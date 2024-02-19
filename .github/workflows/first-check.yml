@@ -1,0 +1,29 @@
+name: CI/CD
+
+# запуск CI/CD при пул-реквесте в ветки main и dev
+on:
+  pull_request:
+    branches:
+    - main
+    - dev
+
+# Работа, которая будет выполняться: сборка (build) и тестирование проекта. Будут запущены на виртуальной машине linux (ubuntu)
+jobs:
+  build-and-testing:
+    runs-on: ubuntu-latest
+
+    # Шаги, в которых описывается, что для проверки будут:
+    # 1. скачан репозиторий (действие actions/checkout@v3)
+    # 2. установлена java (действие actions/setup-java@v3) 11-ой версии
+    # 3. осуществлена сборка проекта вместе с шагом тестирования (действие mvn clean install)
+    steps:
+      - name: Клонирование кода репозитория
+        uses: actions/checkout@v3
+      - name: Установка java 17-ой версии с maven
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          cache: maven
+      - name: Сборка проекта и тестирование
+        run: mvn clean install
