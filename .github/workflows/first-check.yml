@@ -12,10 +12,6 @@ jobs:
   build-and-testing:
     runs-on: ubuntu-latest
 
-    # Шаги, в которых описывается, что для проверки будут:
-    # 1. скачан репозиторий (действие actions/checkout@v3)
-    # 2. установлена java (действие actions/setup-java@v3) 11-ой версии
-    # 3. осуществлена сборка проекта вместе с шагом тестирования (действие mvn clean install)
     steps:
       - name: Клонирование кода репозитория
         uses: actions/checkout@v3
