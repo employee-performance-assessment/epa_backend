@@ -1,0 +1,13 @@
+ru\epa\epabackend\model\Employee.class
+ru\epa\epabackend\model\Project.class
+ru\epa\epabackend\repository\CourseRepository.class
+ru\epa\epabackend\model\Technology.class
+ru\epa\epabackend\repository\TechnologyRepository.class
+ru\epa\epabackend\until\Role.class
+ru\epa\epabackend\model\Course.class
+ru\epa\epabackend\repository\TaskRepository.class
+ru\epa\epabackend\EpaBackendApplication.class
+ru\epa\epabackend\until\TaskStatus.class
+ru\epa\epabackend\repository\ProjectRepository.class
+ru\epa\epabackend\repository\EmployeeRepository.class
+ru\epa\epabackend\model\Task.class
