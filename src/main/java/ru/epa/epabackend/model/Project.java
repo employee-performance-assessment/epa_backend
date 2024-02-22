@@ -1,14 +1,16 @@
 package ru.epa.epabackend.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import ru.epa.epabackend.util.ProjectStatus;
+
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "projects")
 public class Project {
@@ -17,6 +19,14 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String name;
+
+    private ProjectStatus status;
+
+    @ManyToMany
+    @JoinTable(
+            name = "projects_employees",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private List<Employee> employees;
 }

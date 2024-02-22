@@ -1,16 +1,16 @@
 package ru.epa.epabackend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.epa.epabackend.until.TaskStatus;
+import lombok.*;
+import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -23,13 +23,20 @@ public class Task {
 
     private String name;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    private Employee creator;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "executor_id", referencedColumnName = "id")
+    private Employee executor;
+
     private Integer duration;
 
-    private LocalDate start_date;
+    private LocalDate startDate;
 
-    private LocalDate finish_date;
+    private LocalDate finishDate;
 
-    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     private Integer basicPoints;

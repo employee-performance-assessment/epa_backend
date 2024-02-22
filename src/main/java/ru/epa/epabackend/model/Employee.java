@@ -1,17 +1,16 @@
 package ru.epa.epabackend.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Past;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.epa.epabackend.until.Role;
+import lombok.*;
+import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -24,13 +23,7 @@ public class Employee {
 
     private String password;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
-    private Project project;
-
-    @Past
     private LocalDate birthday;
 
-    @Enumerated(EnumType.STRING)
     private Role role;
 }

@@ -1,8 +1,9 @@
-package ru.epa.epabackend.until;
+package ru.epa.epabackend.util;
 
 public enum TaskStatus {
     NEW,
     IN_PROGRESS,
     REVIEW,
-    DONE
+    DONE,
+    CANCELED
 }
