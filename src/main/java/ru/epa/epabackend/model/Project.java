@@ -23,7 +23,7 @@ import java.util.Objects;
 public class Project {
 
     /**
-     * Индификатор проекта.
+     * Идентификатор проекта.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

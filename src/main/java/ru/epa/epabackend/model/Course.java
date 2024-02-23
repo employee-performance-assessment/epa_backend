@@ -24,7 +24,7 @@ import java.util.Set;
 public class Course {
 
     /**
-     * Индификатор курса.
+     * Идентификатор курса.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

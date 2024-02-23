@@ -11,7 +11,7 @@ import java.util.TimeZone;
 
 /**
  * Класс Сотрудник содержит информацию о логине и пароле (для логина используется email),
- * дате рождения, должности/грейду и стеке тетехнологий сотрудника.
+ * дате рождения, должности/грейду и стеке технологий сотрудника.
  *
  * @author Михаил Безуглов
  */
@@ -24,7 +24,7 @@ import java.util.TimeZone;
 @Table(name = "employees")
 public class Employee {
     /**
-     * Индификатор сотрудника.
+     * Идентификатор сотрудника.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,6 +103,12 @@ public class Employee {
     public String toString() {
         return "Employee{" +
                 "id=" + id +
+                ", fistName='" + fistName + '\'' +
+                ", LastName='" + LastName + '\'' +
+                ", patronymic='" + patronymic + '\'' +
+                ", nik='" + nik + '\'' +
+                ", city='" + city + '\'' +
+                ", timeZone=" + timeZone +
                 ", login='" + login + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
