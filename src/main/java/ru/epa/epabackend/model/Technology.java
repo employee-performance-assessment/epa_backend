@@ -32,6 +32,16 @@ public class Technology {
      */
     private String name;
 
+    /**
+     * Список сотрудников, владеющих определёнными технологиями.
+     */
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "employees_technologies",
+            joinColumns = @JoinColumn(name = "technology_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    private Set<Employee> employees = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

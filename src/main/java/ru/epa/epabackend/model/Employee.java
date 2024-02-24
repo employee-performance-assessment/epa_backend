@@ -36,7 +36,7 @@ public class Employee {
     /**
      * Фамилия.
      */
-    private String LastName;
+    private String lastName;
     /**
      * Отчество.
      */
@@ -77,14 +77,26 @@ public class Employee {
     private Role role;
 
     /**
+     * Должность.
+     */
+    private String position;
+
+    /**
+     * Список задач сотрудника.
+     */
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id")
+    private Set<Task> tasks = new HashSet<>();
+
+    /**
      * Стек технологий, которыми владеет сотрудник.
      */
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "employees_technologies",
             joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
-    private Set<Technology> technologies;
+            inverseJoinColumns = @JoinColumn(name = "technology_id"))
+    private Set<Technology> technologies = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
