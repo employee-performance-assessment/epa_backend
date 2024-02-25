@@ -52,3 +52,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### For Mac ###
+*.db
+db/*
