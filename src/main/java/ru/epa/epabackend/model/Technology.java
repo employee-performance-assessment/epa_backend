@@ -3,7 +3,9 @@ package ru.epa.epabackend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Класс Технологии содержит название инструментов, применяющихся при работе в проектах

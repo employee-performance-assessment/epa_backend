@@ -22,5 +22,6 @@ public enum Role {
     /**
      Сотрудник с минимальным опытом.
      */
-    JUNIOR
+    JUNIOR,
+    USER
 }

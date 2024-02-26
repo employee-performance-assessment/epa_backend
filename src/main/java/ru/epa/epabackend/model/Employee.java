@@ -5,9 +5,9 @@ import lombok.*;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * Класс Сотрудник содержит информацию о логине и пароле (для логина используется email),
@@ -23,20 +23,26 @@ import java.util.TimeZone;
 @Entity
 @Table(name = "employees")
 public class Employee {
+
     /**
      * Идентификатор сотрудника.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    /**
-     * Имя.
-     */
-    private String fistName;
+
     /**
      * Фамилия.
      */
+    @Column(name = "last_name")
     private String lastName;
+
+    /**
+     * Имя.
+     */
+    @Column(name = "first_name")
+    private String firstName;
+
     /**
      * Отчество.
      */
@@ -46,14 +52,11 @@ public class Employee {
      * Ник в корпоративном мессенджере.
      */
     private String nik;
+
     /**
      * Город проживания.
      */
     private String city;
-    /**
-     * Часовой пояс сотрудника.
-     */
-    private TimeZone timeZone;
 
     /**
      * Логин сотрудника - email.
@@ -74,6 +77,7 @@ public class Employee {
      * Роль/грейд
      * Возможные роли: ADMIN, SENIOR, MIDDLE, JUNIOR.
      */
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     /**
@@ -82,10 +86,15 @@ public class Employee {
     private String position;
 
     /**
+     * Отдел/подразделение.
+     */
+    private String department;
+
+    /**
      * Список задач сотрудника.
      */
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "executor_id")
     private Set<Task> tasks = new HashSet<>();
 
     /**
@@ -115,16 +124,17 @@ public class Employee {
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", fistName='" + fistName + '\'' +
-                ", LastName='" + LastName + '\'' +
+                ", last name='" + lastName + '\'' +
+                ", first name='" + firstName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
                 ", nik='" + nik + '\'' +
                 ", city='" + city + '\'' +
-                ", timeZone=" + timeZone +
                 ", login='" + login + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
                 ", role=" + role +
+                ", position=" + position +
+                ", tasks=" + tasks +
                 ", technologies=" + technologies +
                 '}';
     }

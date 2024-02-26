@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,12 +44,12 @@ public class Course {
     /**
      * Дата начала курса.
      */
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     /**
      * Дата окончания курса.
      */
-    private LocalDate finishDate;
+    private LocalDateTime finishDate;
 
     /**
      * Поле стек технологий курса.
@@ -57,7 +58,7 @@ public class Course {
     @JoinTable(
             name = "courses_technologies",
             joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
+            inverseJoinColumns = @JoinColumn(name = "technology_id"))
     private Set<Technology> technologies;
 
     @Override
