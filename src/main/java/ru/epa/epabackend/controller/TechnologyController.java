@@ -9,34 +9,47 @@ import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
 
+/**
+ * Класс TechnologyController содержит ендпоинты для технологии.
+ *
+ * @author Артем Масалкин
+ */
+
 @Validated
 @RestController
-@RequestMapping(path = "/technologys")
+@RequestMapping(path = "/technologies")
 @RequiredArgsConstructor
 public class TechnologyController {
     private final TechnologyService technologyService;
 
+    /**
+     * Ендпоинт создания технологии.
+     */
     @PostMapping
     public TechnologyDto createTechnology(@RequestBody TechnologyDto technologyDto) {
-        return technologyService.createTechnology(TechnologyMapper.toTechnology(technologyDto));
+        return technologyService.createTechnology(TechnologyMapper.toEntity(technologyDto));
     }
 
+    /**
+     * Ендпоинт обновления технологии.
+     */
     @PatchMapping("/{technologyId}")
     public TechnologyDto updateTechnology(@RequestBody TechnologyDto technologyDto,
                                           @PathVariable("technologyId") Long technologyId) {
         return technologyService.updateTechnology(technologyDto, technologyId);
     }
 
+    /**
+     * Эндпоинт выведения списка всех технологий.
+     */
     @GetMapping
-    public List<TechnologyDto> getAllTechnology() {
-        return technologyService.getAllTechnologys();
+    public List<TechnologyDto> getAllTechnologies() {
+        return technologyService.getAllTechnologies();
     }
 
-    @GetMapping("/{technologyId}")
-    public TechnologyDto getTechnologyById(@PathVariable Long technologyId) {
-        return technologyService.getTechnologyDtoById(technologyId);
-    }
-
+    /**
+     * Эндпоинт удаления технологии.
+     */
     @GetMapping("/{technologyId}")
     public void deleteTechnologyById(@PathVariable Long technologyId) {
         technologyService.deleteTechnologyById(technologyId);

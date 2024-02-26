@@ -6,24 +6,39 @@ import ru.epa.epabackend.model.Technology;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Класс TechnologyMapper содержит преобразование сущности.
+ *
+ * @author Артем Масалкин
+ */
 public class TechnologyMapper {
-    public static TechnologyDto toTechnologyDto(Technology technology) {
+
+    /**
+     * Преобразование из сущности в DTO.
+     */
+    public static TechnologyDto toDto(Technology technology) {
         return TechnologyDto.builder()
                 .id(technology.getId())
                 .name(technology.getName())
                 .build();
     }
 
-    public static Technology toTechnology(TechnologyDto technologyDto) {
+    /**
+     * Преобразование из DTO в сущность.
+     */
+    public static Technology toEntity(TechnologyDto technologyDto) {
         return Technology.builder()
                 .id(technologyDto.getId())
                 .name(technologyDto.getName())
                 .build();
     }
 
-    public static List<TechnologyDto> toTechnologyDtoList(List<Technology> technologys) {
-        return technologys.stream()
-                .map(TechnologyMapper::toTechnologyDto)
+    /**
+     * Список DTO.
+     */
+    public static List<TechnologyDto> toTechnologyDtoList(List<Technology> technologies) {
+        return technologies.stream()
+                .map(TechnologyMapper::toDto)
                 .collect(Collectors.toList());
     }
 }

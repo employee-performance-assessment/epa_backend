@@ -11,45 +11,55 @@ import ru.epa.epabackend.repository.TechnologyRepository;
 
 import java.util.List;
 
+/**
+ * Класс TechnologyServiceImpl содержит методы действий с технологией.
+ *
+ * @author Артем Масалкин
+ */
 @Service
 @RequiredArgsConstructor
-public class TechnologyServiceImpl implements TechnologyService{
+public class TechnologyServiceImpl implements TechnologyService {
     private final TechnologyRepository technologyRepository;
 
+    /**
+     * Добавление технологии.
+     */
     @Transactional
-    public TechnologyDto createTechnology(Technology technology){
-        return TechnologyMapper.toTechnologyDto(technologyRepository.save(technology));
+    public TechnologyDto createTechnology(Technology technology) {
+        return TechnologyMapper.toDto(technologyRepository.save(technology));
     }
 
+    /**
+     * Получение технологии по идентификатору.
+     */
     @Transactional
-    public TechnologyDto updateTechnology(TechnologyDto technologyDto, Long technologyId){
-        Technology technology = technologyRepository.findById(technologyId)
-                .orElseThrow(() -> new NotFoundException
-                        (String.format("Технологии с id %d не существует", technologyId)));
-        return TechnologyMapper.toTechnologyDto(technology);
-    }
-
-    @Transactional
-    public List<TechnologyDto> getAllTechnologys(){
-        return TechnologyMapper.toTechnologyDtoList(technologyRepository.findAll());
-    }
-
-    @Transactional
-    public Technology getTechnologyById(Long technologyId){
+    public Technology getTechnologyById(Long technologyId) {
         return technologyRepository.findById(technologyId)
                 .orElseThrow(() -> new NotFoundException
                         (String.format("Технологии с id %d не существует", technologyId)));
     }
 
+    /**
+     * Обновление технологии.
+     */
     @Transactional
-    public TechnologyDto getTechnologyDtoById(Long technologyId){
-        return TechnologyMapper.toTechnologyDto(getTechnologyById(technologyId));
+    public TechnologyDto updateTechnology(TechnologyDto technologyDto, Long technologyId) {
+        return TechnologyMapper.toDto(getTechnologyById(technologyId));
     }
 
+    /**
+     * Получение списка всех технологий.
+     */
     @Transactional
-    public void deleteTechnologyById(Long technologyId){
+    public List<TechnologyDto> getAllTechnologies() {
+        return TechnologyMapper.toTechnologyDtoList(technologyRepository.findAll());
+    }
+
+    /**
+     * Удаление технологии по идентификатору.
+     */
+    @Transactional
+    public void deleteTechnologyById(Long technologyId) {
         technologyRepository.deleteById(technologyId);
     }
-
-
 }
