@@ -36,7 +36,7 @@ public class Employee {
     /**
      * Фамилия.
      */
-    private String LastName;
+    private String lastName;
     /**
      * Отчество.
      */
@@ -104,7 +104,7 @@ public class Employee {
         return "Employee{" +
                 "id=" + id +
                 ", fistName='" + fistName + '\'' +
-                ", LastName='" + LastName + '\'' +
+                ", LastName='" + lastName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
                 ", nik='" + nik + '\'' +
                 ", city='" + city + '\'' +
