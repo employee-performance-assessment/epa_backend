@@ -213,14 +213,14 @@
 							"raw": "{\r\n  \"fullName\": \"Ivanov John Ivanovich\"\r\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/private/employees/1",
+							"raw": "http://localhost:8080/user/employees/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"private",
+								"user",
 								"employees",
 								"1"
 							]
@@ -266,14 +266,14 @@
 							"raw": "{\r\n  \"fullName\": \"Ivanov John Ivanovich\"\r\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/employee/employees/999",
+							"raw": "http://localhost:8080/user/employees/999",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"employee",
+								"user",
 								"employees",
 								"999"
 							]
@@ -357,7 +357,7 @@
 									"pm.test(\"Test employee[0] 'fullName' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData[0]).to.have.property('fullName');\r",
-									"    pm.expect(jsonData[0].fullName, '\"fullName\" must be \"Ivanov Test\"').to.eql(\"Ivanov Ivan\");\r",
+									"    pm.expect(jsonData[0].fullName, '\"fullName\" must be \"Ivanov Test\"').to.eql(\"Ivanov John\");\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -373,14 +373,14 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/private/employees",
+							"raw": "http://localhost:8080/user/employees",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"private",
+								"user",
 								"employees"
 							]
 						}
@@ -415,14 +415,14 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/private/employees/1",
+							"raw": "http://localhost:8080/user/employees/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"private",
+								"user",
 								"employees",
 								"1"
 							]
