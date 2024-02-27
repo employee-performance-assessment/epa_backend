@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeDtoFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoNew;
-import ru.epa.epabackend.dto.employee.EmployeeDtoShort;
-import ru.epa.epabackend.dto.employee.EmployeeDtoUpdate;
+import ru.epa.epabackend.dto.employee.*;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
@@ -30,20 +27,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Override
-    public EmployeeDtoFull addEmployee(EmployeeDtoNew employeeDtoNew) {
-        log.info("Создание нового сотрудника {}", employeeDtoNew.getFullName());
-        Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeDtoNew));
+    public EmployeeDtoResponseFull addEmployee(EmployeeRtoRequest employeeRtoRequest) {
+        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
+        Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeRtoRequest));
         employee.setRole(USER);
         return EmployeeMapper.toEmployeeDtoFull(employee);
     }
 
     @Override
-    public EmployeeDtoFull updateEmployee(Long employeeId, EmployeeDtoUpdate employeeDtoUpdate) {
-        log.info("Обновление существующего сотрудника {}", employeeDtoUpdate.getFullName());
+    public EmployeeDtoResponseFull updateEmployee(Long employeeId, EmployeeRtoRequest employeeRtoRequest) {
+        log.info("Обновление существующего сотрудника {}", employeeRtoRequest.getFullName());
         Employee oldEmployee = getEmployee(employeeId);
-        String fullName = employeeDtoUpdate.getFullName();
+        String fullName = employeeRtoRequest.getFullName();
         if (fullName != null && !fullName.isBlank()) {
-            String[] full = employeeDtoUpdate.getFullName().split(" ");
+            String[] full = employeeRtoRequest.getFullName().split(" ");
             if (full.length != 3) {
                 throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
             }
@@ -51,35 +48,18 @@ public class EmployeeServiceImpl implements EmployeeService {
             oldEmployee.setFirstName(full[1]);
             oldEmployee.setPatronymic(full[2]);
         }
-        String nik = employeeDtoUpdate.getNickName();
-        if (nik != null && !nik.isBlank()) {
-            oldEmployee.setNickName(nik);
-        }
-        String city = employeeDtoUpdate.getCity();
-        if (city != null && !city.isBlank()) {
-            oldEmployee.setCity(city);
-        }
-        String login = employeeDtoUpdate.getLogin();
-        if (login != null && !login.isBlank()) {
-            oldEmployee.setLogin(login);
-        }
-        String password = employeeDtoUpdate.getPassword();
-        if (password != null && !password.isBlank()) {
-            oldEmployee.setPassword(password);
-        }
-        LocalDate birthday = employeeDtoUpdate.getBirthday();
-        if (birthday != null) {
-            oldEmployee.setBirthday(birthday);
-        }
-        Role role = employeeDtoUpdate.getRole();
+
+        updateEmployeeFields(oldEmployee, employeeRtoRequest);
+
+        Role role = employeeRtoRequest.getRole();
         if (role != null) {
             oldEmployee.setRole(role);
         }
-        String position = employeeDtoUpdate.getPosition();
+        String position = employeeRtoRequest.getPosition();
         if (position != null && !position.isBlank()) {
             oldEmployee.setPosition(position);
         }
-        String department = employeeDtoUpdate.getDepartment();
+        String department = employeeRtoRequest.getDepartment();
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
@@ -98,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeDtoShort> getAllEmployees() {
+    public List<EmployeeDtoResponseShort> getAllEmployees() {
         log.info("Получение всех сотрудников");
         return employeeRepository.findAll().stream()
                 .map(EmployeeMapper::toEmployeeDtoShort)
@@ -107,7 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public EmployeeDtoFull getEmployeeById(Long employeeId) {
+    public EmployeeDtoResponseFull getEmployeeById(Long employeeId) {
         log.info("Получение сотрудника по идентификатору {}", employeeId);
         Employee employee = getEmployee(employeeId);
         return EmployeeMapper.toEmployeeDtoFull(employee);
@@ -116,5 +96,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     private Employee getEmployee(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
+    }
+
+    private void updateEmployeeFields(Employee oldEmployee, EmployeeRtoRequest employeeRtoRequest) {
+        String nickName = employeeRtoRequest.getNickName();
+        if (nickName != null && !nickName.isBlank()) {
+            oldEmployee.setNickName(nickName);
+        }
+        String city = employeeRtoRequest.getCity();
+        if (city != null && !city.isBlank()) {
+            oldEmployee.setCity(city);
+        }
+        String login = employeeRtoRequest.getLogin();
+        if (login != null && !login.isBlank()) {
+            oldEmployee.setLogin(login);
+        }
+        String password = employeeRtoRequest.getPassword();
+        if (password != null && !password.isBlank()) {
+            oldEmployee.setPassword(password);
+        }
+        LocalDate birthday = employeeRtoRequest.getBirthday();
+        if (birthday != null) {
+            oldEmployee.setBirthday(birthday);
+        }
     }
 }

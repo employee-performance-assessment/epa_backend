@@ -1,20 +1,17 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.employee.EmployeeDtoFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoNew;
-import ru.epa.epabackend.dto.employee.EmployeeDtoShort;
-import ru.epa.epabackend.dto.employee.EmployeeDtoUpdate;
+import ru.epa.epabackend.dto.employee.*;
 
 import java.util.List;
 
 public interface EmployeeService {
-    EmployeeDtoFull addEmployee(EmployeeDtoNew employeeDtoNew);
+    EmployeeDtoResponseFull addEmployee(EmployeeRtoRequest employeeRtoRequest);
 
-    EmployeeDtoFull updateEmployee(Long employeeId, EmployeeDtoUpdate employeeDtoUpdate);
+    EmployeeDtoResponseFull updateEmployee(Long employeeId, EmployeeRtoRequest employeeRtoRequest);
 
     void deleteEmployee(Long employeeId);
 
-    List<EmployeeDtoShort> getAllEmployees();
+    List<EmployeeDtoResponseShort> getAllEmployees();
 
-    EmployeeDtoFull getEmployeeById(Long employeeId);
+    EmployeeDtoResponseFull getEmployeeById(Long employeeId);
 }

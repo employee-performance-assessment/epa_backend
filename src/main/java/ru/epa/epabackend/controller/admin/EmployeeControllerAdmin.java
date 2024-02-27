@@ -1,16 +1,16 @@
 package ru.epa.epabackend.controller.admin;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeDtoFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoNew;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
+import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.service.EmployeeService;
 
-@Validated
+import static ru.epa.epabackend.util.ValidationGroups.Create;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -21,9 +21,10 @@ public class EmployeeControllerAdmin {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public EmployeeDtoFull addEmployee(@Valid @RequestBody EmployeeDtoNew employeeDtoNew) {
-        log.info("POST / employees / {} ", employeeDtoNew.getFullName());
-        return employeeService.addEmployee(employeeDtoNew);
+    public EmployeeDtoResponseFull addEmployee(@Validated(Create.class) @RequestBody EmployeeRtoRequest
+                                                           employeeRtoRequest) {
+        log.info("POST / employees / {} ", employeeRtoRequest.getFullName());
+        return employeeService.addEmployee(employeeRtoRequest);
     }
 
     @DeleteMapping("/{employeeId}")

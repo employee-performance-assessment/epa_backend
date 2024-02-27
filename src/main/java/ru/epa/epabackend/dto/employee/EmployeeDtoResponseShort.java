@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class EmployeeDtoShort {
+public class EmployeeDtoResponseShort {
 
     private String fullName;
 

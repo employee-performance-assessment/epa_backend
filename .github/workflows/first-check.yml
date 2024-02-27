@@ -4,12 +4,12 @@ name: CI/CD
 on:
   pull_request:
     branches:
-    - main
-    - dev
+      - main
+      - dev
 
-# Работа, которая будет выполняться: сборка (build) и тестирование проекта. Будут запущены на виртуальной машине linux (ubuntu)
+# Работа, которая будет выполняться на виртуальной машине linux (ubuntu)
 jobs:
-  build-and-testing:
+  build-and-checkstyle-and-testing:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,5 +21,49 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
           cache: maven
+
+      - name: Проверка стилистики (checkstyle)
+        run: mvn checkstyle:check -Dcheckstyle.config.location=./checkstyle.xml
+
+      - name: Чтение application.yml
+        run: |
+          cat src/main/resources/application.yml >> application.yml
+
+      - name: Запуск postgreSQL через докер-контейнер
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        run: |
+          export POSTGRES_DB=epa-backend
+          export POSTGRES_USER=postgres
+          export POSTGRES_PASSWORD=root
+          docker run --name postgres -e POSTGRES_DB=$POSTGRES_DB -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -p 5432:5432 -d postgres:latest
+
+      - name: Ожидание 3 сек инициализации PostgreSQL
+        run: sleep 3
+
       - name: Сборка проекта и тестирование
         run: mvn clean install
+
+      - name: Запуск Spring Boot на порту 8080
+        run: |
+          mvn spring-boot:run -Dserver.port=8080 &
+          app_pid=$!
+          sleep 10
+          if ps -p $app_pid > /dev/null; then
+            exit 0
+          else
+            exit 1
+          fi
+
+      # TODO - когда появятся Postman тесты, нужно будет указать их тут для автоматической проверки
+      #- name: Проход Postman тестов с baseUrl http://localhost:8080
+      #  run: npx newman run ./postman/epa-backend.json --env-var baseUrl=http://localhost:8080
+
+      - name: Остановка Spring Boot
+        run: mvn spring-boot:stop
+
+      - name: остановка контейнера с PostgreSQL
+        run: docker stop postgres
+        continue-on-error: true
