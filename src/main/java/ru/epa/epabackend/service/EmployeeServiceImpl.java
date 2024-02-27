@@ -51,26 +51,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             oldEmployee.setFirstName(full[1]);
             oldEmployee.setPatronymic(full[2]);
         }
-        String nik = employeeDtoUpdate.getNickName();
-        if (nik != null && !nik.isBlank()) {
-            oldEmployee.setNickName(nik);
-        }
-        String city = employeeDtoUpdate.getCity();
-        if (city != null && !city.isBlank()) {
-            oldEmployee.setCity(city);
-        }
-        String login = employeeDtoUpdate.getLogin();
-        if (login != null && !login.isBlank()) {
-            oldEmployee.setLogin(login);
-        }
-        String password = employeeDtoUpdate.getPassword();
-        if (password != null && !password.isBlank()) {
-            oldEmployee.setPassword(password);
-        }
-        LocalDate birthday = employeeDtoUpdate.getBirthday();
-        if (birthday != null) {
-            oldEmployee.setBirthday(birthday);
-        }
+
+        updateEmployeeFields(oldEmployee, employeeDtoUpdate);
+
         Role role = employeeDtoUpdate.getRole();
         if (role != null) {
             oldEmployee.setRole(role);
@@ -116,5 +99,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     private Employee getEmployee(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
+    }
+
+    private void updateEmployeeFields(Employee oldEmployee, EmployeeDtoUpdate employeeDtoUpdate) {
+        String nickName = employeeDtoUpdate.getNickName();
+        if (nickName != null && !nickName.isBlank()) {
+            oldEmployee.setNickName(nickName);
+        }
+        String city = employeeDtoUpdate.getCity();
+        if (city != null && !city.isBlank()) {
+            oldEmployee.setCity(city);
+        }
+        String login = employeeDtoUpdate.getLogin();
+        if (login != null && !login.isBlank()) {
+            oldEmployee.setLogin(login);
+        }
+        String password = employeeDtoUpdate.getPassword();
+        if (password != null && !password.isBlank()) {
+            oldEmployee.setPassword(password);
+        }
+        LocalDate birthday = employeeDtoUpdate.getBirthday();
+        if (birthday != null) {
+            oldEmployee.setBirthday(birthday);
+        }
     }
 }
