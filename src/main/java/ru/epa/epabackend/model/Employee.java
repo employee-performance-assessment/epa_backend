@@ -51,7 +51,8 @@ public class Employee {
     /**
      * Ник в корпоративном мессенджере.
      */
-    private String nik;
+    @Column(name = "nick_name")
+    private String nickName;
 
     /**
      * Город проживания.
@@ -127,13 +128,14 @@ public class Employee {
                 ", last name='" + lastName + '\'' +
                 ", first name='" + firstName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
-                ", nik='" + nik + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
                 ", login='" + login + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
                 ", role=" + role +
                 ", position=" + position +
+                ", department=" + department +
                 ", tasks=" + tasks +
                 ", technologies=" + technologies +
                 '}';

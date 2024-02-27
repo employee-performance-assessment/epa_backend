@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,12 +43,12 @@ public class Course {
     /**
      * Дата начала курса.
      */
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     /**
      * Дата окончания курса.
      */
-    private LocalDateTime finishDate;
+    private LocalDate finishDate;
 
     /**
      * Поле стек технологий курса.

@@ -1,20 +1,21 @@
 package ru.epa.epabackend.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.epa.epabackend.dto.EmployeeDto;
-import ru.epa.epabackend.dto.EmployeeDtoShort;
-import ru.epa.epabackend.exception.WrongFullNameException;
+import ru.epa.epabackend.dto.employee.EmployeeDtoFull;
+import ru.epa.epabackend.dto.employee.EmployeeDtoNew;
+import ru.epa.epabackend.dto.employee.EmployeeDtoShort;
+import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.model.Employee;
 
 @UtilityClass
 public class EmployeeMapper {
 
-    public EmployeeDto toEmployeeDto(Employee employee) {
+    public EmployeeDtoFull toEmployeeDtoFull(Employee employee) {
         String fullName = employee.getLastName() + " " + employee.getFirstName() + " " + employee.getPatronymic();
-        return EmployeeDto.builder()
+        return EmployeeDtoFull.builder()
                 .id(employee.getId())
                 .fullName(fullName)
-                .nik(employee.getNik())
+                .nickName(employee.getNickName())
                 .city(employee.getCity())
                 .login(employee.getLogin())
                 .password(employee.getPassword())
@@ -25,24 +26,23 @@ public class EmployeeMapper {
                 .build();
     }
 
-    public Employee toEmployee(EmployeeDto employeeDto) {
-        String[] fullName = employeeDto.getFullName().split(" ");
+    public Employee toEmployee(EmployeeDtoNew employeeDtoNew) {
+        String[] fullName = employeeDtoNew.getFullName().split(" ");
         if (fullName.length != 3) {
             throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
         }
         return Employee.builder()
-                .id(employeeDto.getId())
                 .lastName(fullName[0])
                 .firstName(fullName[1])
                 .patronymic(fullName[2])
-                .nik(employeeDto.getNik())
-                .city(employeeDto.getCity())
-                .login(employeeDto.getLogin())
-                .password(employeeDto.getPassword())
-                .birthday(employeeDto.getBirthday())
-                .role(employeeDto.getRole())
-                .position(employeeDto.getPosition())
-                .department(employeeDto.getDepartment())
+                .nickName(employeeDtoNew.getNickName())
+                .city(employeeDtoNew.getCity())
+                .login(employeeDtoNew.getLogin())
+                .password(employeeDtoNew.getPassword())
+                .birthday(employeeDtoNew.getBirthday())
+                .role(employeeDtoNew.getRole())
+                .position(employeeDtoNew.getPosition())
+                .department(employeeDtoNew.getDepartment())
                 .build();
     }
 
