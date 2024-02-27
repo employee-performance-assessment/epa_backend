@@ -38,6 +38,7 @@ public class Project {
      * Статус проекта
      * Возможные статусы проекта:  ABANDONED, TODO, WIP, COMPLETED, DISTRIBUTED.
      */
+    @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
     /**

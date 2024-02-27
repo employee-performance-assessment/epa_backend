@@ -5,9 +5,9 @@ import lombok.*;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * Класс Сотрудник содержит информацию о логине и пароле (для логина используется email),
@@ -23,20 +23,26 @@ import java.util.TimeZone;
 @Entity
 @Table(name = "employees")
 public class Employee {
+
     /**
      * Идентификатор сотрудника.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    /**
-     * Имя.
-     */
-    private String fistName;
+
     /**
      * Фамилия.
      */
+    @Column(name = "last_name")
     private String lastName;
+
+    /**
+     * Имя.
+     */
+    @Column(name = "first_name")
+    private String firstName;
+
     /**
      * Отчество.
      */
@@ -45,15 +51,13 @@ public class Employee {
     /**
      * Ник в корпоративном мессенджере.
      */
-    private String nik;
+    @Column(name = "nick_name")
+    private String nickName;
+
     /**
      * Город проживания.
      */
     private String city;
-    /**
-     * Часовой пояс сотрудника.
-     */
-    private TimeZone timeZone;
 
     /**
      * Логин сотрудника - email.
@@ -74,17 +78,35 @@ public class Employee {
      * Роль/грейд
      * Возможные роли: ADMIN, SENIOR, MIDDLE, JUNIOR.
      */
+    @Enumerated(EnumType.STRING)
     private Role role;
+
+    /**
+     * Должность.
+     */
+    private String position;
+
+    /**
+     * Отдел/подразделение.
+     */
+    private String department;
+
+    /**
+     * Список задач сотрудника.
+     */
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "executor_id")
+    private Set<Task> tasks = new HashSet<>();
 
     /**
      * Стек технологий, которыми владеет сотрудник.
      */
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "employees_technologies",
             joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
-    private Set<Technology> technologies;
+            inverseJoinColumns = @JoinColumn(name = "technology_id"))
+    private Set<Technology> technologies = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -103,16 +125,18 @@ public class Employee {
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", fistName='" + fistName + '\'' +
-                ", LastName='" + lastName + '\'' +
+                ", last name='" + lastName + '\'' +
+                ", first name='" + firstName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
-                ", nik='" + nik + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
-                ", timeZone=" + timeZone +
                 ", login='" + login + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
                 ", role=" + role +
+                ", position=" + position +
+                ", department=" + department +
+                ", tasks=" + tasks +
                 ", technologies=" + technologies +
                 '}';
     }
