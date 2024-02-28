@@ -50,7 +50,7 @@ public class TechnologyController {
     /**
      * Эндпоинт удаления технологии.
      */
-    @GetMapping("/{technologyId}")
+    @DeleteMapping("/{technologyId}")
     public void deleteTechnologyById(@PathVariable Long technologyId) {
         technologyService.deleteTechnologyById(technologyId);
     }

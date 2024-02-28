@@ -17,11 +17,6 @@ import lombok.*;
 public class TechnologyDto {
 
     /**
-     * Идентификатор технологии.
-     */
-    private Long id;
-
-    /**
      * Название технологии.
      */
     private String name;

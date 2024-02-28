@@ -18,7 +18,6 @@ public class TechnologyMapper {
      */
     public static TechnologyDto toDto(Technology technology) {
         return TechnologyDto.builder()
-                .id(technology.getId())
                 .name(technology.getName())
                 .build();
     }
@@ -28,7 +27,6 @@ public class TechnologyMapper {
      */
     public static Technology toEntity(TechnologyDto technologyDto) {
         return Technology.builder()
-                .id(technologyDto.getId())
                 .name(technologyDto.getName())
                 .build();
     }
