@@ -1,13 +1,25 @@
 package ru.epa.epabackend.exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.http.HttpStatus;
+
+import java.util.Date;
+
+import static ru.epa.epabackend.util.DateConstant.DATE_TIME_PATTERN;
+
+@Data
 public class ErrorResponse {
-    private final String error;
 
-    public ErrorResponse(String error) {
-        this.error = error;
-    }
+    private HttpStatus status;
+    private String message;
 
-    public String getError() {
-        return error;
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
+    private Date timestamp;
+
+    public ErrorResponse(HttpStatus status, String message) {
+        this.status = status;
+        this.message = message;
+        this.timestamp = new Date();
     }
 }
