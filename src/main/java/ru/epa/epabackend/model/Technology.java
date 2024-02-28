@@ -3,7 +3,9 @@ package ru.epa.epabackend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Класс Технологии содержит название инструментов, применяющихся при работе в проектах
@@ -31,6 +33,16 @@ public class Technology {
      * Название технологии.
      */
     private String name;
+
+    /**
+     * Список сотрудников, владеющих определёнными технологиями.
+     */
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "employees_technologies",
+            joinColumns = @JoinColumn(name = "technology_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    private Set<Employee> employees = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

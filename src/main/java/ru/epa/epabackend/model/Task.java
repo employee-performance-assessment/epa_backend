@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.epa.epabackend.util.TaskStatus;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -52,7 +52,7 @@ public class Task {
      * Руководитель создавший задачу и контролирующий выполнение задачи.
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    @JoinColumn(name = "creator_id")
     private Employee creator;
 
     /**
@@ -60,7 +60,7 @@ public class Task {
      */
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "executor_id", referencedColumnName = "id")
+    @JoinColumn(name = "executor_id")
     private Employee executor;
 
     /**
@@ -71,17 +71,20 @@ public class Task {
     /**
      * Дата взятие задачи в работу.
      */
-    private LocalDate startDate;
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
 
     /**
      * Дата выполнения задачи.
      */
-    private LocalDate finishDate;
+    @Column(name = "finish_date")
+    private LocalDateTime finishDate;
 
     /**
      * Статус выполнения задачи
      * Возможные статусы: NEW, IN_PROGRESS, REVIEW, DONE, CANCELED.
      */
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     /**
@@ -103,7 +106,7 @@ public class Task {
     @JoinTable(
             name = "tasks_technologies",
             joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
+            inverseJoinColumns = @JoinColumn(name = "technology_id"))
     private Set<Technology> technologies;
 
     @Override

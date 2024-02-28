@@ -1,0 +1,480 @@
+{
+	"info": {
+		"_postman_id": "e9da5565-2b54-40c6-9adb-1ff4f0864731",
+		"name": "epa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26701489"
+	},
+	"item": [
+		{
+			"name": "Employee",
+			"item": [
+				{
+					"name": "add employee 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'id' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Ivanov Ivan Ivanovich\",\r\n  \"login\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/employees",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add employee fail name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Ivan\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/employees",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add employee fail email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Ivanov Ivan Ivanovich\",\r\n  \"login\": \"mail@mail..ru\",\r\n  \"password\": \"password1\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/employees",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update employee 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Has employee update response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'id' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Ivanov John Ivanovich\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/employees/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"employees",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update employee unknown",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([500, 404]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Ivanov John Ivanovich\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/employees/999",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"employees",
+								"999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add employee 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'id' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Ivanov Test Ivanovich\",\r\n  \"login\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/employees",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get All employees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list employee response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test employee[0] 'fullName' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('fullName');\r",
+									"    pm.expect(jsonData[0].fullName, '\"fullName\" must be \"Ivanov Test\"').to.eql(\"Ivanov John\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/user/employees",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get employee 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/user/employees/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"employees",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete employee 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/admin/employees/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"admin",
+								"employees",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
