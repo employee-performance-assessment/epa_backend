@@ -6,14 +6,13 @@ import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Set;
 
 /**
- * Класс Задача содержит информацию о названии, описании, приоритете, создателе, исполнителе,
+ * Класс Задача содержит информацию о названии, описании, создателе, исполнителе,
  * времени заложенному на выполнение этой задачи, сложности задачи (сложность измеряется в балах,
- * чем больше баллов тем сложнее задача), стеку технологий к которому относится задача,
- * дату начала и завершения выполнения задачи сотрудником, статусе задачи и количестве баллов
- * начисленных сотруднику за выполнение задачи.
+ * чем больше баллов тем сложнее задача),
+ * дату начала и завершения выполнения задачи сотрудником, статусе задачи, количестве баллов
+ * начисленных сотруднику за выполнение задачи и дополнительном количестве баллов за задачу.
  *
  * @author Михаил Безуглов
  */
@@ -34,11 +33,6 @@ public class Task {
     private Long id;
 
     /**
-     * Приоритет задачи.
-     */
-    private Integer priority;
-
-    /**
      * Название задачи.
      */
     private String name;
@@ -47,6 +41,13 @@ public class Task {
      * Описание задачи.
      */
     private String description;
+
+    /**
+     * Описание проекта.
+     */
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private Project project;
 
     /**
      * Руководитель создавший задачу и контролирующий выполнение задачи.
@@ -64,11 +65,6 @@ public class Task {
     private Employee executor;
 
     /**
-     * Время заложенное на выполнение задачи руководителем.
-     */
-    private Integer duration;
-
-    /**
      * Дата взятие задачи в работу.
      */
     private LocalDate startDate;
@@ -82,6 +78,7 @@ public class Task {
      * Статус выполнения задачи
      * Возможные статусы: NEW, IN_PROGRESS, REVIEW, DONE, CANCELED.
      */
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     /**
@@ -97,14 +94,10 @@ public class Task {
     private Integer points;
 
     /**
-     * Стек технологий, которыми владеет сотрудник.
+     * Дополнительные баллы, которые вычитаются или прибавляются, в зависимости от того
+     * выполнил ли в срок задачу исполнитель. Задаются руководителем.
      */
-    @ManyToMany
-    @JoinTable(
-            name = "tasks_technologies",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
-    private Set<Technology> technologies;
+    private Integer penaltyPoints;
 
     @Override
     public boolean equals(Object o) {
@@ -123,17 +116,14 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "id=" + id +
-                ", priority=" + priority +
                 ", name='" + name + '\'' +
                 ", creator=" + creator +
                 ", executor=" + executor +
-                ", duration=" + duration +
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +
                 ", status=" + status +
                 ", basicPoints=" + basicPoints +
                 ", points=" + points +
-                ", technologies=" + technologies +
                 '}';
     }
 }
