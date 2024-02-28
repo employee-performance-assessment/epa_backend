@@ -53,7 +53,7 @@ public class Task {
      * Руководитель создавший задачу и контролирующий выполнение задачи.
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    @JoinColumn(name = "creator_id")
     private Employee creator;
 
     /**
@@ -61,17 +61,19 @@ public class Task {
      */
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "executor_id", referencedColumnName = "id")
+    @JoinColumn(name = "executor_id")
     private Employee executor;
 
     /**
      * Дата взятие задачи в работу.
      */
+    @Column(name = "start_date")
     private LocalDate startDate;
 
     /**
      * Дата выполнения задачи.
      */
+    @Column(name = "finish_date")
     private LocalDate finishDate;
 
     /**
