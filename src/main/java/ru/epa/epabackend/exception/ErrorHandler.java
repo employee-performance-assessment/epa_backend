@@ -23,27 +23,27 @@ public class ErrorHandler {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
-    
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse entityNotFoundException(EntityNotFoundException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
-    
+
     @ExceptionHandler({DataIntegrityViolationException.class, ConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse conflictException(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.CONFLICT, e.getMessage());
     }
-    
+
     @ExceptionHandler({AccessDeniedException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleForbidden(final Exception e) {
         return new ErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
     }
-    
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable e) {
