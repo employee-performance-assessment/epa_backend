@@ -35,8 +35,7 @@ public class TechnologyServiceImpl implements TechnologyService {
     @Transactional
     public Technology getTechnologyById(Long technologyId) {
         return technologyRepository.findById(technologyId)
-                .orElseThrow(() -> new NotFoundException
-                        (String.format("Технологии с id %d не существует", technologyId)));
+                .orElseThrow(() -> new NotFoundException(String.format("Технологии с id %d не существует", technologyId)));
     }
 
     /**
