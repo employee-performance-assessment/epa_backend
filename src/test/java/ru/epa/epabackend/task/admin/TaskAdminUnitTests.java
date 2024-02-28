@@ -57,7 +57,7 @@ class TaskAdminUnitTests {
                 .build();
         employee = Employee.builder()
                 .id(ID_2)
-                .role(Role.MIDDLE)
+                .role(Role.USER)
                 .build();
         task = Task.builder()
                 .id(ID_1)
