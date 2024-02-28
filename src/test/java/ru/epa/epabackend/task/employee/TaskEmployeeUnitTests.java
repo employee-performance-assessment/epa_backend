@@ -95,7 +95,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
 
-        TaskOutDto taskOutDtoResult = taskService.update(task.getId(), employee.getId(), STATUS);
+        TaskOutDto taskOutDtoResult = taskService.update(employee.getId(), task.getId(), STATUS);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);

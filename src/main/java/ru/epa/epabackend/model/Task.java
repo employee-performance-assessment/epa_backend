@@ -124,6 +124,7 @@ public class Task {
                 ", status=" + status +
                 ", basicPoints=" + basicPoints +
                 ", points=" + points +
+                ", penaltyPoints=" + penaltyPoints +
                 '}';
     }
 }
