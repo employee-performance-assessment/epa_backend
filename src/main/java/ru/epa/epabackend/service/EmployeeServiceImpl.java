@@ -3,9 +3,13 @@ package ru.epa.epabackend.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.*;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
@@ -16,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.epa.epabackend.util.Role.USER;
+import static ru.epa.epabackend.util.Role.ROLE_USER;
 
 @Slf4j
 @Service
@@ -25,12 +29,14 @@ import static ru.epa.epabackend.util.Role.USER;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public EmployeeDtoResponseFull addEmployee(EmployeeRtoRequest employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
         Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeRtoRequest));
-        employee.setRole(USER);
+        employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
+        employee.setRole(ROLE_USER);
         return EmployeeMapper.toEmployeeDtoFull(employee);
     }
 
@@ -93,6 +99,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.toEmployeeDtoFull(employee);
     }
 
+    @Override
+    public UserDetailsService userDetailsService() {
+        return this::getEmployeeByLogin;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Employee getEmployeeByLogin(String login) {
+        return employeeRepository.findByLogin(login).orElseThrow(() ->
+                new EntityNotFoundException("Неверный логин или пароль"));
+    }
+
     public Employee getEmployee(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
@@ -113,7 +131,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         String password = employeeRtoRequest.getPassword();
         if (password != null && !password.isBlank()) {
-            oldEmployee.setPassword(password);
+            oldEmployee.setPassword(passwordEncoder.encode(password));
         }
         LocalDate birthday = employeeRtoRequest.getBirthday();
         if (birthday != null) {
