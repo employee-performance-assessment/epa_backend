@@ -9,9 +9,9 @@ public enum Role {
     /**
      * Руководитель.
      */
-    ADMIN,
+    ROLE_ADMIN,
     /**
      * Сотрудник.
      */
-    USER
+    ROLE_USER
 }

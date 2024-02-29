@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  epa-db:
+    image: postgres:16-alpine
+    container_name: epa-db
+    ports:
+      - "6543:5432"
+    environment:
+      - POSTGRES_DB=epa-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root

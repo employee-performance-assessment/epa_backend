@@ -18,7 +18,6 @@ public class EmployeeMapper {
                 .nickName(employee.getNickName())
                 .city(employee.getCity())
                 .login(employee.getLogin())
-                .password(employee.getPassword())
                 .birthday(employee.getBirthday())
                 .role(employee.getRole())
                 .position(employee.getPosition())

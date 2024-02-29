@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/epa-backend
+    url: jdbc:postgresql://localhost:6543/epa-db
     username: postgres
     password: root
 
@@ -29,3 +29,10 @@ logging:
         transaction: info
     spring security: info
     web: info
+
+token:
+  secret: 51Ph61VOzrdwNvRa9FZclUpZRU160G1O
+  duration: 10m
+admin:
+  login: ggg
+  password: ggg
