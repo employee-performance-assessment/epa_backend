@@ -47,7 +47,7 @@ public class TaskControllerEmployee {
     @PatchMapping("/{taskId}")
     public TaskFullDto updateStatus(@PathVariable Long employeeId, @PathVariable Long taskId,
                                     @RequestParam String status) throws IllegalArgumentException {
-        try{
+        try {
             TaskStatus taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
             return taskEmployeeService.updateStatus(employeeId, taskId, taskStatus);
         } catch (IllegalArgumentException exception) {
