@@ -65,7 +65,7 @@ class TaskAdminUnitTests {
     public void init() {
         admin = Employee.builder()
                 .id(ID_1)
-                .role(Role.ADMIN)
+                .role(Role.ROLE_ADMIN)
                 .build();
         employeeDtoResponseShort = EmployeeDtoResponseShort.builder()
                 .fullName("name")
@@ -73,7 +73,7 @@ class TaskAdminUnitTests {
                 .build();
         employee = Employee.builder()
                 .id(ID_2)
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .build();
         task = Task.builder()
                 .id(ID_1)

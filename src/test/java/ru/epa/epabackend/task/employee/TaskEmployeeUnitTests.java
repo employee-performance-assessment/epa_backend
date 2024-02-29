@@ -35,7 +35,6 @@ class TaskEmployeeUnitTests {
     private TaskMapper taskMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
-
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
     private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
@@ -49,7 +48,7 @@ class TaskEmployeeUnitTests {
     public void init() {
         employee = Employee.builder()
                 .id(ID_2)
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .build();
         employeeDtoResponseShort = EmployeeDtoResponseShort.builder()
                 .fullName("name")
