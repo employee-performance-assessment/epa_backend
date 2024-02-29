@@ -1,7 +1,5 @@
 package ru.epa.epabackend.util;
 
-import java.util.Optional;
-
 /**
  * Статусы жизни задачи.
  *
@@ -28,14 +26,5 @@ public enum TaskStatus {
     /**
      * Задача отменена или заморожена на неопределенный срок.
      */
-    CANCELED;
-
-    public static Optional<TaskStatus> from(String stringStatus) {
-        for (TaskStatus taskStatus : values()) {
-            if (taskStatus.name().equalsIgnoreCase(stringStatus)) {
-                return Optional.of(taskStatus);
-            }
-        }
-        return Optional.empty();
-    }
+    CANCELED
 }

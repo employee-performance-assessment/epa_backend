@@ -1,11 +1,12 @@
-package ru.epa.epabackend.controller.task.admin;
+package ru.epa.epabackend.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.TaskInDto;
-import ru.epa.epabackend.dto.TaskOutDto;
-import ru.epa.epabackend.service.task.admin.TaskAdminService;
+import ru.epa.epabackend.dto.task.TaskInDto;
+import ru.epa.epabackend.dto.task.TaskFullDto;
+import ru.epa.epabackend.dto.task.TaskShortDto;
+import ru.epa.epabackend.service.task.TaskService;
 
 import java.util.List;
 
@@ -18,54 +19,47 @@ import java.util.List;
 @RequestMapping("/admin/tasks")
 @RequiredArgsConstructor
 @Validated
-public class TaskAdminController {
+public class TaskControllerAdmin {
 
-    private final TaskAdminService taskAdminService;
+    private final TaskService taskService;
 
     /**
      * Эндпойнт поиска всех задач.
      */
     @GetMapping
-    public List<TaskOutDto> findAllTasks() {
-        return taskAdminService.findAll();
+    public List<TaskShortDto> findAllTasks() {
+        return taskService.findAllByAdmin();
     }
 
     /**
      * Эндпойнт поиска задачи по ID.
      */
     @GetMapping("/{taskId}")
-    public TaskOutDto findTaskById(
-            @PathVariable Long taskId
-    ) {
-        return taskAdminService.findById(taskId);
+    public TaskFullDto findTaskById(@PathVariable Long taskId) {
+        return taskService.findByIdByAdmin(taskId);
     }
 
     /**
      * Эндпойнт создания задачи.
      */
     @PostMapping()
-    public TaskOutDto createTask(
-            @RequestBody TaskInDto taskInDto) {
-        return taskAdminService.create(taskInDto);
+    public TaskFullDto createTask(@RequestBody TaskInDto taskInDto) {
+        return taskService.createByAdmin(taskInDto);
     }
 
     /**
      * Эндпойнт обновления задачи.
      */
     @PatchMapping("/{taskId}")
-    public TaskOutDto updateTask(
-            @PathVariable Long taskId,
-            @RequestBody TaskInDto taskInDto) {
-        return taskAdminService.update(taskId, taskInDto);
+    public TaskFullDto updateTask(@PathVariable Long taskId, @RequestBody TaskInDto taskInDto) {
+        return taskService.updateByAdmin(taskId, taskInDto);
     }
 
     /**
      * Эндпойнт удаления задачи.
      */
     @DeleteMapping("/{taskId}")
-    public void deleteTask(
-            @PathVariable Long taskId
-    ) {
-        taskAdminService.delete(taskId);
+    public void deleteTask(@PathVariable Long taskId) {
+        taskService.deleteByAdmin(taskId);
     }
 }

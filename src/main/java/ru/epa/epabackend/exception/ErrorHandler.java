@@ -10,6 +10,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 
 @Slf4j
@@ -31,14 +33,14 @@ public class ErrorHandler {
         return new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class, ConflictException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse conflictException(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.CONFLICT, e.getMessage());
     }
 
-    @ExceptionHandler({AccessDeniedException.class})
+    @ExceptionHandler()
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleForbidden(final Exception e) {
         return new ErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());

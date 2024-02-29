@@ -1,10 +1,10 @@
-package ru.epa.epabackend.dto;
+package ru.epa.epabackend.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.epa.epabackend.model.Employee;
-import ru.epa.epabackend.model.Project;
-import ru.epa.epabackend.util.Constants;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.project.ProjectOutDtoShort;
+import ru.epa.epabackend.util.DateConstant;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
@@ -20,8 +20,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskOutDto {
+public class TaskFullDto {
 
+    /**
+     * ID задачи.
+     */
     private Long id;
 
     /**
@@ -37,28 +40,29 @@ public class TaskOutDto {
     /**
      * Описание проекта.
      */
-    private Project project;
-
-    /**
-     * Руководитель создавший задачу и контролирующий выполнение задачи.
-     */
-    private Employee creator;
+    private ProjectOutDtoShort project;
 
     /**
      * Сотрудник выполняющий задачу.
      */
-    private Employee executor;
+    private EmployeeDtoResponseShort executor;
 
     /**
      * Дата взятие задачи в работу.
      */
-    @JsonFormat(pattern = Constants.DATE_TIME_STRING)
+    @JsonFormat(pattern = DateConstant.DATE_PATTERN)
     private LocalDate startDate;
+
+    /**
+     * Дата до которой должна выполниться задача..
+     */
+    @JsonFormat(pattern = DateConstant.DATE_PATTERN)
+    private LocalDate deadLine;
 
     /**
      * Дата выполнения задачи.
      */
-    @JsonFormat(pattern = Constants.DATE_TIME_STRING)
+    @JsonFormat(pattern = DateConstant.DATE_PATTERN)
     private LocalDate finishDate;
 
     /**

@@ -1,11 +1,11 @@
-package ru.epa.epabackend.dto;
+package ru.epa.epabackend.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
-import ru.epa.epabackend.util.Constants;
+import ru.epa.epabackend.util.DateConstant;
 
 import java.time.LocalDate;
 
@@ -41,23 +41,17 @@ public class TaskInDto {
     private Long projectId;
 
     /**
-     * ID Руководителя, создавшего задачу и контролирующего выполнение задачи.
-     */
-    @NotNull
-    private Long creatorId;
-
-    /**
      * ID Сотрудника, выполняющего задачу.
      */
     @NotNull
     private Long executorId;
 
     /**
-     * Дата выполнения задачи.
+     * Дата до которой должна выполниться задача..
      */
     @NotNull
-    @JsonFormat(pattern = Constants.DATE_TIME_STRING)
-    private LocalDate finishDate;
+    @JsonFormat(pattern = DateConstant.DATE_PATTERN)
+    private LocalDate deadLine;
 
     /**
      * Статус выполнения задачи

@@ -50,13 +50,6 @@ public class Task {
     private Project project;
 
     /**
-     * Руководитель создавший задачу и контролирующий выполнение задачи.
-     */
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "creator_id")
-    private Employee creator;
-
-    /**
      * Сотрудник выполняющий задачу.
      */
 
@@ -69,6 +62,13 @@ public class Task {
      */
     @Column(name = "start_date")
     private LocalDate startDate;
+
+    /**
+     * Дата до которой должна выполниться задача..
+     */
+
+    @Column(name = "deadLine")
+    private LocalDate deadLine;
 
     /**
      * Дата выполнения задачи.
@@ -119,7 +119,6 @@ public class Task {
         return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", creator=" + creator +
                 ", executor=" + executor +
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +

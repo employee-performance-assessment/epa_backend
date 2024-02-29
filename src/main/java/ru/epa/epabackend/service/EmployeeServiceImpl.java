@@ -93,7 +93,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.toEmployeeDtoFull(employee);
     }
 
-    private Employee getEmployee(Long employeeId) {
+    public Employee getEmployee(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
     }
