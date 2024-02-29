@@ -42,7 +42,6 @@ create table if not exists tasks (
   penalty_points INTEGER NOT NULL,
   CONSTRAINT pk_task PRIMARY KEY (id),
   CONSTRAINT fk_comeve_on_project foreign key (project_id) references projects (id),
-  CONSTRAINT fk_comeve_on_creator foreign key (creator_id) references employees (id),
   CONSTRAINT fk_comeve_on_executor foreign key (executor_id) references employees (id),
   CONSTRAINT uq_tasks_for_name UNIQUE (name)
 );
