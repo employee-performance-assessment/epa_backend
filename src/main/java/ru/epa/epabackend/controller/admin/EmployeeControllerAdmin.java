@@ -2,6 +2,7 @@ package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 
 @Tag(name = "Admin: Сотрудники", description = "API для работы с пользователями")
+@SecurityRequirement(name = "JWT")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +31,7 @@ public class EmployeeControllerAdmin {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public EmployeeDtoResponseFull addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
-                                                   EmployeeRtoRequest employeeRtoRequest) {
+                                               EmployeeRtoRequest employeeRtoRequest) {
         log.info("POST / employees / {} ", employeeRtoRequest.getFullName());
         return employeeService.addEmployee(employeeRtoRequest);
     }

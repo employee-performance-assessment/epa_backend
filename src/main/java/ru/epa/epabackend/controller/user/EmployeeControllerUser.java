@@ -2,6 +2,7 @@ package ru.epa.epabackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import java.util.List;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 @Tag(name = "Private: Сотрудники", description = "Закрытый API для работы с пользователями")
+@SecurityRequirement(name = "JWT")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
