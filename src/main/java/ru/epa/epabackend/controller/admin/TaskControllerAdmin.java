@@ -20,7 +20,7 @@ import java.util.List;
  * @author Владислав Осипов
  */
 @SecurityRequirement(name = "JWT")
-@Tag(name = "Private: Задачи", description = "Закрытый API для работы с задачами")
+@Tag(name = "Admin: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
 @RequestMapping("/admin/tasks")
 @RequiredArgsConstructor

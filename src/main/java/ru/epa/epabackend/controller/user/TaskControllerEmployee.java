@@ -27,7 +27,7 @@ import java.util.List;
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Private: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("users/tasks")
 @RequiredArgsConstructor
 @Validated
 public class TaskControllerEmployee {
