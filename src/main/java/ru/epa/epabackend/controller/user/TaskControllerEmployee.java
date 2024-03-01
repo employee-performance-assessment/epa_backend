@@ -74,4 +74,10 @@ public class TaskControllerEmployee {
             throw new BadRequestException("Unknown status: " + status);
         }
     }
+
+    @GetMapping("{projectId}")
+    public List<TaskFullDto> findByProjectIdAndStatus(@PathVariable Long projectId,
+                                                      @RequestParam TaskStatus status){
+        return taskEmployeeService.findByProjectIdAndStatus(projectId, status);
+    }
 }

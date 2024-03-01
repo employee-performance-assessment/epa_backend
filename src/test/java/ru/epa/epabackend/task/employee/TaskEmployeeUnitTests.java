@@ -51,6 +51,7 @@ class TaskEmployeeUnitTests {
                 .role(Role.ROLE_USER)
                 .build();
         employeeDtoResponseShort = EmployeeDtoResponseShort.builder()
+                .id(ID_1)
                 .fullName("name")
                 .position("USER")
                 .build();

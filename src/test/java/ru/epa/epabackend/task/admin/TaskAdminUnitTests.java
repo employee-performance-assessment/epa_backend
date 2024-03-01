@@ -8,10 +8,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -38,6 +40,8 @@ class TaskAdminUnitTests {
     @Mock
     private EmployeeRepository employeeRepository;
     @Mock
+    private ProjectMapper projectMapper;
+    @Mock
     private TaskRepository taskRepository;
     @Mock
     private ProjectRepository projectRepository;
@@ -58,6 +62,7 @@ class TaskAdminUnitTests {
     private TaskFullDto taskOutDto = new TaskFullDto();
     private TaskInDto taskInDto = new TaskInDto();
     private Project project = new Project();
+    private ProjectShortDto projectShortDto = projectMapper.toProjectShortDto(project);
     private TaskShortDto taskShortDto = new TaskShortDto();
     private EmployeeDtoResponseShort employeeDtoResponseShort;
 
@@ -68,6 +73,7 @@ class TaskAdminUnitTests {
                 .role(Role.ROLE_ADMIN)
                 .build();
         employeeDtoResponseShort = EmployeeDtoResponseShort.builder()
+                .id(ID_1)
                 .fullName("name")
                 .position("USER")
                 .build();
@@ -91,10 +97,9 @@ class TaskAdminUnitTests {
                 .projectId(ID_1)
                 .deadLine(LocalDate.now().plusDays(2))
                 .build();
-        project = Project.builder()
-                .id(ID_1)
-                .name("Project1")
-                .build();
+        project = new Project()
+                .setId(ID_1)
+                .setName("Project1");
         taskShortDto = TaskShortDto.builder()
                 .id(ID_1)
                 .name("taskShort")
@@ -132,7 +137,7 @@ class TaskAdminUnitTests {
 
     @Test
     void createTask_shouldCallRepository() {
-        when(projectService.findByID(project.getId())).thenReturn(project);
+        when(projectService.findDtoById(project.getId())).thenReturn(projectShortDto);
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.dtoInToTask(taskInDto)).thenReturn(task);

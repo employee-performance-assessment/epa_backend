@@ -1,16 +1,16 @@
 package ru.epa.epabackend.dto.project;
 
+import jakarta.persistence.Access;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import ru.epa.epabackend.util.ProjectStatus;
 
-@Builder
 @Data
 @AllArgsConstructor
-public class ProjectOutDtoShort {
-
+public class ProjectShortDto {
+    private Long id;
     private String name;
-
     private ProjectStatus status;
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeForListDto;
 import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
@@ -111,6 +112,13 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException("Неверный логин или пароль"));
     }
 
+    @Override
+    public List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role) {
+        return employeeRepository.findByProjectIdAndRole(projectId, role).stream()
+                .map(EmployeeMapper::toEmployeeForListDto).collect(Collectors.toList());
+    }
+
+    @Override
     public Employee getEmployee(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));

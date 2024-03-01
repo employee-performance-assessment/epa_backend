@@ -8,6 +8,7 @@ import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -23,6 +24,7 @@ import ru.epa.epabackend.util.TaskStatus;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
@@ -42,6 +44,7 @@ public class TaskServiceImpl implements TaskService {
     private final ProjectRepository projectRepository;
     private final ProjectServiceImpl projectService;
     private final EmployeeServiceImpl employeeService;
+    private final ProjectMapper projectMapper;
 
     /**
      * Получение списка всех задач
@@ -66,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskFullDto createByAdmin(TaskInDto taskInDto) {
-        Project project = projectService.findByID(taskInDto.getProjectId());
+        Project project = projectMapper.toProject(projectService.findDtoById(taskInDto.getProjectId()));
         Task task = taskMapper.dtoInToTask(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
@@ -94,6 +97,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteByAdmin(Long taskId) {
         taskRepository.delete(getTaskFromRepositoryById(taskId));
+    }
+
+    /**
+     * Получение списка задач проекта с определенным статусом задач
+     */
+    @Override
+    public List<TaskFullDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+        return taskRepository.findByProjectIdAndStatus(projectId, status).stream()
+                .map(taskMapper::taskCreateToOutDto).collect(Collectors.toList());
     }
 
     /**

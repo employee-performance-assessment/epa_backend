@@ -53,4 +53,9 @@ public interface TaskService {
      * Удаление задачи
      */
     void deleteByAdmin(Long taskId);
+
+    /**
+     * Получение списка задач проекта с определенным статусом задач
+     */
+    List<TaskFullDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
 }

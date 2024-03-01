@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS projects, employees, tasks, projects_tasks, technologies,
+DROP TABLE IF EXISTS projects, employees, tasks, technologies,
     subtasks, courses, courses_technologies,
     employees_technologies, employees_courses, employees_tasks;
 
@@ -44,14 +44,6 @@ create table if not exists tasks (
   CONSTRAINT fk_comeve_on_project foreign key (project_id) references projects (id),
   CONSTRAINT fk_comeve_on_executor foreign key (executor_id) references employees (id),
   CONSTRAINT uq_tasks_for_name UNIQUE (name)
-);
-
-CREATE TABLE IF NOT EXISTS projects_tasks (
-  project_id BIGINT NOT NULL,
-  task_id    BIGINT NOT NULL,
-  CONSTRAINT pk_projects_events PRIMARY KEY (project_id, task_id),
-  CONSTRAINT fk_comeve_on_project FOREIGN KEY (project_id) REFERENCES projects (id),
-  CONSTRAINT fk_comeve_on_task FOREIGN KEY (task_id) REFERENCES tasks (id)
 );
 
 CREATE TABLE IF NOT EXISTS technologies (
@@ -109,4 +101,10 @@ CREATE TABLE IF NOT EXISTS employees_tasks (
   CONSTRAINT pk_employees_tasks PRIMARY KEY (employee_id, task_id),
   CONSTRAINT fk_comeve_on_employee FOREIGN KEY (employee_id) REFERENCES employees (id),
   CONSTRAINT fk_comeve_on_task FOREIGN KEY (task_id) REFERENCES tasks (id)
+);
+
+CREATE TABLE IF NOT EXISTS projects_employees (
+    project_id BIGINT NOT NULL REFERENCES projects(id),
+    employee_id BIGINT NOT NULL REFERENCES employees(id),
+    PRIMARY KEY (project_id, employee_id)
 );

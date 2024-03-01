@@ -3,6 +3,7 @@ package ru.epa.epabackend.service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.epa.epabackend.dto.employee.*;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.util.Role;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface EmployeeService {
     UserDetailsService userDetailsService();
 
     Employee getEmployeeByLogin(String login);
+
+    List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role);
+
+    Employee getEmployee(Long employeeId);
 }

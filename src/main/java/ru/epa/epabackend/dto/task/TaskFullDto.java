@@ -3,7 +3,7 @@ package ru.epa.epabackend.dto.task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
-import ru.epa.epabackend.dto.project.ProjectOutDtoShort;
+import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.util.DateConstant;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -40,7 +40,7 @@ public class TaskFullDto {
     /**
      * Описание проекта.
      */
-    private ProjectOutDtoShort project;
+    private ProjectShortDto project;
 
     /**
      * Сотрудник выполняющий задачу.
