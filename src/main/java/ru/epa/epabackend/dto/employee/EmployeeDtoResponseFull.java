@@ -25,8 +25,6 @@ public class EmployeeDtoResponseFull {
 
     private String login;
 
-    private String password;
-
     @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate birthday;
 
