@@ -31,7 +31,7 @@ public class TechnologyController {
     }
 
     /**
-     * Ендпоинт обновления технологии.
+     * Эндпоинт обновления технологии.
      */
     @PatchMapping("/{technologyId}")
     public TechnologyDto updateTechnology(@RequestBody TechnologyDto technologyDto,
