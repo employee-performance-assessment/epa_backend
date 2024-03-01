@@ -36,3 +36,10 @@ token:
 admin:
   login: ggg
   password: ggg
+
+token:
+  secret: 51Ph61VOzrdwNvRa9FZclUpZRU160G1O
+  duration: 10m
+admin:
+  login: ggg
+  password: ggg
