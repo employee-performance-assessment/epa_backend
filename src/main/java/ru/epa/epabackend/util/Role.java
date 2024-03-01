@@ -6,21 +6,12 @@ package ru.epa.epabackend.util;
  * @author Михаил Безуглов
  */
 public enum Role {
-
     /**
      * Руководитель.
      */
-    ADMIN,
+    ROLE_ADMIN,
     /**
-     Самый опытный сотрудник в команде.
+     * Сотрудник.
      */
-    SENIOR,
-    /**
-     Сотрудник со средним опытом.
-     */
-    MIDDLE,
-    /**
-     Сотрудник с минимальным опытом.
-     */
-    JUNIOR
+    ROLE_USER
 }
