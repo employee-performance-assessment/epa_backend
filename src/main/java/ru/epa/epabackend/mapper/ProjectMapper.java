@@ -1,21 +1,16 @@
 package ru.epa.epabackend.mapper;
 
-import lombok.experimental.UtilityClass;
+import org.mapstruct.Mapper;
 import ru.epa.epabackend.dto.project.ProjectOutDtoShort;
 import ru.epa.epabackend.model.Project;
 
 /**
- * Класс TaskMapper содержит преобразование сущности.
+ * Интерфейс TaskMapper содержит преобразование сущности.
  *
  * @author Владислав Осипов
  */
-@UtilityClass
-public class ProjectMapper {
+@Mapper(componentModel = "spring")
+public interface ProjectMapper {
 
-    public ProjectOutDtoShort projectShortToOutDto(Project project) {
-        return ProjectOutDtoShort.builder()
-                .name(project.getName())
-                .status(project.getStatus())
-                .build();
-    }
+    ProjectOutDtoShort projectToProjectShortToOutDto(Project project);
 }

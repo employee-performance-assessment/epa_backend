@@ -23,6 +23,7 @@ import ru.epa.epabackend.util.TaskStatus;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
@@ -49,7 +50,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByAdmin() {
-        return taskMapper.tasksToListOutDto(taskRepository.findAll());
+        return taskRepository.findAll().stream().map(taskMapper::taskToTaskShortDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -67,11 +69,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskFullDto createByAdmin(TaskInDto taskInDto) {
         Project project = projectService.findByID(taskInDto.getProjectId());
-        Task task = taskMapper.dtoInToTask(taskInDto);
+        Task task = taskMapper.taskInDtoToTask(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
         task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-        return taskMapper.taskCreateToOutDto(taskRepository.save(task));
+        return taskMapper.taskToTaskFullDto(taskRepository.save(task));
     }
 
     /**
@@ -110,7 +112,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
-        return taskMapper.tasksToListOutDto(taskRepository.findAllByExecutorId(employeeId));
+        return taskRepository.findAllByExecutorId(employeeId).stream().map(taskMapper::taskToTaskShortDto)
+                .collect(Collectors.toList());
     }
 
     /**
