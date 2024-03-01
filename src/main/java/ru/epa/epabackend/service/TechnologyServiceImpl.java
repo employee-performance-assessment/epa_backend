@@ -45,7 +45,7 @@ public class TechnologyServiceImpl implements TechnologyService {
     public TechnologyDto updateTechnology(TechnologyDto technologyDto, Long technologyId) {
         Technology oldTechnology = getTechnologyById(technologyId);
         oldTechnology.setName(technologyDto.getName());
-        return TechnologyMapper.toDto(oldTechnology));
+        return TechnologyMapper.toDto(oldTechnology);
     }
 
     /**
