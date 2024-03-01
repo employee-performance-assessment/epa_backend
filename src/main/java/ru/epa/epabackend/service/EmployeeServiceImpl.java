@@ -111,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException("Неверный логин или пароль"));
     }
 
-    private Employee getEmployee(Long employeeId) {
+    public Employee getEmployee(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
     }
