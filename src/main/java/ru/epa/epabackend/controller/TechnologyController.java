@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.TechnologyDto;
-import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
