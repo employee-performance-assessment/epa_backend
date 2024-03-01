@@ -25,8 +25,8 @@ public class TechnologyServiceImpl implements TechnologyService {
      * Добавление технологии.
      */
     @Transactional
-    public TechnologyDto createTechnology(Technology technology) {
-        return TechnologyMapper.toDto(technologyRepository.save(technology));
+    public TechnologyDto createTechnology(TechnologyDto technologyDto) {
+        return TechnologyMapper.toDto(technologyRepository.save(technologyDto));
     }
 
     /**
@@ -43,7 +43,9 @@ public class TechnologyServiceImpl implements TechnologyService {
      */
     @Transactional
     public TechnologyDto updateTechnology(TechnologyDto technologyDto, Long technologyId) {
-        return TechnologyMapper.toDto(getTechnologyById(technologyId));
+        Technology oldTechnology = getTechnologyById(technologyId);
+        oldTechnology.setName(technologyDto.getName());
+        return TechnologyMapper.toDto(oldTechnology));
     }
 
     /**

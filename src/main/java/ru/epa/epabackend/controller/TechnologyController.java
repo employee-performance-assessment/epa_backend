@@ -19,12 +19,16 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/technologies")
 @RequiredArgsConstructor
+@Tag(name = "Технологии", description = "API для работы с технологиями")
 public class TechnologyController {
     private final TechnologyService technologyService;
 
     /**
-     * Ендпоинт создания технологии.
+     * Эндпоинт создания технологии.
      */
+    @Operation(
+            summary = "Создание новой технологии"
+    )
     @PostMapping
     public TechnologyDto createTechnology(@RequestBody TechnologyDto technologyDto) {
         return technologyService.createTechnology(TechnologyMapper.toEntity(technologyDto));
@@ -33,6 +37,10 @@ public class TechnologyController {
     /**
      * Эндпоинт обновления технологии.
      */
+    @Operation(
+            summary = "Обновление технологии",
+            description = "Обновляет технологию, если она существует в базе данных."
+    )
     @PatchMapping("/{technologyId}")
     public TechnologyDto updateTechnology(@RequestBody TechnologyDto technologyDto,
                                           @PathVariable("technologyId") Long technologyId) {
@@ -42,6 +50,9 @@ public class TechnologyController {
     /**
      * Эндпоинт выведения списка всех технологий.
      */
+    @Operation(
+            summary = "Возвращает список всех технологий"
+    )
     @GetMapping
     public List<TechnologyDto> getAllTechnologies() {
         return technologyService.getAllTechnologies();
@@ -50,6 +61,10 @@ public class TechnologyController {
     /**
      * Эндпоинт удаления технологии.
      */
+    @Operation(
+            summary = "Удаляет технологию",
+            description = "Удаляет технологию, если она существует в базе данных."
+    )
     @DeleteMapping("/{technologyId}")
     public void deleteTechnologyById(@PathVariable Long technologyId) {
         technologyService.deleteTechnologyById(technologyId);
