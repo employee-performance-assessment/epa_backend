@@ -10,20 +10,23 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class,
-            WrongFullNameException.class, MissingServletRequestParameterException.class})
+            WrongFullNameException.class, MissingServletRequestParameterException.class,
+            BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validateException(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse entityNotFoundException(EntityNotFoundException e) {
         log.info(e.getMessage());
@@ -35,6 +38,12 @@ public class ErrorHandler {
     public ErrorResponse conflictException(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.CONFLICT, e.getMessage());
+    }
+
+    @ExceptionHandler()
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(final Exception e) {
+        return new ErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
     @ExceptionHandler
