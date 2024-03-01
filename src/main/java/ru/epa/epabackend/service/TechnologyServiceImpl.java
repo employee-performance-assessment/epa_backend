@@ -25,8 +25,9 @@ public class TechnologyServiceImpl implements TechnologyService {
      * Добавление технологии.
      */
     @Transactional
-    public TechnologyDto createTechnology(Technology technology) {
-        return TechnologyMapper.toDto(technologyRepository.save(technology));
+    public TechnologyDto createTechnology(TechnologyDto technologyDto) {
+        Technology technology = technologyRepository.save(TechnologyMapper.toEntity(technologyDto));
+        return TechnologyMapper.toDto(technology);
     }
 
     /**

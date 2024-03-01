@@ -15,7 +15,7 @@ public interface TechnologyService {
     /**
      * Добавление технологии.
      */
-    TechnologyDto createTechnology(Technology technology);
+    TechnologyDto createTechnology(TechnologyDto technologyDto);
 
     /**
      * Получение технологии по идентификатору.

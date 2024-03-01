@@ -33,7 +33,7 @@ public class TechnologyController {
     )
     @PostMapping
     public TechnologyDto createTechnology(@RequestBody TechnologyDto technologyDto) {
-        return technologyService.createTechnology(TechnologyMapper.toEntity(technologyDto));
+        return technologyService.createTechnology(technologyDto);
     }
 
     /**
