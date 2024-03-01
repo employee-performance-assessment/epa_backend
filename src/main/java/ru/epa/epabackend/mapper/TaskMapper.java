@@ -2,7 +2,6 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
@@ -24,6 +23,7 @@ public interface TaskMapper {
      * Преобразование из DTO в сущность.
      */
     Task taskInDtoToTask(TaskInDto taskInDto);
+
     /**
      * Преобразование из сущности в DTO, при создании.
      */
