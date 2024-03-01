@@ -51,7 +51,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByAdmin() {
-        return taskMapper.tasksToListOutDto(taskRepository.findAll());
+        return taskRepository.findAll().stream().map(taskMapper::taskToTaskShortDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -67,15 +68,21 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
+<<<<<<< HEAD:src/main/java/ru/epa/epabackend/service/impl/TaskServiceImpl.java
     public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
         Employee admin = employeeService.getEmployeeByEmail(email);
         Project project = projectService.findById(taskInDto.getProjectId());
         projectService.checkUserAndProject(admin, project);
         Task task = taskMapper.dtoInToTask(taskInDto);
+=======
+    public TaskFullDto createByAdmin(TaskInDto taskInDto) {
+        Project project = projectService.findByID(taskInDto.getProjectId());
+        Task task = taskMapper.taskInDtoToTask(taskInDto);
+>>>>>>> 7b39a4e (feat: add mapstruct.):src/main/java/ru/epa/epabackend/service/task/TaskServiceImpl.java
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
         task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-        return taskMapper.taskCreateToOutDto(taskRepository.save(task));
+        return taskMapper.taskToTaskFullDto(taskRepository.save(task));
     }
 
     /**
@@ -124,7 +131,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
-        return taskMapper.tasksToListOutDto(taskRepository.findAllByExecutorId(employeeId));
+        return taskRepository.findAllByExecutorId(employeeId).stream().map(taskMapper::taskToTaskShortDto)
+                .collect(Collectors.toList());
     }
 
     /**
