@@ -20,10 +20,7 @@ import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -98,7 +95,7 @@ class TaskEmployeeUnitTests {
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.findById(employee.getId(), task.getId());
 
@@ -113,7 +110,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateStatus(employee.getId(), task.getId(), STATUS);
 

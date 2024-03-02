@@ -12,29 +12,31 @@ import ru.epa.epabackend.model.Task;
  *
  * @author Владислав Осипов
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = {ProjectMapper.class, EmployeeMapper.class})
 public interface TaskMapper {
 
-    EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
-    ProjectMapper INSTANCE_ = Mappers.getMapper(ProjectMapper.class);
+    //EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
+   //ProjectMapper INSTANCE_ = Mappers.getMapper(ProjectMapper.class);
 
     /**
      * Преобразование из DTO в сущность.
      */
-    Task taskInDtoToTask(TaskInDto taskInDto);
+    Task mapToEntity(TaskInDto taskInDto);
 
     /**
+     *
      * Преобразование из сущности в DTO, при создании.
      */
-    TaskFullDto taskToTaskFullDto(Task task);
+    TaskFullDto mapToFullDto(Task task);
 
     /**
      * Преобразование из сущности в DTO, краткое.
      */
-    TaskShortDto taskToTaskShortDto(Task task);
+    TaskShortDto mapToShortDto(Task task);
 
-    /**
-     * Преобразование из сущности в DTO, при обновлении.
-     */
-    TaskFullDto taskUpdateToOutDto(Task task);
+    ///**
+    // * Преобразование из сущности в DTO, при обновлении.
+    // */
+    //TaskFullDto mapUpdateToFullDto(Task task);
 }

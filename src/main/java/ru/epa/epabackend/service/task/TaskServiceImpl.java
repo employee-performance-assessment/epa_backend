@@ -50,7 +50,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByAdmin() {
-        return taskRepository.findAll().stream().map(taskMapper::taskToTaskShortDto)
+        return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -60,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public TaskFullDto findByIdByAdmin(Long taskId) {
-        return taskMapper.taskUpdateToOutDto(getTaskFromRepositoryById(taskId));
+        return taskMapper.mapToFullDto(getTaskFromRepositoryById(taskId));
     }
 
     /**
@@ -69,11 +69,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskFullDto createByAdmin(TaskInDto taskInDto) {
         Project project = projectService.findByID(taskInDto.getProjectId());
-        Task task = taskMapper.taskInDtoToTask(taskInDto);
+        Task task = taskMapper.mapToEntity(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
         task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-        return taskMapper.taskToTaskFullDto(taskRepository.save(task));
+        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**
@@ -87,7 +87,7 @@ public class TaskServiceImpl implements TaskService {
             setPointsToEmployeeAfterTaskDone(taskInDto, task);
             task.setFinishDate(LocalDate.now());
         }
-        return taskMapper.taskUpdateToOutDto(taskRepository.save(task));
+        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**
@@ -112,7 +112,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
-        return taskRepository.findAllByExecutorId(employeeId).stream().map(taskMapper::taskToTaskShortDto)
+        return taskRepository.findAllByExecutorId(employeeId).stream().map(taskMapper::mapToShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -122,7 +122,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public TaskFullDto findById(Long employeeId, Long taskId) {
-        return taskMapper.taskUpdateToOutDto(getTaskFromRepositoryByIdAndExecutorId(taskId, employeeId));
+        return taskMapper.mapToFullDto(getTaskFromRepositoryByIdAndExecutorId(taskId, employeeId));
     }
 
     /**
@@ -135,7 +135,7 @@ public class TaskServiceImpl implements TaskService {
             task.setStartDate(LocalDate.now());
         }
         task.setStatus(taskStatus);
-        return taskMapper.taskUpdateToOutDto(taskRepository.save(task));
+        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**

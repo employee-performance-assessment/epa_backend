@@ -12,5 +12,5 @@ import ru.epa.epabackend.model.Project;
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
 
-    ProjectOutDtoShort projectToProjectShortToOutDto(Project project);
+    ProjectOutDtoShort mapToShortDto(Project project);
 }
