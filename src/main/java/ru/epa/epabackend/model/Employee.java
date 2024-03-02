@@ -2,12 +2,13 @@ package ru.epa.epabackend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Класс Сотрудник содержит информацию о логине и пароле (для логина используется email),
@@ -22,21 +23,27 @@ import java.util.TimeZone;
 @Builder
 @Entity
 @Table(name = "employees")
-public class Employee {
+public class Employee implements UserDetails {
+
     /**
      * Идентификатор сотрудника.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    /**
-     * Имя.
-     */
-    private String fistName;
+
     /**
      * Фамилия.
      */
+    @Column(name = "last_name")
     private String lastName;
+
+    /**
+     * Имя.
+     */
+    @Column(name = "first_name")
+    private String firstName;
+
     /**
      * Отчество.
      */
@@ -45,15 +52,13 @@ public class Employee {
     /**
      * Ник в корпоративном мессенджере.
      */
-    private String nik;
+    @Column(name = "nick_name")
+    private String nickName;
+
     /**
      * Город проживания.
      */
     private String city;
-    /**
-     * Часовой пояс сотрудника.
-     */
-    private TimeZone timeZone;
 
     /**
      * Логин сотрудника - email.
@@ -74,17 +79,35 @@ public class Employee {
      * Роль/грейд
      * Возможные роли: ADMIN, SENIOR, MIDDLE, JUNIOR.
      */
+    @Enumerated(EnumType.STRING)
     private Role role;
+
+    /**
+     * Должность.
+     */
+    private String position;
+
+    /**
+     * Отдел/подразделение.
+     */
+    private String department;
+
+    /**
+     * Список задач сотрудника.
+     */
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "executor_id")
+    private Set<Task> tasks = new HashSet<>();
 
     /**
      * Стек технологий, которыми владеет сотрудник.
      */
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "employees_technologies",
             joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
-    private Set<Technology> technologies;
+            inverseJoinColumns = @JoinColumn(name = "technology_id"))
+    private Set<Technology> technologies = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -92,6 +115,36 @@ public class Employee {
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
         return id.equals(employee.id) && login.equals(employee.login);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     @Override
@@ -103,16 +156,18 @@ public class Employee {
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", fistName='" + fistName + '\'' +
-                ", LastName='" + lastName + '\'' +
+                ", last name='" + lastName + '\'' +
+                ", first name='" + firstName + '\'' +
                 ", patronymic='" + patronymic + '\'' +
-                ", nik='" + nik + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
-                ", timeZone=" + timeZone +
                 ", login='" + login + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
                 ", role=" + role +
+                ", position=" + position +
+                ", department=" + department +
+                ", tasks=" + tasks +
                 ", technologies=" + technologies +
                 '}';
     }

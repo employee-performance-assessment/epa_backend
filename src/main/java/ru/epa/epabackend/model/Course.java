@@ -57,7 +57,7 @@ public class Course {
     @JoinTable(
             name = "courses_technologies",
             joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
+            inverseJoinColumns = @JoinColumn(name = "technology_id"))
     private Set<Technology> technologies;
 
     @Override
