@@ -51,9 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (full.length != 3) {
                 throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
             }
-            oldEmployee.setLastName(full[0]);
-            oldEmployee.setFirstName(full[1]);
-            oldEmployee.setPatronymic(full[2]);
+            oldEmployee.setFullName(fullName);
         }
 
         updateEmployeeFields(oldEmployee, employeeRtoRequest);

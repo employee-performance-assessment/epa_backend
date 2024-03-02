@@ -33,21 +33,10 @@ public class Employee implements UserDetails {
     private Long id;
 
     /**
-     * Фамилия.
+     * Полное имя ФИО.
      */
-    @Column(name = "last_name")
-    private String lastName;
-
-    /**
-     * Имя.
-     */
-    @Column(name = "first_name")
-    private String firstName;
-
-    /**
-     * Отчество.
-     */
-    private String patronymic;
+    @Column(name = "full_name")
+    private String fullName;
 
     /**
      * Ник в корпоративном мессенджере.
@@ -156,9 +145,7 @@ public class Employee implements UserDetails {
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", last name='" + lastName + '\'' +
-                ", first name='" + firstName + '\'' +
-                ", patronymic='" + patronymic + '\'' +
+                ", full name='" + fullName + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
                 ", login='" + login + '\'' +
