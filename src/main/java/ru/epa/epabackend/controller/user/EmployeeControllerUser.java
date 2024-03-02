@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
-import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.service.EmployeeService;
 
 import java.util.List;
@@ -33,9 +33,9 @@ public class EmployeeControllerUser {
     @PatchMapping("/{employeeId}")
     public EmployeeDtoResponseFull updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
                                                   @Validated(Update.class) @Parameter(required = true) @RequestBody
-                                                  EmployeeRtoRequest employeeRtoRequest) {
+                                                  EmployeeDtoRequest employeeDtoRequest) {
         log.info("PATCH / employees / {}", employeeId);
-        return employeeService.updateEmployee(employeeId, employeeRtoRequest);
+        return employeeService.updateEmployee(employeeId, employeeDtoRequest);
     }
 
     @Operation(

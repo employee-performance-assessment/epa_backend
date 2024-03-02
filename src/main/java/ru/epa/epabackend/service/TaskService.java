@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service.task;
+package ru.epa.epabackend.service;
 
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;

@@ -8,8 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
-import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
+import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TaskMapper;
@@ -19,9 +19,9 @@ import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
-import ru.epa.epabackend.service.EmployeeServiceImpl;
-import ru.epa.epabackend.service.project.ProjectServiceImpl;
-import ru.epa.epabackend.service.task.TaskServiceImpl;
+import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
+import ru.epa.epabackend.service.impl.ProjectServiceImpl;
+import ru.epa.epabackend.service.impl.TaskServiceImpl;
 import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -31,10 +31,13 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
+import static ru.epa.epabackend.exception.ExceptionDescriptions.TASK_NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class TaskAdminUnitTests {
+    private static final long ID_1 = 1L;
+    private static final long ID_2 = 2L;
+    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     @Mock
     private EmployeeRepository employeeRepository;
     @Mock
@@ -49,9 +52,6 @@ class TaskAdminUnitTests {
     private TaskMapper taskMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
-    private static final long ID_1 = 1L;
-    private static final long ID_2 = 2L;
-    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     private Employee admin = new Employee();
     private Employee employee = new Employee();
     private Task task = new Task();

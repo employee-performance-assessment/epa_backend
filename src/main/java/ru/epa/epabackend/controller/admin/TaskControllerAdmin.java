@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
-import ru.epa.epabackend.service.task.TaskService;
+import ru.epa.epabackend.service.TaskService;
 
 import java.util.List;
 

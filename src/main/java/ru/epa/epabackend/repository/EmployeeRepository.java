@@ -6,5 +6,5 @@ import ru.epa.epabackend.model.Employee;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    Optional<Employee> findByLogin(String login);
+    Optional<Employee> findByEmail(String login);
 }

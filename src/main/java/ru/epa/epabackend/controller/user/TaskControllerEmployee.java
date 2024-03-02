@@ -11,8 +11,8 @@ import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.model.Employee;
-import ru.epa.epabackend.service.EmployeeServiceImpl;
-import ru.epa.epabackend.service.task.TaskService;
+import ru.epa.epabackend.service.TaskService;
+import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -27,7 +27,7 @@ import java.util.List;
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Private: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
-@RequestMapping("users/tasks")
+@RequestMapping("user/tasks")
 @RequiredArgsConstructor
 @Validated
 public class TaskControllerEmployee {

@@ -63,7 +63,7 @@ public class Employee implements UserDetails {
     /**
      * Логин сотрудника - email.
      */
-    private String login;
+    private String email;
 
     /**
      * Пароль.
@@ -97,6 +97,7 @@ public class Employee implements UserDetails {
      */
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "executor_id")
+    @Builder.Default
     private Set<Task> tasks = new HashSet<>();
 
     /**
@@ -107,6 +108,7 @@ public class Employee implements UserDetails {
             name = "employees_technologies",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "technology_id"))
+    @Builder.Default
     private Set<Technology> technologies = new HashSet<>();
 
     @Override
@@ -114,7 +116,7 @@ public class Employee implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id.equals(employee.id) && login.equals(employee.login);
+        return id.equals(employee.id) && email.equals(employee.email);
     }
 
     @Override
@@ -124,7 +126,7 @@ public class Employee implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.login;
+        return this.email;
     }
 
     @Override
@@ -149,7 +151,7 @@ public class Employee implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login);
+        return Objects.hash(id, email);
     }
 
     @Override
@@ -161,7 +163,7 @@ public class Employee implements UserDetails {
                 ", patronymic='" + patronymic + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
-                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
                 ", role=" + role +

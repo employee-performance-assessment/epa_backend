@@ -15,7 +15,7 @@ import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.repository.TaskRepository;
-import ru.epa.epabackend.service.task.TaskServiceImpl;
+import ru.epa.epabackend.service.impl.TaskServiceImpl;
 import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -29,15 +29,15 @@ import static ru.epa.epabackend.exception.ExceptionDescriptions.FORBIDDEN_TO_EDI
 
 @ExtendWith(MockitoExtension.class)
 class TaskEmployeeUnitTests {
+    private static final long ID_1 = 1L;
+    private static final long ID_2 = 2L;
+    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     @Mock
     private TaskRepository taskRepository;
     @Mock
     private TaskMapper taskMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
-    private static final long ID_1 = 1L;
-    private static final long ID_2 = 2L;
-    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     private Employee employee = new Employee();
     private Task task = new Task();
     private TaskFullDto taskOutDto = new TaskFullDto();
