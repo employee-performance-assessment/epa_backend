@@ -1,7 +1,6 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
@@ -12,7 +11,6 @@ import ru.epa.epabackend.model.Task;
  *
  * @author Владислав Осипов
  */
-
 @Mapper(componentModel = "spring", uses = {ProjectMapper.class, EmployeeMapper.class})
 public interface TaskMapper {
 
