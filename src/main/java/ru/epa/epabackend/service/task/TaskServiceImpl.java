@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
 /**
- * Класс TaskEmployeeServiceImpl содержит методы действий с задачами для администратора.
+ * Класс TaskServiceImpl содержит методы действий с задачами для администратора.
  *
  * @author Владислав Осипов
  */
@@ -47,7 +47,7 @@ public class TaskServiceImpl implements TaskService {
     private final ProjectMapper projectMapper;
 
     /**
-     * Получение списка всех задач
+     * Получение списка всех задач админом
      */
     @Override
     @Transactional(readOnly = true)
@@ -56,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Найти задачу по ID
+     * Найти задачу по ID админом
      */
     @Override
     @Transactional(readOnly = true)
@@ -65,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Создание задачи
+     * Создание задачи админом
      */
     @Override
     public TaskFullDto createByAdmin(TaskInDto taskInDto) {
@@ -78,7 +78,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Обновление задачи
+     * Обновление задачи админом
      */
     @Override
     public TaskFullDto updateByAdmin(Long taskId, TaskInDto taskInDto) {
@@ -92,7 +92,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Удаление задачи
+     * Удаление задачи админом
      */
     @Override
     public void deleteByAdmin(Long taskId) {
@@ -104,6 +104,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskFullDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+        projectService.findById(projectId);
         return taskRepository.findByProjectIdAndStatus(projectId, status).stream()
                 .map(taskMapper::taskCreateToOutDto).collect(Collectors.toList());
     }

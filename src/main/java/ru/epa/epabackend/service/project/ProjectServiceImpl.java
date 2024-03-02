@@ -9,6 +9,7 @@ import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.project.UpdateProjectRto;
+import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
@@ -57,7 +58,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId) {
-        Project project = findById(projectId).setId(projectId);
+        Employee employee = employeeService.getEmployee(employeeId);
+        Project project = findById(projectId);
+        if (project.getEmployees().contains(employee))
+            throw new ConflictException(String.format("Сотрудник с id %d уже добавлен к проекту", employeeId));
+        project.getEmployees().add(employee);
         return projectMapper.toProjectEmployeesDto(projectRepository.save(project));
     }
 
@@ -93,8 +98,10 @@ public class ProjectServiceImpl implements ProjectService {
     public void deleteEmployeeFromProject(Long projectId, Long employeeId) {
         Project project = findById(projectId);
         Employee employee = employeeService.getEmployee(employeeId);
-        if(project.getEmployees().contains(employee))
-            project.getEmployees().remove(employee);
+        if (!project.getEmployees().contains(employee))
+            throw new ConflictException(String.format("Сотрудник с id %d не относится к проекту с id %d, " +
+                    "поэтому не может быть удалён из него", employeeId, projectId));
+        project.getEmployees().remove(employee);
         projectRepository.save(project);
     }
 }
