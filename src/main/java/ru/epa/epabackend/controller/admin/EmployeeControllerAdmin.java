@@ -50,9 +50,4 @@ public class EmployeeControllerAdmin {
         log.info("DELETE / employees / {}", employeeId);
         employeeService.deleteEmployee(employeeId);
     }
-
-    @GetMapping("/{projectId}")
-    public List<EmployeeForListDto> findByProjectIdAndRole(@PathVariable Long projectId) {
-        return employeeService.findByProjectIdAndRole(projectId, Role.ROLE_USER);
-    }
 }

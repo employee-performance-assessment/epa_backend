@@ -17,7 +17,7 @@ public interface TaskService {
     /**
      * Получение списка всех задач
      */
-    List<TaskShortDto> findAllByEmployeeId(Long userId);
+    List<TaskShortDto> findAllByEmployeeId(Long userId, TaskStatus status);
 
     /**
      * Найти задачу по ID

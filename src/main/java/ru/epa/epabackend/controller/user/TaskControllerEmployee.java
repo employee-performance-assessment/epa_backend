@@ -30,16 +30,17 @@ public class TaskControllerEmployee {
     private final TaskService taskEmployeeService;
 
     /**
-     * Эндпойнт поиска всех задач по ID сотрудника.
+     * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
      */
     @Operation(
-            summary = "Получение всех задач по ID сотрудника",
+            summary = "Получение всех задач по ID сотрудника с возможной фильрацией по статусу задачи",
             description = "Возвращает список задач в сокращенном виде в случае, " +
                     "если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskShortDto> findAllTasksByEmployeeId(@Parameter(required = true) @PathVariable Long employeeId) {
-        return taskEmployeeService.findAllByEmployeeId(employeeId);
+    public List<TaskShortDto> findAllTasksByEmployeeId(@Parameter(required = true) @PathVariable Long employeeId,
+                                                       @RequestParam(required = false) TaskStatus status) {
+        return taskEmployeeService.findAllByEmployeeId(employeeId, status);
     }
 
     /**
@@ -75,6 +76,9 @@ public class TaskControllerEmployee {
         }
     }
 
+    /**
+     * Эндпоинт получения списка задач проекта с определенным статусом задач
+     */
     @GetMapping("{projectId}")
     public List<TaskFullDto> findByProjectIdAndStatus(@PathVariable Long projectId,
                                                       @RequestParam TaskStatus status){

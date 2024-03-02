@@ -22,7 +22,5 @@ public interface EmployeeService {
 
     Employee getEmployeeByLogin(String login);
 
-    List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role);
-
     Employee getEmployee(Long employeeId);
 }

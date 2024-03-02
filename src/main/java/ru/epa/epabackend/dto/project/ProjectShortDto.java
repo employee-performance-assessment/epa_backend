@@ -7,6 +7,11 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.epa.epabackend.util.ProjectStatus;
 
+/**
+ * Класс ProjectShortDto для передачи короткой информации о проекте
+ *
+ * @author Константин Осипов
+ */
 @Data
 @AllArgsConstructor
 public class ProjectShortDto {

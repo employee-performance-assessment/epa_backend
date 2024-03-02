@@ -13,8 +13,10 @@ import ru.epa.epabackend.dto.employee.EmployeeForListDto;
 import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
+import ru.epa.epabackend.service.project.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
@@ -110,12 +112,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee getEmployeeByLogin(String login) {
         return employeeRepository.findByLogin(login).orElseThrow(() ->
                 new EntityNotFoundException("Неверный логин или пароль"));
-    }
-
-    @Override
-    public List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role) {
-        return employeeRepository.findByProjectIdAndRole(projectId, role).stream()
-                .map(EmployeeMapper::toEmployeeForListDto).collect(Collectors.toList());
     }
 
     @Override

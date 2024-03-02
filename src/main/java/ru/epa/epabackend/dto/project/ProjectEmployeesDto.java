@@ -6,6 +6,11 @@ import ru.epa.epabackend.model.Employee;
 
 import java.util.List;
 
+/**
+ * Класс ProjectEmployeesDto для передачи информации о проекте включая список сотрудников
+ *
+ * @author Константин Осипов
+ */
 @Data
 @AllArgsConstructor
 public class ProjectEmployeesDto {
