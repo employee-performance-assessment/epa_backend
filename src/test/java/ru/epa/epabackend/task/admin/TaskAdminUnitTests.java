@@ -27,9 +27,7 @@ import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -125,7 +123,7 @@ class TaskAdminUnitTests {
     @Test
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.findByIdByAdmin(task.getId());
 
@@ -156,7 +154,7 @@ class TaskAdminUnitTests {
         when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
 
@@ -173,7 +171,7 @@ class TaskAdminUnitTests {
         when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
 

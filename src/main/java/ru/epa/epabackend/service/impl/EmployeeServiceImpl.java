@@ -31,17 +31,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
-
-    EmployeeMapper employeeMapper;
+    private final EmployeeMapper employeeMapper;
 
     @Override
 
     public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
-        Employee employee = employeeRepository.save(employeeMapper.employeeRtoRequestToEmployee(employeeRtoRequest));
+        Employee employee = employeeRepository.save(employeeMapper.mapToEntity(employeeRtoRequest));
         employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
         employee.setRole(ROLE_USER);
-        return employeeMapper.employeeToEmployeeDtoResponseFull(employee);
+        return employeeMapper.mapToFullDto(employee);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
-        return employeeMapper.employeeToEmployeeDtoResponseFull(oldEmployee);
+        return employeeMapper.mapToFullDto(oldEmployee);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     public List<EmployeeShortDto> getAllEmployees() {
         log.info("Получение всех сотрудников");
-        return employeeRepository.findAll().stream().map(employeeMapper::employeeToEmployeeDtoResponseShort)
+        return employeeRepository.findAll().stream().map(employeeMapper::mapToShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -99,7 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeFullDto getEmployeeById(Long employeeId) {
         log.info("Получение сотрудника по идентификатору {}", employeeId);
         Employee employee = getEmployee(employeeId);
-        return employeeMapper.employeeToEmployeeDtoResponseFull(employee);
+        return employeeMapper.mapToFullDto(employee);
     }
 
     @Override

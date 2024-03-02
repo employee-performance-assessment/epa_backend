@@ -15,6 +15,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
-    ProjectOutDtoShort projectToProjectShortToOutDto(Project project);
 
+    ProjectOutDtoShort mapToShortDto(Project project);
 }

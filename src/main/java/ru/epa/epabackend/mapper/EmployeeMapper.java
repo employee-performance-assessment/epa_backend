@@ -19,7 +19,7 @@ public interface EmployeeMapper {
     }
 
     @Mapping(target = "fullName", expression = "java(setFullName(employee))")
-    EmployeeDtoResponseFull employeeToEmployeeDtoResponseFull(Employee employee);
+    EmployeeDtoResponseFull  mapToFullDto(Employee employee);
 
     default String setLastName(EmployeeRtoRequest employeeRtoRequest) {
         String[] fullName = employeeRtoRequest.getFullName().split(" ");
@@ -39,8 +39,9 @@ public interface EmployeeMapper {
     @Mapping(target = "lastName", expression = "java(setLastName(employeeRtoRequest))")
     @Mapping(target = "firstName", expression = "java(setFirstName(employeeRtoRequest))")
     @Mapping(target = "patronymic", expression = "java(setPatronymic(employeeRtoRequest))")
-    Employee employeeRtoRequestToEmployee(EmployeeRtoRequest employeeRtoRequest);
+    Employee mapToEntity(EmployeeRtoRequest employeeRtoRequest);
 
     @Mapping(target = "fullName", expression = "java(setFullName(employee))")
-    EmployeeDtoResponseShort employeeToEmployeeDtoResponseShort(Employee employee);
+    EmployeeDtoResponseShort mapToShortDto(Employee employee);
 }
+
