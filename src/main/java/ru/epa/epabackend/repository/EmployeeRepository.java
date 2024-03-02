@@ -1,8 +1,6 @@
 package ru.epa.epabackend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.epa.epabackend.dto.employee.EmployeeForListDto;
-import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.util.Role;

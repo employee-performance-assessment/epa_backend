@@ -40,8 +40,6 @@ class TaskAdminUnitTests {
     @Mock
     private EmployeeRepository employeeRepository;
     @Mock
-    private ProjectMapper projectMapper;
-    @Mock
     private TaskRepository taskRepository;
     @Mock
     private ProjectRepository projectRepository;
@@ -63,7 +61,7 @@ class TaskAdminUnitTests {
     private TaskFullDto taskOutDto = new TaskFullDto();
     private TaskInDto taskInDto = new TaskInDto();
     private Project project = new Project();
-    private ProjectShortDto projectShortDto = projectMapper.toProjectShortDto(project);
+    private ProjectShortDto projectShortDto = new ProjectShortDto();
     private TaskShortDto taskShortDto = new TaskShortDto();
     private EmployeeDtoResponseShort employeeDtoResponseShort;
 
@@ -139,7 +137,6 @@ class TaskAdminUnitTests {
 
     @Test
     void createTask_shouldCallRepository() {
-        when(projectService.findDtoById(project.getId(), email)).thenReturn(projectShortDto);
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.dtoInToTask(taskInDto)).thenReturn(task);

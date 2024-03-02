@@ -1,10 +1,8 @@
 package ru.epa.epabackend.dto.project;
 
-import jakarta.persistence.Access;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 import ru.epa.epabackend.util.ProjectStatus;
 
 /**
@@ -13,6 +11,7 @@ import ru.epa.epabackend.util.ProjectStatus;
  * @author Константин Осипов
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class ProjectShortDto {
     private Long id;

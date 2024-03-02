@@ -1,8 +1,6 @@
 package ru.epa.epabackend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.epa.epabackend.dto.task.TaskFullDto;
-import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
 

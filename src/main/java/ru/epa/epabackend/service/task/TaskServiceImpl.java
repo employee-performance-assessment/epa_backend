@@ -125,7 +125,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId, TaskStatus status) {
-        if(status == null)
+        if (status == null)
             return taskMapper.tasksToListOutDto(taskRepository.findAllByExecutorId(employeeId));
         else
             return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()

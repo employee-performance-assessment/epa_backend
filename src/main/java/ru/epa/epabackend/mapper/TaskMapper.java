@@ -2,8 +2,8 @@ package ru.epa.epabackend.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
+import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.model.Task;
 

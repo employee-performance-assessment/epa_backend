@@ -20,6 +20,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**
      * Получение JWT токена по запросу.
+     *
      * @param jwtRequest
      * @return
      */

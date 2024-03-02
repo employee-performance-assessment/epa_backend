@@ -8,7 +8,6 @@ import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.project.UpdateProjectRto;
 import ru.epa.epabackend.util.Role;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface ProjectService {

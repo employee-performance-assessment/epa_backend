@@ -20,7 +20,6 @@ import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.util.Role;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,8 +115,8 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.save(project);
     }
 
-    public void checkUserAndProject(Employee user, Project project){
-        if(!user.getProjects().contains(project))
+    public void checkUserAndProject(Employee user, Project project) {
+        if (!user.getProjects().contains(project))
             throw new ConflictException(String.format("%s с email %s не относится к проекту с id %d",
                     user.getRole(), user.getEmail(), project.getId()));
     }

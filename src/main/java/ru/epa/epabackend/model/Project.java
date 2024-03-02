@@ -6,8 +6,6 @@ import lombok.experimental.Accessors;
 import ru.epa.epabackend.util.ProjectStatus;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * Класс Проект содержит информацию о названии проекта и его статусе,

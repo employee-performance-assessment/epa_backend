@@ -96,7 +96,7 @@ public class TaskControllerEmployee {
     @GetMapping("{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskFullDto> findByProjectIdAndStatus(@PathVariable Long projectId,
-                                                      @RequestParam TaskStatus status){
+                                                      @RequestParam TaskStatus status) {
         return taskEmployeeService.findByProjectIdAndStatus(projectId, status);
     }
 }

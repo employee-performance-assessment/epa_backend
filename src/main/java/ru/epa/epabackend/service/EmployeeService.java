@@ -1,7 +1,9 @@
 package ru.epa.epabackend.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.epa.epabackend.dto.employee.*;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.model.Employee;
 
 import java.util.List;
