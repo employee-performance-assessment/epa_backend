@@ -30,7 +30,7 @@ public class EmployeeRtoRequest {
     @NotBlank(groups = {Create.class})
     @Email(groups = {Create.class, Update.class})
     @Size(max = 512, groups = {Create.class, Update.class})
-    private String login;
+    private String email;
 
     @NotEmpty(groups = {Create.class})
     @Size(min = 8, max = 14, groups = {Create.class, Update.class})
@@ -54,7 +54,7 @@ public class EmployeeRtoRequest {
                 ", fullName='" + fullName + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
-                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
                 ", role=" + role +

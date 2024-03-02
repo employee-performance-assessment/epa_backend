@@ -17,14 +17,14 @@ CREATE TABLE IF NOT EXISTS employees (
   patronymic VARCHAR(50) NOT NULL,
   nick_name  VARCHAR(255),
   city       VARCHAR(255),
-  login      VARCHAR(255) NOT NULL,
+  email      VARCHAR(255) NOT NULL,
   password   VARCHAR(255) NOT NULL,
   birthday   DATE,
   role       VARCHAR(100),
   position   VARCHAR(100),
   department VARCHAR(100),
   CONSTRAINT pk_useremployee PRIMARY KEY (id),
-  CONSTRAINT uq_employees_name_login UNIQUE (login)
+  CONSTRAINT uq_employees_name_email UNIQUE (email)
 );
 
 create table if not exists tasks (

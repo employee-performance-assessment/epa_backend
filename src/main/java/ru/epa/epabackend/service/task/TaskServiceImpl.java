@@ -68,8 +68,10 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-    public TaskFullDto createByAdmin(TaskInDto taskInDto) {
-        Project project = projectMapper.toProject(projectService.findDtoById(taskInDto.getProjectId()));
+    public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
+        Project project = projectService.findById(taskInDto.getProjectId());
+        projectService.checkUserAndProject(admin, project);
         Task task = taskMapper.dtoInToTask(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);

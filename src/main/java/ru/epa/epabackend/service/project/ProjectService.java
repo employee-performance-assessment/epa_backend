@@ -8,22 +8,23 @@ import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.project.UpdateProjectRto;
 import ru.epa.epabackend.util.Role;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface ProjectService {
-    ProjectShortDto save(NewProjectRto newProjectRto, Long adminId);
+    ProjectShortDto save(NewProjectRto newProjectRto, String email);
 
-    ProjectShortDto findDtoById(Long projectId);
+    ProjectShortDto findDtoById(Long projectId, String email);
 
-    ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId);
+    ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId, String email);
 
-    List<ProjectShortDto> findByAdminId(Long adminId);
+    List<ProjectShortDto> findByAdminEmail(String email);
 
-    List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role);
+    List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role, String email);
 
-    ProjectShortDto update(Long projectId, UpdateProjectRto updateProjectRto);
+    ProjectShortDto update(Long projectId, UpdateProjectRto updateProjectRto, String email);
 
-    void delete(Long projectId);
+    void delete(Long projectId, String email);
 
-    void deleteEmployeeFromProject(Long projectId, Long employeeId);
+    void deleteEmployeeFromProject(Long projectId, Long employeeId, String email);
 }

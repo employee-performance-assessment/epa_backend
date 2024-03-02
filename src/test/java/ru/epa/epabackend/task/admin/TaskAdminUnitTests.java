@@ -55,6 +55,7 @@ class TaskAdminUnitTests {
     private TaskServiceImpl taskService;
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
+    private static final String email = "qwerty@gmail.com";
     private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     private Employee admin = new Employee();
     private Employee employee = new Employee();
@@ -80,6 +81,7 @@ class TaskAdminUnitTests {
         employee = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
+                .email(email)
                 .build();
         task = Task.builder()
                 .id(ID_1)
@@ -137,13 +139,13 @@ class TaskAdminUnitTests {
 
     @Test
     void createTask_shouldCallRepository() {
-        when(projectService.findDtoById(project.getId())).thenReturn(projectShortDto);
+        when(projectService.findDtoById(project.getId(), email)).thenReturn(projectShortDto);
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.dtoInToTask(taskInDto)).thenReturn(task);
         when(taskMapper.taskCreateToOutDto(task)).thenReturn(taskOutDto);
 
-        TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto);
+        TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto, email);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);

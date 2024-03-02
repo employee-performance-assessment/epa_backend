@@ -20,6 +20,7 @@ import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.util.Role;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,20 +47,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectShortDto save(NewProjectRto newProjectRto, Long adminId) {
-        Employee admin = employeeService.getEmployee(adminId);
+    public ProjectShortDto save(NewProjectRto newProjectRto, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
         return projectMapper.toProjectShortDto(projectRepository.save(projectMapper.toProject(newProjectRto, admin)));
     }
 
     @Override
-    public ProjectShortDto findDtoById(Long projectId) {
+    public ProjectShortDto findDtoById(Long projectId, String email) {
         return projectMapper.toProjectShortDto(findById(projectId));
     }
 
     @Override
-    public ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId) {
+    public ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
         Employee employee = employeeService.getEmployee(employeeId);
         Project project = findById(projectId);
+        checkUserAndProject(admin, project);
         if (project.getEmployees().contains(employee))
             throw new ConflictException(String.format("Сотрудник с id %d уже добавлен к проекту", employeeId));
         project.getEmployees().add(employee);
@@ -67,21 +70,26 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectShortDto> findByAdminId(Long adminId) {
-        return projectRepository.findByEmployees(employeeService.getEmployee(adminId)).stream()
+    public List<ProjectShortDto> findByAdminEmail(String email) {
+        return projectRepository.findByEmployees(employeeService.getEmployeeByEmail(email)).stream()
                 .map(projectMapper::toProjectShortDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role) {
+    public List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
+        Project project = findById(projectId);
+        checkUserAndProject(admin, project);
         return employeeRepository
                 .findByProjectsAndRole(findById(projectId), role)
                 .stream().map(EmployeeMapper::toEmployeeForListDto).collect(Collectors.toList());
     }
 
     @Override
-    public ProjectShortDto update(Long projectId, UpdateProjectRto updateProjectRto) {
+    public ProjectShortDto update(Long projectId, UpdateProjectRto updateProjectRto, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
         Project project = findById(projectId);
+        checkUserAndProject(admin, project);
         if (updateProjectRto.getName() != null)
             project.setName(updateProjectRto.getName());
         if (updateProjectRto.getStatus() != null)
@@ -90,18 +98,27 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void delete(Long projectId) {
-        projectRepository.delete(findById(projectId));
+    public void delete(Long projectId, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
+        Project project = findById(projectId);
+        checkUserAndProject(admin, project);
+        projectRepository.delete(project);
     }
 
     @Override
-    public void deleteEmployeeFromProject(Long projectId, Long employeeId) {
+    public void deleteEmployeeFromProject(Long projectId, Long employeeId, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
         Project project = findById(projectId);
+        checkUserAndProject(admin, project);
         Employee employee = employeeService.getEmployee(employeeId);
-        if (!project.getEmployees().contains(employee))
-            throw new ConflictException(String.format("Сотрудник с id %d не относится к проекту с id %d, " +
-                    "поэтому не может быть удалён из него", employeeId, projectId));
+        checkUserAndProject(employee, project);
         project.getEmployees().remove(employee);
         projectRepository.save(project);
+    }
+
+    public void checkUserAndProject(Employee user, Project project){
+        if(!user.getProjects().contains(project))
+            throw new ConflictException(String.format("%s с email %s не относится к проекту с id %d",
+                    user.getRole(), user.getEmail(), project.getId()));
     }
 }

@@ -10,12 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
-import ru.epa.epabackend.dto.employee.EmployeeForListDto;
 import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.service.EmployeeService;
-import ru.epa.epabackend.util.Role;
-
-import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 

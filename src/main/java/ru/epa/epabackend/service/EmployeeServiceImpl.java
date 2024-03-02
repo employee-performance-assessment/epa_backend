@@ -9,14 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
-import ru.epa.epabackend.dto.employee.EmployeeForListDto;
 import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
-import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
-import ru.epa.epabackend.service.project.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
@@ -104,14 +101,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public UserDetailsService userDetailsService() {
-        return this::getEmployeeByLogin;
+        return this::getEmployeeByEmail;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Employee getEmployeeByLogin(String login) {
-        return employeeRepository.findByLogin(login).orElseThrow(() ->
-                new EntityNotFoundException("Неверный логин или пароль"));
+    public Employee getEmployeeByEmail(String email) {
+        return employeeRepository.findByEmail(email).orElseThrow(() ->
+                new EntityNotFoundException("Неверный email"));
     }
 
     @Override
@@ -129,9 +126,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (city != null && !city.isBlank()) {
             oldEmployee.setCity(city);
         }
-        String login = employeeRtoRequest.getLogin();
-        if (login != null && !login.isBlank()) {
-            oldEmployee.setLogin(login);
+        String email = employeeRtoRequest.getEmail();
+        if (email != null && !email.isBlank()) {
+            oldEmployee.setEmail(email);
         }
         String password = employeeRtoRequest.getPassword();
         if (password != null && !password.isBlank()) {

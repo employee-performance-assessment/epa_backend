@@ -47,7 +47,7 @@ public class TaskControllerEmployee {
     @GetMapping
     public List<TaskShortDto> findAllTasksByEmployeeId(Principal principal,
                                                        @RequestParam(required = false) TaskStatus status) {
-        Employee employee = employeeService.getEmployeeByLogin(principal.getName());
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
         return taskEmployeeService.findAllByEmployeeId(employee.getId(), status);
     }
 
@@ -62,7 +62,7 @@ public class TaskControllerEmployee {
     @GetMapping("/{taskId}")
     public TaskFullDto findTaskById(@Parameter(required = true) @PathVariable Long taskId,
                                     Principal principal) {
-        Employee employee = employeeService.getEmployeeByLogin(principal.getName());
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
         return taskEmployeeService.findById(employee.getId(), taskId);
     }
 
@@ -76,7 +76,7 @@ public class TaskControllerEmployee {
     public TaskFullDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
                                     @Parameter(required = true) @RequestParam String status,
                                     Principal principal) {
-        Employee employee = employeeService.getEmployeeByLogin(principal.getName());
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
         try {
             TaskStatus taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
             return taskEmployeeService.updateStatus(employee.getId(), taskId, taskStatus);

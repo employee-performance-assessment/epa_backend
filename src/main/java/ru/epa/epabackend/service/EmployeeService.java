@@ -3,7 +3,6 @@ package ru.epa.epabackend.service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.epa.epabackend.dto.employee.*;
 import ru.epa.epabackend.model.Employee;
-import ru.epa.epabackend.util.Role;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface EmployeeService {
 
     UserDetailsService userDetailsService();
 
-    Employee getEmployeeByLogin(String login);
+    Employee getEmployeeByEmail(String email);
 
     Employee getEmployee(Long employeeId);
 }

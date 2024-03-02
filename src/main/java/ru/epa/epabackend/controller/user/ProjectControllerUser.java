@@ -1,6 +1,7 @@
 package ru.epa.epabackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.service.project.ProjectService;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -19,10 +21,11 @@ import java.util.List;
  * @author Константин Осипов
  */
 @Tag(name = "Private: Проекты", description = "API пользователя для работы с проектами")
+@SecurityRequirement(name = "JWT")
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/{userId}/projects")
+@RequestMapping("/user/projects")
 public class ProjectControllerUser {
     private final ProjectService projectService;
 
@@ -36,7 +39,7 @@ public class ProjectControllerUser {
     )
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProjectShortDto findDtoById(@PathVariable Long projectId) {
-        return projectService.findDtoById(projectId);
+    public ProjectShortDto findDtoById(@PathVariable Long projectId, Principal principal) {
+        return projectService.findDtoById(projectId, principal.getName());
     }
 }

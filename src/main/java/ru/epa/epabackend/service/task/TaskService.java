@@ -37,7 +37,7 @@ public interface TaskService {
     /**
      * Создание задачи
      */
-    TaskFullDto createByAdmin(TaskInDto taskDto);
+    TaskFullDto createByAdmin(TaskInDto taskDto, String email);
 
     /**
      * Найти задачу по ID

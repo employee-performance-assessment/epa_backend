@@ -81,7 +81,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(List.of(task));
         when(taskMapper.tasksToListOutDto(List.of(task))).thenReturn(List.of(taskShortDto));
 
-        List<TaskShortDto> tasksResult = taskService.findAllByEmployeeId(ID_1);
+        List<TaskShortDto> tasksResult = taskService.findAllByEmployeeId(ID_1, null);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);

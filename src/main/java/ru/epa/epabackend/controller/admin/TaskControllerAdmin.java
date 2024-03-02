@@ -12,6 +12,7 @@ import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.service.task.TaskService;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -63,8 +64,9 @@ public class TaskControllerAdmin {
             description = "Создание новой задачи администратором"
     )
     @PostMapping()
-    public TaskFullDto createByAdmin(@Parameter(required = true) @RequestBody TaskInDto taskInDto) {
-        return taskService.createByAdmin(taskInDto);
+    public TaskFullDto createByAdmin(@Parameter(required = true) @RequestBody TaskInDto taskInDto,
+                                     Principal principal) {
+        return taskService.createByAdmin(taskInDto, principal.getName());
     }
 
     /**
