@@ -1,6 +1,7 @@
 package ru.epa.epabackend.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
@@ -41,12 +42,12 @@ public class ProjectMapper {
                 .build();
     }
 
-    public ProjectEmployeesDto toProjectEmployeesDto(Project project) {
+    public ProjectEmployeesDto toProjectEmployeesDto(Project project, List<EmployeeShortDto> employees) {
         return ProjectEmployeesDto
                 .builder()
                 .id(project.getId())
                 .name(project.getName())
-                .employees(project.getEmployees())
+                .employees(employees)
                 .build();
     }
 }

@@ -105,10 +105,10 @@ public class TaskServiceImpl implements TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     @Override
-    public List<TaskFullDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+    public List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
         return taskRepository.findByProjectIdAndStatus(projectId, status).stream()
-                .map(taskMapper::taskCreateToOutDto).collect(Collectors.toList());
+                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
     }
 
     /**

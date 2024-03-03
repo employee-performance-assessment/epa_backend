@@ -36,7 +36,7 @@ public class ProjectControllerUser {
     )
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProjectShortDto findDtoById(@PathVariable Long projectId, Principal principal) {
+    public ProjectShortDto findProject(@PathVariable Long projectId, Principal principal) {
         return projectService.findDtoById(projectId, principal.getName());
     }
 }

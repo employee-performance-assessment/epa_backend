@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ import java.util.List;
 public class ProjectEmployeesDto {
     private Long id;
     private String name;
-    private List<Employee> employees;
+    private List<EmployeeShortDto> employees;
 }

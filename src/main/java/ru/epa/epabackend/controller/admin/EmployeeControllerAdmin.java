@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
 import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.service.EmployeeService;
 
@@ -30,8 +30,8 @@ public class EmployeeControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public EmployeeDtoResponseFull addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
-                                               EmployeeRtoRequest employeeRtoRequest) {
+    public EmployeeFullDto addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
+                                       EmployeeRtoRequest employeeRtoRequest) {
         log.info("POST / employees / {} ", employeeRtoRequest.getFullName());
         return employeeService.addEmployee(employeeRtoRequest);
     }

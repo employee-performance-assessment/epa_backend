@@ -3,7 +3,7 @@ package ru.epa.epabackend.service.project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
@@ -64,8 +64,10 @@ public class ProjectServiceImpl implements ProjectService {
         checkUserAndProject(admin, project);
         if (project.getEmployees().contains(employee))
             throw new ConflictException(String.format("Сотрудник с id %d уже добавлен к проекту", employeeId));
-        project.getEmployees().add(employee);
-        return projectMapper.toProjectEmployeesDto(projectRepository.save(project));
+        List<Employee> employees = project.getEmployees();
+        employees.add(employee);
+        return projectMapper.toProjectEmployeesDto(projectRepository.save(project),
+                employees.stream().map(EmployeeMapper::toEmployeeDtoShort).collect(Collectors.toList()));
     }
 
     @Override
@@ -75,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<EmployeeDtoResponseShort> findByProjectIdAndRole(Long projectId, Role role, String email) {
+    public List<EmployeeShortDto> findByProjectIdAndRole(Long projectId, Role role, String email) {
         Employee admin = employeeService.getEmployeeByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);

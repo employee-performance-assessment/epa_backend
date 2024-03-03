@@ -59,5 +59,5 @@ public interface TaskService {
     /**
      * Получение списка задач проекта с определенным статусом задач
      */
-    List<TaskFullDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
+    List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
 }
