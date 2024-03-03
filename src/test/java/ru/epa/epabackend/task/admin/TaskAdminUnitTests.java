@@ -97,9 +97,10 @@ class TaskAdminUnitTests {
                 .projectId(ID_1)
                 .deadLine(LocalDate.now().plusDays(2))
                 .build();
-        project = new Project()
-                .setId(ID_1)
-                .setName("Project1");
+        project = Project.builder()
+                .id(ID_1)
+                .name("Project1")
+                .build();
         taskShortDto = TaskShortDto.builder()
                 .id(ID_1)
                 .name("taskShort")
