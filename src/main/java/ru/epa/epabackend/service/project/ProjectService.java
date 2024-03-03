@@ -6,11 +6,14 @@ import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.project.UpdateProjectRto;
+import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.util.Role;
 
 import java.util.List;
 
 public interface ProjectService {
+    Project findById(Long projectId);
+
     ProjectShortDto save(NewProjectRto newProjectRto, String email);
 
     ProjectShortDto findDtoById(Long projectId, String email);

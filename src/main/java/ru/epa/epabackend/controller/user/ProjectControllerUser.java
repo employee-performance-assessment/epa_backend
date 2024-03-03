@@ -12,7 +12,6 @@ import ru.epa.epabackend.service.project.ProjectService;
 
 import java.security.Principal;
 
-
 /**
  * Класс ProjectControllerUser содержит ендпоинты, относящиеся к проектам пользователя
  *

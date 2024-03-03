@@ -2,7 +2,6 @@ package ru.epa.epabackend.service.project;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeForListDto;
 import ru.epa.epabackend.dto.project.NewProjectRto;
@@ -32,7 +31,7 @@ import static ru.epa.epabackend.exception.ExceptionDescriptions.PROJECT_NOT_FOUN
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRED)
+@Transactional
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
@@ -40,6 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final EmployeeService employeeService;
     private final EmployeeRepository employeeRepository;
 
+    @Override
     public Project findById(Long projectId) {
         return projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.getTitle()));

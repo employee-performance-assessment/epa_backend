@@ -2,7 +2,6 @@ package ru.epa.epabackend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.Accessors;
 import ru.epa.epabackend.util.ProjectStatus;
 
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
+@Builder
 @ToString
 @EqualsAndHashCode(of = {"id", "name"})
 public class Project {

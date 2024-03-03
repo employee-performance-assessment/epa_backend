@@ -1,7 +1,9 @@
 package ru.epa.epabackend.dto.project;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.epa.epabackend.model.Employee;
 
 import java.util.List;
@@ -12,7 +14,9 @@ import java.util.List;
  * @author Константин Осипов
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProjectEmployeesDto {
     private Long id;
     private String name;

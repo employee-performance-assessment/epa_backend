@@ -18,24 +18,35 @@ import java.util.List;
 @Component
 public class ProjectMapper {
     public ProjectShortDto toProjectShortDto(Project project) {
-        return new ProjectShortDto(project.getId(), project.getName(), project.getStatus());
+        return ProjectShortDto.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .status(project.getStatus())
+                .build();
     }
 
     public Project toProject(NewProjectRto newProjectRto, Employee admin) {
-        return new Project()
-                .setName(newProjectRto.getName())
-                .setStatus(ProjectStatus.TODO)
-                .setEmployees(List.of(admin));
+        return Project.builder()
+                .name(newProjectRto.getName())
+                .status(ProjectStatus.TODO)
+                .employees(List.of(admin))
+                .build();
     }
 
     public Project toProject(ProjectShortDto projectShortDto) {
-        return new Project()
-                .setStatus(projectShortDto.getStatus())
-                .setName(projectShortDto.getName())
-                .setStatus(projectShortDto.getStatus());
+        return Project.builder()
+                .status(projectShortDto.getStatus())
+                .name(projectShortDto.getName())
+                .status(projectShortDto.getStatus())
+                .build();
     }
 
     public ProjectEmployeesDto toProjectEmployeesDto(Project project) {
-        return new ProjectEmployeesDto(project.getId(), project.getName(), project.getEmployees());
+        return ProjectEmployeesDto
+                .builder()
+                .id(project.getId())
+                .name(project.getName())
+                .employees(project.getEmployees())
+                .build();
     }
 }
