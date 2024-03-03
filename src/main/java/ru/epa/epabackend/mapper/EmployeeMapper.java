@@ -3,7 +3,6 @@ package ru.epa.epabackend.mapper;
 import lombok.experimental.UtilityClass;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
 import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
-import ru.epa.epabackend.dto.employee.EmployeeForListDto;
 import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.model.Employee;
@@ -52,16 +51,5 @@ public class EmployeeMapper {
                 .fullName(employee.getLastName() + " " + employee.getFirstName())
                 .position(employee.getPosition())
                 .build();
-    }
-
-    public static EmployeeForListDto toEmployeeForListDto(Employee employee) {
-        return new EmployeeForListDto(
-                employee.getId(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getPatronymic(),
-                employee.getRole(),
-                employee.getTechnologies(),
-                employee.getNickName());
     }
 }

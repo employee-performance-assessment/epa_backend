@@ -1,7 +1,7 @@
 package ru.epa.epabackend.service.project;
 
 
-import ru.epa.epabackend.dto.employee.EmployeeForListDto;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
 import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
@@ -22,7 +22,7 @@ public interface ProjectService {
 
     List<ProjectShortDto> findByAdminEmail(String email);
 
-    List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role, String email);
+    List<EmployeeDtoResponseShort> findByProjectIdAndRole(Long projectId, Role role, String email);
 
     ProjectShortDto update(Long projectId, UpdateProjectRto updateProjectRto, String email);
 

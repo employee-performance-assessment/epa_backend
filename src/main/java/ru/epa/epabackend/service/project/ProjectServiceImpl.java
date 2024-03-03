@@ -3,7 +3,7 @@ package ru.epa.epabackend.service.project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeForListDto;
+import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
 import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
@@ -75,13 +75,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<EmployeeForListDto> findByProjectIdAndRole(Long projectId, Role role, String email) {
+    public List<EmployeeDtoResponseShort> findByProjectIdAndRole(Long projectId, Role role, String email) {
         Employee admin = employeeService.getEmployeeByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         return employeeRepository
                 .findByProjectsAndRole(findById(projectId), role)
-                .stream().map(EmployeeMapper::toEmployeeForListDto).collect(Collectors.toList());
+                .stream().map(EmployeeMapper::toEmployeeDtoShort).collect(Collectors.toList());
     }
 
     @Override

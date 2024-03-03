@@ -124,12 +124,18 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortDto> findAllByEmployeeId(Long employeeId, TaskStatus status) {
-        if (status == null)
-            return taskMapper.tasksToListOutDto(taskRepository.findAllByExecutorId(employeeId));
-        else
-            return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()
-                    .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
+    public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
+        return taskMapper.tasksToListOutDto(taskRepository.findAllByExecutorId(employeeId));
+    }
+
+    /**
+     * Получение списка всех задач пользователя с указанным статусом задач
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TaskShortDto> findAllByEmployeeIdAndStatus(Long employeeId, TaskStatus status) {
+        return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()
+                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
     }
 
     /**

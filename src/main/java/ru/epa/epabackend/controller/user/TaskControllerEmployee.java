@@ -45,10 +45,14 @@ public class TaskControllerEmployee {
                     "если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskShortDto> findAllTasksByEmployeeId(Principal principal,
-                                                       @RequestParam(required = false) TaskStatus status) {
+    public List<TaskShortDto> findAllTasksByEmployeeIdAndStatus(Principal principal,
+                                                                @RequestParam(required = false) TaskStatus status) {
         Employee employee = employeeService.getEmployeeByEmail(principal.getName());
-        return taskEmployeeService.findAllByEmployeeId(employee.getId(), status);
+        if (status == null) {
+            return taskEmployeeService.findAllByEmployeeId(employee.getId());
+        } else {
+            return taskEmployeeService.findAllByEmployeeIdAndStatus(employee.getId(), status);
+        }
     }
 
     /**
