@@ -58,3 +58,7 @@ build/
 *.iws
 *.iml
 *.ipr
+
+### For Mac ###
+*.db
+db/*
