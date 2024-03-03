@@ -13,7 +13,7 @@ import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
 @Builder
 @Data
 @AllArgsConstructor
-public class EmployeeDtoResponseFull {
+public class EmployeeFullDto {
 
     private Long id;
 
@@ -23,7 +23,7 @@ public class EmployeeDtoResponseFull {
 
     private String city;
 
-    private String login;
+    private String email;
 
     @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate birthday;
@@ -41,7 +41,7 @@ public class EmployeeDtoResponseFull {
                 ", fullName='" + fullName + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
-                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
                 ", role=" + role +

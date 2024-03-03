@@ -49,7 +49,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Ivanov Ivan Ivanovich\",\r\n  \"login\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Ivanov Ivan Ivanovich\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/admin/employees",
@@ -153,7 +153,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Ivanov Ivan Ivanovich\",\r\n  \"login\": \"mail@mail..ru\",\r\n  \"password\": \"password1\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Ivanov Ivan Ivanovich\",\r\n  \"email\": \"mail@mail..ru\",\r\n  \"password\": \"password1\"\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/admin/employees",
@@ -321,7 +321,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Ivanov Test Ivanovich\",\r\n  \"login\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Ivanov Test Ivanovich\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\"\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/admin/employees",

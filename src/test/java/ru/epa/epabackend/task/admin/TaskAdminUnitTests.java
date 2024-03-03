@@ -7,7 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
+import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
@@ -51,6 +52,7 @@ class TaskAdminUnitTests {
     private TaskServiceImpl taskService;
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
+    private static final String email = "qwerty@gmail.com";
     private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     private Employee admin = new Employee();
     private Employee employee = new Employee();
@@ -58,8 +60,9 @@ class TaskAdminUnitTests {
     private TaskFullDto taskOutDto = new TaskFullDto();
     private TaskInDto taskInDto = new TaskInDto();
     private Project project = new Project();
+    private ProjectShortDto projectShortDto = new ProjectShortDto();
     private TaskShortDto taskShortDto = new TaskShortDto();
-    private EmployeeDtoResponseShort employeeDtoResponseShort;
+    private EmployeeShortDto employeeShortDto;
 
     @BeforeEach
     public void init() {
@@ -67,13 +70,15 @@ class TaskAdminUnitTests {
                 .id(ID_1)
                 .role(Role.ROLE_ADMIN)
                 .build();
-        employeeDtoResponseShort = EmployeeDtoResponseShort.builder()
+        employeeShortDto = EmployeeShortDto.builder()
+                .id(ID_1)
                 .fullName("name")
                 .position("USER")
                 .build();
         employee = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
+                .email(email)
                 .build();
         task = Task.builder()
                 .id(ID_1)
@@ -84,7 +89,7 @@ class TaskAdminUnitTests {
                 .build();
         taskOutDto = TaskFullDto.builder()
                 .id(ID_1)
-                .executor(employeeDtoResponseShort)
+                .executor(employeeShortDto)
                 .build();
         taskInDto = TaskInDto.builder()
                 .executorId(ID_2)
@@ -132,13 +137,12 @@ class TaskAdminUnitTests {
 
     @Test
     void createTask_shouldCallRepository() {
-        when(projectService.findByID(project.getId())).thenReturn(project);
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.dtoInToTask(taskInDto)).thenReturn(task);
         when(taskMapper.taskCreateToOutDto(task)).thenReturn(taskOutDto);
 
-        TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto);
+        TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto, email);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);

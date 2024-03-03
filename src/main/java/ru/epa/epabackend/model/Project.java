@@ -5,21 +5,22 @@ import lombok.*;
 import ru.epa.epabackend.util.ProjectStatus;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Класс Проект содержит информацию о названии проекта и его статусе,
  * а также содержит список задач проекта.
  *
- * @author Михаил Безуглов
+ * @author Михаил Безуглов и Константин Осипов
  */
+@Entity
+@Table(name = "projects")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "projects")
+@ToString
+@EqualsAndHashCode(of = {"id", "name"})
 public class Project {
 
     /**
@@ -44,33 +45,18 @@ public class Project {
     /**
      * Список задач проекта.
      */
-    @ManyToMany
-    @JoinTable(
-            name = "projects_tasks",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
     private List<Task> tasks;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Project project = (Project) o;
-        return id.equals(project.id) && name.equals(project.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", status=" + status +
-                ", tasks=" + tasks +
-                '}';
-    }
+    /**
+     * Список сотрудников проекта.
+     */
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "projects_employees",
+            joinColumns = {@JoinColumn(name = "project_id")},
+            inverseJoinColumns = {@JoinColumn(name = "employee_id")})
+    private List<Employee> employees;
 }

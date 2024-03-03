@@ -20,13 +20,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**
      * Получение JWT токена по запросу.
+     *
      * @param jwtRequest
      * @return
      */
     @Override
     public JwtResponse getToken(JwtRequest jwtRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getLogin(), jwtRequest.getPassword()));
-        UserDetails userDetails = employeeService.getEmployeeByLogin(jwtRequest.getLogin());
+        UserDetails userDetails = employeeService.getEmployeeByEmail(jwtRequest.getLogin());
         return new JwtResponse(jwtService.generateToken(userDetails));
     }
 }

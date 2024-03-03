@@ -34,7 +34,7 @@ public class AdminAccountInitializer implements CommandLineRunner {
                 .lastName("last_name")
                 .firstName("first_name")
                 .patronymic("patronymic")
-                .login(login)
+                .email(login)
                 .password(passwordEncoder.encode(password))
                 .role(Role.ROLE_ADMIN)
                 .build();
