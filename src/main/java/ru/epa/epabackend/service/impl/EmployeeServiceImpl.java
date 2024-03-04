@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
 import static ru.epa.epabackend.util.Role.ROLE_USER;
 
 @Slf4j
@@ -40,6 +41,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
         employee.setRole(ROLE_USER);
         return EmployeeMapper.toEmployeeDtoFull(employee);
+    }
+
+    @Override
+    public EmployeeFullDto addEmployeeSelfRegister(EmployeeDtoRequest employeeRtoRequest) {
+        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
+        Employee employeeToSave = EmployeeMapper.toEmployee(employeeRtoRequest);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
+        employeeToSave.setRole(ROLE_ADMIN);
+        return EmployeeMapper.toEmployeeDtoFull(employeeRepository.save(employeeToSave));
     }
 
     @Override
