@@ -19,6 +19,8 @@ public interface TaskService {
      */
     List<TaskShortDto> findAllByEmployeeId(Long userId);
 
+    List<TaskShortDto> findAllByEmployeeIdAndStatus(Long userId, TaskStatus status);
+
     /**
      * Найти задачу по ID
      */
@@ -37,7 +39,7 @@ public interface TaskService {
     /**
      * Создание задачи
      */
-    TaskFullDto createByAdmin(TaskInDto taskDto);
+    TaskFullDto createByAdmin(TaskInDto taskDto, String email);
 
     /**
      * Найти задачу по ID
@@ -53,4 +55,9 @@ public interface TaskService {
      * Удаление задачи
      */
     void deleteByAdmin(Long taskId);
+
+    /**
+     * Получение списка задач проекта с определенным статусом задач
+     */
+    List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
 }

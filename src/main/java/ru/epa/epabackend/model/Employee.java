@@ -14,7 +14,7 @@ import java.util.*;
  * Класс Сотрудник содержит информацию о логине и пароле (для логина используется email),
  * дате рождения, должности/грейду и стеке технологий сотрудника.
  *
- * @author Михаил Безуглов
+ * @author Михаил Безуглов и Валентина Вахламова
  */
 @Getter
 @Setter
@@ -110,6 +110,15 @@ public class Employee implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "technology_id"))
     @Builder.Default
     private Set<Technology> technologies = new HashSet<>();
+
+    /**
+     * Список проектов сотрудника.
+     */
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "projects_employees",
+            joinColumns = {@JoinColumn(name = "employee_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")})
+    private List<Project> projects;
 
     @Override
     public boolean equals(Object o) {

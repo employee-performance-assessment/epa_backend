@@ -2,26 +2,26 @@ package ru.epa.epabackend.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.model.Employee;
 
 import java.util.List;
 
 public interface EmployeeService {
-    EmployeeDtoResponseFull addEmployee(EmployeeDtoRequest employeeDtoRequest);
+    EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest);
 
-    EmployeeDtoResponseFull updateEmployee(Long employeeId, EmployeeDtoRequest employeeDtoRequest);
+    EmployeeFullDto updateEmployee(Long employeeId, EmployeeDtoRequest employeeRtoRequest);
 
     void deleteEmployee(Long employeeId);
 
-    List<EmployeeDtoResponseShort> getAllEmployees();
+    List<EmployeeShortDto> getAllEmployees();
 
-    EmployeeDtoResponseFull getEmployeeById(Long employeeId);
+    EmployeeFullDto getEmployeeById(Long employeeId);
 
     UserDetailsService userDetailsService();
 
-    Employee getEmployeeByLogin(String login);
+    Employee getEmployeeByEmail(String email);
 
     Employee getEmployee(Long employeeId);
 }

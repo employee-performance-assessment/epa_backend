@@ -5,14 +5,15 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.TaskService;
-import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -33,20 +34,25 @@ import java.util.List;
 public class TaskControllerEmployee {
 
     private final TaskService taskEmployeeService;
-    private final EmployeeServiceImpl employeeService;
+    private final EmployeeService employeeService;
 
     /**
-     * Эндпойнт поиска всех задач по ID сотрудника.
+     * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
      */
     @Operation(
-            summary = "Получение всех задач по ID сотрудника",
+            summary = "Получение всех задач по ID сотрудника с возможной фильрацией по статусу задачи",
             description = "Возвращает список задач в сокращенном виде в случае, " +
                     "если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskShortDto> findAllTasksByEmployeeId(Principal principal) {
-        Employee employee = employeeService.getEmployeeByLogin(principal.getName());
-        return taskEmployeeService.findAllByEmployeeId(employee.getId());
+    public List<TaskShortDto> findAllTasksByEmployeeIdAndStatus(Principal principal,
+                                                                @RequestParam(required = false) TaskStatus status) {
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+        if (status == null) {
+            return taskEmployeeService.findAllByEmployeeId(employee.getId());
+        } else {
+            return taskEmployeeService.findAllByEmployeeIdAndStatus(employee.getId(), status);
+        }
     }
 
     /**
@@ -60,7 +66,7 @@ public class TaskControllerEmployee {
     @GetMapping("/{taskId}")
     public TaskFullDto findTaskById(@Parameter(required = true) @PathVariable Long taskId,
                                     Principal principal) {
-        Employee employee = employeeService.getEmployeeByLogin(principal.getName());
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
         return taskEmployeeService.findById(employee.getId(), taskId);
     }
 
@@ -74,12 +80,27 @@ public class TaskControllerEmployee {
     public TaskFullDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
                                     @Parameter(required = true) @RequestParam String status,
                                     Principal principal) {
-        Employee employee = employeeService.getEmployeeByLogin(principal.getName());
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
         try {
             TaskStatus taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
             return taskEmployeeService.updateStatus(employee.getId(), taskId, taskStatus);
         } catch (IllegalArgumentException exception) {
             throw new BadRequestException("Unknown status: " + status);
         }
+    }
+
+    /**
+     * Эндпоинт получения списка задач проекта с определенным статусом задач
+     */
+    @Operation(
+            summary = "Получение списка задач проекта с определенным статусом задач",
+            description = "При успешном получении возвращается 200 Ok\n" +
+                    "В случае отсутствия проекта с указанным id возвращается 404 Not Found"
+    )
+    @GetMapping("{projectId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TaskShortDto> findByProjectIdAndStatus(@PathVariable Long projectId,
+                                                       @RequestParam TaskStatus status) {
+        return taskEmployeeService.findByProjectIdAndStatus(projectId, status);
     }
 }

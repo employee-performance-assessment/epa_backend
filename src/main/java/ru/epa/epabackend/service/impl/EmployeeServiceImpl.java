@@ -8,8 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
@@ -33,16 +33,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public EmployeeDtoResponseFull addEmployee(EmployeeDtoRequest employeeDtoRequest) {
-        log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
-        Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeDtoRequest));
-        employee.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
+
+    public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest) {
+        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
+        Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeRtoRequest));
+        employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
         employee.setRole(ROLE_USER);
         return EmployeeMapper.toEmployeeDtoFull(employee);
     }
 
     @Override
-    public EmployeeDtoResponseFull updateEmployee(Long employeeId, EmployeeDtoRequest employeeDtoRequest) {
+    public EmployeeFullDto updateEmployee(Long employeeId, EmployeeDtoRequest employeeDtoRequest) {
         log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
         Employee oldEmployee = getEmployee(employeeId);
         String fullName = employeeDtoRequest.getFullName();
@@ -85,7 +86,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeDtoResponseShort> getAllEmployees() {
+    public List<EmployeeShortDto> getAllEmployees() {
         log.info("Получение всех сотрудников");
         return employeeRepository.findAll().stream()
                 .map(EmployeeMapper::toEmployeeDtoShort)
@@ -94,7 +95,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public EmployeeDtoResponseFull getEmployeeById(Long employeeId) {
+    public EmployeeFullDto getEmployeeById(Long employeeId) {
         log.info("Получение сотрудника по идентификатору {}", employeeId);
         Employee employee = getEmployee(employeeId);
         return EmployeeMapper.toEmployeeDtoFull(employee);
@@ -102,14 +103,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public UserDetailsService userDetailsService() {
-        return this::getEmployeeByLogin;
+        return this::getEmployeeByEmail;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Employee getEmployeeByLogin(String login) {
-        return employeeRepository.findByEmail(login).orElseThrow(() ->
-                new EntityNotFoundException("Неверный логин или пароль"));
+    public Employee getEmployeeByEmail(String email) {
+        return employeeRepository.findByEmail(email).orElseThrow(() ->
+                new EntityNotFoundException("Неверный email"));
     }
 
     @Override
@@ -127,9 +128,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (city != null && !city.isBlank()) {
             oldEmployee.setCity(city);
         }
-        String login = employeeDtoRequest.getEmail();
-        if (login != null && !login.isBlank()) {
-            oldEmployee.setEmail(login);
+        String email = employeeDtoRequest.getEmail();
+        if (email != null && !email.isBlank()) {
+            oldEmployee.setEmail(email);
         }
         String password = employeeDtoRequest.getPassword();
         if (password != null && !password.isBlank()) {

@@ -2,17 +2,17 @@ package ru.epa.epabackend.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.model.Employee;
 
 @UtilityClass
 public class EmployeeMapper {
 
-    public EmployeeDtoResponseFull toEmployeeDtoFull(Employee employee) {
+    public EmployeeFullDto toEmployeeDtoFull(Employee employee) {
         String fullName = employee.getLastName() + " " + employee.getFirstName() + " " + employee.getPatronymic();
-        return EmployeeDtoResponseFull.builder()
+        return EmployeeFullDto.builder()
                 .id(employee.getId())
                 .fullName(fullName)
                 .nickName(employee.getNickName())
@@ -45,8 +45,9 @@ public class EmployeeMapper {
                 .build();
     }
 
-    public EmployeeDtoResponseShort toEmployeeDtoShort(Employee employee) {
-        return EmployeeDtoResponseShort.builder()
+    public EmployeeShortDto toEmployeeDtoShort(Employee employee) {
+        return EmployeeShortDto.builder()
+                .id(employee.getId())
                 .fullName(employee.getLastName() + " " + employee.getFirstName())
                 .position(employee.getPosition())
                 .build();

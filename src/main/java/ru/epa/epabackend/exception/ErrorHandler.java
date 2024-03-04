@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 
@@ -33,7 +34,7 @@ public class ErrorHandler {
         return new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class, ConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse conflictException(RuntimeException e) {
         log.info(e.getMessage());

@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
 import ru.epa.epabackend.service.EmployeeService;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
@@ -30,10 +30,11 @@ public class EmployeeControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public EmployeeDtoResponseFull addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
-                                               EmployeeDtoRequest employeeDtoRequest) {
-        log.info("POST / employees / {} ", employeeDtoRequest.getFullName());
-        return employeeService.addEmployee(employeeDtoRequest);
+
+    public EmployeeFullDto addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
+                                       EmployeeDtoRequest employeeRtoRequest) {
+        log.info("POST / employees / {} ", employeeRtoRequest.getFullName());
+        return employeeService.addEmployee(employeeRtoRequest);
     }
 
     @Operation(

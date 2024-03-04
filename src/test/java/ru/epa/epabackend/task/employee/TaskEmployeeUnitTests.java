@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
@@ -42,7 +42,7 @@ class TaskEmployeeUnitTests {
     private Task task = new Task();
     private TaskFullDto taskOutDto = new TaskFullDto();
     private TaskShortDto taskShortDto = new TaskShortDto();
-    private EmployeeDtoResponseShort employeeDtoResponseShort;
+    private EmployeeShortDto employeeShortDto;
 
     @BeforeEach
     public void init() {
@@ -50,7 +50,8 @@ class TaskEmployeeUnitTests {
                 .id(ID_2)
                 .role(Role.ROLE_USER)
                 .build();
-        employeeDtoResponseShort = EmployeeDtoResponseShort.builder()
+        employeeShortDto = EmployeeShortDto.builder()
+                .id(ID_1)
                 .fullName("name")
                 .position("USER")
                 .build();
@@ -64,7 +65,7 @@ class TaskEmployeeUnitTests {
                 .build();
         taskOutDto = TaskFullDto.builder()
                 .id(ID_1)
-                .executor(employeeDtoResponseShort)
+                .executor(employeeShortDto)
                 .build();
         taskShortDto = TaskShortDto.builder()
                 .id(ID_1)

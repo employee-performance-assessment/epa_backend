@@ -1,5 +1,6 @@
 package ru.epa.epabackend.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
@@ -14,7 +15,9 @@ import java.util.List;
  * @author Владислав Осипов
  */
 @Component
+@RequiredArgsConstructor
 public class TaskMapper {
+    private final ProjectMapper projectMapper;
 
     /**
      * Преобразование из DTO в сущность.
@@ -40,7 +43,7 @@ public class TaskMapper {
                 .executor(EmployeeMapper.toEmployeeDtoShort(task.getExecutor()))
                 .deadLine(task.getDeadLine())
                 .status(task.getStatus())
-                .project(ProjectMapper.projectShortToOutDto(task.getProject()))
+                .project(projectMapper.toProjectShortDto(task.getProject()))
                 .basicPoints(task.getBasicPoints())
                 .penaltyPoints(task.getPenaltyPoints())
                 .build();
@@ -70,7 +73,7 @@ public class TaskMapper {
                 .executor(EmployeeMapper.toEmployeeDtoShort(task.getExecutor()))
                 .startDate(task.getStartDate())
                 .finishDate(task.getFinishDate())
-                .project(ProjectMapper.projectShortToOutDto(task.getProject()))
+                .project(projectMapper.toProjectShortDto(task.getProject()))
                 .status(task.getStatus())
                 .basicPoints(task.getBasicPoints())
                 .penaltyPoints(task.getPenaltyPoints())

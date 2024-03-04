@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service;
+package ru.epa.epabackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,6 +8,7 @@ import ru.epa.epabackend.exception.NotFoundException;
 import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.repository.TechnologyRepository;
+import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
 
