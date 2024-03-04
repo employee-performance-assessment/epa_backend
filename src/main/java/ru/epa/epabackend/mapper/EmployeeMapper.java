@@ -1,23 +1,23 @@
 package ru.epa.epabackend.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
 import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.model.Employee;
 
 @UtilityClass
 public class EmployeeMapper {
 
-    public EmployeeDtoResponseFull toEmployeeDtoFull(Employee employee) {
+    public EmployeeFullDto toEmployeeDtoFull(Employee employee) {
         String fullName = employee.getLastName() + " " + employee.getFirstName() + " " + employee.getPatronymic();
-        return EmployeeDtoResponseFull.builder()
+        return EmployeeFullDto.builder()
                 .id(employee.getId())
                 .fullName(fullName)
                 .nickName(employee.getNickName())
                 .city(employee.getCity())
-                .login(employee.getLogin())
+                .email(employee.getEmail())
                 .birthday(employee.getBirthday())
                 .role(employee.getRole())
                 .position(employee.getPosition())
@@ -36,7 +36,7 @@ public class EmployeeMapper {
                 .patronymic(fullName[2])
                 .nickName(employeeRtoRequest.getNickName())
                 .city(employeeRtoRequest.getCity())
-                .login(employeeRtoRequest.getLogin())
+                .email(employeeRtoRequest.getEmail())
                 .password(employeeRtoRequest.getPassword())
                 .birthday(employeeRtoRequest.getBirthday())
                 .role(employeeRtoRequest.getRole())
@@ -45,8 +45,9 @@ public class EmployeeMapper {
                 .build();
     }
 
-    public EmployeeDtoResponseShort toEmployeeDtoShort(Employee employee) {
-        return EmployeeDtoResponseShort.builder()
+    public EmployeeShortDto toEmployeeDtoShort(Employee employee) {
+        return EmployeeShortDto.builder()
+                .id(employee.getId())
                 .fullName(employee.getLastName() + " " + employee.getFirstName())
                 .position(employee.getPosition())
                 .build();

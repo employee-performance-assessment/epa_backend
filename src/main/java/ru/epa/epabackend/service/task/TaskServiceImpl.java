@@ -8,6 +8,7 @@ import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -23,11 +24,12 @@ import ru.epa.epabackend.util.TaskStatus;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
 /**
- * Класс TaskEmployeeServiceImpl содержит методы действий с задачами для администратора.
+ * Класс TaskServiceImpl содержит методы действий с задачами для администратора.
  *
  * @author Владислав Осипов
  */
@@ -42,9 +44,10 @@ public class TaskServiceImpl implements TaskService {
     private final ProjectRepository projectRepository;
     private final ProjectServiceImpl projectService;
     private final EmployeeServiceImpl employeeService;
+    private final ProjectMapper projectMapper;
 
     /**
-     * Получение списка всех задач
+     * Получение списка всех задач админом
      */
     @Override
     @Transactional(readOnly = true)
@@ -53,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Найти задачу по ID
+     * Найти задачу по ID админом
      */
     @Override
     @Transactional(readOnly = true)
@@ -62,11 +65,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Создание задачи
+     * Создание задачи админом
      */
     @Override
-    public TaskFullDto createByAdmin(TaskInDto taskInDto) {
-        Project project = projectService.findByID(taskInDto.getProjectId());
+    public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
+        Employee admin = employeeService.getEmployeeByEmail(email);
+        Project project = projectService.findById(taskInDto.getProjectId());
+        projectService.checkUserAndProject(admin, project);
         Task task = taskMapper.dtoInToTask(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
@@ -75,7 +80,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Обновление задачи
+     * Обновление задачи админом
      */
     @Override
     public TaskFullDto updateByAdmin(Long taskId, TaskInDto taskInDto) {
@@ -89,11 +94,21 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Удаление задачи
+     * Удаление задачи админом
      */
     @Override
     public void deleteByAdmin(Long taskId) {
         taskRepository.delete(getTaskFromRepositoryById(taskId));
+    }
+
+    /**
+     * Получение списка задач проекта с определенным статусом задач
+     */
+    @Override
+    public List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+        projectService.findById(projectId);
+        return taskRepository.findByProjectIdAndStatus(projectId, status).stream()
+                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
     }
 
     /**
@@ -111,6 +126,16 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
         return taskMapper.tasksToListOutDto(taskRepository.findAllByExecutorId(employeeId));
+    }
+
+    /**
+     * Получение списка всех задач пользователя с указанным статусом задач
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<TaskShortDto> findAllByEmployeeIdAndStatus(Long employeeId, TaskStatus status) {
+        return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()
+                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
     }
 
     /**

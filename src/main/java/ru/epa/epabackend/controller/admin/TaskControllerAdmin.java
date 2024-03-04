@@ -2,6 +2,7 @@ package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -11,6 +12,7 @@ import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.service.task.TaskService;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -18,7 +20,8 @@ import java.util.List;
  *
  * @author Владислав Осипов
  */
-@Tag(name = "Private: Задачи", description = "Закрытый API для работы с задачами")
+@SecurityRequirement(name = "JWT")
+@Tag(name = "Admin: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
 @RequestMapping("/admin/tasks")
 @RequiredArgsConstructor
@@ -61,8 +64,9 @@ public class TaskControllerAdmin {
             description = "Создание новой задачи администратором"
     )
     @PostMapping()
-    public TaskFullDto createByAdmin(@Parameter(required = true) @RequestBody TaskInDto taskInDto) {
-        return taskService.createByAdmin(taskInDto);
+    public TaskFullDto createByAdmin(@Parameter(required = true) @RequestBody TaskInDto taskInDto,
+                                     Principal principal) {
+        return taskService.createByAdmin(taskInDto, principal.getName());
     }
 
     /**
