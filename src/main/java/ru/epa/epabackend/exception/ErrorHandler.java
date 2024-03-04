@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
-import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class,
-            WrongFullNameException.class, MissingServletRequestParameterException.class,
-            BadRequestException.class})
+            MissingServletRequestParameterException.class, BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validateException(RuntimeException e) {
         log.info(e.getMessage());

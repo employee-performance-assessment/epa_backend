@@ -19,7 +19,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class EmployeeDtoRequest {
 
     @NotBlank
-    @Size(min = 8, max = 152, groups = {Create.class, Update.class})
+    @Size(min = 8, max = 512, groups = {Create.class, Update.class})
     private String fullName;
 
     @Size(min = 2, max = 50, groups = {Create.class, Update.class})
