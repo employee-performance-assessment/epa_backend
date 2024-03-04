@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service.task;
+package ru.epa.epabackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,6 @@ import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.NotFoundException;
-import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -16,8 +15,9 @@ import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
-import ru.epa.epabackend.service.EmployeeServiceImpl;
-import ru.epa.epabackend.service.project.ProjectServiceImpl;
+import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.service.ProjectService;
+import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -42,9 +42,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final EmployeeRepository employeeRepository;
     private final ProjectRepository projectRepository;
-    private final ProjectServiceImpl projectService;
-    private final EmployeeServiceImpl employeeService;
-    private final ProjectMapper projectMapper;
+    private final ProjectService projectService;
+    private final EmployeeService employeeService;
 
     /**
      * Получение списка всех задач админом

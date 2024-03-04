@@ -53,6 +53,12 @@ build/
 ### VS Code ###
 .vscode/
 
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
 ### For Mac ###
 *.db
 db/*

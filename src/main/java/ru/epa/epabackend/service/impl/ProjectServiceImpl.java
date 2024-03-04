@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service.project;
+package ru.epa.epabackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.util.List;
@@ -117,6 +118,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.save(project);
     }
 
+    @Override
     public void checkUserAndProject(Employee user, Project project) {
         if (!user.getProjects().contains(project))
             throw new ConflictException(String.format("%s с email %s не относится к проекту с id %d",

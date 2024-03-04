@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service;
+package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -7,13 +7,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
 import ru.epa.epabackend.dto.employee.EmployeeFullDto;
-import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
+import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
@@ -32,7 +33,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public EmployeeFullDto addEmployee(EmployeeRtoRequest employeeRtoRequest) {
+
+    public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
         Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeRtoRequest));
         employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
@@ -41,12 +43,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeFullDto updateEmployee(Long employeeId, EmployeeRtoRequest employeeRtoRequest) {
-        log.info("Обновление существующего сотрудника {}", employeeRtoRequest.getFullName());
+    public EmployeeFullDto updateEmployee(Long employeeId, EmployeeDtoRequest employeeDtoRequest) {
+        log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
         Employee oldEmployee = getEmployee(employeeId);
-        String fullName = employeeRtoRequest.getFullName();
+        String fullName = employeeDtoRequest.getFullName();
         if (fullName != null && !fullName.isBlank()) {
-            String[] full = employeeRtoRequest.getFullName().split(" ");
+            String[] full = employeeDtoRequest.getFullName().split(" ");
             if (full.length != 3) {
                 throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
             }
@@ -55,17 +57,17 @@ public class EmployeeServiceImpl implements EmployeeService {
             oldEmployee.setPatronymic(full[2]);
         }
 
-        updateEmployeeFields(oldEmployee, employeeRtoRequest);
+        updateEmployeeFields(oldEmployee, employeeDtoRequest);
 
-        Role role = employeeRtoRequest.getRole();
+        Role role = employeeDtoRequest.getRole();
         if (role != null) {
             oldEmployee.setRole(role);
         }
-        String position = employeeRtoRequest.getPosition();
+        String position = employeeDtoRequest.getPosition();
         if (position != null && !position.isBlank()) {
             oldEmployee.setPosition(position);
         }
-        String department = employeeRtoRequest.getDepartment();
+        String department = employeeDtoRequest.getDepartment();
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
@@ -117,24 +119,24 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
     }
 
-    private void updateEmployeeFields(Employee oldEmployee, EmployeeRtoRequest employeeRtoRequest) {
-        String nickName = employeeRtoRequest.getNickName();
+    private void updateEmployeeFields(Employee oldEmployee, EmployeeDtoRequest employeeDtoRequest) {
+        String nickName = employeeDtoRequest.getNickName();
         if (nickName != null && !nickName.isBlank()) {
             oldEmployee.setNickName(nickName);
         }
-        String city = employeeRtoRequest.getCity();
+        String city = employeeDtoRequest.getCity();
         if (city != null && !city.isBlank()) {
             oldEmployee.setCity(city);
         }
-        String email = employeeRtoRequest.getEmail();
+        String email = employeeDtoRequest.getEmail();
         if (email != null && !email.isBlank()) {
             oldEmployee.setEmail(email);
         }
-        String password = employeeRtoRequest.getPassword();
+        String password = employeeDtoRequest.getPassword();
         if (password != null && !password.isBlank()) {
             oldEmployee.setPassword(passwordEncoder.encode(password));
         }
-        LocalDate birthday = employeeRtoRequest.getBirthday();
+        LocalDate birthday = employeeDtoRequest.getBirthday();
         if (birthday != null) {
             oldEmployee.setBirthday(birthday);
         }

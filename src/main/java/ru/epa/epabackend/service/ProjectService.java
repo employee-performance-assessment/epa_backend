@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service.project;
+package ru.epa.epabackend.service;
 
 
 import ru.epa.epabackend.dto.employee.EmployeeShortDto;
@@ -6,6 +6,7 @@ import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.project.UpdateProjectRto;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.util.Role;
 
@@ -29,4 +30,6 @@ public interface ProjectService {
     void delete(Long projectId, String email);
 
     void deleteEmployeeFromProject(Long projectId, Long employeeId, String email);
+
+    void checkUserAndProject(Employee user, Project project);
 }

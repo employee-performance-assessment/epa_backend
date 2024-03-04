@@ -97,6 +97,7 @@ public class Employee implements UserDetails {
      */
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "executor_id")
+    @Builder.Default
     private Set<Task> tasks = new HashSet<>();
 
     /**
@@ -107,6 +108,7 @@ public class Employee implements UserDetails {
             name = "employees_technologies",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "technology_id"))
+    @Builder.Default
     private Set<Technology> technologies = new HashSet<>();
 
     /**

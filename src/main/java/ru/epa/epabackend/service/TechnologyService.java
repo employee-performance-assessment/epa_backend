@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.TechnologyDto;
+import ru.epa.epabackend.dto.technology.TechnologyDto;
 import ru.epa.epabackend.model.Technology;
 
 import java.util.List;
