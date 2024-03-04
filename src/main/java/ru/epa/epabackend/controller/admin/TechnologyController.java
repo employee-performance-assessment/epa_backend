@@ -1,11 +1,11 @@
-package ru.epa.epabackend.controller;
+package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.TechnologyDto;
+import ru.epa.epabackend.dto.technology.TechnologyDto;
 import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
@@ -18,9 +18,9 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(path = "/technologies")
+@RequestMapping("/admin/technologies")
 @RequiredArgsConstructor
-@Tag(name = "Технологии", description = "API для работы с технологиями")
+@Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
 public class TechnologyController {
     private final TechnologyService technologyService;
 
