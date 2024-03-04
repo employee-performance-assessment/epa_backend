@@ -1,6 +1,7 @@
 package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/technologies")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "JWT")
 @Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
 public class TechnologyController {
     private final TechnologyService technologyService;

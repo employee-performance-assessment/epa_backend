@@ -33,7 +33,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-
     public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
         Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeRtoRequest));

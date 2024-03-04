@@ -97,7 +97,7 @@ public class TaskControllerEmployee {
             description = "При успешном получении возвращается 200 Ok\n" +
                     "В случае отсутствия проекта с указанным id возвращается 404 Not Found"
     )
-    @GetMapping("{projectId}")
+    @GetMapping("/project/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskShortDto> findByProjectIdAndStatus(@PathVariable Long projectId,
                                                        @RequestParam TaskStatus status) {
