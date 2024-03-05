@@ -20,8 +20,11 @@ import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static ru.epa.epabackend.exception.ExceptionDescriptions.FORBIDDEN_TO_EDIT_NOT_YOUR_TASK;
@@ -75,14 +78,13 @@ class TaskEmployeeUnitTests {
                 .build();
     }
 
-  /*  @Test
+    @Test
     void findAllTasksByEmployeeId_shouldCallRepository() {
-        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(List.of(task));
+        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(asList(task));
         List<TaskShortDto> tasks = new ArrayList<>();
-        tasks.add(taskMapper.taskToTaskShortDto(task));
+        tasks.add(taskMapper.mapToShortDto(task));
         List<TaskShortDto> taskShortDtoList = new ArrayList<>();
         taskShortDtoList.add(taskShortDto);
-        when(tasks).thenReturn(taskShortDtoList);
 
         List<TaskShortDto> tasksResult = taskService.findAllByEmployeeId(ID_1);
 
@@ -90,7 +92,7 @@ class TaskEmployeeUnitTests {
         assertNotNull(tasksResult);
         assertEquals(expectedSize, tasksResult.size());
         verify(taskRepository, times(1)).findAllByExecutorId(ID_1);
-    }*/
+    }
 
     @Test
     void findTaskById_shouldCallRepository() {

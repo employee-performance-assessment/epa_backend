@@ -37,6 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private final EmployeeMapper employeeMapper;
     private final EmployeeService employeeService;
     private final EmployeeRepository employeeRepository;
 
@@ -49,12 +50,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectShortDto save(NewProjectRto newProjectRto, String email) {
         Employee admin = employeeService.getEmployeeByEmail(email);
-        return projectMapper.toProjectShortDto(projectRepository.save(projectMapper.toProject(newProjectRto, admin)));
+        return projectMapper.mapToShortDto(projectRepository.save(projectMapper.mapToEntity(newProjectRto, admin)));
     }
 
     @Override
     public ProjectShortDto findDtoById(Long projectId, String email) {
-        return projectMapper.toProjectShortDto(findById(projectId));
+        return projectMapper.mapToShortDto(findById(projectId));
     }
 
     @Override
@@ -67,14 +68,14 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ConflictException(String.format("Сотрудник с id %d уже добавлен к проекту", employeeId));
         List<Employee> employees = project.getEmployees();
         employees.add(employee);
-        return projectMapper.toProjectEmployeesDto(projectRepository.save(project),
-                employees.stream().map(EmployeeMapper::toEmployeeDtoShort).collect(Collectors.toList()));
+        return projectMapper.mapToProjectEmployeesDto(projectRepository.save(project),
+                employees.stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList()));
     }
 
     @Override
     public List<ProjectShortDto> findByAdminEmail(String email) {
         return projectRepository.findByEmployees(employeeService.getEmployeeByEmail(email)).stream()
-                .map(projectMapper::toProjectShortDto).collect(Collectors.toList());
+                .map(projectMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     @Override
@@ -84,7 +85,7 @@ public class ProjectServiceImpl implements ProjectService {
         checkUserAndProject(admin, project);
         return employeeRepository
                 .findByProjectsAndRole(findById(projectId), role)
-                .stream().map(EmployeeMapper::toEmployeeDtoShort).collect(Collectors.toList());
+                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     @Override
@@ -96,7 +97,7 @@ public class ProjectServiceImpl implements ProjectService {
             project.setName(updateProjectRto.getName());
         if (updateProjectRto.getStatus() != null)
             project.setStatus(updateProjectRto.getStatus());
-        return projectMapper.toProjectShortDto(projectRepository.save(project));
+        return projectMapper.mapToShortDto(projectRepository.save(project));
     }
 
     @Override

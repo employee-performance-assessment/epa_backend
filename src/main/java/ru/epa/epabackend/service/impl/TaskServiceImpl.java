@@ -68,21 +68,10 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-<<<<<<< HEAD:src/main/java/ru/epa/epabackend/service/impl/TaskServiceImpl.java
     public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
         Employee admin = employeeService.getEmployeeByEmail(email);
         Project project = projectService.findById(taskInDto.getProjectId());
-        projectService.checkUserAndProject(admin, project);
-        Task task = taskMapper.dtoInToTask(taskInDto);
-=======
-    public TaskFullDto createByAdmin(TaskInDto taskInDto) {
-        Project project = projectService.findByID(taskInDto.getProjectId());
-<<<<<<< HEAD:src/main/java/ru/epa/epabackend/service/impl/TaskServiceImpl.java
-        Task task = taskMapper.taskInDtoToTask(taskInDto);
->>>>>>> 7b39a4e (feat: add mapstruct.):src/main/java/ru/epa/epabackend/service/task/TaskServiceImpl.java
-=======
         Task task = taskMapper.mapToEntity(taskInDto);
->>>>>>> 5a9ecde (fix: correction of comments after review):src/main/java/ru/epa/epabackend/service/task/TaskServiceImpl.java
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
         task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
@@ -117,8 +106,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
-        return taskRepository.findByProjectIdAndStatus(projectId, status).stream()
-                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
+        return taskRepository.findByProjectIdAndStatus(projectId, status)
+                .stream().map(taskMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     /**
@@ -135,8 +124,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
-        return taskRepository.findAllByExecutorId(employeeId).stream().map(taskMapper::mapToShortDto)
-                .collect(Collectors.toList());
+        return taskRepository.findAllByExecutorId(employeeId).stream()
+                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     /**
@@ -146,7 +135,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeIdAndStatus(Long employeeId, TaskStatus status) {
         return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()
-                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
+                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     /**

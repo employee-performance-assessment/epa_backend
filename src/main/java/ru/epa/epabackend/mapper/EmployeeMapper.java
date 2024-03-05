@@ -1,18 +1,17 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseFull;
-import ru.epa.epabackend.dto.employee.EmployeeDtoResponseShort;
-import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
+import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.model.Employee;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
 
-    EmployeeDtoResponseFull mapToFullDto(Employee employee);
+    EmployeeFullDto mapToFullDto(Employee employee);
 
-    Employee mapToEntity(EmployeeRtoRequest employeeRtoRequest);
+    Employee mapToEntity(EmployeeDtoRequest employeeRtoRequest);
 
-    EmployeeDtoResponseShort mapToShortDto(Employee employee);
+    EmployeeShortDto mapToShortDto(Employee employee);
 }
-
