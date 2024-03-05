@@ -74,7 +74,9 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskMapper.dtoInToTask(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
-        task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+        if (taskInDto.getExecutorId() != null) {
+            task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+        }
         return taskMapper.taskCreateToOutDto(taskRepository.save(task));
     }
 
