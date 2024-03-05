@@ -20,7 +20,7 @@ public interface ProjectMapper {
 
     ProjectShortDto mapToShortDto(Project project);
 
-    Project mapToEntity (NewProjectRto newProjectRto, Employee admin);
+    Project mapToEntity(NewProjectRto newProjectRto, Employee admin);
 
     Project mapToEntity(ProjectShortDto projectShortDto);
 
