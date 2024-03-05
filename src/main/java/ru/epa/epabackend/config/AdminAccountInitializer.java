@@ -31,7 +31,7 @@ public class AdminAccountInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         Employee admin = Employee.builder()
-                .fullName("last_name")
+                .fullName("full_name")
                 .email(login)
                 .password(passwordEncoder.encode(password))
                 .role(Role.ROLE_ADMIN)

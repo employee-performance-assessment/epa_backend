@@ -33,7 +33,7 @@ public class Employee implements UserDetails {
     private Long id;
 
     /**
-     * Фамилия.
+     * Полное имя ФИО.
      */
     @Column(name = "full_name")
     private String fullName;
@@ -156,7 +156,7 @@ public class Employee implements UserDetails {
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", last name='" + fullName + '\'' +
+                ", full name='" + fullName + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
                 ", email='" + email + '\'' +
