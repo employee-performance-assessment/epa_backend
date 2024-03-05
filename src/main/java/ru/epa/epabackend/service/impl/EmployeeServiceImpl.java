@@ -70,7 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
-        return EmployeeMapper.toEmployeeDtoFull(oldEmployee);
+        return EmployeeMapper.toEmployeeDtoFull(employeeRepository.save(oldEmployee));
     }
 
     @Override
