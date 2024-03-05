@@ -20,9 +20,11 @@ import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static ru.epa.epabackend.exception.ExceptionDescriptions.FORBIDDEN_TO_EDIT_NOT_YOUR_TASK;
@@ -78,8 +80,11 @@ class TaskEmployeeUnitTests {
 
     @Test
     void findAllTasksByEmployeeId_shouldCallRepository() {
-        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(List.of(task));
-        when(taskMapper.tasksToListOutDto(List.of(task))).thenReturn(List.of(taskShortDto));
+        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(asList(task));
+        List<TaskShortDto> tasks = new ArrayList<>();
+        tasks.add(taskMapper.mapToShortDto(task));
+        List<TaskShortDto> taskShortDtoList = new ArrayList<>();
+        taskShortDtoList.add(taskShortDto);
 
         List<TaskShortDto> tasksResult = taskService.findAllByEmployeeId(ID_1);
 
@@ -93,7 +98,7 @@ class TaskEmployeeUnitTests {
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.findById(employee.getId(), task.getId());
 
@@ -108,7 +113,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateStatus(employee.getId(), task.getId(), STATUS);
 

@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static ru.epa.epabackend.exception.ExceptionDescriptions.TASK_NOT_FOUND;
@@ -111,9 +112,8 @@ class TaskAdminUnitTests {
 
     @Test
     void findAllTasks_shouldCallRepository() {
-        when(taskRepository.findAll()).thenReturn(List.of(task));
-        when(taskMapper.tasksToListOutDto(List.of(task))).thenReturn(List.of(taskShortDto));
-
+        when(taskRepository.findAll()).thenReturn(asList(task));
+        when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
         List<TaskShortDto> tasksResult = taskService.findAllByAdmin();
 
         int expectedSize = 1;
@@ -125,7 +125,7 @@ class TaskAdminUnitTests {
     @Test
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.findByIdByAdmin(task.getId());
 
@@ -139,8 +139,8 @@ class TaskAdminUnitTests {
     void createTask_shouldCallRepository() {
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.dtoInToTask(taskInDto)).thenReturn(task);
-        when(taskMapper.taskCreateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToEntity(taskInDto)).thenReturn(task);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto, email);
 
@@ -156,7 +156,7 @@ class TaskAdminUnitTests {
         when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
 
@@ -173,7 +173,7 @@ class TaskAdminUnitTests {
         when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
 
