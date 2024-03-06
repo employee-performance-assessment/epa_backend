@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
         if (taskInDto.getExecutorId() != null) {
             task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
         }
-        return taskMapper.taskCreateToOutDto(taskRepository.save(task));
+        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**

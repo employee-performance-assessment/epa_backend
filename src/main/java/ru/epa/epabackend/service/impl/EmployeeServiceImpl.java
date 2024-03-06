@@ -36,10 +36,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeDtoRequest) {
         log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
-        Employee employeeToSave = EmployeeMapper.toEmployee(employeeDtoRequest);
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
         employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
         employeeToSave.setRole(ROLE_USER);
-        return EmployeeMapper.toEmployeeDtoFull(employeeRepository.save(employeeToSave));
+        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
-        return EmployeeMapper.toEmployeeDtoFull(employeeRepository.save(oldEmployee));
+        return employeeMapper.mapToFullDto(employeeRepository.save(oldEmployee));
     }
 
     @Override
