@@ -35,13 +35,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     @Override
-
-    public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest) {
-        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
-        Employee employee = employeeRepository.save(employeeMapper.mapToEntity(employeeRtoRequest));
-        employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
-        employee.setRole(ROLE_USER);
-        return employeeMapper.mapToFullDto(employee);
+    public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeDtoRequest) {
+        log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
+        employeeToSave.setRole(ROLE_USER);
+        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
     }
 
     @Override
@@ -80,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
-        return employeeMapper.mapToFullDto(oldEmployee);
+        return employeeMapper.mapToFullDto(employeeRepository.save(oldEmployee));
     }
 
     @Override
