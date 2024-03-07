@@ -11,6 +11,8 @@ import java.util.List;
 public interface EmployeeService {
     EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest);
 
+    EmployeeFullDto addEmployeeSelfRegister(EmployeeDtoRequest employeeRtoRequest);
+
     EmployeeFullDto updateEmployee(Long employeeId, EmployeeDtoRequest employeeRtoRequest);
 
     void deleteEmployee(Long employeeId);
