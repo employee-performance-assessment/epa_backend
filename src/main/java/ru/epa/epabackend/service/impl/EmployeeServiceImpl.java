@@ -46,10 +46,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeFullDto addEmployeeSelfRegister(EmployeeDtoRequest employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
-        Employee employeeToSave = EmployeeMapper.toEmployee(employeeRtoRequest);
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeRtoRequest);
         employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
-        return EmployeeMapper.toEmployeeDtoFull(employeeRepository.save(employeeToSave));
+        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
     }
 
     @Override

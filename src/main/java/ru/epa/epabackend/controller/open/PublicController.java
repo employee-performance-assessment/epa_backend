@@ -42,6 +42,6 @@ public class PublicController {
     )
     @PostMapping("/register")
     public EmployeeFullDto register(@RequestBody EmployeeDtoRequest employeeDtoRequest) {
-        return employeeService.addEmployee(employeeDtoRequest);
+        return employeeService.addEmployeeSelfRegister(employeeDtoRequest);
     }
 }
