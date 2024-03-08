@@ -28,7 +28,6 @@ public interface TaskMapper {
     Task mapToEntity(TaskInDto taskInDto);
 
     /**
-     *
      * Преобразование из сущности в DTO, при создании.
      */
     TaskFullDto mapToFullDto(Task task);
