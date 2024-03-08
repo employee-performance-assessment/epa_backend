@@ -8,6 +8,7 @@ import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
+import ru.epa.epabackend.util.ProjectStatus;
 
 import java.util.List;
 
@@ -21,9 +22,10 @@ public interface ProjectMapper {
 
     ProjectShortDto mapToShortDto(Project project);
 
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "employees", ignore = true)
-    Project mapToEntity(NewProjectRto newProjectRto, Employee admin);
+    @Mapping(target = "status", constant = "TODO")
+    @Mapping(target = "employees", source = "employees")
+    @Mapping(target = "created", expression = "java(java.time.LocalDate.now())")
+    Project mapToEntity(NewProjectRto newProjectRto, List<Employee> employees);
 
     @Mapping(target = "employees", ignore = true)
     @Mapping(target = "tasks", ignore = true)

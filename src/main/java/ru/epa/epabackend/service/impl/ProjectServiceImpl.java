@@ -49,7 +49,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectShortDto save(NewProjectRto newProjectRto, String email) {
         Employee admin = employeeService.getEmployeeByEmail(email);
-        return projectMapper.mapToShortDto(projectRepository.save(projectMapper.mapToEntity(newProjectRto, admin)));
+        return projectMapper.mapToShortDto(projectRepository.save(projectMapper.mapToEntity(newProjectRto, List.of(admin))));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectShortDto> findByAdminEmail(String email) {
+    public List<ProjectShortDto> findByUserEmail(String email) {
         return projectRepository.findByEmployees(employeeService.getEmployeeByEmail(email)).stream()
                 .map(projectMapper::mapToShortDto).collect(Collectors.toList());
     }

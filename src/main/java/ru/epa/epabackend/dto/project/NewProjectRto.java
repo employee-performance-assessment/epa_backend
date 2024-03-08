@@ -18,6 +18,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NewProjectRto {
     @NotBlank
-    @Size(min = 3, max = 255)
+    @Size(min = 2, max = 250)
     private String name;
 }

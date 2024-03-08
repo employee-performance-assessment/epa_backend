@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.epa.epabackend.util.ProjectStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -41,6 +42,12 @@ public class Project {
      */
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
+
+    /**
+     * Дата создания
+     */
+    @Column(name = "created")
+    private LocalDate created;
 
     /**
      * Список задач проекта.
