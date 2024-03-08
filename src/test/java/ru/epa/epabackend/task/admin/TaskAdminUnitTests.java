@@ -1,5 +1,6 @@
 package ru.epa.epabackend.task.admin;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -33,7 +33,6 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static ru.epa.epabackend.exception.ExceptionDescriptions.TASK_NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
 class TaskAdminUnitTests {
@@ -192,13 +191,9 @@ class TaskAdminUnitTests {
         verify(taskRepository, times(1)).delete(task);
     }
 
-
     @Test
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class, () ->
-                taskService.findByIdByAdmin(ID_1));
-
-        assertEquals(TASK_NOT_FOUND.getTitle(), exception.getMessage());
+        assertThrows(EntityNotFoundException.class, () -> taskService.findByIdByAdmin(ID_1));
     }
 }

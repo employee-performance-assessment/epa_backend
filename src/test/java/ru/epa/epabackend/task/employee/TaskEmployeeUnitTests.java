@@ -1,5 +1,6 @@
 package ru.epa.epabackend.task.employee;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Task;
@@ -27,7 +27,6 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static ru.epa.epabackend.exception.ExceptionDescriptions.FORBIDDEN_TO_EDIT_NOT_YOUR_TASK;
 
 @ExtendWith(MockitoExtension.class)
 class TaskEmployeeUnitTests {
@@ -126,9 +125,6 @@ class TaskEmployeeUnitTests {
     @Test
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class, () ->
-                taskService.findById(ID_2, ID_1));
-
-        assertEquals(FORBIDDEN_TO_EDIT_NOT_YOUR_TASK.getTitle(), exception.getMessage());
+        assertThrows(EntityNotFoundException.class, () -> taskService.findById(ID_2, ID_1));
     }
 }

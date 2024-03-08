@@ -116,14 +116,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional(readOnly = true)
     public Employee getEmployeeByEmail(String email) {
-        return employeeRepository.findByEmail(email).orElseThrow(() ->
-                new EntityNotFoundException("Неверный email"));
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Неверный email, oбъект класса %s не " +
+                        "найден", Employee.class)));
     }
 
     @Override
     public Employee getEmployee(Long employeeId) {
-        return employeeRepository.findById(employeeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
+        return employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Employee.class)));
     }
 
     private void updateEmployeeFields(Employee oldEmployee, EmployeeDtoRequest employeeDtoRequest) {

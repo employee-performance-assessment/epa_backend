@@ -1,5 +1,6 @@
 package ru.epa.epabackend.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,6 @@ import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.project.UpdateProjectRto;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
@@ -22,8 +22,6 @@ import ru.epa.epabackend.util.Role;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.epa.epabackend.exception.ExceptionDescriptions.PROJECT_NOT_FOUND;
 
 /**
  * Класс ProjectServiceImpl содержит бизнес-логику работы с проектами
@@ -44,7 +42,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project findById(Long projectId) {
         return projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.getTitle()));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Project.class)));
     }
 
     @Override

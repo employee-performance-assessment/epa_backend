@@ -1,10 +1,10 @@
 package ru.epa.epabackend.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.technology.TechnologyDto;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.repository.TechnologyRepository;
@@ -39,7 +39,8 @@ public class TechnologyServiceImpl implements TechnologyService {
     @Transactional
     public Technology getTechnologyById(Long technologyId) {
         return technologyRepository.findById(technologyId)
-                .orElseThrow(() -> new NotFoundException(String.format("Технологии с id %d не существует", technologyId)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Technology.class)));
     }
 
     /**

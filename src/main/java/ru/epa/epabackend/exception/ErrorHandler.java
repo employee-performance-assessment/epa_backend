@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 
 @Slf4j
@@ -27,7 +26,7 @@ public class ErrorHandler {
         return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse entityNotFoundException(EntityNotFoundException e) {
         log.info(e.getMessage());

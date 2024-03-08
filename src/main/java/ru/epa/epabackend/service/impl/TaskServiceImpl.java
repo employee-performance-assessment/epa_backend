@@ -1,5 +1,6 @@
 package ru.epa.epabackend.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,7 +8,6 @@ import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -25,8 +25,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
 /**
  * Класс TaskServiceImpl содержит методы действий с задачами для администратора.
@@ -117,7 +115,8 @@ public class TaskServiceImpl implements TaskService {
      */
     private Task getTaskFromRepositoryById(Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new NotFoundException(TASK_NOT_FOUND.getTitle()));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Task.class)));
     }
 
     /**
@@ -167,7 +166,8 @@ public class TaskServiceImpl implements TaskService {
      */
     private Task getTaskFromRepositoryByIdAndExecutorId(Long taskId, Long employeeId) {
         return taskRepository.findByIdAndExecutorId(taskId, employeeId)
-                .orElseThrow(() -> new NotFoundException(FORBIDDEN_TO_EDIT_NOT_YOUR_TASK.getTitle()));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Task.class)));
     }
 
     private void setPointsToEmployeeAfterTaskDone(TaskInDto taskInDto, Task task) {
@@ -187,7 +187,8 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskInDto.getExecutorId() != null) {
             Employee employee = employeeRepository.findById(taskInDto.getExecutorId())
-                    .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND.getTitle()));
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                            Employee.class)));
             task.setExecutor(employee);
         }
 
@@ -197,7 +198,8 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskInDto.getProjectId() != null) {
             Project project = projectRepository.findById(taskInDto.getProjectId())
-                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.getTitle()));
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                            Project.class)));
             task.setProject(project);
         }
 
