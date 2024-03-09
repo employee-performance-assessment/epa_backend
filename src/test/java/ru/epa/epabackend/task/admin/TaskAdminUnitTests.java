@@ -79,12 +79,18 @@ class TaskAdminUnitTests {
                 .role(Role.ROLE_USER)
                 .email(email)
                 .build();
+        project = Project.builder()
+                .id(ID_1)
+                .name("Project1")
+                .employees(List.of(employee))
+                .build();
         task = Task.builder()
                 .id(ID_1)
                 .basicPoints(10)
                 .penaltyPoints(2)
                 .finishDate(LocalDate.now().plusDays(2))
                 .executor(employee)
+                .project(project)
                 .build();
         taskOutDto = TaskFullDto.builder()
                 .id(ID_1)
@@ -94,11 +100,6 @@ class TaskAdminUnitTests {
                 .executorId(ID_2)
                 .projectId(ID_1)
                 .deadLine(LocalDate.now().plusDays(2))
-                .build();
-        project = Project.builder()
-                .id(ID_1)
-                .name("Project1")
-                .employees(List.of(employee))
                 .build();
         taskShortDto = TaskShortDto.builder()
                 .id(ID_1)
@@ -152,7 +153,6 @@ class TaskAdminUnitTests {
 
     @Test
     void updateTask_shouldCallRepository() {
-        when(projectService.findById(project.getId())).thenReturn(project);
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(task)).thenReturn(task);
@@ -169,7 +169,6 @@ class TaskAdminUnitTests {
     @Test
     void updateTask_shouldCallRepository_status_done() {
         taskInDto.setStatus("DONE");
-        when(projectService.findById(project.getId())).thenReturn(project);
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
