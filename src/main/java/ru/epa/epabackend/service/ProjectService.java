@@ -21,7 +21,7 @@ public interface ProjectService {
 
     ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId, String email);
 
-    List<ProjectShortDto> findByAdminEmail(String email);
+    List<ProjectShortDto> findByUserEmail(String email);
 
     List<EmployeeShortDto> findByProjectIdAndRole(Long projectId, Role role, String email);
 

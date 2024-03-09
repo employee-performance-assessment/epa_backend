@@ -21,9 +21,10 @@ public interface ProjectMapper {
 
     ProjectShortDto mapToShortDto(Project project);
 
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "employees", ignore = true)
-    Project mapToEntity(NewProjectRto newProjectRto, Employee admin);
+    @Mapping(target = "status", constant = "TODO")
+    @Mapping(target = "employees", source = "employees")
+    @Mapping(target = "created", expression = "java(java.time.LocalDate.now())")
+    Project mapToEntity(NewProjectRto newProjectRto, List<Employee> employees);
 
     @Mapping(target = "employees", ignore = true)
     @Mapping(target = "tasks", ignore = true)

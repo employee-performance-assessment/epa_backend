@@ -37,7 +37,7 @@ public class Technology {
     /**
      * Список сотрудников, владеющих определёнными технологиями.
      */
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "employees_technologies",
             joinColumns = @JoinColumn(name = "technology_id"),
