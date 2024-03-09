@@ -35,4 +35,5 @@ public interface TaskMapper {
      * Преобразование из сущности в DTO, краткое.
      */
     TaskShortDto mapToShortDto(Task task);
+
 }

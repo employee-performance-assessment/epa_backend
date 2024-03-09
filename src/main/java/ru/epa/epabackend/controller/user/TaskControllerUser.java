@@ -46,12 +46,18 @@ public class TaskControllerUser {
     )
     @GetMapping
     public List<TaskShortDto> findAllTasksByEmployeeIdAndStatus(Principal principal,
-                                                                @RequestParam(required = false) TaskStatus status) {
+                                                                @RequestParam(required = false) String status) {
         Employee employee = employeeService.getEmployeeByEmail(principal.getName());
         if (status == null) {
             return taskEmployeeService.findAllByEmployeeId(employee.getId());
         } else {
-            return taskEmployeeService.findAllByEmployeeIdAndStatus(employee.getId(), status);
+            try {
+                TaskStatus taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
+                return taskEmployeeService.findAllByEmployeeIdAndStatus(employee.getId(), taskStatus);
+            } catch (IllegalArgumentException exception) {
+                throw new BadRequestException("Unknown status: " + status);
+            }
+
         }
     }
 

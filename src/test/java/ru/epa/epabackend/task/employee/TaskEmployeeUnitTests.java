@@ -20,11 +20,9 @@ import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -42,7 +40,6 @@ class TaskEmployeeUnitTests {
     private Employee employee = new Employee();
     private Task task = new Task();
     private TaskFullDto taskOutDto = new TaskFullDto();
-    private TaskShortDto taskShortDto = new TaskShortDto();
     private EmployeeShortDto employeeShortDto;
 
     @BeforeEach
@@ -68,22 +65,11 @@ class TaskEmployeeUnitTests {
                 .id(ID_1)
                 .executor(employeeShortDto)
                 .build();
-        taskShortDto = TaskShortDto.builder()
-                .id(ID_1)
-                .name("taskShort")
-                .deadLine(LocalDate.now().plusDays(2))
-                .status(STATUS)
-                .basicPoints(10)
-                .build();
     }
 
     @Test
     void findAllTasksByEmployeeId_shouldCallRepository() {
-        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(asList(task));
-        List<TaskShortDto> tasks = new ArrayList<>();
-        tasks.add(taskMapper.mapToShortDto(task));
-        List<TaskShortDto> taskShortDtoList = new ArrayList<>();
-        taskShortDtoList.add(taskShortDto);
+        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(List.of(task));
 
         List<TaskShortDto> tasksResult = taskService.findAllByEmployeeId(ID_1);
 

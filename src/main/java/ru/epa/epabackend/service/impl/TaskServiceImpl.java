@@ -8,12 +8,12 @@ import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
-import ru.epa.epabackend.repository.EmployeeRepository;
-import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.ProjectService;
@@ -24,7 +24,6 @@ import ru.epa.epabackend.util.TaskStatus;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Класс TaskServiceImpl содержит методы действий с задачами для администратора.
@@ -38,8 +37,8 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
-    private final EmployeeRepository employeeRepository;
-    private final ProjectRepository projectRepository;
+    private final EmployeeMapper employeeMapper;
+    private final ProjectMapper projectMapper;
     private final ProjectService projectService;
     private final EmployeeService employeeService;
 
@@ -50,7 +49,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByAdmin() {
         return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -72,7 +71,10 @@ public class TaskServiceImpl implements TaskService {
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
         setExecutorToTask(task, taskInDto, project);
-        return taskMapper.mapToFullDto(taskRepository.save(task));
+        TaskFullDto taskFullDto = taskMapper.mapToFullDto(taskRepository.save(task));
+        taskFullDto.setExecutor(employeeMapper.mapToShortDto(task.getExecutor()));
+        taskFullDto.setProject(projectMapper.mapToShortDto(task.getProject()));
+        return taskFullDto;
     }
 
     /**
@@ -104,7 +106,7 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
         return taskRepository.findByProjectIdAndStatus(projectId, status)
-                .stream().map(taskMapper::mapToShortDto).collect(Collectors.toList());
+                .stream().map(taskMapper::mapToShortDto).toList();
     }
 
     /**
@@ -123,7 +125,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
         return taskRepository.findAllByExecutorId(employeeId).stream()
-                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
+                .map(taskMapper::mapToShortDto).toList();
     }
 
     /**
@@ -133,7 +135,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeIdAndStatus(Long employeeId, TaskStatus status) {
         return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()
-                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
+                .map(taskMapper::mapToShortDto).toList();
     }
 
     /**
@@ -179,7 +181,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         if (taskInDto.getDescription() != null) {
-            task.setName(taskInDto.getDescription());
+            task.setDescription(taskInDto.getDescription());
         }
 
         if (taskInDto.getProjectId() != null) {

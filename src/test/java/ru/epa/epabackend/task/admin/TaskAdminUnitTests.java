@@ -13,12 +13,12 @@ import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
+import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
-import ru.epa.epabackend.repository.EmployeeRepository;
-import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.service.impl.ProjectServiceImpl;
@@ -30,7 +30,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -40,17 +39,17 @@ class TaskAdminUnitTests {
     private static final long ID_2 = 2L;
     private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     @Mock
-    private EmployeeRepository employeeRepository;
-    @Mock
     private TaskRepository taskRepository;
-    @Mock
-    private ProjectRepository projectRepository;
     @Mock
     private ProjectServiceImpl projectService;
     @Mock
     private EmployeeServiceImpl employeeService;
     @Mock
     private TaskMapper taskMapper;
+    @Mock
+    private EmployeeMapper employeeMapper;
+    @Mock
+    private ProjectMapper projectMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
     private static final String email = "qwerty@gmail.com";
@@ -112,7 +111,7 @@ class TaskAdminUnitTests {
 
     @Test
     void findAllTasks_shouldCallRepository() {
-        when(taskRepository.findAll()).thenReturn(asList(task));
+        when(taskRepository.findAll()).thenReturn(List.of(task));
         when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
         List<TaskShortDto> tasksResult = taskService.findAllByAdmin();
 
@@ -141,6 +140,8 @@ class TaskAdminUnitTests {
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToEntity(taskInDto)).thenReturn(task);
+        when(employeeMapper.mapToShortDto(employee)).thenReturn(employeeShortDto);
+        when(projectMapper.mapToShortDto(project)).thenReturn(projectShortDto);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto);
