@@ -175,12 +175,6 @@ public class TaskServiceImpl implements TaskService {
             task.setDescription(taskInDto.getDescription());
         }
 
-        if (taskInDto.getProjectId() != null) {
-            Project project = projectService.findById(taskInDto.getProjectId());
-            task.setProject(project);
-            setExecutorToTask(task, taskInDto, project);
-        }
-
         if (taskInDto.getBasicPoints() != null) {
             task.setBasicPoints(taskInDto.getBasicPoints());
         }
@@ -198,24 +192,8 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    private void setExecutorToTask(Task task, TaskInDto taskInDto, Project project) {
-        if (checkExecutorExists(taskInDto)) {
-            Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
-            if (checkProjectContainsExecutor(project, employee)) {
-                task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-            } else {
-                throw new BadRequestException(String.format("Сотрудника с id %d нет в проекте.",
-                        taskInDto.getExecutorId()));
-            }
-        }
-    }
-
     private boolean checkProjectContainsExecutor(Project project, Employee employee) {
         return project.getEmployees().contains(employee);
-    }
-
-    private boolean checkExecutorExists(TaskInDto taskInDto) {
-        return taskInDto.getExecutorId() != null;
     }
 
     private TaskStatus getTaskStatus(String status) {
