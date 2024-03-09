@@ -66,7 +66,7 @@ public class TaskServiceImpl implements TaskService {
         Project project = projectService.findById(taskInDto.getProjectId());
         Employee executor = employeeService.getEmployee(taskInDto.getExecutorId());
         taskInDto.setStatus("NEW");
-        if (checkProjectContainsExecutor(project, executor)) {
+        if (project.getEmployees().contains(executor)) {
             Task task = taskRepository.save(taskMapper.mapToEntity(taskInDto, project, executor));
             return taskMapper.mapToFullDto(task);
         } else {
@@ -177,7 +177,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskInDto.getExecutorId() != null) {
             Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
-            if (checkProjectContainsExecutor(task.getProject(), employee)) {
+            if (task.getProject().getEmployees().contains(employee)) {
                 task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
             } else {
                 throw new BadRequestException(String.format("Сотрудника с id %d нет в проекте.",
@@ -200,10 +200,6 @@ public class TaskServiceImpl implements TaskService {
                 throw new BadRequestException("Unknown status: " + taskInDto.getStatus());
             }
         }
-    }
-
-    private boolean checkProjectContainsExecutor(Project project, Employee employee) {
-        return project.getEmployees().contains(employee);
     }
 
     private TaskStatus getTaskStatus(String status) {
