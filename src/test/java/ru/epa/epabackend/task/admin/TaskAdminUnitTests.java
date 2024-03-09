@@ -113,7 +113,7 @@ class TaskAdminUnitTests {
     void findAllTasks_shouldCallRepository() {
         when(taskRepository.findAll()).thenReturn(List.of(task));
         when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
-        List<TaskShortDto> tasksResult = taskService.findAllByAdmin();
+        List<TaskShortDto> tasksResult = taskService.findAll();
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
@@ -139,9 +139,7 @@ class TaskAdminUnitTests {
         when(projectService.findById(project.getId())).thenReturn(project);
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.mapToEntity(taskInDto)).thenReturn(task);
-        when(employeeMapper.mapToShortDto(employee)).thenReturn(employeeShortDto);
-        when(projectMapper.mapToShortDto(project)).thenReturn(projectShortDto);
+        when(taskMapper.mapToEntity(taskInDto, project, employee)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto);

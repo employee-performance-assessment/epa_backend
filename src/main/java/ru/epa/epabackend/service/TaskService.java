@@ -5,6 +5,7 @@ import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.util.TaskStatus;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -14,27 +15,22 @@ import java.util.List;
  */
 public interface TaskService {
 
-    /**
-     * Получение списка всех задач
-     */
-    List<TaskShortDto> findAllByEmployeeId(Long userId);
-
-    List<TaskShortDto> findAllByEmployeeIdAndStatus(Long userId, TaskStatus status);
+    List<TaskShortDto> findAllByExecutorIdFilters(String status, Principal principal);
 
     /**
      * Найти задачу по ID
      */
-    TaskFullDto findById(Long userId, Long taskId);
+    TaskFullDto findByIdAndExecutorId(Principal principal, Long taskId);
 
     /**
      * Обновление задачи
      */
-    TaskFullDto updateStatus(Long taskId, Long userId, TaskStatus taskStatus);
+    TaskFullDto updateStatus(Long taskId, String status, Principal principal);
 
     /**
      * Получение списка всех задач
      */
-    List<TaskShortDto> findAllByAdmin();
+    List<TaskShortDto> findAll();
 
     /**
      * Создание задачи
