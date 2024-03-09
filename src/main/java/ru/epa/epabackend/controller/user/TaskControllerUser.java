@@ -13,7 +13,7 @@ import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.service.EmployeeService;
-import ru.epa.epabackend.service.task.TaskService;
+import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -28,10 +28,10 @@ import java.util.List;
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Private: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
-@RequestMapping("users/tasks")
+@RequestMapping("user/tasks")
 @RequiredArgsConstructor
 @Validated
-public class TaskControllerEmployee {
+public class TaskControllerUser {
 
     private final TaskService taskEmployeeService;
     private final EmployeeService employeeService;
@@ -97,7 +97,7 @@ public class TaskControllerEmployee {
             description = "При успешном получении возвращается 200 Ok\n" +
                     "В случае отсутствия проекта с указанным id возвращается 404 Not Found"
     )
-    @GetMapping("{projectId}")
+    @GetMapping("/project/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskShortDto> findByProjectIdAndStatus(@PathVariable Long projectId,
                                                        @RequestParam TaskStatus status) {

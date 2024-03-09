@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
+import ru.epa.epabackend.dto.employee.EmployeeFullDto;
 import ru.epa.epabackend.dto.employee.JwtRequest;
 import ru.epa.epabackend.dto.employee.JwtResponse;
 import ru.epa.epabackend.service.AuthenticationService;
+import ru.epa.epabackend.service.EmployeeService;
 
 /**
  *
@@ -23,6 +26,7 @@ import ru.epa.epabackend.service.AuthenticationService;
 @RequestMapping("/public")
 public class PublicController {
     private final AuthenticationService authenticationService;
+    private final EmployeeService employeeService;
 
     @Operation(
             summary = "Получение JWT токена по паре логин пароль"
@@ -31,5 +35,13 @@ public class PublicController {
     public JwtResponse getToken(@RequestBody @Parameter(required = true) JwtRequest jwtRequest) {
         log.info("POST / jwtRequest / {}", jwtRequest);
         return authenticationService.getToken(jwtRequest);
+    }
+
+    @Operation(
+            summary = "Саморегистрация администратора"
+    )
+    @PostMapping("/register")
+    public EmployeeFullDto register(@RequestBody EmployeeDtoRequest employeeDtoRequest) {
+        return employeeService.addEmployeeSelfRegister(employeeDtoRequest);
     }
 }

@@ -1,5 +1,6 @@
 package ru.epa.epabackend.task.employee;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,34 +11,34 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.repository.TaskRepository;
-import ru.epa.epabackend.service.task.TaskServiceImpl;
+import ru.epa.epabackend.service.impl.TaskServiceImpl;
 import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static ru.epa.epabackend.exception.ExceptionDescriptions.FORBIDDEN_TO_EDIT_NOT_YOUR_TASK;
 
 @ExtendWith(MockitoExtension.class)
 class TaskEmployeeUnitTests {
+    private static final long ID_1 = 1L;
+    private static final long ID_2 = 2L;
+    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     @Mock
     private TaskRepository taskRepository;
     @Mock
     private TaskMapper taskMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
-    private static final long ID_1 = 1L;
-    private static final long ID_2 = 2L;
-    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     private Employee employee = new Employee();
     private Task task = new Task();
     private TaskFullDto taskOutDto = new TaskFullDto();
@@ -78,8 +79,11 @@ class TaskEmployeeUnitTests {
 
     @Test
     void findAllTasksByEmployeeId_shouldCallRepository() {
-        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(List.of(task));
-        when(taskMapper.tasksToListOutDto(List.of(task))).thenReturn(List.of(taskShortDto));
+        when(taskRepository.findAllByExecutorId(ID_1)).thenReturn(asList(task));
+        List<TaskShortDto> tasks = new ArrayList<>();
+        tasks.add(taskMapper.mapToShortDto(task));
+        List<TaskShortDto> taskShortDtoList = new ArrayList<>();
+        taskShortDtoList.add(taskShortDto);
 
         List<TaskShortDto> tasksResult = taskService.findAllByEmployeeId(ID_1);
 
@@ -93,7 +97,7 @@ class TaskEmployeeUnitTests {
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.findById(employee.getId(), task.getId());
 
@@ -108,7 +112,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateStatus(employee.getId(), task.getId(), STATUS);
 
@@ -121,9 +125,6 @@ class TaskEmployeeUnitTests {
     @Test
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class, () ->
-                taskService.findById(ID_2, ID_1));
-
-        assertEquals(FORBIDDEN_TO_EDIT_NOT_YOUR_TASK.getTitle(), exception.getMessage());
+        assertThrows(EntityNotFoundException.class, () -> taskService.findById(ID_2, ID_1));
     }
 }

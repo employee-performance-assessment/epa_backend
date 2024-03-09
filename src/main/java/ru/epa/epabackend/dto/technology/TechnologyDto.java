@@ -1,4 +1,4 @@
-package ru.epa.epabackend.dto;
+package ru.epa.epabackend.dto.technology;
 
 import lombok.*;
 

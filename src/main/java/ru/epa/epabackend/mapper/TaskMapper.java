@@ -1,89 +1,39 @@
 package ru.epa.epabackend.mapper;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.model.Task;
 
-import java.util.List;
-
 /**
- * Класс TaskMapper содержит преобразование сущности.
+ * Интерфейс TaskMapper содержит преобразование сущности.
  *
  * @author Владислав Осипов
  */
-@Component
-@RequiredArgsConstructor
-public class TaskMapper {
-    private final ProjectMapper projectMapper;
+@Mapper(componentModel = "spring", uses = {ProjectMapper.class, EmployeeMapper.class})
+public interface TaskMapper {
 
     /**
      * Преобразование из DTO в сущность.
      */
-    public Task dtoInToTask(TaskInDto taskInDto) {
-        return Task.builder()
-                .name(taskInDto.getName())
-                .description(taskInDto.getDescription())
-                .basicPoints(taskInDto.getBasicPoints())
-                .deadLine(taskInDto.getDeadLine())
-                .penaltyPoints(taskInDto.getPenaltyPoints())
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "project", ignore = true)
+    @Mapping(target = "executor", ignore = true)
+    @Mapping(target = "startDate", ignore = true)
+    @Mapping(target = "finishDate", ignore = true)
+    @Mapping(target = "points", source = "basicPoints")
+    Task mapToEntity(TaskInDto taskInDto);
 
     /**
      * Преобразование из сущности в DTO, при создании.
      */
-    public TaskFullDto taskCreateToOutDto(Task task) {
-        return TaskFullDto.builder()
-                .id(task.getId())
-                .name(task.getName())
-                .description(task.getDescription())
-                .executor(EmployeeMapper.toEmployeeDtoShort(task.getExecutor()))
-                .deadLine(task.getDeadLine())
-                .status(task.getStatus())
-                .project(projectMapper.toProjectShortDto(task.getProject()))
-                .basicPoints(task.getBasicPoints())
-                .penaltyPoints(task.getPenaltyPoints())
-                .build();
-    }
+    TaskFullDto mapToFullDto(Task task);
 
     /**
      * Преобразование из сущности в DTO, краткое.
      */
-    public TaskShortDto taskShortToOutDto(Task task) {
-        return TaskShortDto.builder()
-                .id(task.getId())
-                .name(task.getName())
-                .deadLine(task.getDeadLine())
-                .status(task.getStatus())
-                .basicPoints(task.getBasicPoints())
-                .build();
-    }
-
-    /**
-     * Преобразование из сущности в DTO, при обновлении.
-     */
-    public TaskFullDto taskUpdateToOutDto(Task task) {
-        return TaskFullDto.builder()
-                .id(task.getId())
-                .name(task.getName())
-                .description(task.getDescription())
-                .executor(EmployeeMapper.toEmployeeDtoShort(task.getExecutor()))
-                .startDate(task.getStartDate())
-                .finishDate(task.getFinishDate())
-                .project(projectMapper.toProjectShortDto(task.getProject()))
-                .status(task.getStatus())
-                .basicPoints(task.getBasicPoints())
-                .penaltyPoints(task.getPenaltyPoints())
-                .build();
-    }
-
-    /**
-     * Преобразование из списка сущностей в список DTO.
-     */
-    public List<TaskShortDto> tasksToListOutDto(List<Task> listTasks) {
-        return listTasks.stream().map(this::taskShortToOutDto).toList();
-    }
+    TaskShortDto mapToShortDto(Task task);
 }

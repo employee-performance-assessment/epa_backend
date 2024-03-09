@@ -8,9 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
-import ru.epa.epabackend.service.project.ProjectService;
+import ru.epa.epabackend.service.ProjectService;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * Класс ProjectControllerUser содержит ендпоинты, относящиеся к проектам пользователя
@@ -38,5 +39,19 @@ public class ProjectControllerUser {
     @ResponseStatus(HttpStatus.OK)
     public ProjectShortDto findProject(@PathVariable Long projectId, Principal principal) {
         return projectService.findDtoById(projectId, principal.getName());
+    }
+
+    /**
+     * Эндпоинт получения списка проектов пользователя с короткой информацией о проектах
+     */
+    @Operation(
+            summary = "Получение списка проектов пользователя с короткой информацией о проектах",
+            description = "При успешном получении списка возвращается 200 Ok.\n" +
+                    "В случае отсутствия указанного email в базе данных возвращается 404 Not Found."
+    )
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProjectShortDto> findByUserEmail(Principal principal) {
+        return projectService.findByUserEmail(principal.getName());
     }
 }

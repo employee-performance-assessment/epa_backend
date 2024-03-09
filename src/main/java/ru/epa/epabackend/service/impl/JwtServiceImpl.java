@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service;
+package ru.epa.epabackend.service.impl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.service.JwtService;
 
 import java.time.Duration;
 import java.util.Date;

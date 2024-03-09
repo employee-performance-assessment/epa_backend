@@ -1,5 +1,6 @@
 package ru.epa.epabackend.task.admin;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,10 +10,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
-import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskFullDto;
+import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -20,9 +20,9 @@ import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
-import ru.epa.epabackend.service.EmployeeServiceImpl;
-import ru.epa.epabackend.service.project.ProjectServiceImpl;
-import ru.epa.epabackend.service.task.TaskServiceImpl;
+import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
+import ru.epa.epabackend.service.impl.ProjectServiceImpl;
+import ru.epa.epabackend.service.impl.TaskServiceImpl;
 import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -30,12 +30,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
 @ExtendWith(MockitoExtension.class)
 class TaskAdminUnitTests {
+    private static final long ID_1 = 1L;
+    private static final long ID_2 = 2L;
+    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     @Mock
     private EmployeeRepository employeeRepository;
     @Mock
@@ -50,10 +53,7 @@ class TaskAdminUnitTests {
     private TaskMapper taskMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
-    private static final long ID_1 = 1L;
-    private static final long ID_2 = 2L;
     private static final String email = "qwerty@gmail.com";
-    private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
     private Employee admin = new Employee();
     private Employee employee = new Employee();
     private Task task = new Task();
@@ -111,9 +111,8 @@ class TaskAdminUnitTests {
 
     @Test
     void findAllTasks_shouldCallRepository() {
-        when(taskRepository.findAll()).thenReturn(List.of(task));
-        when(taskMapper.tasksToListOutDto(List.of(task))).thenReturn(List.of(taskShortDto));
-
+        when(taskRepository.findAll()).thenReturn(asList(task));
+        when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
         List<TaskShortDto> tasksResult = taskService.findAllByAdmin();
 
         int expectedSize = 1;
@@ -125,7 +124,7 @@ class TaskAdminUnitTests {
     @Test
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.findByIdByAdmin(task.getId());
 
@@ -139,8 +138,8 @@ class TaskAdminUnitTests {
     void createTask_shouldCallRepository() {
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.dtoInToTask(taskInDto)).thenReturn(task);
-        when(taskMapper.taskCreateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToEntity(taskInDto)).thenReturn(task);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto, email);
 
@@ -156,7 +155,7 @@ class TaskAdminUnitTests {
         when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
 
@@ -173,7 +172,7 @@ class TaskAdminUnitTests {
         when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.taskUpdateToOutDto(task)).thenReturn(taskOutDto);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
         TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
 
@@ -192,13 +191,9 @@ class TaskAdminUnitTests {
         verify(taskRepository, times(1)).delete(task);
     }
 
-
     @Test
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(NotFoundException.class, () ->
-                taskService.findByIdByAdmin(ID_1));
-
-        assertEquals(TASK_NOT_FOUND.getTitle(), exception.getMessage());
+        assertThrows(EntityNotFoundException.class, () -> taskService.findByIdByAdmin(ID_1));
     }
 }

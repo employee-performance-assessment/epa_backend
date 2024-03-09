@@ -1,4 +1,4 @@
-package ru.epa.epabackend.service;
+package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -7,19 +7,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
 import ru.epa.epabackend.dto.employee.EmployeeFullDto;
-import ru.epa.epabackend.dto.employee.EmployeeRtoRequest;
 import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
+import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
 import static ru.epa.epabackend.util.Role.ROLE_USER;
 
 @Slf4j
@@ -30,46 +32,54 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmployeeMapper employeeMapper;
 
     @Override
-    public EmployeeFullDto addEmployee(EmployeeRtoRequest employeeRtoRequest) {
-        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
-        Employee employee = employeeRepository.save(EmployeeMapper.toEmployee(employeeRtoRequest));
-        employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
-        employee.setRole(ROLE_USER);
-        return EmployeeMapper.toEmployeeDtoFull(employee);
+    public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeDtoRequest) {
+        log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
+        employeeToSave.setRole(ROLE_USER);
+        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
     }
 
     @Override
-    public EmployeeFullDto updateEmployee(Long employeeId, EmployeeRtoRequest employeeRtoRequest) {
-        log.info("Обновление существующего сотрудника {}", employeeRtoRequest.getFullName());
+    public EmployeeFullDto addEmployeeSelfRegister(EmployeeDtoRequest employeeRtoRequest) {
+        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeRtoRequest);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
+        employeeToSave.setRole(ROLE_ADMIN);
+        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
+    }
+
+    @Override
+    public EmployeeFullDto updateEmployee(Long employeeId, EmployeeDtoRequest employeeDtoRequest) {
+        log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
         Employee oldEmployee = getEmployee(employeeId);
-        String fullName = employeeRtoRequest.getFullName();
+        String fullName = employeeDtoRequest.getFullName();
         if (fullName != null && !fullName.isBlank()) {
-            String[] full = employeeRtoRequest.getFullName().split(" ");
+            String[] full = employeeDtoRequest.getFullName().split(" ");
             if (full.length != 3) {
                 throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
             }
-            oldEmployee.setLastName(full[0]);
-            oldEmployee.setFirstName(full[1]);
-            oldEmployee.setPatronymic(full[2]);
+            oldEmployee.setFullName(fullName);
         }
 
-        updateEmployeeFields(oldEmployee, employeeRtoRequest);
+        updateEmployeeFields(oldEmployee, employeeDtoRequest);
 
-        Role role = employeeRtoRequest.getRole();
+        Role role = employeeDtoRequest.getRole();
         if (role != null) {
             oldEmployee.setRole(role);
         }
-        String position = employeeRtoRequest.getPosition();
+        String position = employeeDtoRequest.getPosition();
         if (position != null && !position.isBlank()) {
             oldEmployee.setPosition(position);
         }
-        String department = employeeRtoRequest.getDepartment();
+        String department = employeeDtoRequest.getDepartment();
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
-        return EmployeeMapper.toEmployeeDtoFull(oldEmployee);
+        return employeeMapper.mapToFullDto(employeeRepository.save(oldEmployee));
     }
 
     @Override
@@ -86,8 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     public List<EmployeeShortDto> getAllEmployees() {
         log.info("Получение всех сотрудников");
-        return employeeRepository.findAll().stream()
-                .map(EmployeeMapper::toEmployeeDtoShort)
+        return employeeRepository.findAll().stream().map(employeeMapper::mapToShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -96,7 +105,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeFullDto getEmployeeById(Long employeeId) {
         log.info("Получение сотрудника по идентификатору {}", employeeId);
         Employee employee = getEmployee(employeeId);
-        return EmployeeMapper.toEmployeeDtoFull(employee);
+        return employeeMapper.mapToFullDto(employee);
     }
 
     @Override
@@ -107,34 +116,36 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional(readOnly = true)
     public Employee getEmployeeByEmail(String email) {
-        return employeeRepository.findByEmail(email).orElseThrow(() ->
-                new EntityNotFoundException("Неверный email"));
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Неверный email, oбъект класса %s не " +
+                        "найден", Employee.class)));
     }
 
     @Override
     public Employee getEmployee(Long employeeId) {
-        return employeeRepository.findById(employeeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
+        return employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Employee.class)));
     }
 
-    private void updateEmployeeFields(Employee oldEmployee, EmployeeRtoRequest employeeRtoRequest) {
-        String nickName = employeeRtoRequest.getNickName();
+    private void updateEmployeeFields(Employee oldEmployee, EmployeeDtoRequest employeeDtoRequest) {
+        String nickName = employeeDtoRequest.getNickName();
         if (nickName != null && !nickName.isBlank()) {
             oldEmployee.setNickName(nickName);
         }
-        String city = employeeRtoRequest.getCity();
+        String city = employeeDtoRequest.getCity();
         if (city != null && !city.isBlank()) {
             oldEmployee.setCity(city);
         }
-        String email = employeeRtoRequest.getEmail();
+        String email = employeeDtoRequest.getEmail();
         if (email != null && !email.isBlank()) {
             oldEmployee.setEmail(email);
         }
-        String password = employeeRtoRequest.getPassword();
+        String password = employeeDtoRequest.getPassword();
         if (password != null && !password.isBlank()) {
             oldEmployee.setPassword(passwordEncoder.encode(password));
         }
-        LocalDate birthday = employeeRtoRequest.getBirthday();
+        LocalDate birthday = employeeDtoRequest.getBirthday();
         if (birthday != null) {
             oldEmployee.setBirthday(birthday);
         }

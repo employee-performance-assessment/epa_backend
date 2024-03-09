@@ -1,5 +1,6 @@
-package ru.epa.epabackend.service.task;
+package ru.epa.epabackend.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,8 +8,6 @@ import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
-import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -16,8 +15,9 @@ import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
-import ru.epa.epabackend.service.EmployeeServiceImpl;
-import ru.epa.epabackend.service.project.ProjectServiceImpl;
+import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.service.ProjectService;
+import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -25,8 +25,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
 /**
  * Класс TaskServiceImpl содержит методы действий с задачами для администратора.
@@ -42,9 +40,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final EmployeeRepository employeeRepository;
     private final ProjectRepository projectRepository;
-    private final ProjectServiceImpl projectService;
-    private final EmployeeServiceImpl employeeService;
-    private final ProjectMapper projectMapper;
+    private final ProjectService projectService;
+    private final EmployeeService employeeService;
 
     /**
      * Получение списка всех задач админом
@@ -52,7 +49,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByAdmin() {
-        return taskMapper.tasksToListOutDto(taskRepository.findAll());
+        return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -61,7 +59,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public TaskFullDto findByIdByAdmin(Long taskId) {
-        return taskMapper.taskUpdateToOutDto(getTaskFromRepositoryById(taskId));
+        return taskMapper.mapToFullDto(getTaskFromRepositoryById(taskId));
     }
 
     /**
@@ -69,14 +67,15 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
+        employeeService.getEmployeeByEmail(email);
         Project project = projectService.findById(taskInDto.getProjectId());
-        projectService.checkUserAndProject(admin, project);
-        Task task = taskMapper.dtoInToTask(taskInDto);
+        Task task = taskMapper.mapToEntity(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
-        task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-        return taskMapper.taskCreateToOutDto(taskRepository.save(task));
+        if (taskInDto.getExecutorId() != null) {
+            task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+        }
+        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**
@@ -90,7 +89,7 @@ public class TaskServiceImpl implements TaskService {
             setPointsToEmployeeAfterTaskDone(taskInDto, task);
             task.setFinishDate(LocalDate.now());
         }
-        return taskMapper.taskUpdateToOutDto(taskRepository.save(task));
+        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**
@@ -107,8 +106,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
-        return taskRepository.findByProjectIdAndStatus(projectId, status).stream()
-                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
+        return taskRepository.findByProjectIdAndStatus(projectId, status)
+                .stream().map(taskMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     /**
@@ -116,7 +115,8 @@ public class TaskServiceImpl implements TaskService {
      */
     private Task getTaskFromRepositoryById(Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new NotFoundException(TASK_NOT_FOUND.getTitle()));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Task.class)));
     }
 
     /**
@@ -125,7 +125,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
-        return taskMapper.tasksToListOutDto(taskRepository.findAllByExecutorId(employeeId));
+        return taskRepository.findAllByExecutorId(employeeId).stream()
+                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     /**
@@ -135,7 +136,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     public List<TaskShortDto> findAllByEmployeeIdAndStatus(Long employeeId, TaskStatus status) {
         return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()
-                .map(taskMapper::taskShortToOutDto).collect(Collectors.toList());
+                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     /**
@@ -144,7 +145,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public TaskFullDto findById(Long employeeId, Long taskId) {
-        return taskMapper.taskUpdateToOutDto(getTaskFromRepositoryByIdAndExecutorId(taskId, employeeId));
+        return taskMapper.mapToFullDto(getTaskFromRepositoryByIdAndExecutorId(taskId, employeeId));
     }
 
     /**
@@ -157,7 +158,7 @@ public class TaskServiceImpl implements TaskService {
             task.setStartDate(LocalDate.now());
         }
         task.setStatus(taskStatus);
-        return taskMapper.taskUpdateToOutDto(taskRepository.save(task));
+        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**
@@ -165,7 +166,8 @@ public class TaskServiceImpl implements TaskService {
      */
     private Task getTaskFromRepositoryByIdAndExecutorId(Long taskId, Long employeeId) {
         return taskRepository.findByIdAndExecutorId(taskId, employeeId)
-                .orElseThrow(() -> new NotFoundException(FORBIDDEN_TO_EDIT_NOT_YOUR_TASK.getTitle()));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Task.class)));
     }
 
     private void setPointsToEmployeeAfterTaskDone(TaskInDto taskInDto, Task task) {
@@ -185,7 +187,8 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskInDto.getExecutorId() != null) {
             Employee employee = employeeRepository.findById(taskInDto.getExecutorId())
-                    .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND.getTitle()));
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                            Employee.class)));
             task.setExecutor(employee);
         }
 
@@ -195,7 +198,8 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskInDto.getProjectId() != null) {
             Project project = projectRepository.findById(taskInDto.getProjectId())
-                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.getTitle()));
+                    .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                            Project.class)));
             task.setProject(project);
         }
 

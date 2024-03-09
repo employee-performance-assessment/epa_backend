@@ -16,7 +16,7 @@ import ru.epa.epabackend.util.ValidationGroups;
 public class JwtRequest {
     @Email(groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
     @Size(max = 512, groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
-    private String login;
+    private String email;
 
     @NotEmpty(groups = {ValidationGroups.Create.class})
     @Size(min = 8, max = 14, groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
@@ -25,7 +25,7 @@ public class JwtRequest {
     @Override
     public String toString() {
         return "JwtRequest{" +
-                "login='" + login + '\'' +
+                "email='" + email + '\'' +
                 ", password={masked}" +
                 '}';
     }

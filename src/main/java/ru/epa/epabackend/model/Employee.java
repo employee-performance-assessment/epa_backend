@@ -33,21 +33,10 @@ public class Employee implements UserDetails {
     private Long id;
 
     /**
-     * Фамилия.
+     * Полное имя ФИО.
      */
-    @Column(name = "last_name")
-    private String lastName;
-
-    /**
-     * Имя.
-     */
-    @Column(name = "first_name")
-    private String firstName;
-
-    /**
-     * Отчество.
-     */
-    private String patronymic;
+    @Column(name = "full_name")
+    private String fullName;
 
     /**
      * Ник в корпоративном мессенджере.
@@ -95,24 +84,26 @@ public class Employee implements UserDetails {
     /**
      * Список задач сотрудника.
      */
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "executor_id")
+    @Builder.Default
     private Set<Task> tasks = new HashSet<>();
 
     /**
      * Стек технологий, которыми владеет сотрудник.
      */
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "employees_technologies",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "technology_id"))
+    @Builder.Default
     private Set<Technology> technologies = new HashSet<>();
 
     /**
      * Список проектов сотрудника.
      */
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "projects_employees",
             joinColumns = {@JoinColumn(name = "employee_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
@@ -165,9 +156,7 @@ public class Employee implements UserDetails {
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", last name='" + lastName + '\'' +
-                ", first name='" + firstName + '\'' +
-                ", patronymic='" + patronymic + '\'' +
+                ", full name='" + fullName + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", city='" + city + '\'' +
                 ", email='" + email + '\'' +

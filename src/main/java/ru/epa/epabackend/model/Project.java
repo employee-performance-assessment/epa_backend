@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.epa.epabackend.util.ProjectStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -43,10 +44,16 @@ public class Project {
     private ProjectStatus status;
 
     /**
+     * Дата создания
+     */
+    @Column(name = "created")
+    private LocalDate created;
+
+    /**
      * Список задач проекта.
      */
     @ToString.Exclude
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private List<Task> tasks;
 
@@ -54,7 +61,7 @@ public class Project {
      * Список сотрудников проекта.
      */
     @ToString.Exclude
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "projects_employees",
             joinColumns = {@JoinColumn(name = "project_id")},
             inverseJoinColumns = {@JoinColumn(name = "employee_id")})

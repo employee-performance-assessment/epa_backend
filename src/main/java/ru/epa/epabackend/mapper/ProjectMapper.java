@@ -1,13 +1,13 @@
 package ru.epa.epabackend.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.epa.epabackend.dto.employee.EmployeeShortDto;
 import ru.epa.epabackend.dto.project.NewProjectRto;
 import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
 import ru.epa.epabackend.dto.project.ProjectShortDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
-import ru.epa.epabackend.util.ProjectStatus;
 
 import java.util.List;
 
@@ -16,38 +16,19 @@ import java.util.List;
  *
  * @author Владислав Осипов и Константин Осипов
  */
-@Component
-public class ProjectMapper {
-    public ProjectShortDto toProjectShortDto(Project project) {
-        return ProjectShortDto.builder()
-                .id(project.getId())
-                .name(project.getName())
-                .status(project.getStatus())
-                .build();
-    }
+@Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
+public interface ProjectMapper {
 
-    public Project toProject(NewProjectRto newProjectRto, Employee admin) {
-        return Project.builder()
-                .name(newProjectRto.getName())
-                .status(ProjectStatus.TODO)
-                .employees(List.of(admin))
-                .build();
-    }
+    ProjectShortDto mapToShortDto(Project project);
 
-    public Project toProject(ProjectShortDto projectShortDto) {
-        return Project.builder()
-                .status(projectShortDto.getStatus())
-                .name(projectShortDto.getName())
-                .status(projectShortDto.getStatus())
-                .build();
-    }
+    @Mapping(target = "status", constant = "TODO")
+    @Mapping(target = "employees", source = "employees")
+    @Mapping(target = "created", expression = "java(java.time.LocalDate.now())")
+    Project mapToEntity(NewProjectRto newProjectRto, List<Employee> employees);
 
-    public ProjectEmployeesDto toProjectEmployeesDto(Project project, List<EmployeeShortDto> employees) {
-        return ProjectEmployeesDto
-                .builder()
-                .id(project.getId())
-                .name(project.getName())
-                .employees(employees)
-                .build();
-    }
+    @Mapping(target = "employees", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    Project mapToEntity(ProjectShortDto projectShortDto);
+
+    ProjectEmployeesDto mapToProjectEmployeesDto(Project project, List<EmployeeShortDto> employeeShortDtoList);
 }
