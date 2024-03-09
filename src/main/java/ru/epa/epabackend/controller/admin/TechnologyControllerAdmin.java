@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
-public class TechnologyController {
+public class TechnologyControllerAdmin {
     private final TechnologyService technologyService;
 
     /**

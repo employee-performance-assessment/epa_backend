@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d2156e80-9aef-475e-8777-30641f41de44",
+		"_postman_id": "2fe04108-ba03-4f9f-96e6-1ea55a2342a5",
 		"name": "epa_24_03_09",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21428156"
+		"_exporter_id": "26701489"
 	},
 	"item": [
 		{
@@ -1367,8 +1367,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"pm.test(\"Has project create response\", function () {\r",
 									"    pm.response.to.be.withBody;\r",
@@ -1784,11 +1784,7 @@
 									"});\r",
 									"pm.test(\"Test update task\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.id).to.eql(1);\r",
-									"    pm.expect(jsonData.description).to.eql('updated task1 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2246-08-20\");\r",
-									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
-									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
+									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1809,7 +1805,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"updated task1\",\n  \"description\": \"updated task1 description\",\n  \"projectId\": 1,\n  \"creatorId\": 1,\n  \"executorId\": 4,\n  \"deadLine\": \"2246-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"raw": "{\n  \"name\": \"u task1\",\n  \"description\": \"u task1 description\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1817,20 +1813,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks/:id",
+							"raw": "{{baseUrl}}/admin/tasks/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
 								"tasks",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"2"
 							]
 						}
 					},

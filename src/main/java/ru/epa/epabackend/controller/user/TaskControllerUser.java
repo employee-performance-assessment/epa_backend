@@ -31,7 +31,7 @@ import java.util.List;
 @RequestMapping("user/tasks")
 @RequiredArgsConstructor
 @Validated
-public class TaskControllerEmployee {
+public class TaskControllerUser {
 
     private final TaskService taskEmployeeService;
     private final EmployeeService employeeService;
