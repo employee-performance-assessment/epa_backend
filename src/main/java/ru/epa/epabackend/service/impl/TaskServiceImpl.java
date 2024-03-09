@@ -66,15 +66,12 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-    public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
-        employeeService.getEmployeeByEmail(email);
+    public TaskFullDto createByAdmin(TaskInDto taskInDto) {
         Project project = projectService.findById(taskInDto.getProjectId());
         Task task = taskMapper.mapToEntity(taskInDto);
         task.setStatus(TaskStatus.NEW);
         task.setProject(project);
-        if (taskInDto.getExecutorId() != null) {
-            task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-        }
+        setExecutorToTask(task, taskInDto, project);
         return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
@@ -185,22 +182,14 @@ public class TaskServiceImpl implements TaskService {
             task.setName(taskInDto.getDescription());
         }
 
-        if (taskInDto.getExecutorId() != null) {
-            Employee employee = employeeRepository.findById(taskInDto.getExecutorId())
-                    .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
-                            Employee.class)));
-            task.setExecutor(employee);
+        if (taskInDto.getProjectId() != null) {
+            Project project = projectService.findById(taskInDto.getProjectId());
+            task.setProject(project);
+            setExecutorToTask(task, taskInDto, project);
         }
 
         if (taskInDto.getBasicPoints() != null) {
             task.setBasicPoints(taskInDto.getBasicPoints());
-        }
-
-        if (taskInDto.getProjectId() != null) {
-            Project project = projectRepository.findById(taskInDto.getProjectId())
-                    .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
-                            Project.class)));
-            task.setProject(project);
         }
 
         if (taskInDto.getPenaltyPoints() != null) {
@@ -214,5 +203,25 @@ public class TaskServiceImpl implements TaskService {
                 throw new BadRequestException("Unknown status: " + taskInDto.getStatus());
             }
         }
+    }
+
+    private void setExecutorToTask(Task task, TaskInDto taskInDto, Project project) {
+        if (checkExecutorExists(taskInDto)) {
+            Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
+            if (checkProjectContainsExecutor(project, employee)) {
+                task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+            } else {
+                throw new BadRequestException(String.format("Сотрудника с id %d нет в проекте.",
+                        taskInDto.getExecutorId()));
+            }
+        }
+    }
+
+    private boolean checkExecutorExists(TaskInDto taskInDto) {
+        return taskInDto.getExecutorId() != null;
+    }
+
+    private boolean checkProjectContainsExecutor(Project project, Employee employee) {
+        return project.getEmployees().contains(employee);
     }
 }
