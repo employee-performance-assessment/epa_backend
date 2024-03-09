@@ -175,6 +175,11 @@ public class TaskServiceImpl implements TaskService {
             task.setDescription(taskInDto.getDescription());
         }
 
+        if (taskInDto.getProjectId() != null) {
+            Project project = projectService.findById(taskInDto.getProjectId());
+            setExecutorToTask(task, taskInDto, project);
+        }
+
         if (taskInDto.getBasicPoints() != null) {
             task.setBasicPoints(taskInDto.getBasicPoints());
         }
@@ -188,6 +193,18 @@ public class TaskServiceImpl implements TaskService {
                 task.setStatus(EnumUtils.getEnum(TaskStatus.class, taskInDto.getStatus()));
             } catch (IllegalArgumentException exception) {
                 throw new BadRequestException("Unknown status: " + taskInDto.getStatus());
+            }
+        }
+    }
+
+    private void setExecutorToTask(Task task, TaskInDto taskInDto, Project project) {
+        if (taskInDto.getExecutorId() != null) {
+            Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
+            if (checkProjectContainsExecutor(project, employee)) {
+                task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+            } else {
+                throw new BadRequestException(String.format("Сотрудника с id %d нет в проекте.",
+                        taskInDto.getExecutorId()));
             }
         }
     }
