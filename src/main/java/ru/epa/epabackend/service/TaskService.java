@@ -30,27 +30,27 @@ public interface TaskService {
     /**
      * Получение списка всех задач
      */
-    List<TaskShortDto> findAllByAdmin();
+    List<TaskShortDto> findAll();
 
     /**
      * Создание задачи
      */
-    TaskFullDto createByAdmin(TaskInDto taskDto);
+    TaskFullDto create(TaskInDto taskDto);
 
     /**
      * Найти задачу по ID
      */
-    TaskFullDto findByIdByAdmin(Long taskId);
+    TaskFullDto findDtoById(Long taskId);
 
     /**
      * Обновление задачи
      */
-    TaskFullDto updateByAdmin(Long taskId, TaskInDto taskDto);
+    TaskFullDto update(Long taskId, TaskInDto taskDto);
 
     /**
      * Удаление задачи
      */
-    void deleteByAdmin(Long taskId);
+    void delete(Long taskId);
 
     /**
      * Получение списка задач проекта с определенным статусом задач

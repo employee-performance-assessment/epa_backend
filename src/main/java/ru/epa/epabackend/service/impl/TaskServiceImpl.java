@@ -44,7 +44,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortDto> findAllByAdmin() {
+    public List<TaskShortDto> findAll() {
         return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
                 .toList();
     }
@@ -54,15 +54,15 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskFullDto findByIdByAdmin(Long taskId) {
-        return taskMapper.mapToFullDto(getTaskFromRepositoryById(taskId));
+    public TaskFullDto findDtoById(Long taskId) {
+        return taskMapper.mapToFullDto(findById(taskId));
     }
 
     /**
      * Создание задачи админом
      */
     @Override
-    public TaskFullDto createByAdmin(TaskInDto taskInDto) {
+    public TaskFullDto create(TaskInDto taskInDto) {
         Project project = projectService.findById(taskInDto.getProjectId());
         Employee executor = employeeService.getEmployee(taskInDto.getExecutorId());
         taskInDto.setStatus("NEW");
@@ -79,8 +79,8 @@ public class TaskServiceImpl implements TaskService {
      * Обновление задачи админом
      */
     @Override
-    public TaskFullDto updateByAdmin(Long taskId, TaskInDto taskInDto) {
-        Task task = getTaskFromRepositoryById(taskId);
+    public TaskFullDto update(Long taskId, TaskInDto taskInDto) {
+        Task task = findById(taskId);
         setNotNullParamToEntity(taskInDto, task);
         if (task.getStatus() == TaskStatus.DONE) {
             setPointsToEmployeeAfterTaskDone(taskInDto, task);
@@ -93,8 +93,8 @@ public class TaskServiceImpl implements TaskService {
      * Удаление задачи админом
      */
     @Override
-    public void deleteByAdmin(Long taskId) {
-        taskRepository.delete(getTaskFromRepositoryById(taskId));
+    public void delete(Long taskId) {
+        taskRepository.delete(findById(taskId));
     }
 
     /**
@@ -105,15 +105,6 @@ public class TaskServiceImpl implements TaskService {
         projectService.findById(projectId);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status)
                 .stream().map(taskMapper::mapToShortDto).toList();
-    }
-
-    /**
-     * Получение задачи из репозитория по ID
-     */
-    private Task getTaskFromRepositoryById(Long taskId) {
-        return taskRepository.findById(taskId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
-                        Task.class)));
     }
 
     /**
@@ -233,5 +224,14 @@ public class TaskServiceImpl implements TaskService {
             taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
         }
         return taskStatus;
+    }
+
+    /**
+     * Получение задачи из репозитория по ID
+     */
+    private Task findById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Task.class)));
     }
 }
