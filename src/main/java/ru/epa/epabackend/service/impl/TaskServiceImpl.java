@@ -66,13 +66,10 @@ public class TaskServiceImpl implements TaskService {
         Project project = projectService.findById(taskInDto.getProjectId());
         Employee executor = employeeService.getEmployee(taskInDto.getExecutorId());
         taskInDto.setStatus("NEW");
-        if (project.getEmployees().contains(executor)) {
-            Task task = taskRepository.save(taskMapper.mapToEntity(taskInDto, project, executor));
-            return taskMapper.mapToFullDto(task);
-        } else {
-            throw new BadRequestException(String.format("Сотрудника с id %d нет в проекте.",
-                    taskInDto.getExecutorId()));
-        }
+        checkProjectContainsExecutor(project, executor);
+        Task task = taskRepository.save(taskMapper.mapToEntity(taskInDto, project, executor));
+        return taskMapper.mapToFullDto(task);
+
     }
 
     /**
@@ -177,12 +174,9 @@ public class TaskServiceImpl implements TaskService {
 
         if (taskInDto.getExecutorId() != null) {
             Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
-            if (task.getProject().getEmployees().contains(employee)) {
-                task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-            } else {
-                throw new BadRequestException(String.format("Сотрудника с id %d нет в проекте.",
-                        taskInDto.getExecutorId()));
-            }
+            checkProjectContainsExecutor(task.getProject(), employee);
+            task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+
         }
 
         if (taskInDto.getBasicPoints() != null) {
@@ -199,6 +193,13 @@ public class TaskServiceImpl implements TaskService {
             } catch (IllegalArgumentException exception) {
                 throw new BadRequestException("Unknown status: " + taskInDto.getStatus());
             }
+        }
+    }
+
+    private void checkProjectContainsExecutor(Project project, Employee employee) {
+        if (!project.getEmployees().contains(employee)) {
+            throw new EntityNotFoundException(String.format("Пользователя с id %d нет в проекте с id %d",
+                    employee.getId(), project.getId()));
         }
     }
 
