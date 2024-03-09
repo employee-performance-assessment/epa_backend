@@ -99,6 +99,7 @@ class TaskAdminUnitTests {
         project = Project.builder()
                 .id(ID_1)
                 .name("Project1")
+                .employees(List.of(employee))
                 .build();
         taskShortDto = TaskShortDto.builder()
                 .id(ID_1)
@@ -136,6 +137,7 @@ class TaskAdminUnitTests {
 
     @Test
     void createTask_shouldCallRepository() {
+        when(projectService.findById(project.getId())).thenReturn(project);
         when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToEntity(taskInDto)).thenReturn(task);
@@ -151,9 +153,9 @@ class TaskAdminUnitTests {
 
     @Test
     void updateTask_shouldCallRepository() {
+        when(projectService.findById(project.getId())).thenReturn(project);
+        when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
-        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
@@ -168,9 +170,9 @@ class TaskAdminUnitTests {
     @Test
     void updateTask_shouldCallRepository_status_done() {
         taskInDto.setStatus("DONE");
+        when(projectService.findById(project.getId())).thenReturn(project);
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
-        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 

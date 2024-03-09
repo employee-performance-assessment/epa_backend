@@ -24,7 +24,6 @@ public interface TaskMapper {
     @Mapping(target = "executor", ignore = true)
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
-    @Mapping(target = "points", source = "basicPoints")
     Task mapToEntity(TaskInDto taskInDto);
 
     /**
