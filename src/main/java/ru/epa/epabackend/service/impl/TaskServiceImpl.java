@@ -44,7 +44,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortDto> findAll() {
+    public List<TaskShortDto> findAllByAdmin() {
         return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
                 .toList();
     }

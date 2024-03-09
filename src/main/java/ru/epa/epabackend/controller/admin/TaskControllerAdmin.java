@@ -39,7 +39,7 @@ public class TaskControllerAdmin {
     )
     @GetMapping
     public List<TaskShortDto> findAllByAdmin() {
-        return taskService.findAll();
+        return taskService.findAllByAdmin();
     }
 
     /**

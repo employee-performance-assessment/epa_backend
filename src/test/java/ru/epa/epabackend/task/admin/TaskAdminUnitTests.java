@@ -113,7 +113,7 @@ class TaskAdminUnitTests {
     void findAllTasks_shouldCallRepository() {
         when(taskRepository.findAll()).thenReturn(List.of(task));
         when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
-        List<TaskShortDto> tasksResult = taskService.findAll();
+        List<TaskShortDto> tasksResult = taskService.findAllByAdmin();
 
         int expectedSize = 1;
         assertNotNull(tasksResult);

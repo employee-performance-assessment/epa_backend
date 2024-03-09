@@ -30,7 +30,7 @@ public interface TaskService {
     /**
      * Получение списка всех задач
      */
-    List<TaskShortDto> findAll();
+    List<TaskShortDto> findAllByAdmin();
 
     /**
      * Создание задачи
