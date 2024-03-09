@@ -141,7 +141,7 @@ class TaskAdminUnitTests {
         when(taskMapper.mapToEntity(taskInDto)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto, email);
+        TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
