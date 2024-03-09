@@ -67,7 +67,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
+        employeeService.getEmployeeByEmail(email);
         Project project = projectService.findById(taskInDto.getProjectId());
         Task task = taskMapper.mapToEntity(taskInDto);
         task.setStatus(TaskStatus.NEW);
