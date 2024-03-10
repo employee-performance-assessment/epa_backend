@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/epa-backend
-    username: postgres
+    username: root
     password: root
 
 
@@ -22,11 +22,16 @@ spring:
 logging:
   level:
     org:
+      zalando:
+        logbook: TRACE
       springframework:
         orm:
           jpa: info
           JpaTransactionManager: debug
         transaction: info
+        web:
+          servlet:
+            DispatcherServlet: debug
     spring security: info
     web: info
 
