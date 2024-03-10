@@ -12,7 +12,6 @@ import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.service.TaskService;
 
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -40,7 +39,7 @@ public class TaskControllerAdmin {
     )
     @GetMapping
     public List<TaskShortDto> findAllByAdmin() {
-        return taskService.findAllByAdmin();
+        return taskService.findAll();
     }
 
     /**
@@ -53,7 +52,7 @@ public class TaskControllerAdmin {
     )
     @GetMapping("/{taskId}")
     public TaskFullDto findByIdByAdmin(@Parameter(required = true) @PathVariable Long taskId) {
-        return taskService.findByIdByAdmin(taskId);
+        return taskService.findDtoById(taskId);
     }
 
     /**
@@ -64,9 +63,8 @@ public class TaskControllerAdmin {
             description = "Создание новой задачи администратором"
     )
     @PostMapping()
-    public TaskFullDto createByAdmin(@Parameter(required = true) @RequestBody TaskInDto taskInDto,
-                                     Principal principal) {
-        return taskService.createByAdmin(taskInDto, principal.getName());
+    public TaskFullDto createByAdmin(@Parameter(required = true) @RequestBody TaskInDto taskInDto) {
+        return taskService.create(taskInDto);
     }
 
     /**
@@ -79,7 +77,7 @@ public class TaskControllerAdmin {
     @PatchMapping("/{taskId}")
     public TaskFullDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
                                      @Parameter(required = true) @RequestBody TaskInDto taskInDto) {
-        return taskService.updateByAdmin(taskId, taskInDto);
+        return taskService.update(taskId, taskInDto);
     }
 
     /**
@@ -91,6 +89,6 @@ public class TaskControllerAdmin {
     )
     @DeleteMapping("/{taskId}")
     public void deleteByAdmin(@Parameter(required = true) @PathVariable Long taskId) {
-        taskService.deleteByAdmin(taskId);
+        taskService.delete(taskId);
     }
 }
