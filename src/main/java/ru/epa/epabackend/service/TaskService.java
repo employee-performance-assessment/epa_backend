@@ -46,7 +46,6 @@ public interface TaskService {
      * Обновление задачи
      */
     TaskCreateFindByIdUpdateResponseDto update(Long taskId, TaskCreateUpdateRequestDto taskDto);
-
     /**
      * Удаление задачи
      */

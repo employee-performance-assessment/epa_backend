@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "2fe04108-ba03-4f9f-96e6-1ea55a2342a5",
+		"_postman_id": "5a56d64b-16f8-42d9-b2cd-4b68d674d268",
 		"name": "epa_24_03_09",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26701489"
+		"_exporter_id": "21857559"
 	},
 	"item": [
 		{
@@ -1594,7 +1594,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"task1\",\n  \"description\": \"task1 description\",\n  \"projectId\": 1,\n  \"creatorId\": 1,\n  \"executorId\": 4,\n  \"deadLine\": \"2246-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"raw": "{\n  \"name\": \"task1\",\n  \"description\": \"task1 description\",\n  \"projectId\": 1,\n  \"creatorId\": 1,\n  \"executorId\": 5,\n  \"deadLine\": \"2246-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1652,7 +1652,56 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"creatorId\": 1,\n  \"executorId\": 4,\n  \"deadLine\": \"2226-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"creatorId\": 1,\n  \"executorId\": 6,\n  \"deadLine\": \"2226-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create task3 admin user not in project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"task3\",\n  \"description\": \"task3 description\",\n  \"projectId\": 1,\n  \"creatorId\": 1,\n  \"executorId\": 4,\n  \"deadLine\": \"2226-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1683,8 +1732,17 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Test list task\", function () {\r",
+									"pm.test(\"Test list user\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].id).to.eql(1);\r",
+									"    pm.expect(jsonData[0].name).to.eql('task1');\r",
+									"    pm.expect(jsonData[0].deadLine).to.eql(\"2246-08-20\");\r",
+									"    pm.expect(jsonData[0].basicPoints).to.eql(100);\r",
+									"\r",
+									"    pm.expect(jsonData[1].id).to.eql(2);\r",
+									"    pm.expect(jsonData[1].name).to.eql('task2');\r",
+									"    pm.expect(jsonData[1].deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData[1].basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.length).to.eql(2);\r",
 									"});\r",
 									""
@@ -1734,9 +1792,14 @@
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Test get task\", function () {\r",
+									"pm.test(\"Test get user\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData.id).to.eql(1);\r",
+									"    pm.expect(jsonData.name).to.eql('task1');\r",
+									"    pm.expect(jsonData.description).to.eql('task1 description');\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2246-08-20\");\r",
+									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1782,9 +1845,14 @@
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Test update task\", function () {\r",
+									"pm.test(\"Test update user\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData.id).to.eql(2);\r",
+									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
+									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1805,7 +1873,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"u task1\",\n  \"description\": \"u task1 description\"\n}",
+							"raw": "{\n  \"name\": \"u task2 name\",\n  \"description\": \"u task2 description\",\n  \"projectId\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1813,14 +1881,20 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks/2",
+							"raw": "{{baseUrl}}/admin/tasks/:id",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
 								"tasks",
-								"2"
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -1865,6 +1939,466 @@
 									"value": "1",
 									"description": "(Required) "
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all tasks employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test list user\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].id).to.eql(2);\r",
+									"    pm.expect(jsonData[0].name).to.eql('u task2 name');\r",
+									"    pm.expect(jsonData[0].deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData[0].basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.length).to.eql(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"tasks"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get Task By Id employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Test get user\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(2);\r",
+									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
+									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/tasks/:id1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"tasks",
+								":id1"
+							],
+							"variable": [
+								{
+									"key": "id1",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Conflict",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "-29029902",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Update task employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Test update user\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(2);\r",
+									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
+									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
+									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");   \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"IN_PROGRESS\"",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/tasks/:id1?status=in_progress",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"tasks",
+								":id1"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "in_progress"
+								}
+							],
+							"variable": [
+								{
+									"key": "id1",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Save token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
 							]
 						}
 					},
