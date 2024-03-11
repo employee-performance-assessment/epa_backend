@@ -151,7 +151,6 @@ class TaskAdminUnitTests {
 
     @Test
     void updateTask_shouldCallRepository() {
-        when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
