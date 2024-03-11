@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskShortDto {
+public class TaskFindAllResponseDto {
     /**
      * ID задачи.
      */

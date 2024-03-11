@@ -2,10 +2,10 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.epa.epabackend.dto.employee.EmployeeShortDto;
-import ru.epa.epabackend.dto.project.NewProjectRto;
-import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
-import ru.epa.epabackend.dto.project.ProjectShortDto;
+import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.project.ProjectCreateFindByIdFindAllUpdateResponseDto;
+import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
+import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 
@@ -19,16 +19,16 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
 public interface ProjectMapper {
 
-    ProjectShortDto mapToShortDto(Project project);
+    ProjectCreateFindByIdFindAllUpdateResponseDto mapToShortDto(Project project);
 
     @Mapping(target = "status", constant = "TODO")
     @Mapping(target = "employees", source = "employees")
     @Mapping(target = "created", expression = "java(java.time.LocalDate.now())")
-    Project mapToEntity(NewProjectRto newProjectRto, List<Employee> employees);
+    Project mapToEntity(ProjectCreateRequestDto newProjectRto, List<Employee> employees);
 
     @Mapping(target = "employees", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    Project mapToEntity(ProjectShortDto projectShortDto);
+    Project mapToEntity(ProjectCreateFindByIdFindAllUpdateResponseDto projectShortDto);
 
-    ProjectEmployeesDto mapToProjectEmployeesDto(Project project, List<EmployeeShortDto> employeeShortDtoList);
+    ProjectSaveWithEmployeeResponseDto mapToProjectEmployeesDto(Project project, List<EmployeeFindAllResponseDto> employeeShortDtoList);
 }

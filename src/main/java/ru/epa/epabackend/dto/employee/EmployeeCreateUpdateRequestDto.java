@@ -16,7 +16,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @Builder
 @Data
 @AllArgsConstructor
-public class EmployeeDtoRequest {
+public class EmployeeCreateUpdateRequestDto {
 
     @NotBlank
     @Size(min = 8, max = 152, groups = {Create.class, Update.class})

@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskInDto {
+public class TaskCreateUpdateRequestDto {
 
     /**
      * Название задачи.

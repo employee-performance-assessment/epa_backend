@@ -8,13 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.task.TaskFullDto;
-import ru.epa.epabackend.dto.task.TaskShortDto;
-import ru.epa.epabackend.exception.exceptions.BadRequestException;
-import ru.epa.epabackend.model.Employee;
-import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
+import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
 import ru.epa.epabackend.service.TaskService;
-import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
@@ -34,7 +30,6 @@ import java.util.List;
 public class TaskControllerUser {
 
     private final TaskService taskEmployeeService;
-    private final EmployeeService employeeService;
 
     /**
      * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
@@ -45,14 +40,9 @@ public class TaskControllerUser {
                     "если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskShortDto> findAllTasksByEmployeeIdAndStatus(Principal principal,
-                                                                @RequestParam(required = false) TaskStatus status) {
-        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
-        if (status == null) {
-            return taskEmployeeService.findAllByEmployeeId(employee.getId());
-        } else {
-            return taskEmployeeService.findAllByEmployeeIdAndStatus(employee.getId(), status);
-        }
+    public List<TaskFindAllResponseDto> findAllTasksByEmployeeIdFilters(Principal principal,
+                                                                        @RequestParam(required = false) String status) {
+        return taskEmployeeService.findAllByExecutorIdFilters(status, principal);
     }
 
     /**
@@ -64,10 +54,10 @@ public class TaskControllerUser {
                     "В случае, если задачи не найдено, возвращает ошибкую 404"
     )
     @GetMapping("/{taskId}")
-    public TaskFullDto findTaskById(@Parameter(required = true) @PathVariable Long taskId,
-                                    Principal principal) {
-        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
-        return taskEmployeeService.findById(employee.getId(), taskId);
+    public TaskCreateFindByIdUpdateResponseDto findTaskById(
+            @Parameter(required = true) @PathVariable Long taskId,
+                                                            Principal principal) {
+        return taskEmployeeService.findByIdAndExecutorId(principal, taskId);
     }
 
     /**
@@ -77,16 +67,11 @@ public class TaskControllerUser {
             summary = "Обновление статуса выполнения задачи сотрудником"
     )
     @PatchMapping("/{taskId}")
-    public TaskFullDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
+    public TaskCreateFindByIdUpdateResponseDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
                                     @Parameter(required = true) @RequestParam String status,
                                     Principal principal) {
-        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
-        try {
-            TaskStatus taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
-            return taskEmployeeService.updateStatus(employee.getId(), taskId, taskStatus);
-        } catch (IllegalArgumentException exception) {
-            throw new BadRequestException("Unknown status: " + status);
-        }
+        return taskEmployeeService.updateStatus(taskId, status, principal);
+
     }
 
     /**
@@ -99,7 +84,7 @@ public class TaskControllerUser {
     )
     @GetMapping("/project/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<TaskShortDto> findByProjectIdAndStatus(@PathVariable Long projectId,
+    public List<TaskFindAllResponseDto> findByProjectIdAndStatus(@PathVariable Long projectId,
                                                        @RequestParam TaskStatus status) {
         return taskEmployeeService.findByProjectIdAndStatus(projectId, status);
     }

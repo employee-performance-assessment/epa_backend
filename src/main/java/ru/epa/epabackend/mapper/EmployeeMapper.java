@@ -2,21 +2,21 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
-import ru.epa.epabackend.dto.employee.EmployeeFullDto;
-import ru.epa.epabackend.dto.employee.EmployeeShortDto;
+import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateFindByIdResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
 import ru.epa.epabackend.model.Employee;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
 
-    EmployeeFullDto mapToFullDto(Employee employee);
+    EmployeeCreateUpdateFindByIdResponseDto mapToFullDto(Employee employee);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
-    Employee mapToEntity(EmployeeDtoRequest employeeRtoRequest);
+    Employee mapToEntity(EmployeeCreateUpdateRequestDto employeeRtoRequest);
 
-    EmployeeShortDto mapToShortDto(Employee employee);
+    EmployeeFindAllResponseDto mapToShortDto(Employee employee);
 }

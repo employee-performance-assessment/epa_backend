@@ -8,11 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortDto;
-import ru.epa.epabackend.dto.project.NewProjectRto;
-import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
-import ru.epa.epabackend.dto.project.ProjectShortDto;
-import ru.epa.epabackend.dto.project.UpdateProjectRto;
+import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.project.ProjectCreateFindByIdFindAllUpdateResponseDto;
+import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
+import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
@@ -42,8 +42,8 @@ public class ProjectControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectShortDto save(@Valid @RequestBody NewProjectRto newProjectRto, Principal principal) {
-        return projectService.save(newProjectRto, principal.getName());
+    public ProjectCreateFindByIdFindAllUpdateResponseDto save(@Valid @RequestBody ProjectCreateRequestDto newProjectRto, Principal principal) {
+        return projectService.create(newProjectRto, principal.getName());
     }
 
     /**
@@ -59,9 +59,9 @@ public class ProjectControllerAdmin {
     )
     @PostMapping("/{projectId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectEmployeesDto saveWithEmployee(@PathVariable Long projectId,
-                                                @RequestParam Long employeeId,
-                                                Principal principal) {
+    public ProjectSaveWithEmployeeResponseDto saveWithEmployee(@PathVariable Long projectId,
+                                                               @RequestParam Long employeeId,
+                                                               Principal principal) {
         return projectService.saveWithEmployee(projectId, employeeId, principal.getName());
     }
 
@@ -76,8 +76,8 @@ public class ProjectControllerAdmin {
     )
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeShortDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
-        return projectService.findByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
+    public List<EmployeeFindAllResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
+        return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
     }
 
     /**
@@ -93,8 +93,8 @@ public class ProjectControllerAdmin {
     )
     @PatchMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProjectShortDto update(@PathVariable Long projectId, @Valid @RequestBody UpdateProjectRto updateProjectRto,
-                                  Principal principal) {
+    public ProjectCreateFindByIdFindAllUpdateResponseDto update(@PathVariable Long projectId, @Valid @RequestBody ProjectUpdateRequestDto updateProjectRto,
+                                                                Principal principal) {
         return projectService.update(projectId, updateProjectRto, principal.getName());
     }
 

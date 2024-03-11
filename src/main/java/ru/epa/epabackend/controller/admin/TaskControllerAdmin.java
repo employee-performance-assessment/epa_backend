@@ -7,12 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.task.TaskFullDto;
-import ru.epa.epabackend.dto.task.TaskInDto;
-import ru.epa.epabackend.dto.task.TaskShortDto;
+import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
 import ru.epa.epabackend.service.TaskService;
 
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -39,8 +38,8 @@ public class TaskControllerAdmin {
                     "В случае, если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskShortDto> findAllByAdmin() {
-        return taskService.findAllByAdmin();
+    public List<TaskFindAllResponseDto> findAllByAdmin() {
+        return taskService.findAll();
     }
 
     /**
@@ -52,8 +51,9 @@ public class TaskControllerAdmin {
                     "В случае, если задачи не найдено, возвращает ошибкую 404"
     )
     @GetMapping("/{taskId}")
-    public TaskFullDto findByIdByAdmin(@Parameter(required = true) @PathVariable Long taskId) {
-        return taskService.findByIdByAdmin(taskId);
+    public TaskCreateFindByIdUpdateResponseDto findByIdByAdmin(
+            @Parameter(required = true) @PathVariable Long taskId) {
+        return taskService.findDtoById(taskId);
     }
 
     /**
@@ -64,9 +64,9 @@ public class TaskControllerAdmin {
             description = "Создание новой задачи администратором"
     )
     @PostMapping()
-    public TaskFullDto createByAdmin(@Parameter(required = true) @RequestBody TaskInDto taskInDto,
-                                     Principal principal) {
-        return taskService.createByAdmin(taskInDto, principal.getName());
+    public TaskCreateFindByIdUpdateResponseDto createByAdmin(
+            @Parameter(required = true) @RequestBody TaskCreateUpdateRequestDto taskInDto) {
+        return taskService.create(taskInDto);
     }
 
     /**
@@ -77,9 +77,9 @@ public class TaskControllerAdmin {
             description = "Обновление задачи администратором"
     )
     @PatchMapping("/{taskId}")
-    public TaskFullDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
-                                     @Parameter(required = true) @RequestBody TaskInDto taskInDto) {
-        return taskService.updateByAdmin(taskId, taskInDto);
+    public TaskCreateFindByIdUpdateResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
+                                     @Parameter(required = true) @RequestBody TaskCreateUpdateRequestDto taskInDto) {
+        return taskService.update(taskId, taskInDto);
     }
 
     /**
@@ -91,6 +91,6 @@ public class TaskControllerAdmin {
     )
     @DeleteMapping("/{taskId}")
     public void deleteByAdmin(@Parameter(required = true) @PathVariable Long taskId) {
-        taskService.deleteByAdmin(taskId);
+        taskService.delete(taskId);
     }
 }

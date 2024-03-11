@@ -2,8 +2,8 @@ package ru.epa.epabackend.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortDto;
-import ru.epa.epabackend.dto.project.ProjectShortDto;
+import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.project.ProjectCreateFindByIdFindAllUpdateResponseDto;
 import ru.epa.epabackend.util.DateConstant;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskFullDto {
+public class TaskCreateFindByIdUpdateResponseDto {
 
     /**
      * ID задачи.
@@ -40,12 +40,12 @@ public class TaskFullDto {
     /**
      * Описание проекта.
      */
-    private ProjectShortDto project;
+    private ProjectCreateFindByIdFindAllUpdateResponseDto project;
 
     /**
      * Сотрудник выполняющий задачу.
      */
-    private EmployeeShortDto executor;
+    private EmployeeFindAllResponseDto executor;
 
     /**
      * Дата взятие задачи в работу.

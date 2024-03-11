@@ -15,7 +15,7 @@ import ru.epa.epabackend.util.ProjectStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProjectShortDto {
+public class ProjectCreateFindByIdFindAllUpdateResponseDto {
     private Long id;
     private String name;
     private ProjectStatus status;

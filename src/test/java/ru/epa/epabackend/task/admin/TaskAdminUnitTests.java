@@ -8,17 +8,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeShortDto;
-import ru.epa.epabackend.dto.project.ProjectShortDto;
-import ru.epa.epabackend.dto.task.TaskFullDto;
-import ru.epa.epabackend.dto.task.TaskInDto;
-import ru.epa.epabackend.dto.task.TaskShortDto;
+import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
-import ru.epa.epabackend.repository.EmployeeRepository;
-import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.service.impl.ProjectServiceImpl;
@@ -30,7 +29,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -39,30 +37,29 @@ class TaskAdminUnitTests {
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
     private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
-    @Mock
-    private EmployeeRepository employeeRepository;
+    private static final String email = "qwerty@gmail.com";
     @Mock
     private TaskRepository taskRepository;
-    @Mock
-    private ProjectRepository projectRepository;
     @Mock
     private ProjectServiceImpl projectService;
     @Mock
     private EmployeeServiceImpl employeeService;
     @Mock
+    private EmployeeMapper employeeMapper;
+    @Mock
     private TaskMapper taskMapper;
+    @Mock
+    private ProjectMapper projectMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
-    private static final String email = "qwerty@gmail.com";
     private Employee admin = new Employee();
     private Employee employee = new Employee();
     private Task task = new Task();
-    private TaskFullDto taskOutDto = new TaskFullDto();
-    private TaskInDto taskInDto = new TaskInDto();
+    private TaskCreateFindByIdUpdateResponseDto taskOutDto = new TaskCreateFindByIdUpdateResponseDto();
+    private TaskCreateUpdateRequestDto taskInDto = new TaskCreateUpdateRequestDto();
     private Project project = new Project();
-    private ProjectShortDto projectShortDto = new ProjectShortDto();
-    private TaskShortDto taskShortDto = new TaskShortDto();
-    private EmployeeShortDto employeeShortDto;
+    private TaskFindAllResponseDto taskShortDto = new TaskFindAllResponseDto();
+    private EmployeeFindAllResponseDto employeeShortDto;
 
     @BeforeEach
     public void init() {
@@ -70,7 +67,7 @@ class TaskAdminUnitTests {
                 .id(ID_1)
                 .role(Role.ROLE_ADMIN)
                 .build();
-        employeeShortDto = EmployeeShortDto.builder()
+        employeeShortDto = EmployeeFindAllResponseDto.builder()
                 .id(ID_1)
                 .fullName("name")
                 .position("USER")
@@ -80,27 +77,29 @@ class TaskAdminUnitTests {
                 .role(Role.ROLE_USER)
                 .email(email)
                 .build();
+        project = Project.builder()
+                .id(ID_1)
+                .name("Project1")
+                .employees(List.of(employee))
+                .build();
         task = Task.builder()
                 .id(ID_1)
                 .basicPoints(10)
                 .penaltyPoints(2)
                 .finishDate(LocalDate.now().plusDays(2))
                 .executor(employee)
+                .project(project)
                 .build();
-        taskOutDto = TaskFullDto.builder()
+        taskOutDto = TaskCreateFindByIdUpdateResponseDto.builder()
                 .id(ID_1)
                 .executor(employeeShortDto)
                 .build();
-        taskInDto = TaskInDto.builder()
+        taskInDto = TaskCreateUpdateRequestDto.builder()
                 .executorId(ID_2)
                 .projectId(ID_1)
                 .deadLine(LocalDate.now().plusDays(2))
                 .build();
-        project = Project.builder()
-                .id(ID_1)
-                .name("Project1")
-                .build();
-        taskShortDto = TaskShortDto.builder()
+        taskShortDto = TaskFindAllResponseDto.builder()
                 .id(ID_1)
                 .name("taskShort")
                 .deadLine(LocalDate.now().plusDays(2))
@@ -111,9 +110,9 @@ class TaskAdminUnitTests {
 
     @Test
     void findAllTasks_shouldCallRepository() {
-        when(taskRepository.findAll()).thenReturn(asList(task));
+        when(taskRepository.findAll()).thenReturn(List.of(task));
         when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
-        List<TaskShortDto> tasksResult = taskService.findAllByAdmin();
+        List<TaskFindAllResponseDto> tasksResult = taskService.findAll();
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
@@ -126,7 +125,7 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullDto taskOutDtoResult = taskService.findByIdByAdmin(task.getId());
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.findDtoById(task.getId());
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -136,12 +135,13 @@ class TaskAdminUnitTests {
 
     @Test
     void createTask_shouldCallRepository() {
-        when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
+        when(projectService.findById(project.getId())).thenReturn(project);
+        when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.mapToEntity(taskInDto)).thenReturn(task);
+        when(taskMapper.mapToEntity(taskInDto, project, employee)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullDto taskOutDtoResult = taskService.createByAdmin(taskInDto, email);
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.create(taskInDto);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -152,12 +152,11 @@ class TaskAdminUnitTests {
     @Test
     void updateTask_shouldCallRepository() {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
-        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -169,12 +168,11 @@ class TaskAdminUnitTests {
     void updateTask_shouldCallRepository_status_done() {
         taskInDto.setStatus("DONE");
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
-        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullDto taskOutDtoResult = taskService.updateByAdmin(ID_1, taskInDto);
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -186,7 +184,7 @@ class TaskAdminUnitTests {
     void deleteTask_shouldCallRepository() {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
 
-        taskService.deleteByAdmin(ID_1);
+        taskService.delete(ID_1);
 
         verify(taskRepository, times(1)).delete(task);
     }
@@ -194,6 +192,6 @@ class TaskAdminUnitTests {
     @Test
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> taskService.findByIdByAdmin(ID_1));
+        assertThrows(EntityNotFoundException.class, () -> taskService.findDtoById(ID_1));
     }
 }

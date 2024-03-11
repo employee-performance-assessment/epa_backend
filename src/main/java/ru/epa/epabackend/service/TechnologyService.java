@@ -1,6 +1,7 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.technology.TechnologyDto;
+import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateFindAllResponseDto;
+import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateRequestDto;
 import ru.epa.epabackend.model.Technology;
 
 import java.util.List;
@@ -15,25 +16,25 @@ public interface TechnologyService {
     /**
      * Добавление технологии.
      */
-    TechnologyDto createTechnology(TechnologyDto technologyDto);
+    TechnologyCreateUpdateFindAllResponseDto create(TechnologyCreateUpdateRequestDto technologyDto);
 
     /**
      * Получение технологии по идентификатору.
      */
-    Technology getTechnologyById(Long technologyId);
+    Technology findById(Long technologyId);
 
     /**
      * Обновление технологии.
      */
-    TechnologyDto updateTechnology(TechnologyDto technologyDto, Long technologyId);
+    TechnologyCreateUpdateFindAllResponseDto update(TechnologyCreateUpdateRequestDto technologyDto, Long technologyId);
 
     /**
      * Получение списка всех технологий.
      */
-    List<TechnologyDto> getAllTechnologies();
+    List<TechnologyCreateUpdateFindAllResponseDto> findAll();
 
     /**
      * Удаление технологии по идентификатору.
      */
-    void deleteTechnologyById(Long technologyById);
+    void delete(Long technologyById);
 }

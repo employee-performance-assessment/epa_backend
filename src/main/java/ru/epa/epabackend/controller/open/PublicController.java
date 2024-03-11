@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
-import ru.epa.epabackend.dto.employee.EmployeeFullDto;
+import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateFindByIdResponseDto;
 import ru.epa.epabackend.dto.employee.JwtRequest;
 import ru.epa.epabackend.dto.employee.JwtResponse;
 import ru.epa.epabackend.service.AuthenticationService;
@@ -41,7 +41,7 @@ public class PublicController {
             summary = "Саморегистрация администратора"
     )
     @PostMapping("/register")
-    public EmployeeFullDto register(@RequestBody EmployeeDtoRequest employeeDtoRequest) {
-        return employeeService.addEmployeeSelfRegister(employeeDtoRequest);
+    public EmployeeCreateUpdateFindByIdResponseDto register(@RequestBody EmployeeCreateUpdateRequestDto employeeDtoRequest) {
+        return employeeService.createSelfRegister(employeeDtoRequest);
     }
 }

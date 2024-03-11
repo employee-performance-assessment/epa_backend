@@ -30,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public JwtResponse getToken(JwtRequest jwtRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword()));
-        UserDetails userDetails = employeeService.getEmployeeByEmail(jwtRequest.getEmail());
+        UserDetails userDetails = employeeService.findByEmail(jwtRequest.getEmail());
         return new JwtResponse(jwtService.generateToken(userDetails));
     }
 }

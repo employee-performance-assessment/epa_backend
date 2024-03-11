@@ -11,7 +11,7 @@ import ru.epa.epabackend.util.ProjectStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateProjectRto {
+public class ProjectUpdateRequestDto {
     @Size(min = 3, max = 255)
     private String name;
     private ProjectStatus status;
