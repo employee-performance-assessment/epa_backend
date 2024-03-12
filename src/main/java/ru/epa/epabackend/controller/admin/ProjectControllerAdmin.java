@@ -57,26 +57,12 @@ public class ProjectControllerAdmin {
                     "Когда проект не относится к администратору получаем 409 Conflict.\n" +
                     "Если сотрудник был добавлен в проект ранее, возвращается ошибка 409 Conflict."
     )
-    @PostMapping("/{projectId}/")
+    @PostMapping("/{projectId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ProjectEmployeesDto saveWithEmployee(@PathVariable Long projectId,
                                                 @RequestParam Long employeeId,
                                                 Principal principal) {
         return projectService.saveWithEmployee(projectId, employeeId, principal.getName());
-    }
-
-    /**
-     * Эндпоинт получения списка проектов администратора с короткой информацией о проектах
-     */
-    @Operation(
-            summary = "Получение списка проектов администратора с короткой информацией о проектах",
-            description = "При успешном получении списка возвращается 200 Ok.\n" +
-                    "В случае отсутствия указанного email в базе данных возвращается 404 Not Found."
-    )
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ProjectShortDto> findByAdminEmail(Principal principal) {
-        return projectService.findByAdminEmail(principal.getName());
     }
 
     /**

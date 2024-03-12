@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
 import static ru.epa.epabackend.util.Role.ROLE_USER;
 
 @Slf4j
@@ -33,13 +34,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     @Override
+    public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeDtoRequest) {
+        log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
+        employeeToSave.setRole(ROLE_USER);
+        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
+    }
 
-    public EmployeeFullDto addEmployee(EmployeeDtoRequest employeeRtoRequest) {
+    @Override
+    public EmployeeFullDto addEmployeeSelfRegister(EmployeeDtoRequest employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
-        Employee employee = employeeRepository.save(employeeMapper.mapToEntity(employeeRtoRequest));
-        employee.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
-        employee.setRole(ROLE_USER);
-        return employeeMapper.mapToFullDto(employee);
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeRtoRequest);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
+        employeeToSave.setRole(ROLE_ADMIN);
+        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
     }
 
     @Override
@@ -61,7 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
-        return employeeMapper.mapToFullDto(oldEmployee);
+        return employeeMapper.mapToFullDto(employeeRepository.save(oldEmployee));
     }
 
     @Override
@@ -98,14 +107,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional(readOnly = true)
     public Employee getEmployeeByEmail(String email) {
-        return employeeRepository.findByEmail(email).orElseThrow(() ->
-                new EntityNotFoundException("Неверный email"));
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Неверный email, oбъект класса %s не " +
+                        "найден", Employee.class)));
     }
 
     @Override
     public Employee getEmployee(Long employeeId) {
-        return employeeRepository.findById(employeeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class)));
+        return employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Employee.class)));
     }
 
     private void updateEmployeeFields(Employee oldEmployee, EmployeeDtoRequest employeeDtoRequest) {

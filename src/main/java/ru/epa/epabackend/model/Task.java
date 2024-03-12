@@ -45,7 +45,7 @@ public class Task {
     /**
      * Описание проекта.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
@@ -53,7 +53,7 @@ public class Task {
      * Сотрудник выполняющий задачу.
      */
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "executor_id")
     private Employee executor;
 

@@ -12,20 +12,28 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
+
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class,
-            MissingServletRequestParameterException.class, BadRequestException.class})
+    @ExceptionHandler({ConstraintViolationException.class,
+            MissingServletRequestParameterException.class,
+            BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validateException(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse validateException(MethodArgumentNotValidException e) {
+        log.info(e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse entityNotFoundException(EntityNotFoundException e) {
         log.info(e.getMessage());
@@ -37,12 +45,6 @@ public class ErrorHandler {
     public ErrorResponse conflictException(RuntimeException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.CONFLICT, e.getMessage());
-    }
-
-    @ExceptionHandler()
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleForbidden(final Exception e) {
-        return new ErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
     @ExceptionHandler

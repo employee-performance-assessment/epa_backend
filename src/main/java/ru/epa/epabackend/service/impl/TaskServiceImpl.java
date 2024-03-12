@@ -1,5 +1,6 @@
 package ru.epa.epabackend.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,13 +8,10 @@ import ru.epa.epabackend.dto.task.TaskFullDto;
 import ru.epa.epabackend.dto.task.TaskInDto;
 import ru.epa.epabackend.dto.task.TaskShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
-import ru.epa.epabackend.exception.exceptions.NotFoundException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
-import ru.epa.epabackend.repository.EmployeeRepository;
-import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.ProjectService;
@@ -21,12 +19,10 @@ import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static ru.epa.epabackend.exception.ExceptionDescriptions.*;
 
 /**
  * Класс TaskServiceImpl содержит методы действий с задачами для администратора.
@@ -40,8 +36,6 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
-    private final EmployeeRepository employeeRepository;
-    private final ProjectRepository projectRepository;
     private final ProjectService projectService;
     private final EmployeeService employeeService;
 
@@ -50,9 +44,9 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortDto> findAllByAdmin() {
+    public List<TaskShortDto> findAll() {
         return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -60,30 +54,30 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskFullDto findByIdByAdmin(Long taskId) {
-        return taskMapper.mapToFullDto(getTaskFromRepositoryById(taskId));
+    public TaskFullDto findDtoById(Long taskId) {
+        return taskMapper.mapToFullDto(findById(taskId));
     }
 
     /**
      * Создание задачи админом
      */
     @Override
-    public TaskFullDto createByAdmin(TaskInDto taskInDto, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
+    public TaskFullDto create(TaskInDto taskInDto) {
         Project project = projectService.findById(taskInDto.getProjectId());
-        Task task = taskMapper.mapToEntity(taskInDto);
-        task.setStatus(TaskStatus.NEW);
-        task.setProject(project);
-        task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
-        return taskMapper.mapToFullDto(taskRepository.save(task));
+        Employee executor = employeeService.getEmployee(taskInDto.getExecutorId());
+        taskInDto.setStatus("NEW");
+        checkProjectContainsExecutor(project, executor);
+        Task task = taskRepository.save(taskMapper.mapToEntity(taskInDto, project, executor));
+        return taskMapper.mapToFullDto(task);
+
     }
 
     /**
      * Обновление задачи админом
      */
     @Override
-    public TaskFullDto updateByAdmin(Long taskId, TaskInDto taskInDto) {
-        Task task = getTaskFromRepositoryById(taskId);
+    public TaskFullDto update(Long taskId, TaskInDto taskInDto) {
+        Task task = findById(taskId);
         setNotNullParamToEntity(taskInDto, task);
         if (task.getStatus() == TaskStatus.DONE) {
             setPointsToEmployeeAfterTaskDone(taskInDto, task);
@@ -96,8 +90,8 @@ public class TaskServiceImpl implements TaskService {
      * Удаление задачи админом
      */
     @Override
-    public void deleteByAdmin(Long taskId) {
-        taskRepository.delete(getTaskFromRepositoryById(taskId));
+    public void delete(Long taskId) {
+        taskRepository.delete(findById(taskId));
     }
 
     /**
@@ -106,26 +100,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
-        return taskRepository.findByProjectIdAndStatus(projectId, status)
-                .stream().map(taskMapper::mapToShortDto).collect(Collectors.toList());
-    }
-
-    /**
-     * Получение задачи из репозитория по ID
-     */
-    private Task getTaskFromRepositoryById(Long taskId) {
-        return taskRepository.findById(taskId)
-                .orElseThrow(() -> new NotFoundException(TASK_NOT_FOUND.getTitle()));
-    }
-
-    /**
-     * Получение списка всех задач пользователя
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<TaskShortDto> findAllByEmployeeId(Long employeeId) {
-        return taskRepository.findAllByExecutorId(employeeId).stream()
-                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
+        return taskRepository.findAllByProjectIdAndStatus(projectId, status)
+                .stream().map(taskMapper::mapToShortDto).toList();
     }
 
     /**
@@ -133,9 +109,14 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortDto> findAllByEmployeeIdAndStatus(Long employeeId, TaskStatus status) {
-        return taskRepository.findByExecutorIdAndStatus(employeeId, status).stream()
-                .map(taskMapper::mapToShortDto).collect(Collectors.toList());
+    public List<TaskShortDto> findAllByExecutorIdFilters(String status, Principal principal) {
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+        try {
+            return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status)).stream()
+                    .map(taskMapper::mapToShortDto).toList();
+        } catch (IllegalArgumentException exception) {
+            throw new BadRequestException("Неверный статус: " + status);
+        }
     }
 
     /**
@@ -143,29 +124,37 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskFullDto findById(Long employeeId, Long taskId) {
-        return taskMapper.mapToFullDto(getTaskFromRepositoryByIdAndExecutorId(taskId, employeeId));
+    public TaskFullDto findByIdAndExecutorId(Principal principal, Long taskId) {
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+        return taskMapper.mapToFullDto(findByIdAndExecutorId(taskId, employee.getId()));
     }
 
     /**
-     * Обновление задачи
+     * Обновление статуса задачи
      */
     @Override
-    public TaskFullDto updateStatus(Long employeeId, Long taskId, TaskStatus taskStatus) {
-        Task task = getTaskFromRepositoryByIdAndExecutorId(taskId, employeeId);
-        if (taskStatus == TaskStatus.IN_PROGRESS) {
-            task.setStartDate(LocalDate.now());
+    public TaskFullDto updateStatus(Long taskId, String status, Principal principal) {
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+        try {
+            TaskStatus taskStatus = getTaskStatus(status);
+            Task task = findByIdAndExecutorId(taskId, employee.getId());
+            if (taskStatus == TaskStatus.IN_PROGRESS) {
+                task.setStartDate(LocalDate.now());
+            }
+            task.setStatus(taskStatus);
+            return taskMapper.mapToFullDto(taskRepository.save(task));
+        } catch (IllegalArgumentException exception) {
+            throw new BadRequestException("Неверный статус: " + status);
         }
-        task.setStatus(taskStatus);
-        return taskMapper.mapToFullDto(taskRepository.save(task));
     }
 
     /**
      * Получение задачи из репозитория по ID задачи и ID исполнителя
      */
-    private Task getTaskFromRepositoryByIdAndExecutorId(Long taskId, Long employeeId) {
+    private Task findByIdAndExecutorId(Long taskId, Long employeeId) {
         return taskRepository.findByIdAndExecutorId(taskId, employeeId)
-                .orElseThrow(() -> new NotFoundException(FORBIDDEN_TO_EDIT_NOT_YOUR_TASK.getTitle()));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Task.class)));
     }
 
     private void setPointsToEmployeeAfterTaskDone(TaskInDto taskInDto, Task task) {
@@ -180,23 +169,18 @@ public class TaskServiceImpl implements TaskService {
         }
 
         if (taskInDto.getDescription() != null) {
-            task.setName(taskInDto.getDescription());
+            task.setDescription(taskInDto.getDescription());
         }
 
         if (taskInDto.getExecutorId() != null) {
-            Employee employee = employeeRepository.findById(taskInDto.getExecutorId())
-                    .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND.getTitle()));
-            task.setExecutor(employee);
+            Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
+            checkProjectContainsExecutor(task.getProject(), employee);
+            task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+
         }
 
         if (taskInDto.getBasicPoints() != null) {
             task.setBasicPoints(taskInDto.getBasicPoints());
-        }
-
-        if (taskInDto.getProjectId() != null) {
-            Project project = projectRepository.findById(taskInDto.getProjectId())
-                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.getTitle()));
-            task.setProject(project);
         }
 
         if (taskInDto.getPenaltyPoints() != null) {
@@ -210,5 +194,29 @@ public class TaskServiceImpl implements TaskService {
                 throw new BadRequestException("Unknown status: " + taskInDto.getStatus());
             }
         }
+    }
+
+    private void checkProjectContainsExecutor(Project project, Employee employee) {
+        if (!project.getEmployees().contains(employee)) {
+            throw new EntityNotFoundException(String.format("Пользователя с id %d нет в проекте с id %d",
+                    employee.getId(), project.getId()));
+        }
+    }
+
+    private TaskStatus getTaskStatus(String status) {
+        TaskStatus taskStatus = null;
+        if (status != null) {
+            taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
+        }
+        return taskStatus;
+    }
+
+    /**
+     * Получение задачи из репозитория по ID
+     */
+    private Task findById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
+                        Task.class)));
     }
 }

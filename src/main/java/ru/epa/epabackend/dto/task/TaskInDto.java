@@ -43,7 +43,6 @@ public class TaskInDto {
     /**
      * ID Сотрудника, выполняющего задачу.
      */
-    @NotNull
     private Long executorId;
 
     /**
