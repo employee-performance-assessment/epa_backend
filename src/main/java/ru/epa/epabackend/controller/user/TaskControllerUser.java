@@ -8,8 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.task.TaskFullResponseDto;
-import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+<<<<<<<<< Temporary merge branch 1
+import ru.epa.epabackend.dto.task.TaskFullDto;
+import ru.epa.epabackend.dto.task.TaskShortDto;
+=========
+import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
+import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+>>>>>>>>> Temporary merge branch 2
 import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -40,8 +45,13 @@ public class TaskControllerUser {
                     "если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskShortResponseDto> findAllTasksByEmployeeIdFilters(Principal principal,
-                                                                      @RequestParam(required = false) String status) {
+<<<<<<<<< Temporary merge branch 1
+    public List<TaskShortDto> findAllTasksByEmployeeIdFilters(Principal principal,
+                                                              @RequestParam(required = false) String status) {
+=========
+    public List<TaskFindAllResponseDto> findAllTasksByEmployeeIdFilters(Principal principal,
+                                                                        @RequestParam(required = false) String status) {
+>>>>>>>>> Temporary merge branch 2
         return taskEmployeeService.findAllByExecutorIdFilters(status, principal);
     }
 
@@ -54,9 +64,14 @@ public class TaskControllerUser {
                     "В случае, если задачи не найдено, возвращает ошибкую 404"
     )
     @GetMapping("/{taskId}")
-    public TaskFullResponseDto findTaskById(
+<<<<<<<<< Temporary merge branch 1
+    public TaskFullDto findTaskById(@Parameter(required = true) @PathVariable Long taskId,
+                                    Principal principal) {
+=========
+    public TaskCreateFindByIdUpdateResponseDto findTaskById(
             @Parameter(required = true) @PathVariable Long taskId,
                                                             Principal principal) {
+>>>>>>>>> Temporary merge branch 2
         return taskEmployeeService.findByIdAndExecutorId(principal, taskId);
     }
 
@@ -67,9 +82,9 @@ public class TaskControllerUser {
             summary = "Обновление статуса выполнения задачи сотрудником"
     )
     @PatchMapping("/{taskId}")
-    public TaskFullResponseDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
-                                            @Parameter(required = true) @RequestParam String status,
-                                            Principal principal) {
+    public TaskCreateFindByIdUpdateResponseDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
+                                    @Parameter(required = true) @RequestParam String status,
+                                    Principal principal) {
         return taskEmployeeService.updateStatus(taskId, status, principal);
 
     }
@@ -84,8 +99,8 @@ public class TaskControllerUser {
     )
     @GetMapping("/project/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<TaskShortResponseDto> findByProjectIdAndStatus(@PathVariable Long projectId,
-                                                               @RequestParam TaskStatus status) {
+    public List<TaskFindAllResponseDto> findByProjectIdAndStatus(@PathVariable Long projectId,
+                                                       @RequestParam TaskStatus status) {
         return taskEmployeeService.findByProjectIdAndStatus(projectId, status);
     }
 }

@@ -5,9 +5,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.task.TaskFullResponseDto;
-import ru.epa.epabackend.dto.task.TaskRequestDto;
-import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
@@ -45,7 +45,11 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortResponseDto> findAll() {
+<<<<<<<<< Temporary merge branch 1
+    public List<TaskShortDto> findAll() {
+=========
+    public List<TaskFindAllResponseDto> findAll() {
+>>>>>>>>> Temporary merge branch 2
         return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
                 .toList();
     }
@@ -55,7 +59,11 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskFullResponseDto findDtoById(Long taskId) {
+<<<<<<<<< Temporary merge branch 1
+    public TaskFullDto findDtoById(Long taskId) {
+=========
+    public TaskCreateFindByIdUpdateResponseDto findDtoById(Long taskId) {
+>>>>>>>>> Temporary merge branch 2
         return taskMapper.mapToFullDto(findById(taskId));
     }
 
@@ -63,12 +71,21 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-    public TaskFullResponseDto create(TaskRequestDto taskCreateUpdateRequestDto) {
+<<<<<<<<< Temporary merge branch 1
+    public TaskFullDto create(TaskInDto taskInDto) {
+        Project project = projectService.findById(taskInDto.getProjectId());
+        Employee executor = employeeService.getEmployee(taskInDto.getExecutorId());
+        taskInDto.setStatus("NEW");
+        checkProjectContainsExecutor(project, executor);
+        Task task = taskRepository.save(taskMapper.mapToEntity(taskInDto, project, executor));
+=========
+    public TaskCreateFindByIdUpdateResponseDto create(TaskCreateUpdateRequestDto taskCreateUpdateRequestDto) {
         Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
         Employee executor = employeeService.findById(taskCreateUpdateRequestDto.getExecutorId());
         taskCreateUpdateRequestDto.setStatus("NEW");
         checkProjectContainsExecutor(project, executor);
         Task task = taskRepository.save(taskMapper.mapToEntity(taskCreateUpdateRequestDto, project, executor));
+>>>>>>>>> Temporary merge branch 2
         return taskMapper.mapToFullDto(task);
 
     }
@@ -77,10 +94,16 @@ public class TaskServiceImpl implements TaskService {
      * Обновление задачи админом
      */
     @Override
-    public TaskFullResponseDto update(
-            Long taskId, TaskRequestDto taskCreateUpdateRequestDto) {
+<<<<<<<<< Temporary merge branch 1
+    public TaskFullDto update(Long taskId, TaskInDto taskInDto) {
+        Task task = findById(taskId);
+        setNotNullParamToEntity(taskInDto, task);
+=========
+    public TaskCreateFindByIdUpdateResponseDto update(
+            Long taskId, TaskCreateUpdateRequestDto taskCreateUpdateRequestDto) {
         Task task = findById(taskId);
         setNotNullParamToEntity(taskCreateUpdateRequestDto, task);
+>>>>>>>>> Temporary merge branch 2
         if (task.getStatus() == TaskStatus.DONE) {
             setPointsToEmployeeAfterTaskDone(taskCreateUpdateRequestDto, task);
             task.setFinishDate(LocalDate.now());
@@ -100,7 +123,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     @Override
-    public List<TaskShortResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+    public List<TaskFindAllResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status)
                 .stream().map(taskMapper::mapToShortDto).toList();
@@ -111,8 +134,13 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortResponseDto> findAllByExecutorIdFilters(String status, Principal principal) {
+<<<<<<<<< Temporary merge branch 1
+    public List<TaskShortDto> findAllByExecutorIdFilters(String status, Principal principal) {
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+=========
+    public List<TaskFindAllResponseDto> findAllByExecutorIdFilters(String status, Principal principal) {
         Employee employee = employeeService.findByEmail(principal.getName());
+>>>>>>>>> Temporary merge branch 2
         try {
             return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status)).stream()
                     .map(taskMapper::mapToShortDto).toList();
@@ -126,8 +154,13 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskFullResponseDto findByIdAndExecutorId(Principal principal, Long taskId) {
+<<<<<<<<< Temporary merge branch 1
+    public TaskFullDto findByIdAndExecutorId(Principal principal, Long taskId) {
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+=========
+    public TaskCreateFindByIdUpdateResponseDto findByIdAndExecutorId(Principal principal, Long taskId) {
         Employee employee = employeeService.findByEmail(principal.getName());
+>>>>>>>>> Temporary merge branch 2
         return taskMapper.mapToFullDto(findByIdAndExecutorId(taskId, employee.getId()));
     }
 
@@ -135,8 +168,13 @@ public class TaskServiceImpl implements TaskService {
      * Обновление статуса задачи
      */
     @Override
-    public TaskFullResponseDto updateStatus(Long taskId, String status, Principal principal) {
+<<<<<<<<< Temporary merge branch 1
+    public TaskFullDto updateStatus(Long taskId, String status, Principal principal) {
+        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+=========
+    public TaskCreateFindByIdUpdateResponseDto updateStatus(Long taskId, String status, Principal principal) {
         Employee employee = employeeService.findByEmail(principal.getName());
+>>>>>>>>> Temporary merge branch 2
         try {
             TaskStatus taskStatus = getTaskStatus(status);
             Task task = findByIdAndExecutorId(taskId, employee.getId());
@@ -159,17 +197,27 @@ public class TaskServiceImpl implements TaskService {
                         Task.class)));
     }
 
-    private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
+    private void setPointsToEmployeeAfterTaskDone(TaskCreateUpdateRequestDto dto, Task task) {
         Period period = Period.between(LocalDate.now(), dto.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
-    private void setNotNullParamToEntity(TaskRequestDto dto, Task task) {
+    private void setNotNullParamToEntity(TaskCreateUpdateRequestDto dto, Task task) {
         if (dto.getName() != null) {
             task.setName(dto.getName());
         }
 
+<<<<<<<<< Temporary merge branch 1
+        if (taskInDto.getDescription() != null) {
+            task.setDescription(taskInDto.getDescription());
+        }
+
+        if (taskInDto.getExecutorId() != null) {
+            Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
+            checkProjectContainsExecutor(task.getProject(), employee);
+            task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+=========
         if (dto.getDescription() != null) {
             task.setDescription(dto.getDescription());
         }
@@ -178,6 +226,7 @@ public class TaskServiceImpl implements TaskService {
             Employee employee = employeeService.findById(dto.getExecutorId());
             checkProjectContainsExecutor(task.getProject(), employee);
             task.setExecutor(employeeService.findById(dto.getExecutorId()));
+>>>>>>>>> Temporary merge branch 2
 
         }
 
@@ -185,11 +234,19 @@ public class TaskServiceImpl implements TaskService {
             task.setBasicPoints(dto.getBasicPoints());
         }
 
+<<<<<<<<< Temporary merge branch 1
+        if (taskInDto.getPenaltyPoints() != null) {
+            task.setPenaltyPoints(taskInDto.getPenaltyPoints());
+        }
+
+        if (taskInDto.getStatus() != null) {
+=========
         if (dto.getPenaltyPoints() != null) {
             task.setPenaltyPoints(dto.getPenaltyPoints());
         }
 
         if (dto.getStatus() != null) {
+>>>>>>>>> Temporary merge branch 2
             try {
                 task.setStatus(EnumUtils.getEnum(TaskStatus.class, dto.getStatus()));
             } catch (IllegalArgumentException exception) {
@@ -221,4 +278,8 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
                         Task.class)));
     }
+<<<<<<<<< Temporary merge branch 1
 }
+=========
+}
+>>>>>>>>> Temporary merge branch 2

@@ -8,10 +8,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.task.TaskFullResponseDto;
-import ru.epa.epabackend.dto.task.TaskRequestDto;
-import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+<<<<<<<<< Temporary merge branch 1
+import ru.epa.epabackend.dto.employee.EmployeeShortDto;
+import ru.epa.epabackend.dto.project.ProjectShortDto;
+import ru.epa.epabackend.dto.task.TaskFullDto;
+import ru.epa.epabackend.dto.task.TaskInDto;
+import ru.epa.epabackend.dto.task.TaskShortDto;
+=========
+import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+>>>>>>>>> Temporary merge branch 2
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
@@ -37,7 +45,10 @@ class TaskAdminUnitTests {
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
     private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
+<<<<<<<<< Temporary merge branch 1
+=========
     private static final String email = "qwerty@gmail.com";
+>>>>>>>>> Temporary merge branch 2
     @Mock
     private TaskRepository taskRepository;
     @Mock
@@ -49,17 +60,22 @@ class TaskAdminUnitTests {
     @Mock
     private TaskMapper taskMapper;
     @Mock
+<<<<<<<<< Temporary merge branch 1
+    private EmployeeMapper employeeMapper;
+    @Mock
+=========
+>>>>>>>>> Temporary merge branch 2
     private ProjectMapper projectMapper;
     @InjectMocks
     private TaskServiceImpl taskService;
     private Employee admin = new Employee();
     private Employee employee = new Employee();
     private Task task = new Task();
-    private TaskFullResponseDto taskOutDto = new TaskFullResponseDto();
-    private TaskRequestDto taskInDto = new TaskRequestDto();
+    private TaskCreateFindByIdUpdateResponseDto taskOutDto = new TaskCreateFindByIdUpdateResponseDto();
+    private TaskCreateUpdateRequestDto taskInDto = new TaskCreateUpdateRequestDto();
     private Project project = new Project();
-    private TaskShortResponseDto taskShortDto = new TaskShortResponseDto();
-    private EmployeeShortResponseDto employeeShortDto;
+    private TaskFindAllResponseDto taskShortDto = new TaskFindAllResponseDto();
+    private EmployeeFindAllResponseDto employeeShortDto;
 
     @BeforeEach
     public void init() {
@@ -67,7 +83,7 @@ class TaskAdminUnitTests {
                 .id(ID_1)
                 .role(Role.ROLE_ADMIN)
                 .build();
-        employeeShortDto = EmployeeShortResponseDto.builder()
+        employeeShortDto = EmployeeFindAllResponseDto.builder()
                 .id(ID_1)
                 .fullName("name")
                 .position("USER")
@@ -90,16 +106,20 @@ class TaskAdminUnitTests {
                 .executor(employee)
                 .project(project)
                 .build();
-        taskOutDto = TaskFullResponseDto.builder()
+        taskOutDto = TaskCreateFindByIdUpdateResponseDto.builder()
                 .id(ID_1)
                 .executor(employeeShortDto)
                 .build();
-        taskInDto = TaskRequestDto.builder()
+        taskInDto = TaskCreateUpdateRequestDto.builder()
                 .executorId(ID_2)
                 .projectId(ID_1)
                 .deadLine(LocalDate.now().plusDays(2))
                 .build();
-        taskShortDto = TaskShortResponseDto.builder()
+<<<<<<<<< Temporary merge branch 1
+        taskShortDto = TaskShortDto.builder()
+=========
+        taskShortDto = TaskFindAllResponseDto.builder()
+>>>>>>>>> Temporary merge branch 2
                 .id(ID_1)
                 .name("taskShort")
                 .deadLine(LocalDate.now().plusDays(2))
@@ -112,7 +132,11 @@ class TaskAdminUnitTests {
     void findAllTasks_shouldCallRepository() {
         when(taskRepository.findAll()).thenReturn(List.of(task));
         when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
-        List<TaskShortResponseDto> tasksResult = taskService.findAll();
+<<<<<<<<< Temporary merge branch 1
+        List<TaskShortDto> tasksResult = taskService.findAll();
+=========
+        List<TaskFindAllResponseDto> tasksResult = taskService.findAll();
+>>>>>>>>> Temporary merge branch 2
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
@@ -125,7 +149,11 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.findDtoById(task.getId());
+<<<<<<<<< Temporary merge branch 1
+        TaskFullDto taskOutDtoResult = taskService.findDtoById(task.getId());
+=========
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.findDtoById(task.getId());
+>>>>>>>>> Temporary merge branch 2
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -136,12 +164,20 @@ class TaskAdminUnitTests {
     @Test
     void createTask_shouldCallRepository() {
         when(projectService.findById(project.getId())).thenReturn(project);
+<<<<<<<<< Temporary merge branch 1
+        when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
+=========
         when(employeeService.findById(employee.getId())).thenReturn(employee);
+>>>>>>>>> Temporary merge branch 2
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToEntity(taskInDto, project, employee)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.create(taskInDto);
+<<<<<<<<< Temporary merge branch 1
+        TaskFullDto taskOutDtoResult = taskService.create(taskInDto);
+=========
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.create(taskInDto);
+>>>>>>>>> Temporary merge branch 2
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -151,12 +187,20 @@ class TaskAdminUnitTests {
 
     @Test
     void updateTask_shouldCallRepository() {
+        when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
+<<<<<<<<< Temporary merge branch 1
+        when(taskRepository.save(task)).thenReturn(task);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
+
+        TaskFullDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+=========
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+>>>>>>>>> Temporary merge branch 2
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -168,11 +212,19 @@ class TaskAdminUnitTests {
     void updateTask_shouldCallRepository_status_done() {
         taskInDto.setStatus("DONE");
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
+<<<<<<<<< Temporary merge branch 1
+        when(employeeService.getEmployee(employee.getId())).thenReturn(employee);
+        when(taskRepository.save(task)).thenReturn(task);
+        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
+
+        TaskFullDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+=========
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+>>>>>>>>> Temporary merge branch 2
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);

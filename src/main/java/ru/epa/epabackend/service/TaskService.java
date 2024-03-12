@@ -1,8 +1,8 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.task.TaskFullResponseDto;
-import ru.epa.epabackend.dto.task.TaskRequestDto;
-import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
+import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
@@ -15,37 +15,65 @@ import java.util.List;
  */
 public interface TaskService {
 
-    List<TaskShortResponseDto> findAllByExecutorIdFilters(String status, Principal principal);
+<<<<<<<<< Temporary merge branch 1
+    List<TaskShortDto> findAllByExecutorIdFilters(String status, Principal principal);
+=========
+    List<TaskFindAllResponseDto> findAllByExecutorIdFilters(String status, Principal principal);
+>>>>>>>>> Temporary merge branch 2
 
     /**
      * Найти задачу по ID
      */
-    TaskFullResponseDto findByIdAndExecutorId(Principal principal, Long taskId);
+<<<<<<<<< Temporary merge branch 1
+    TaskFullDto findByIdAndExecutorId(Principal principal, Long taskId);
+=========
+    TaskCreateFindByIdUpdateResponseDto findByIdAndExecutorId(Principal principal, Long taskId);
+>>>>>>>>> Temporary merge branch 2
 
     /**
      * Обновление задачи
      */
-    TaskFullResponseDto updateStatus(Long taskId, String status, Principal principal);
+<<<<<<<<< Temporary merge branch 1
+    TaskFullDto updateStatus(Long taskId, String status, Principal principal);
+=========
+    TaskCreateFindByIdUpdateResponseDto updateStatus(Long taskId, String status, Principal principal);
+>>>>>>>>> Temporary merge branch 2
 
     /**
      * Получение списка всех задач
      */
-    List<TaskShortResponseDto> findAll();
+<<<<<<<<< Temporary merge branch 1
+    List<TaskShortDto> findAll();
+=========
+    List<TaskFindAllResponseDto> findAll();
+>>>>>>>>> Temporary merge branch 2
 
     /**
      * Создание задачи
      */
-    TaskFullResponseDto create(TaskRequestDto taskDto);
+<<<<<<<<< Temporary merge branch 1
+    TaskFullDto create(TaskInDto taskDto);
+=========
+    TaskCreateFindByIdUpdateResponseDto create(TaskCreateUpdateRequestDto taskDto);
+>>>>>>>>> Temporary merge branch 2
 
     /**
      * Найти задачу по ID
      */
-    TaskFullResponseDto findDtoById(Long taskId);
+<<<<<<<<< Temporary merge branch 1
+    TaskFullDto findDtoById(Long taskId);
+=========
+    TaskCreateFindByIdUpdateResponseDto findDtoById(Long taskId);
+>>>>>>>>> Temporary merge branch 2
 
     /**
      * Обновление задачи
      */
-    TaskFullResponseDto update(Long taskId, TaskRequestDto taskDto);
+<<<<<<<<< Temporary merge branch 1
+    TaskFullDto update(Long taskId, TaskInDto taskDto);
+=========
+    TaskCreateFindByIdUpdateResponseDto update(Long taskId, TaskCreateUpdateRequestDto taskDto);
+>>>>>>>>> Temporary merge branch 2
 
     /**
      * Удаление задачи
@@ -55,5 +83,5 @@ public interface TaskService {
     /**
      * Получение списка задач проекта с определенным статусом задач
      */
-    List<TaskShortResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
+    List<TaskFindAllResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
 }
