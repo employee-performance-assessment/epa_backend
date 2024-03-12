@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
-import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.service.TaskService;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class TaskControllerAdmin {
                     "В случае, если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskFindAllResponseDto> findAllByAdmin() {
+    public List<TaskShortResponseDto> findAllByAdmin() {
         return taskService.findAll();
     }
 
@@ -51,7 +51,7 @@ public class TaskControllerAdmin {
                     "В случае, если задачи не найдено, возвращает ошибкую 404"
     )
     @GetMapping("/{taskId}")
-    public TaskCreateFindByIdUpdateResponseDto findByIdByAdmin(
+    public TaskFullResponseDto findByIdByAdmin(
             @Parameter(required = true) @PathVariable Long taskId) {
         return taskService.findDtoById(taskId);
     }
@@ -64,8 +64,8 @@ public class TaskControllerAdmin {
             description = "Создание новой задачи администратором"
     )
     @PostMapping()
-    public TaskCreateFindByIdUpdateResponseDto createByAdmin(
-            @Parameter(required = true) @RequestBody TaskCreateUpdateRequestDto taskInDto) {
+    public TaskFullResponseDto createByAdmin(
+            @Parameter(required = true) @RequestBody TaskRequestDto taskInDto) {
         return taskService.create(taskInDto);
     }
 
@@ -77,8 +77,8 @@ public class TaskControllerAdmin {
             description = "Обновление задачи администратором"
     )
     @PatchMapping("/{taskId}")
-    public TaskCreateFindByIdUpdateResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
-                                     @Parameter(required = true) @RequestBody TaskCreateUpdateRequestDto taskInDto) {
+    public TaskFullResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
+                                             @Parameter(required = true) @RequestBody TaskRequestDto taskInDto) {
         return taskService.update(taskId, taskInDto);
     }
 

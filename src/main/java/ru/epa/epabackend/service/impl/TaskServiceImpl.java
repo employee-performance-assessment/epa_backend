@@ -5,9 +5,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
-import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
@@ -45,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskFindAllResponseDto> findAll() {
+    public List<TaskShortResponseDto> findAll() {
         return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
                 .toList();
     }
@@ -55,7 +55,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskCreateFindByIdUpdateResponseDto findDtoById(Long taskId) {
+    public TaskFullResponseDto findDtoById(Long taskId) {
         return taskMapper.mapToFullDto(findById(taskId));
     }
 
@@ -63,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-    public TaskCreateFindByIdUpdateResponseDto create(TaskCreateUpdateRequestDto taskCreateUpdateRequestDto) {
+    public TaskFullResponseDto create(TaskRequestDto taskCreateUpdateRequestDto) {
         Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
         Employee executor = employeeService.findById(taskCreateUpdateRequestDto.getExecutorId());
         taskCreateUpdateRequestDto.setStatus("NEW");
@@ -77,8 +77,8 @@ public class TaskServiceImpl implements TaskService {
      * Обновление задачи админом
      */
     @Override
-    public TaskCreateFindByIdUpdateResponseDto update(
-            Long taskId, TaskCreateUpdateRequestDto taskCreateUpdateRequestDto) {
+    public TaskFullResponseDto update(
+            Long taskId, TaskRequestDto taskCreateUpdateRequestDto) {
         Task task = findById(taskId);
         setNotNullParamToEntity(taskCreateUpdateRequestDto, task);
         if (task.getStatus() == TaskStatus.DONE) {
@@ -100,7 +100,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     @Override
-    public List<TaskFindAllResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+    public List<TaskShortResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status)
                 .stream().map(taskMapper::mapToShortDto).toList();
@@ -111,7 +111,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskFindAllResponseDto> findAllByExecutorIdFilters(String status, Principal principal) {
+    public List<TaskShortResponseDto> findAllByExecutorIdFilters(String status, Principal principal) {
         Employee employee = employeeService.findByEmail(principal.getName());
         try {
             return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status)).stream()
@@ -126,7 +126,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskCreateFindByIdUpdateResponseDto findByIdAndExecutorId(Principal principal, Long taskId) {
+    public TaskFullResponseDto findByIdAndExecutorId(Principal principal, Long taskId) {
         Employee employee = employeeService.findByEmail(principal.getName());
         return taskMapper.mapToFullDto(findByIdAndExecutorId(taskId, employee.getId()));
     }
@@ -135,7 +135,7 @@ public class TaskServiceImpl implements TaskService {
      * Обновление статуса задачи
      */
     @Override
-    public TaskCreateFindByIdUpdateResponseDto updateStatus(Long taskId, String status, Principal principal) {
+    public TaskFullResponseDto updateStatus(Long taskId, String status, Principal principal) {
         Employee employee = employeeService.findByEmail(principal.getName());
         try {
             TaskStatus taskStatus = getTaskStatus(status);
@@ -159,13 +159,13 @@ public class TaskServiceImpl implements TaskService {
                         Task.class)));
     }
 
-    private void setPointsToEmployeeAfterTaskDone(TaskCreateUpdateRequestDto dto, Task task) {
+    private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
         Period period = Period.between(LocalDate.now(), dto.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
-    private void setNotNullParamToEntity(TaskCreateUpdateRequestDto dto, Task task) {
+    private void setNotNullParamToEntity(TaskRequestDto dto, Task task) {
         if (dto.getName() != null) {
             task.setName(dto.getName());
         }

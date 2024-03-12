@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
-import ru.epa.epabackend.dto.project.ProjectCreateFindByIdFindAllUpdateResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
@@ -42,7 +42,7 @@ public class ProjectControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectCreateFindByIdFindAllUpdateResponseDto save(@Valid @RequestBody ProjectCreateRequestDto newProjectRto, Principal principal) {
+    public ProjectShortResponseDto save(@Valid @RequestBody ProjectCreateRequestDto newProjectRto, Principal principal) {
         return projectService.create(newProjectRto, principal.getName());
     }
 
@@ -76,7 +76,7 @@ public class ProjectControllerAdmin {
     )
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeFindAllResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
+    public List<EmployeeShortResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
         return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
     }
 
@@ -93,8 +93,8 @@ public class ProjectControllerAdmin {
     )
     @PatchMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProjectCreateFindByIdFindAllUpdateResponseDto update(@PathVariable Long projectId, @Valid @RequestBody ProjectUpdateRequestDto updateProjectRto,
-                                                                Principal principal) {
+    public ProjectShortResponseDto update(@PathVariable Long projectId, @Valid @RequestBody ProjectUpdateRequestDto updateProjectRto,
+                                          Principal principal) {
         return projectService.update(projectId, updateProjectRto, principal.getName());
     }
 

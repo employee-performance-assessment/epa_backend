@@ -1,8 +1,8 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
-import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
@@ -15,37 +15,37 @@ import java.util.List;
  */
 public interface TaskService {
 
-    List<TaskFindAllResponseDto> findAllByExecutorIdFilters(String status, Principal principal);
+    List<TaskShortResponseDto> findAllByExecutorIdFilters(String status, Principal principal);
 
     /**
      * Найти задачу по ID
      */
-    TaskCreateFindByIdUpdateResponseDto findByIdAndExecutorId(Principal principal, Long taskId);
+    TaskFullResponseDto findByIdAndExecutorId(Principal principal, Long taskId);
 
     /**
      * Обновление задачи
      */
-    TaskCreateFindByIdUpdateResponseDto updateStatus(Long taskId, String status, Principal principal);
+    TaskFullResponseDto updateStatus(Long taskId, String status, Principal principal);
 
     /**
      * Получение списка всех задач
      */
-    List<TaskFindAllResponseDto> findAll();
+    List<TaskShortResponseDto> findAll();
 
     /**
      * Создание задачи
      */
-    TaskCreateFindByIdUpdateResponseDto create(TaskCreateUpdateRequestDto taskDto);
+    TaskFullResponseDto create(TaskRequestDto taskDto);
 
     /**
      * Найти задачу по ID
      */
-    TaskCreateFindByIdUpdateResponseDto findDtoById(Long taskId);
+    TaskFullResponseDto findDtoById(Long taskId);
 
     /**
      * Обновление задачи
      */
-    TaskCreateFindByIdUpdateResponseDto update(Long taskId, TaskCreateUpdateRequestDto taskDto);
+    TaskFullResponseDto update(Long taskId, TaskRequestDto taskDto);
 
     /**
      * Удаление задачи
@@ -55,5 +55,5 @@ public interface TaskService {
     /**
      * Получение списка задач проекта с определенным статусом задач
      */
-    List<TaskFindAllResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
+    List<TaskShortResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status);
 }

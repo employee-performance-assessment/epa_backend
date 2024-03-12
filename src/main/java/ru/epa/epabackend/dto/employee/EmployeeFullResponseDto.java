@@ -13,7 +13,7 @@ import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
 @Builder
 @Data
 @AllArgsConstructor
-public class EmployeeCreateUpdateFindByIdResponseDto {
+public class EmployeeFullResponseDto {
 
     private Long id;
 

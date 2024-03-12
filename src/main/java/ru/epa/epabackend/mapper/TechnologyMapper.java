@@ -2,8 +2,8 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateFindAllResponseDto;
-import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
+import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
 import ru.epa.epabackend.model.Technology;
 
 /**
@@ -17,12 +17,12 @@ public interface TechnologyMapper {
     /**
      * Преобразование из сущности в DTO.
      */
-    TechnologyCreateUpdateFindAllResponseDto mapToDto(Technology technology);
+    TechnologyResponseDto mapToDto(Technology technology);
 
     /**
      * Преобразование из DTO в сущность.
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "employees", ignore = true)
-    Technology mapToEntity(TechnologyCreateUpdateRequestDto technologyDto);
+    Technology mapToEntity(TechnologyRequestDto technologyDto);
 }

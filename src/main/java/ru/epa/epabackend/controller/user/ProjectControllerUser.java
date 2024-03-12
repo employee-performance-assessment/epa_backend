@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.project.ProjectCreateFindByIdFindAllUpdateResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.service.ProjectService;
 
 import java.security.Principal;
@@ -37,7 +37,7 @@ public class ProjectControllerUser {
     )
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProjectCreateFindByIdFindAllUpdateResponseDto findProject(@PathVariable Long projectId, Principal principal) {
+    public ProjectShortResponseDto findProject(@PathVariable Long projectId, Principal principal) {
         return projectService.findDtoById(projectId, principal.getName());
     }
 
@@ -51,7 +51,7 @@ public class ProjectControllerUser {
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProjectCreateFindByIdFindAllUpdateResponseDto> findByUserEmail(Principal principal) {
+    public List<ProjectShortResponseDto> findByUserEmail(Principal principal) {
         return projectService.findAllByUserEmail(principal.getName());
     }
 }

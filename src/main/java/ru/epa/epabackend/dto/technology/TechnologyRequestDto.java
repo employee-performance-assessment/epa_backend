@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TechnologyCreateUpdateRequestDto {
+public class TechnologyRequestDto {
 
     /**
      * Название технологии.

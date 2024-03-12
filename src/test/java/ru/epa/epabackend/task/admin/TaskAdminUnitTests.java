@@ -8,10 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
-import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
-import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
@@ -55,11 +55,11 @@ class TaskAdminUnitTests {
     private Employee admin = new Employee();
     private Employee employee = new Employee();
     private Task task = new Task();
-    private TaskCreateFindByIdUpdateResponseDto taskOutDto = new TaskCreateFindByIdUpdateResponseDto();
-    private TaskCreateUpdateRequestDto taskInDto = new TaskCreateUpdateRequestDto();
+    private TaskFullResponseDto taskOutDto = new TaskFullResponseDto();
+    private TaskRequestDto taskInDto = new TaskRequestDto();
     private Project project = new Project();
-    private TaskFindAllResponseDto taskShortDto = new TaskFindAllResponseDto();
-    private EmployeeFindAllResponseDto employeeShortDto;
+    private TaskShortResponseDto taskShortDto = new TaskShortResponseDto();
+    private EmployeeShortResponseDto employeeShortDto;
 
     @BeforeEach
     public void init() {
@@ -67,7 +67,7 @@ class TaskAdminUnitTests {
                 .id(ID_1)
                 .role(Role.ROLE_ADMIN)
                 .build();
-        employeeShortDto = EmployeeFindAllResponseDto.builder()
+        employeeShortDto = EmployeeShortResponseDto.builder()
                 .id(ID_1)
                 .fullName("name")
                 .position("USER")
@@ -90,16 +90,16 @@ class TaskAdminUnitTests {
                 .executor(employee)
                 .project(project)
                 .build();
-        taskOutDto = TaskCreateFindByIdUpdateResponseDto.builder()
+        taskOutDto = TaskFullResponseDto.builder()
                 .id(ID_1)
                 .executor(employeeShortDto)
                 .build();
-        taskInDto = TaskCreateUpdateRequestDto.builder()
+        taskInDto = TaskRequestDto.builder()
                 .executorId(ID_2)
                 .projectId(ID_1)
                 .deadLine(LocalDate.now().plusDays(2))
                 .build();
-        taskShortDto = TaskFindAllResponseDto.builder()
+        taskShortDto = TaskShortResponseDto.builder()
                 .id(ID_1)
                 .name("taskShort")
                 .deadLine(LocalDate.now().plusDays(2))
@@ -112,7 +112,7 @@ class TaskAdminUnitTests {
     void findAllTasks_shouldCallRepository() {
         when(taskRepository.findAll()).thenReturn(List.of(task));
         when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
-        List<TaskFindAllResponseDto> tasksResult = taskService.findAll();
+        List<TaskShortResponseDto> tasksResult = taskService.findAll();
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
@@ -125,7 +125,7 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.findDtoById(task.getId());
+        TaskFullResponseDto taskOutDtoResult = taskService.findDtoById(task.getId());
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -141,7 +141,7 @@ class TaskAdminUnitTests {
         when(taskMapper.mapToEntity(taskInDto, project, employee)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.create(taskInDto);
+        TaskFullResponseDto taskOutDtoResult = taskService.create(taskInDto);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -156,7 +156,7 @@ class TaskAdminUnitTests {
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+        TaskFullResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -172,7 +172,7 @@ class TaskAdminUnitTests {
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+        TaskFullResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);

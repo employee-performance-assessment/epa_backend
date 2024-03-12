@@ -1,25 +1,25 @@
 package ru.epa.epabackend.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateFindByIdResponseDto;
-import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 
 import java.util.List;
 
 public interface EmployeeService {
-    EmployeeCreateUpdateFindByIdResponseDto create(EmployeeCreateUpdateRequestDto employeeRtoRequest);
+    EmployeeFullResponseDto create(EmployeeRequestDto employeeRtoRequest);
 
-    EmployeeCreateUpdateFindByIdResponseDto createSelfRegister(EmployeeCreateUpdateRequestDto employeeRtoRequest);
+    EmployeeFullResponseDto createSelfRegister(EmployeeRequestDto employeeRtoRequest);
 
-    EmployeeCreateUpdateFindByIdResponseDto update(Long employeeId, EmployeeCreateUpdateRequestDto employeeRtoRequest);
+    EmployeeFullResponseDto update(Long employeeId, EmployeeRequestDto employeeRtoRequest);
 
     void delete(Long employeeId);
 
-    List<EmployeeFindAllResponseDto> findAll();
+    List<EmployeeShortResponseDto> findAll();
 
-    EmployeeCreateUpdateFindByIdResponseDto findByIdDto(Long employeeId);
+    EmployeeFullResponseDto findByIdDto(Long employeeId);
 
     UserDetailsService userDetailsService();
 

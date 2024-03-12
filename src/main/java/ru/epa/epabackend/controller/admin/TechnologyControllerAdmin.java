@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateFindAllResponseDto;
-import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
+import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class TechnologyControllerAdmin {
             summary = "Создание новой технологии"
     )
     @PostMapping
-    public TechnologyCreateUpdateFindAllResponseDto createTechnology(@RequestBody TechnologyCreateUpdateRequestDto technologyDto) {
+    public TechnologyResponseDto createTechnology(@RequestBody TechnologyRequestDto technologyDto) {
         return technologyService.create(technologyDto);
     }
 
@@ -46,8 +46,8 @@ public class TechnologyControllerAdmin {
             description = "Обновляет технологию, если она существует в базе данных."
     )
     @PatchMapping("/{technologyId}")
-    public TechnologyCreateUpdateFindAllResponseDto updateTechnology(
-            @RequestBody TechnologyCreateUpdateRequestDto technologyDto,
+    public TechnologyResponseDto updateTechnology(
+            @RequestBody TechnologyRequestDto technologyDto,
             @PathVariable("technologyId") Long technologyId) {
         return technologyService.update(technologyDto, technologyId);
     }
@@ -59,7 +59,7 @@ public class TechnologyControllerAdmin {
             summary = "Возвращает список всех технологий"
     )
     @GetMapping
-    public List<TechnologyCreateUpdateFindAllResponseDto> getAllTechnologies() {
+    public List<TechnologyResponseDto> getAllTechnologies() {
         return technologyService.findAll();
     }
 

@@ -2,8 +2,8 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
-import ru.epa.epabackend.dto.project.ProjectCreateFindByIdFindAllUpdateResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
 import ru.epa.epabackend.model.Employee;
@@ -19,7 +19,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
 public interface ProjectMapper {
 
-    ProjectCreateFindByIdFindAllUpdateResponseDto mapToShortDto(Project project);
+    ProjectShortResponseDto mapToShortDto(Project project);
 
     @Mapping(target = "status", constant = "TODO")
     @Mapping(target = "employees", source = "employees")
@@ -28,7 +28,7 @@ public interface ProjectMapper {
 
     @Mapping(target = "employees", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    Project mapToEntity(ProjectCreateFindByIdFindAllUpdateResponseDto projectShortDto);
+    Project mapToEntity(ProjectShortResponseDto projectShortDto);
 
-    ProjectSaveWithEmployeeResponseDto mapToProjectEmployeesDto(Project project, List<EmployeeFindAllResponseDto> employeeShortDtoList);
+    ProjectSaveWithEmployeeResponseDto mapToProjectEmployeesDto(Project project, List<EmployeeShortResponseDto> employeeShortDtoList);
 }

@@ -4,8 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
-import ru.epa.epabackend.dto.project.ProjectCreateFindByIdFindAllUpdateResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
@@ -47,7 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectCreateFindByIdFindAllUpdateResponseDto create(
+    public ProjectShortResponseDto create(
             ProjectCreateRequestDto newProjectRto, String email) {
         Employee admin = employeeService.findByEmail(email);
         return projectMapper.mapToShortDto(projectRepository
@@ -55,7 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectCreateFindByIdFindAllUpdateResponseDto findDtoById(Long projectId, String email) {
+    public ProjectShortResponseDto findDtoById(Long projectId, String email) {
         return projectMapper.mapToShortDto(findById(projectId));
     }
 
@@ -74,13 +74,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectCreateFindByIdFindAllUpdateResponseDto> findAllByUserEmail(String email) {
+    public List<ProjectShortResponseDto> findAllByUserEmail(String email) {
         return projectRepository.findByEmployees(employeeService.findByEmail(email)).stream()
                 .map(projectMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeFindAllResponseDto> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
+    public List<EmployeeShortResponseDto> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
@@ -90,7 +90,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectCreateFindByIdFindAllUpdateResponseDto update(
+    public ProjectShortResponseDto update(
             Long projectId, ProjectUpdateRequestDto updateProjectRto, String email) {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);

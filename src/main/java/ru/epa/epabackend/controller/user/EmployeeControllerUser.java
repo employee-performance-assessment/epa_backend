@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateFindByIdResponseDto;
-import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.service.EmployeeService;
 
 import java.util.List;
@@ -32,9 +32,9 @@ public class EmployeeControllerUser {
     )
     @PatchMapping("/{employeeId}")
 
-    public EmployeeCreateUpdateFindByIdResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
-                                                                  @Validated(Update.class) @Parameter(required = true) @RequestBody
-                                          EmployeeCreateUpdateRequestDto employeeDtoRequest) {
+    public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
+                                                  @Validated(Update.class) @Parameter(required = true) @RequestBody
+                                                  EmployeeRequestDto employeeDtoRequest) {
         log.info("PATCH / employees / {}", employeeId);
         return employeeService.update(employeeId, employeeDtoRequest);
     }
@@ -44,7 +44,7 @@ public class EmployeeControllerUser {
             description = "Возвращает список сотрудников в сокращенном виде\n\nВ случае, если не найдено ни одного сотрудника, возвращает пустой список."
     )
     @GetMapping
-    public List<EmployeeFindAllResponseDto> getAllEmployees() {
+    public List<EmployeeShortResponseDto> getAllEmployees() {
         log.info("GET / employees");
         return employeeService.findAll();
     }
@@ -54,7 +54,7 @@ public class EmployeeControllerUser {
             description = "Возвращает полную информацию о сотруднике, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибкую 404"
     )
     @GetMapping("/{employeeId}")
-    public EmployeeCreateUpdateFindByIdResponseDto getEmployeeById(@PathVariable @Parameter(required = true) Long employeeId) {
+    public EmployeeFullResponseDto getEmployeeById(@PathVariable @Parameter(required = true) Long employeeId) {
         log.info("GET / employees / {}", employeeId);
         return employeeService.findByIdDto(employeeId);
     }

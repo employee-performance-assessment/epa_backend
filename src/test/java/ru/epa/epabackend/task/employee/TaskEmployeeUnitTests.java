@@ -8,9 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
-import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
-import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Task;
@@ -45,8 +45,8 @@ class TaskEmployeeUnitTests {
     private TaskServiceImpl taskService;
     private Employee employee = new Employee();
     private Task task = new Task();
-    private TaskCreateFindByIdUpdateResponseDto taskOutDto = new TaskCreateFindByIdUpdateResponseDto();
-    private EmployeeFindAllResponseDto employeeShortDto;
+    private TaskFullResponseDto taskOutDto = new TaskFullResponseDto();
+    private EmployeeShortResponseDto employeeShortDto;
 
     @BeforeEach
     public void init() {
@@ -54,7 +54,7 @@ class TaskEmployeeUnitTests {
                 .id(ID_2)
                 .role(Role.ROLE_USER)
                 .build();
-        employeeShortDto = EmployeeFindAllResponseDto.builder()
+        employeeShortDto = EmployeeShortResponseDto.builder()
                 .id(ID_1)
                 .fullName("name")
                 .position("USER")
@@ -67,7 +67,7 @@ class TaskEmployeeUnitTests {
                 .executor(employee)
                 .status(TaskStatus.IN_PROGRESS)
                 .build();
-        taskOutDto = TaskCreateFindByIdUpdateResponseDto.builder()
+        taskOutDto = TaskFullResponseDto.builder()
                 .id(ID_1)
                 .executor(employeeShortDto)
                 .build();
@@ -78,7 +78,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findAllByExecutorIdFilters(ID_2, null)).thenReturn(List.of(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        List<TaskFindAllResponseDto> tasksResult = taskService.findAllByExecutorIdFilters(null, principal);
+        List<TaskShortResponseDto> tasksResult = taskService.findAllByExecutorIdFilters(null, principal);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
@@ -93,7 +93,7 @@ class TaskEmployeeUnitTests {
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService.findByIdAndExecutorId(principal, task.getId());
+        TaskFullResponseDto taskOutDtoResult = taskService.findByIdAndExecutorId(principal, task.getId());
 
         int expectedId = 1;
         assertNotNull(taskOutDtoResult);
@@ -109,7 +109,7 @@ class TaskEmployeeUnitTests {
         when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        TaskCreateFindByIdUpdateResponseDto taskOutDtoResult = taskService
+        TaskFullResponseDto taskOutDtoResult = taskService
                 .updateStatus(task.getId(), STATUS, principal);
 
         int expectedId = 1;

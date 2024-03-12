@@ -4,8 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateFindAllResponseDto;
-import ru.epa.epabackend.dto.technology.TechnologyCreateUpdateRequestDto;
+import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
+import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.repository.TechnologyRepository;
@@ -29,7 +29,7 @@ public class TechnologyServiceImpl implements TechnologyService {
      * Добавление технологии.
      */
     @Transactional
-    public TechnologyCreateUpdateFindAllResponseDto create(TechnologyCreateUpdateRequestDto technologyDto) {
+    public TechnologyResponseDto create(TechnologyRequestDto technologyDto) {
         Technology technology = technologyRepository.save(technologyMapper.mapToEntity(technologyDto));
         return technologyMapper.mapToDto(technology);
     }
@@ -48,7 +48,7 @@ public class TechnologyServiceImpl implements TechnologyService {
      * Обновление технологии.
      */
     @Transactional
-    public TechnologyCreateUpdateFindAllResponseDto update(TechnologyCreateUpdateRequestDto technologyDto, Long technologyId) {
+    public TechnologyResponseDto update(TechnologyRequestDto technologyDto, Long technologyId) {
         Technology oldTechnology = findById(technologyId);
         oldTechnology.setName(technologyDto.getName());
         return technologyMapper.mapToDto(oldTechnology);
@@ -58,7 +58,7 @@ public class TechnologyServiceImpl implements TechnologyService {
      * Получение списка всех технологий.
      */
     @Transactional
-    public List<TechnologyCreateUpdateFindAllResponseDto> findAll() {
+    public List<TechnologyResponseDto> findAll() {
         return technologyRepository.findAll().stream().map(technologyMapper::mapToDto)
                 .collect(Collectors.toList());
     }

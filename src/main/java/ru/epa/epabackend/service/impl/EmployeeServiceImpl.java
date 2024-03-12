@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateFindByIdResponseDto;
-import ru.epa.epabackend.dto.employee.EmployeeCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
@@ -35,7 +35,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     @Override
-    public EmployeeCreateUpdateFindByIdResponseDto create(EmployeeCreateUpdateRequestDto employeeDtoRequest) {
+    public EmployeeFullResponseDto create(EmployeeRequestDto employeeDtoRequest) {
         log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
         employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
@@ -44,8 +44,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeCreateUpdateFindByIdResponseDto createSelfRegister(
-            EmployeeCreateUpdateRequestDto employeeRtoRequest) {
+    public EmployeeFullResponseDto createSelfRegister(
+            EmployeeRequestDto employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeRtoRequest);
         employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
@@ -54,8 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeCreateUpdateFindByIdResponseDto update(
-            Long employeeId, EmployeeCreateUpdateRequestDto employeeDtoRequest) {
+    public EmployeeFullResponseDto update(
+            Long employeeId, EmployeeRequestDto employeeDtoRequest) {
         log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
         Employee oldEmployee = findById(employeeId);
         String fullName = employeeDtoRequest.getFullName();
@@ -96,7 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeFindAllResponseDto> findAll() {
+    public List<EmployeeShortResponseDto> findAll() {
         log.info("Получение всех сотрудников");
         return employeeRepository.findAll().stream().map(employeeMapper::mapToShortDto)
                 .collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public EmployeeCreateUpdateFindByIdResponseDto findByIdDto(Long employeeId) {
+    public EmployeeFullResponseDto findByIdDto(Long employeeId) {
         log.info("Получение сотрудника по идентификатору {}", employeeId);
         Employee employee = findById(employeeId);
         return employeeMapper.mapToFullDto(employee);
@@ -130,7 +130,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         Employee.class)));
     }
 
-    private void updateFields(Employee oldEmployee, EmployeeCreateUpdateRequestDto employeeDtoRequest) {
+    private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeDtoRequest) {
         String nickName = employeeDtoRequest.getNickName();
         if (nickName != null && !nickName.isBlank()) {
             oldEmployee.setNickName(nickName);

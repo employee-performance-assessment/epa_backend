@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.epa.epabackend.dto.employee.EmployeeFindAllResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ import java.util.List;
 public class ProjectSaveWithEmployeeResponseDto {
     private Long id;
     private String name;
-    private List<EmployeeFindAllResponseDto> employees;
+    private List<EmployeeShortResponseDto> employees;
 }
