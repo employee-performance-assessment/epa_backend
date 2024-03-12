@@ -2,15 +2,9 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-<<<<<<<<< Temporary merge branch 1
-import ru.epa.epabackend.dto.task.TaskFullDto;
-import ru.epa.epabackend.dto.task.TaskInDto;
-import ru.epa.epabackend.dto.task.TaskShortDto;
-=========
-import ru.epa.epabackend.dto.task.TaskCreateFindByIdUpdateResponseDto;
-import ru.epa.epabackend.dto.task.TaskCreateUpdateRequestDto;
-import ru.epa.epabackend.dto.task.TaskFindAllResponseDto;
->>>>>>>>> Temporary merge branch 2
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
@@ -33,24 +27,15 @@ public interface TaskMapper {
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
     @Mapping(target = "name", source = "taskInDto.name")
-<<<<<<<<< Temporary merge branch 1
-    Task mapToEntity(TaskInDto taskInDto, Project project, Employee executor);
-=========
-    Task mapToEntity(TaskCreateUpdateRequestDto taskInDto, Project project, Employee executor);
->>>>>>>>> Temporary merge branch 2
+    Task mapToEntity(TaskRequestDto taskInDto, Project project, Employee executor);
 
     /**
      * Преобразование из сущности в DTO, при создании.
      */
-    TaskCreateFindByIdUpdateResponseDto mapToFullDto(Task task);
+    TaskFullResponseDto mapToFullDto(Task task);
 
     /**
      * Преобразование из сущности в DTO, краткое.
      */
-<<<<<<<<< Temporary merge branch 1
-    TaskShortDto mapToShortDto(Task task);
-
-=========
-    TaskFindAllResponseDto mapToShortDto(Task task);
->>>>>>>>> Temporary merge branch 2
+    TaskShortResponseDto mapToShortDto(Task task);
 }
