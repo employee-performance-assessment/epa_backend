@@ -1,12 +1,13 @@
 package ru.epa.epabackend.service.impl;
 
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.task.TaskFullDto;
-import ru.epa.epabackend.dto.task.TaskInDto;
-import ru.epa.epabackend.dto.task.TaskShortDto;
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
@@ -44,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortDto> findAll() {
+    public List<TaskShortResponseDto> findAll() {
         return taskRepository.findAll().stream().map(taskMapper::mapToShortDto)
                 .toList();
     }
@@ -54,7 +55,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskFullDto findDtoById(Long taskId) {
+    public TaskFullResponseDto findDtoById(Long taskId) {
         return taskMapper.mapToFullDto(findById(taskId));
     }
 
@@ -62,12 +63,12 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-    public TaskFullDto create(TaskInDto taskInDto) {
-        Project project = projectService.findById(taskInDto.getProjectId());
-        Employee executor = employeeService.getEmployee(taskInDto.getExecutorId());
-        taskInDto.setStatus("NEW");
+    public TaskFullResponseDto create(TaskRequestDto taskCreateUpdateRequestDto) {
+        Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
+        Employee executor = employeeService.findById(taskCreateUpdateRequestDto.getExecutorId());
+        taskCreateUpdateRequestDto.setStatus("NEW");
         checkProjectContainsExecutor(project, executor);
-        Task task = taskRepository.save(taskMapper.mapToEntity(taskInDto, project, executor));
+        Task task = taskRepository.save(taskMapper.mapToEntity(taskCreateUpdateRequestDto, project, executor));
         return taskMapper.mapToFullDto(task);
 
     }
@@ -76,11 +77,12 @@ public class TaskServiceImpl implements TaskService {
      * Обновление задачи админом
      */
     @Override
-    public TaskFullDto update(Long taskId, TaskInDto taskInDto) {
+    public TaskFullResponseDto update(
+            Long taskId, TaskRequestDto taskCreateUpdateRequestDto) {
         Task task = findById(taskId);
-        setNotNullParamToEntity(taskInDto, task);
+        setNotNullParamToEntity(taskCreateUpdateRequestDto, task);
         if (task.getStatus() == TaskStatus.DONE) {
-            setPointsToEmployeeAfterTaskDone(taskInDto, task);
+            setPointsToEmployeeAfterTaskDone(taskCreateUpdateRequestDto, task);
             task.setFinishDate(LocalDate.now());
         }
         return taskMapper.mapToFullDto(taskRepository.save(task));
@@ -98,7 +100,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     @Override
-    public List<TaskShortDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+    public List<TaskShortResponseDto> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status)
                 .stream().map(taskMapper::mapToShortDto).toList();
@@ -109,8 +111,8 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TaskShortDto> findAllByExecutorIdFilters(String status, Principal principal) {
-        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+    public List<TaskShortResponseDto> findAllByExecutorIdFilters(String status, Principal principal) {
+        Employee employee = employeeService.findByEmail(principal.getName());
         try {
             return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status)).stream()
                     .map(taskMapper::mapToShortDto).toList();
@@ -124,8 +126,8 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TaskFullDto findByIdAndExecutorId(Principal principal, Long taskId) {
-        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+    public TaskFullResponseDto findByIdAndExecutorId(Principal principal, Long taskId) {
+        Employee employee = employeeService.findByEmail(principal.getName());
         return taskMapper.mapToFullDto(findByIdAndExecutorId(taskId, employee.getId()));
     }
 
@@ -133,8 +135,8 @@ public class TaskServiceImpl implements TaskService {
      * Обновление статуса задачи
      */
     @Override
-    public TaskFullDto updateStatus(Long taskId, String status, Principal principal) {
-        Employee employee = employeeService.getEmployeeByEmail(principal.getName());
+    public TaskFullResponseDto updateStatus(Long taskId, String status, Principal principal) {
+        Employee employee = employeeService.findByEmail(principal.getName());
         try {
             TaskStatus taskStatus = getTaskStatus(status);
             Task task = findByIdAndExecutorId(taskId, employee.getId());
@@ -157,41 +159,41 @@ public class TaskServiceImpl implements TaskService {
                         Task.class)));
     }
 
-    private void setPointsToEmployeeAfterTaskDone(TaskInDto taskInDto, Task task) {
-        Period period = Period.between(LocalDate.now(), taskInDto.getDeadLine());
+    private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
+        Period period = Period.between(LocalDate.now(), dto.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
-    private void setNotNullParamToEntity(TaskInDto taskInDto, Task task) {
-        if (taskInDto.getName() != null) {
-            task.setName(taskInDto.getName());
+    private void setNotNullParamToEntity(TaskRequestDto dto, Task task) {
+        if (dto.getName() != null) {
+            task.setName(dto.getName());
         }
 
-        if (taskInDto.getDescription() != null) {
-            task.setDescription(taskInDto.getDescription());
+        if (dto.getDescription() != null) {
+            task.setDescription(dto.getDescription());
         }
 
-        if (taskInDto.getExecutorId() != null) {
-            Employee employee = employeeService.getEmployee(taskInDto.getExecutorId());
+        if (dto.getExecutorId() != null) {
+            Employee employee = employeeService.findById(dto.getExecutorId());
             checkProjectContainsExecutor(task.getProject(), employee);
-            task.setExecutor(employeeService.getEmployee(taskInDto.getExecutorId()));
+            task.setExecutor(employeeService.findById(dto.getExecutorId()));
 
         }
 
-        if (taskInDto.getBasicPoints() != null) {
-            task.setBasicPoints(taskInDto.getBasicPoints());
+        if (dto.getBasicPoints() != null) {
+            task.setBasicPoints(dto.getBasicPoints());
         }
 
-        if (taskInDto.getPenaltyPoints() != null) {
-            task.setPenaltyPoints(taskInDto.getPenaltyPoints());
+        if (dto.getPenaltyPoints() != null) {
+            task.setPenaltyPoints(dto.getPenaltyPoints());
         }
 
-        if (taskInDto.getStatus() != null) {
+        if (dto.getStatus() != null) {
             try {
-                task.setStatus(EnumUtils.getEnum(TaskStatus.class, taskInDto.getStatus()));
+                task.setStatus(EnumUtils.getEnum(TaskStatus.class, dto.getStatus()));
             } catch (IllegalArgumentException exception) {
-                throw new BadRequestException("Unknown status: " + taskInDto.getStatus());
+                throw new BadRequestException("Unknown status: " + dto.getStatus());
             }
         }
     }

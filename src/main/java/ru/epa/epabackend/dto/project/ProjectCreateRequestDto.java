@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewProjectRto {
+public class ProjectCreateRequestDto {
     @NotBlank
     @Size(min = 2, max = 250)
     private String name;

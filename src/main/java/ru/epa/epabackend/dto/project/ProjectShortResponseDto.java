@@ -1,18 +1,22 @@
 package ru.epa.epabackend.dto.project;
 
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.epa.epabackend.util.ProjectStatus;
 
+/**
+ * Класс ProjectShortDto для передачи короткой информации о проекте
+ *
+ * @author Константин Осипов
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateProjectRto {
-    @Size(min = 3, max = 255)
+public class ProjectShortResponseDto {
+    private Long id;
     private String name;
     private ProjectStatus status;
 }

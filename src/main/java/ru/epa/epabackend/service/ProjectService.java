@@ -1,11 +1,11 @@
 package ru.epa.epabackend.service;
 
 
-import ru.epa.epabackend.dto.employee.EmployeeShortDto;
-import ru.epa.epabackend.dto.project.NewProjectRto;
-import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
-import ru.epa.epabackend.dto.project.ProjectShortDto;
-import ru.epa.epabackend.dto.project.UpdateProjectRto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
+import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.util.Role;
@@ -15,17 +15,17 @@ import java.util.List;
 public interface ProjectService {
     Project findById(Long projectId);
 
-    ProjectShortDto save(NewProjectRto newProjectRto, String email);
+    ProjectShortResponseDto create(ProjectCreateRequestDto newProjectRto, String email);
 
-    ProjectShortDto findDtoById(Long projectId, String email);
+    ProjectShortResponseDto findDtoById(Long projectId, String email);
 
-    ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId, String email);
+    ProjectSaveWithEmployeeResponseDto saveWithEmployee(Long projectId, Long employeeId, String email);
 
-    List<ProjectShortDto> findByUserEmail(String email);
+    List<ProjectShortResponseDto> findAllByUserEmail(String email);
 
-    List<EmployeeShortDto> findByProjectIdAndRole(Long projectId, Role role, String email);
+    List<EmployeeShortResponseDto> findAllByProjectIdAndRole(Long projectId, Role role, String email);
 
-    ProjectShortDto update(Long projectId, UpdateProjectRto updateProjectRto, String email);
+    ProjectShortResponseDto update(Long projectId, ProjectUpdateRequestDto updateProjectRto, String email);
 
     void delete(Long projectId, String email);
 
