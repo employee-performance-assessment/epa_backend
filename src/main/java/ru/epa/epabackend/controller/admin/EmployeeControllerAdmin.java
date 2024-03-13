@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
-import ru.epa.epabackend.dto.employee.EmployeeFullDto;
+import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.service.EmployeeService;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
@@ -31,10 +31,11 @@ public class EmployeeControllerAdmin {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
 
-    public EmployeeFullDto addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
-                                       EmployeeDtoRequest employeeRtoRequest) {
+    public EmployeeFullResponseDto addEmployee(
+            @Validated(Create.class) @RequestBody @Parameter(required = true)
+            EmployeeRequestDto employeeRtoRequest) {
         log.info("POST / employees / {} ", employeeRtoRequest.getFullName());
-        return employeeService.addEmployee(employeeRtoRequest);
+        return employeeService.create(employeeRtoRequest);
     }
 
     @Operation(
@@ -45,6 +46,6 @@ public class EmployeeControllerAdmin {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteEmployee(@PathVariable @Parameter(required = true) Long employeeId) {
         log.info("DELETE / employees / {}", employeeId);
-        employeeService.deleteEmployee(employeeId);
+        employeeService.delete(employeeId);
     }
 }

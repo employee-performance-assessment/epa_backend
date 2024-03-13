@@ -4,11 +4,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeShortDto;
-import ru.epa.epabackend.dto.project.NewProjectRto;
-import ru.epa.epabackend.dto.project.ProjectEmployeesDto;
-import ru.epa.epabackend.dto.project.ProjectShortDto;
-import ru.epa.epabackend.dto.project.UpdateProjectRto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
+import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
@@ -47,20 +47,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectShortDto save(NewProjectRto newProjectRto, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
-        return projectMapper.mapToShortDto(projectRepository.save(projectMapper.mapToEntity(newProjectRto, List.of(admin))));
+    public ProjectShortResponseDto create(
+            ProjectCreateRequestDto newProjectRto, String email) {
+        Employee admin = employeeService.findByEmail(email);
+        return projectMapper.mapToShortDto(projectRepository
+                .save(projectMapper.mapToEntity(newProjectRto, List.of(admin))));
     }
 
     @Override
-    public ProjectShortDto findDtoById(Long projectId, String email) {
+    public ProjectShortResponseDto findDtoById(Long projectId, String email) {
         return projectMapper.mapToShortDto(findById(projectId));
     }
 
     @Override
-    public ProjectEmployeesDto saveWithEmployee(Long projectId, Long employeeId, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
-        Employee employee = employeeService.getEmployee(employeeId);
+    public ProjectSaveWithEmployeeResponseDto saveWithEmployee(Long projectId, Long employeeId, String email) {
+        Employee admin = employeeService.findByEmail(email);
+        Employee employee = employeeService.findById(employeeId);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         if (project.getEmployees().contains(employee))
@@ -72,14 +74,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectShortDto> findByUserEmail(String email) {
-        return projectRepository.findByEmployees(employeeService.getEmployeeByEmail(email)).stream()
+    public List<ProjectShortResponseDto> findAllByUserEmail(String email) {
+        return projectRepository.findByEmployees(employeeService.findByEmail(email)).stream()
                 .map(projectMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<EmployeeShortDto> findByProjectIdAndRole(Long projectId, Role role, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
+    public List<EmployeeShortResponseDto> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
+        Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         return employeeRepository
@@ -88,8 +90,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectShortDto update(Long projectId, UpdateProjectRto updateProjectRto, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
+    public ProjectShortResponseDto update(
+            Long projectId, ProjectUpdateRequestDto updateProjectRto, String email) {
+        Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         if (updateProjectRto.getName() != null)
@@ -101,7 +104,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void delete(Long projectId, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
+        Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         projectRepository.delete(project);
@@ -109,10 +112,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteEmployeeFromProject(Long projectId, Long employeeId, String email) {
-        Employee admin = employeeService.getEmployeeByEmail(email);
+        Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        Employee employee = employeeService.getEmployee(employeeId);
+        Employee employee = employeeService.findById(employeeId);
         checkUserAndProject(employee, project);
         project.getEmployees().remove(employee);
         projectRepository.save(project);
