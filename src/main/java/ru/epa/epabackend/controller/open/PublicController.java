@@ -2,6 +2,10 @@ package ru.epa.epabackend.controller.open;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,7 @@ import ru.epa.epabackend.dto.employee.EmployeeDtoRequest;
 import ru.epa.epabackend.dto.employee.EmployeeFullDto;
 import ru.epa.epabackend.dto.employee.JwtRequest;
 import ru.epa.epabackend.dto.employee.JwtResponse;
+import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.service.AuthenticationService;
 import ru.epa.epabackend.service.EmployeeService;
 
@@ -31,6 +36,11 @@ public class PublicController {
     @Operation(
             summary = "Получение JWT токена по паре логин пароль"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "JWT created"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized Error", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping("/auth")
     public JwtResponse getToken(@RequestBody @Parameter(required = true) JwtRequest jwtRequest) {
         log.info("POST / jwtRequest / {}", jwtRequest);
@@ -40,6 +50,16 @@ public class PublicController {
     @Operation(
             summary = "Саморегистрация администратора"
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Admin created", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = EmployeeFullDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping("/register")
     public EmployeeFullDto register(@RequestBody EmployeeDtoRequest employeeDtoRequest) {
         return employeeService.addEmployeeSelfRegister(employeeDtoRequest);

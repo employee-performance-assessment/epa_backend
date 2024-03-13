@@ -1,6 +1,7 @@
 package ru.epa.epabackend.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import javax.security.sasl.AuthenticationException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -53,5 +54,18 @@ public class ErrorHandler {
         log.error("Error thrown: {}", e.getClass());
         log.error("Error message: {}", e.getMessage());
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse authenticationException(AuthenticationException e) {
+        log.info(e.getMessage());
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
+    @ExceptionHandler()
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(final Exception e) {
+        return new ErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
     }
 }
