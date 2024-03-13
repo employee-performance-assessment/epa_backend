@@ -29,9 +29,10 @@ public class LogbookConfiguration {
 
     @Bean
     public HeaderFilter headerFilter() {
-        Set<String> headers = Set.of(
+        Set<String> headers = Set.of
+                (
                 "Authorization"
-        );
+                );
 
         return HeaderFilters.replaceHeaders(headers, "{masked}");
     }
