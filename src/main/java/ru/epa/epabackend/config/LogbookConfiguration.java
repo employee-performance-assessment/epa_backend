@@ -16,8 +16,7 @@ import static org.zalando.logbook.json.JsonBodyFilters.replaceJsonStringProperty
 public class LogbookConfiguration {
     @Bean
     public BodyFilter bodyFilter() {
-        Set<String> properties = Set.of
-                (
+        Set<String> properties = Set.of(
                         "password",
                         "token"
                 );
@@ -29,9 +28,8 @@ public class LogbookConfiguration {
 
     @Bean
     public HeaderFilter headerFilter() {
-        Set<String> headers = Set.of
-                (
-                "Authorization"
+        Set<String> headers = Set.of(
+                        "Authorization"
                 );
 
         return HeaderFilters.replaceHeaders(headers, "{masked}");
