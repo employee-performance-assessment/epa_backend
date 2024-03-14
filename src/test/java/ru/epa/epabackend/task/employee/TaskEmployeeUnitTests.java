@@ -78,7 +78,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findAllByExecutorIdFilters(ID_2, null)).thenReturn(List.of(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        List<TaskShortResponseDto> tasksResult = taskService.findAllByExecutorIdFilters(null, principal);
+        List<Task> tasksResult = taskService.findAllByExecutorIdFilters(null, principal);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
@@ -90,15 +90,14 @@ class TaskEmployeeUnitTests {
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
-        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.findByIdAndExecutorId(principal, task.getId());
+        Task task = taskService.findByIdAndExecutorId(principal, this.task.getId());
 
         int expectedId = 1;
-        assertNotNull(taskOutDtoResult);
-        assertEquals(expectedId, taskOutDtoResult.getId());
-        verify(taskRepository, times(1)).findByIdAndExecutorId(task.getId(), employee.getId());
+        assertNotNull(task);
+        assertEquals(expectedId, task.getId());
+        verify(taskRepository, times(1)).findByIdAndExecutorId(this.task.getId(), employee.getId());
     }
 
     @Test
@@ -106,16 +105,15 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        TaskFullResponseDto taskOutDtoResult = taskService
-                .updateStatus(task.getId(), STATUS, principal);
+        Task task = taskService
+                .updateStatus(this.task.getId(), STATUS, principal);
 
         int expectedId = 1;
-        assertNotNull(taskOutDtoResult);
-        assertEquals(expectedId, taskOutDtoResult.getId());
-        verify(taskRepository, times(1)).save(task);
+        assertNotNull(task);
+        assertEquals(expectedId, task.getId());
+        verify(taskRepository, times(1)).save(this.task);
     }
 
     @Test

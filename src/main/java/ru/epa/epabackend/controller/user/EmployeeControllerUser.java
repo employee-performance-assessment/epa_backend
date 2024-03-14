@@ -16,6 +16,7 @@ import ru.epa.epabackend.service.EmployeeService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -39,7 +40,7 @@ public class EmployeeControllerUser {
                                                   @Validated(Update.class) @Parameter(required = true) @RequestBody
                                                   EmployeeRequestDto employeeDtoRequest) {
         log.info("PATCH / employees / {}", employeeId);
-        return employeeService.update(employeeId, employeeDtoRequest);
+        return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeDtoRequest));
     }
 
     @Operation(
@@ -47,9 +48,10 @@ public class EmployeeControllerUser {
             description = "Возвращает список сотрудников в сокращенном виде\n\nВ случае, если не найдено ни одного сотрудника, возвращает пустой список."
     )
     @GetMapping
-    public List<EmployeeShortResponseDto> getAllEmployees() {
+    public List<EmployeeShortResponseDto> findAll() {
         log.info("GET / employees");
-        return employeeService.findAll();
+        return employeeService.findAll().stream().map(employeeMapper::mapToShortDto)
+                .collect(Collectors.toList());
     }
 
     @Operation(
@@ -57,9 +59,9 @@ public class EmployeeControllerUser {
             description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибку 404"
     )
     @GetMapping("/{employeeId}")
-    public EmployeeFullResponseDto getEmployeeById(@PathVariable @Parameter(required = true) Long employeeId) {
+    public EmployeeFullResponseDto findByIdDto(@PathVariable @Parameter(required = true) Long employeeId) {
         log.info("GET / employees / {}", employeeId);
-        return employeeService.findByIdDto(employeeId);
+        return employeeMapper.mapToFullDto(employeeService.findByIdDto(employeeId));
     }
 
     @Operation(

@@ -9,15 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
+import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс ProjectControllerAdmin содержит ендпоинты, относящиеся к проектам администратора
@@ -32,6 +36,8 @@ import java.util.List;
 @RequestMapping("/admin/projects")
 public class ProjectControllerAdmin {
     private final ProjectService projectService;
+    private final ProjectMapper projectMapper;
+    private final EmployeeMapper employeeMapper;
 
     /**
      * Эндпоинт добавления нового проекта
@@ -43,7 +49,7 @@ public class ProjectControllerAdmin {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProjectShortResponseDto save(@Valid @RequestBody ProjectCreateRequestDto newProjectRto, Principal principal) {
-        return projectService.create(newProjectRto, principal.getName());
+        return projectMapper.mapToShortDto(projectService.create(newProjectRto, principal.getName()));
     }
 
     /**
@@ -62,7 +68,9 @@ public class ProjectControllerAdmin {
     public ProjectSaveWithEmployeeResponseDto saveWithEmployee(@PathVariable Long projectId,
                                                                @RequestParam Long employeeId,
                                                                Principal principal) {
-        return projectService.saveWithEmployee(projectId, employeeId, principal.getName());
+        Project project = projectService.saveWithEmployee(projectId, employeeId, principal.getName());
+        return projectMapper.mapToProjectEmployeesDto(project, project.getEmployees()
+                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList()));
     }
 
     /**
@@ -77,7 +85,8 @@ public class ProjectControllerAdmin {
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeShortResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
-        return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
+        return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName())
+                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList());
     }
 
     /**
@@ -95,7 +104,7 @@ public class ProjectControllerAdmin {
     @ResponseStatus(HttpStatus.OK)
     public ProjectShortResponseDto update(@PathVariable Long projectId, @Valid @RequestBody ProjectUpdateRequestDto updateProjectRto,
                                           Principal principal) {
-        return projectService.update(projectId, updateProjectRto, principal.getName());
+        return projectMapper.mapToShortDto(projectService.update(projectId, updateProjectRto, principal.getName()));
     }
 
     /**

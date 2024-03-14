@@ -8,9 +8,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
 import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
+import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс TechnologyController содержит ендпоинты для технологии.
@@ -26,6 +28,7 @@ import java.util.List;
 @Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
 public class TechnologyControllerAdmin {
     private final TechnologyService technologyService;
+    private final TechnologyMapper technologyMapper;
 
     /**
      * Эндпоинт создания технологии.
@@ -35,7 +38,7 @@ public class TechnologyControllerAdmin {
     )
     @PostMapping
     public TechnologyResponseDto createTechnology(@RequestBody TechnologyRequestDto technologyDto) {
-        return technologyService.create(technologyDto);
+        return technologyMapper.mapToDto(technologyService.create(technologyDto));
     }
 
     /**
@@ -49,7 +52,7 @@ public class TechnologyControllerAdmin {
     public TechnologyResponseDto updateTechnology(
             @RequestBody TechnologyRequestDto technologyDto,
             @PathVariable("technologyId") Long technologyId) {
-        return technologyService.update(technologyDto, technologyId);
+        return technologyMapper.mapToDto(technologyService.update(technologyDto, technologyId));
     }
 
     /**
@@ -60,7 +63,7 @@ public class TechnologyControllerAdmin {
     )
     @GetMapping
     public List<TechnologyResponseDto> getAllTechnologies() {
-        return technologyService.findAll();
+        return technologyService.findAll().stream().map(technologyMapper::mapToDto).collect(Collectors.toList());
     }
 
     /**
