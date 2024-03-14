@@ -13,6 +13,7 @@ import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.JwtRequest;
 import ru.epa.epabackend.dto.employee.JwtResponse;
+import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.AuthenticationService;
 import ru.epa.epabackend.service.EmployeeService;
 
@@ -27,6 +28,7 @@ import ru.epa.epabackend.service.EmployeeService;
 public class PublicController {
     private final AuthenticationService authenticationService;
     private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
     @Operation(
             summary = "Получение JWT токена по паре логин пароль"
@@ -42,6 +44,6 @@ public class PublicController {
     )
     @PostMapping("/register")
     public EmployeeFullResponseDto register(@RequestBody EmployeeRequestDto employeeDtoRequest) {
-        return employeeService.createSelfRegister(employeeDtoRequest);
+        return employeeMapper.mapToFullDto(employeeService.createSelfRegister(employeeDtoRequest));
     }
 }

@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
+import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.service.ProjectService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс ProjectControllerUser содержит ендпоинты, относящиеся к проектам пользователя
@@ -26,6 +28,7 @@ import java.util.List;
 @RequestMapping("/user/projects")
 public class ProjectControllerUser {
     private final ProjectService projectService;
+    private final ProjectMapper projectMapper;
 
     /**
      * Эндпоинт получения короткой информации о проекте
@@ -38,7 +41,7 @@ public class ProjectControllerUser {
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public ProjectShortResponseDto findProject(@PathVariable Long projectId, Principal principal) {
-        return projectService.findDtoById(projectId, principal.getName());
+        return projectMapper.mapToShortDto(projectService.findDtoById(projectId, principal.getName()));
     }
 
     /**
@@ -52,6 +55,7 @@ public class ProjectControllerUser {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProjectShortResponseDto> findByUserEmail(Principal principal) {
-        return projectService.findAllByUserEmail(principal.getName());
+        return projectService.findAllByUserEmail(principal.getName()).stream()
+                .map(projectMapper::mapToShortDto).collect(Collectors.toList());
     }
 }

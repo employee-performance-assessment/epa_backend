@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
@@ -35,26 +34,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     @Override
-    public EmployeeFullResponseDto create(EmployeeRequestDto employeeDtoRequest) {
+    public Employee create(EmployeeRequestDto employeeDtoRequest) {
         log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
         employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
         employeeToSave.setRole(ROLE_USER);
-        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
+        return employeeRepository.save(employeeToSave);
     }
 
     @Override
-    public EmployeeFullResponseDto createSelfRegister(
+    public Employee createSelfRegister(
             EmployeeRequestDto employeeRtoRequest) {
         log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeRtoRequest);
         employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
-        return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
+        return employeeRepository.save(employeeToSave);
     }
 
     @Override
-    public EmployeeFullResponseDto update(
+    public Employee update(
             Long employeeId, EmployeeRequestDto employeeDtoRequest) {
         log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
         Employee oldEmployee = findById(employeeId);
@@ -81,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
-        return employeeMapper.mapToFullDto(employeeRepository.save(oldEmployee));
+        return employeeRepository.save(oldEmployee);
     }
 
     @Override
@@ -96,18 +95,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeShortResponseDto> findAll() {
+    public List<Employee> findAll() {
         log.info("Получение всех сотрудников");
-        return employeeRepository.findAll().stream().map(employeeMapper::mapToShortDto)
-                .collect(Collectors.toList());
+        return employeeRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public EmployeeFullResponseDto findByIdDto(Long employeeId) {
+    public Employee findByIdDto(Long employeeId) {
         log.info("Получение сотрудника по идентификатору {}", employeeId);
-        Employee employee = findById(employeeId);
-        return employeeMapper.mapToFullDto(employee);
+        return findById(employeeId);
     }
 
     @Override
