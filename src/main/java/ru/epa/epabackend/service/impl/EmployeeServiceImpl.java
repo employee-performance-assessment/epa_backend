@@ -42,7 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeFullResponseDto createSelfRegister(
+    public Employee createSelfRegister(
             EmployeeShortRequestDto employeeShortRequestDto) {
         log.info("Создание нового сотрудника {}", employeeShortRequestDto.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeShortRequestDto);
