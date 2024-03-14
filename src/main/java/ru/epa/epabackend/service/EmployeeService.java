@@ -11,7 +11,7 @@ import java.util.List;
 public interface EmployeeService {
     Employee create(EmployeeRequestDto employeeRtoRequest);
 
-    EmployeeFullResponseDto createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto);
+    Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto);
 
     Employee update(Long employeeId, EmployeeRequestDto employeeRtoRequest);
 
