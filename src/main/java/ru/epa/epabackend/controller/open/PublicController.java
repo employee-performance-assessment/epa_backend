@@ -9,11 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
-import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
-import ru.epa.epabackend.dto.employee.JwtRequest;
-import ru.epa.epabackend.dto.employee.JwtResponse;
-import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.dto.employee.*;
 import ru.epa.epabackend.service.AuthenticationService;
 import ru.epa.epabackend.service.EmployeeService;
 
@@ -28,7 +24,6 @@ import ru.epa.epabackend.service.EmployeeService;
 public class PublicController {
     private final AuthenticationService authenticationService;
     private final EmployeeService employeeService;
-    private final EmployeeMapper employeeMapper;
 
     @Operation(
             summary = "Получение JWT токена по паре логин пароль"
@@ -43,7 +38,7 @@ public class PublicController {
             summary = "Саморегистрация администратора"
     )
     @PostMapping("/register")
-    public EmployeeFullResponseDto register(@RequestBody EmployeeRequestDto employeeDtoRequest) {
-        return employeeMapper.mapToFullDto(employeeService.createSelfRegister(employeeDtoRequest));
+    public EmployeeFullResponseDto register(@RequestBody EmployeeShortRequestDto employeeShortRequestDto) {
+        return employeeService.createSelfRegister(employeeShortRequestDto);
     }
 }

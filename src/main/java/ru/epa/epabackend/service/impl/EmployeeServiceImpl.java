@@ -8,6 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
@@ -41,11 +43,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee createSelfRegister(
-            EmployeeRequestDto employeeRtoRequest) {
-        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
-        Employee employeeToSave = employeeMapper.mapToEntity(employeeRtoRequest);
-        employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
+    public EmployeeFullResponseDto createSelfRegister(
+            EmployeeShortRequestDto employeeShortRequestDto) {
+        log.info("Создание нового сотрудника {}", employeeShortRequestDto.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeShortRequestDto);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeShortRequestDto.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
         return employeeRepository.save(employeeToSave);
     }
