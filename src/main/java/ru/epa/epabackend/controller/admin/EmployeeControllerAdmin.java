@@ -36,7 +36,7 @@ public class EmployeeControllerAdmin {
     public EmployeeFullResponseDto addEmployee(
             @Validated(Create.class) @RequestBody @Parameter(required = true)
             EmployeeRequestDto employeeRtoRequest) {
-        return employeeService.create(employeeRtoRequest);
+        return employeeMapper.mapToFullDto(employeeService.create(employeeRtoRequest));
     }
 
     @Operation(
