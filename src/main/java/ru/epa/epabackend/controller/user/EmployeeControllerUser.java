@@ -14,6 +14,7 @@ import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.EmployeeService;
 
+import java.security.Principal;
 import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Update;
@@ -53,7 +54,7 @@ public class EmployeeControllerUser {
 
     @Operation(
             summary = "Получение информации о сотруднике по id",
-            description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибкую 404"
+            description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибку 404"
     )
     @GetMapping("/{employeeId}")
     public EmployeeFullResponseDto getEmployeeById(@PathVariable @Parameter(required = true) Long employeeId) {
@@ -62,11 +63,11 @@ public class EmployeeControllerUser {
     }
 
     @Operation(
-            summary = "Получение информации о сотруднике по email",
-            description = "Возвращает полную информацию о сотруднике по email, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибкую 404"
+            summary = "Получение информации о владельце токена",
+            description = "Возвращает полную информацию о владельце токена, если он существует в базе данных."
     )
-    @GetMapping("/email/{email}")
-    public EmployeeFullResponseDto getEmployeeByEmail(@PathVariable @Parameter(required = true) String email) {
-        return employeeMapper.mapToFullDto(employeeService.findByEmail(email));
+    @GetMapping("/me")
+    public EmployeeFullResponseDto getMe(Principal principal) {
+        return employeeMapper.mapToFullDto(employeeService.findByEmail(principal.getName()));
     }
 }
