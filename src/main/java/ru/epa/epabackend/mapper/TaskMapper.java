@@ -26,6 +26,7 @@ public interface TaskMapper {
     @Mapping(target = "executor", source = "executor")
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
+    @Mapping(target = "points", ignore = true)
     @Mapping(target = "name", source = "taskInDto.name")
     Task mapToEntity(TaskRequestDto taskInDto, Project project, Employee executor);
 
