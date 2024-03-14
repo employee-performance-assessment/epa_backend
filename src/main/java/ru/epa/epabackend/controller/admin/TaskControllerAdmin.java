@@ -14,6 +14,9 @@ import ru.epa.epabackend.service.TaskService;
 
 import java.util.List;
 
+import static ru.epa.epabackend.util.ValidationGroups.Create;
+import static ru.epa.epabackend.util.ValidationGroups.Update;
+
 /**
  * Класс TaskAdminController содержит ендпоинты задач для администратора.
  *
@@ -63,7 +66,8 @@ public class TaskControllerAdmin {
             description = "Создание новой задачи администратором"
     )
     @PostMapping()
-    public TaskFullResponseDto createByAdmin(@Parameter(required = true) @RequestBody TaskRequestDto taskInDto) {
+    public TaskFullResponseDto createByAdmin(@Validated(Create.class) @Parameter(required = true)
+                                             @RequestBody TaskRequestDto taskInDto) {
         return taskService.create(taskInDto);
     }
 
@@ -76,7 +80,8 @@ public class TaskControllerAdmin {
     )
     @PatchMapping("/{taskId}")
     public TaskFullResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
-                                     @Parameter(required = true) @RequestBody TaskRequestDto taskInDto) {
+                                             @Validated(Update.class) @Parameter(required = true)
+                                             @RequestBody TaskRequestDto taskInDto) {
         return taskService.update(taskId, taskInDto);
     }
 
