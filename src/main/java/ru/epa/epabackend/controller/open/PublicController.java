@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.employee.*;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.service.AuthenticationService;
 import ru.epa.epabackend.service.EmployeeService;
 
