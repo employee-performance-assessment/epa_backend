@@ -38,7 +38,6 @@ public class EmployeeControllerUser {
     public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
                                                   @Validated(Update.class) @Parameter(required = true) @RequestBody
                                                   EmployeeRequestDto employeeDtoRequest) {
-        log.info("PATCH / employees / {}", employeeId);
         return employeeService.update(employeeId, employeeDtoRequest);
     }
 
@@ -48,7 +47,6 @@ public class EmployeeControllerUser {
     )
     @GetMapping
     public List<EmployeeShortResponseDto> getAllEmployees() {
-        log.info("GET / employees");
         return employeeService.findAll();
     }
 
@@ -58,7 +56,6 @@ public class EmployeeControllerUser {
     )
     @GetMapping("/{employeeId}")
     public EmployeeFullResponseDto getEmployeeById(@PathVariable @Parameter(required = true) Long employeeId) {
-        log.info("GET / employees / {}", employeeId);
         return employeeService.findByIdDto(employeeId);
     }
 

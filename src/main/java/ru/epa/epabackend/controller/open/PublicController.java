@@ -30,7 +30,6 @@ public class PublicController {
     )
     @PostMapping("/auth")
     public JwtResponse getToken(@RequestBody @Parameter(required = true) JwtRequest jwtRequest) {
-        log.info("POST / jwtRequest / {}", jwtRequest);
         return authenticationService.getToken(jwtRequest);
     }
 

@@ -34,7 +34,6 @@ public class EmployeeControllerAdmin {
     public EmployeeFullResponseDto addEmployee(
             @Validated(Create.class) @RequestBody @Parameter(required = true)
             EmployeeRequestDto employeeRtoRequest) {
-        log.info("POST / employees / {} ", employeeRtoRequest.getFullName());
         return employeeService.create(employeeRtoRequest);
     }
 
@@ -45,7 +44,6 @@ public class EmployeeControllerAdmin {
     @DeleteMapping("/{employeeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteEmployee(@PathVariable @Parameter(required = true) Long employeeId) {
-        log.info("DELETE / employees / {}", employeeId);
         employeeService.delete(employeeId);
     }
 }
