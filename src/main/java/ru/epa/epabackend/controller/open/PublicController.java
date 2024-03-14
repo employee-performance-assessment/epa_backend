@@ -38,7 +38,7 @@ public class PublicController {
             summary = "Саморегистрация администратора"
     )
     @PostMapping("/register")
-    public EmployeeFullResponseDto register(@RequestBody EmployeeShortRequestDto employeeShortRequestDto) {
+    public Employee register(@RequestBody EmployeeShortRequestDto employeeShortRequestDto) {
         return employeeService.createSelfRegister(employeeShortRequestDto);
     }
 }
