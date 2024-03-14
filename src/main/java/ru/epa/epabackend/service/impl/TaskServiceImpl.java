@@ -154,9 +154,9 @@ public class TaskServiceImpl implements TaskService {
      * Получение задачи из репозитория по ID задачи и ID исполнителя
      */
     private Task findByIdAndExecutorId(Long taskId, Long employeeId) {
-        return taskRepository.findByIdAndExecutorId(taskId, employeeId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
-                        Task.class)));
+        return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Задача с id %s и исполнителем с id %s не найдена",
+                        taskId, employeeId)));
     }
 
     private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
@@ -217,8 +217,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение задачи из репозитория по ID
      */
     private Task findById(Long taskId) {
-        return taskRepository.findById(taskId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
-                        Task.class)));
+        return taskRepository.findById(taskId).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
     }
 }

@@ -90,7 +90,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeRepository.existsById(employeeId)) {
             employeeRepository.deleteById(employeeId);
         } else {
-            throw new EntityNotFoundException(String.format("Объект класса %s не найден", Employee.class));
+            throw new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId));
         }
     }
 
@@ -118,16 +118,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional(readOnly = true)
     public Employee findByEmail(String email) {
-        return employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Неверный email, oбъект класса %s не " +
-                        "найден", Employee.class)));
+        return employeeRepository.findByEmail(email).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Сотрудник с email %s не найден", email)));
     }
 
     @Override
     public Employee findById(Long employeeId) {
-        return employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
-                        Employee.class)));
+        return employeeRepository.findById(employeeId).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
     }
 
     private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeDtoRequest) {
