@@ -35,9 +35,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project findById(Long projectId) {
-        return projectRepository.findById(projectId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Объект класса %s не найден",
-                        Project.class)));
+        return projectRepository.findById(projectId).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Проект с id %s не найден", projectId)));
     }
 
     @Override
