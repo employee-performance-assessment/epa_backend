@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.EmployeeService;
 
+import java.security.Principal;
 import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Update;
@@ -26,6 +28,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class EmployeeControllerUser {
 
     private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
     @Operation(
             summary = "Обновление сотрудника"
@@ -50,12 +53,21 @@ public class EmployeeControllerUser {
     }
 
     @Operation(
-            summary = "Получение информации о сотруднике",
-            description = "Возвращает полную информацию о сотруднике, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибкую 404"
+            summary = "Получение информации о сотруднике по id",
+            description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибку 404"
     )
     @GetMapping("/{employeeId}")
     public EmployeeFullResponseDto getEmployeeById(@PathVariable @Parameter(required = true) Long employeeId) {
         log.info("GET / employees / {}", employeeId);
         return employeeService.findByIdDto(employeeId);
+    }
+
+    @Operation(
+            summary = "Получение информации о владельце токена",
+            description = "Возвращает полную информацию о владельце токена, если он существует в базе данных."
+    )
+    @GetMapping("/me")
+    public EmployeeFullResponseDto getMe(Principal principal) {
+        return employeeMapper.mapToFullDto(employeeService.findByEmail(principal.getName()));
     }
 }
