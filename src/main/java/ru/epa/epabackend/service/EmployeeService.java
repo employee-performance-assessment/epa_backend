@@ -3,6 +3,7 @@ package ru.epa.epabackend.service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface EmployeeService {
     EmployeeFullResponseDto create(EmployeeRequestDto employeeRtoRequest);
 
-    EmployeeFullResponseDto createSelfRegister(EmployeeRequestDto employeeRtoRequest);
+    EmployeeFullResponseDto createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto);
 
     EmployeeFullResponseDto update(Long employeeId, EmployeeRequestDto employeeRtoRequest);
 

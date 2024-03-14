@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
@@ -45,10 +46,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeFullResponseDto createSelfRegister(
-            EmployeeRequestDto employeeRtoRequest) {
-        log.info("Создание нового сотрудника {}", employeeRtoRequest.getFullName());
-        Employee employeeToSave = employeeMapper.mapToEntity(employeeRtoRequest);
-        employeeToSave.setPassword(passwordEncoder.encode(employeeRtoRequest.getPassword()));
+            EmployeeShortRequestDto employeeShortRequestDto) {
+        log.info("Создание нового сотрудника {}", employeeShortRequestDto.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeShortRequestDto);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeShortRequestDto.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
         return employeeMapper.mapToFullDto(employeeRepository.save(employeeToSave));
     }
