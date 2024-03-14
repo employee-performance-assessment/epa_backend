@@ -16,6 +16,7 @@ import ru.epa.epabackend.service.EmployeeService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -38,7 +39,7 @@ public class EmployeeControllerUser {
     public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
                                                   @Validated(Update.class) @Parameter(required = true) @RequestBody
                                                   EmployeeRequestDto employeeDtoRequest) {
-        return employeeService.update(employeeId, employeeDtoRequest);
+        return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeDtoRequest));
     }
 
     @Operation(
@@ -46,8 +47,9 @@ public class EmployeeControllerUser {
             description = "Возвращает список сотрудников в сокращенном виде\n\nВ случае, если не найдено ни одного сотрудника, возвращает пустой список."
     )
     @GetMapping
-    public List<EmployeeShortResponseDto> getAllEmployees() {
-        return employeeService.findAll();
+    public List<EmployeeShortResponseDto> findAll() {
+        return employeeService.findAll().stream().map(employeeMapper::mapToShortDto)
+                .collect(Collectors.toList());
     }
 
     @Operation(
@@ -55,8 +57,8 @@ public class EmployeeControllerUser {
             description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибку 404"
     )
     @GetMapping("/{employeeId}")
-    public EmployeeFullResponseDto getEmployeeById(@PathVariable @Parameter(required = true) Long employeeId) {
-        return employeeService.findByIdDto(employeeId);
+    public EmployeeFullResponseDto findByIdDto(@PathVariable @Parameter(required = true) Long employeeId) {
+        return employeeMapper.mapToFullDto(employeeService.findByIdDto(employeeId));
     }
 
     @Operation(

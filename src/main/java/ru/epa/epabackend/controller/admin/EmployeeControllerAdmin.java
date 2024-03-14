@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.EmployeeService;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
@@ -24,6 +25,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 public class EmployeeControllerAdmin {
 
     private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
     @Operation(
             summary = "Добавление нового сотрудника"

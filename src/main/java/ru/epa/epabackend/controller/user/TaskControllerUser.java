@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -30,6 +31,7 @@ import java.util.List;
 public class TaskControllerUser {
 
     private final TaskService taskEmployeeService;
+    private final TaskMapper taskMapper;
 
     /**
      * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
@@ -42,7 +44,8 @@ public class TaskControllerUser {
     @GetMapping
     public List<TaskShortResponseDto> findAllTasksByEmployeeIdFilters(Principal principal,
                                                                       @RequestParam(required = false) String status) {
-        return taskEmployeeService.findAllByExecutorIdFilters(status, principal);
+        return taskEmployeeService.findAllByExecutorIdFilters(status, principal).stream()
+                .map(taskMapper::mapToShortDto).toList();
     }
 
     /**
@@ -57,7 +60,7 @@ public class TaskControllerUser {
     public TaskFullResponseDto findTaskById(
             @Parameter(required = true) @PathVariable Long taskId,
             Principal principal) {
-        return taskEmployeeService.findByIdAndExecutorId(principal, taskId);
+        return taskMapper.mapToFullDto(taskEmployeeService.findByIdAndExecutorId(principal, taskId));
     }
 
     /**
@@ -70,7 +73,7 @@ public class TaskControllerUser {
     public TaskFullResponseDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
                                             @Parameter(required = true) @RequestParam String status,
                                             Principal principal) {
-        return taskEmployeeService.updateStatus(taskId, status, principal);
+        return taskMapper.mapToFullDto(taskEmployeeService.updateStatus(taskId, status, principal));
 
     }
 
@@ -85,7 +88,8 @@ public class TaskControllerUser {
     @GetMapping("/project/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskShortResponseDto> findByProjectIdAndStatus(@PathVariable Long projectId,
-                                                                 @RequestParam TaskStatus status) {
-        return taskEmployeeService.findByProjectIdAndStatus(projectId, status);
+                                                               @RequestParam TaskStatus status) {
+        return taskEmployeeService.findByProjectIdAndStatus(projectId, status)
+                .stream().map(taskMapper::mapToShortDto).toList();
     }
 }
