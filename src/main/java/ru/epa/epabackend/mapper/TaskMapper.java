@@ -45,7 +45,7 @@ public interface TaskMapper {
     default List<TaskShortResponseDto> mapList(List<Task> tasks) {
         return tasks.stream().map(this::mapToShortDto).collect(Collectors.toList());
     }
-  
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", source = "taskCreateUpdateRequestDto.status")

@@ -36,7 +36,7 @@ public interface ProjectMapper {
     default List<ProjectShortResponseDto> mapAsList(List<Project> projects) {
         return projects.stream().map(this::mapToShortDto).collect(Collectors.toList());
     }
-  
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "employees", ignore = true)
     @Mapping(target = "tasks", ignore = true)

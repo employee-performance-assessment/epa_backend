@@ -32,7 +32,7 @@ public interface EmployeeMapper {
     default List<EmployeeShortResponseDto> mapList(List<Employee> employees) {
         return employees.stream().map(this::mapToShortDto).collect(Collectors.toList());
     }
-  
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
