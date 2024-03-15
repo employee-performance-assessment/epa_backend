@@ -26,7 +26,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/employees")
+@RequestMapping("/admin/employee")
 public class EmployeeControllerAdmin {
 
     private final EmployeeService employeeService;

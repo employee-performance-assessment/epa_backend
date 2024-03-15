@@ -40,11 +40,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project create(
-            ProjectCreateRequestDto newProjectRto, String email) {
+    public Project create(ProjectCreateRequestDto projectCreateRequestDto, String email) {
         Employee admin = employeeService.findByEmail(email);
         return projectRepository
-                .save(projectMapper.mapToEntity(newProjectRto, List.of(admin)));
+                .save(projectMapper.mapToEntity(projectCreateRequestDto, List.of(admin)));
     }
 
     @Override
@@ -79,15 +78,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project update(
-            Long projectId, ProjectUpdateRequestDto updateProjectRto, String email) {
+    public Project update(Long projectId, ProjectUpdateRequestDto projectUpdateRequestDto, String email) {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        if (updateProjectRto.getName() != null)
-            project.setName(updateProjectRto.getName());
-        if (updateProjectRto.getStatus() != null)
-            project.setStatus(updateProjectRto.getStatus());
+        if (projectUpdateRequestDto.getName() != null)
+            project.setName(projectUpdateRequestDto.getName());
+        if (projectUpdateRequestDto.getStatus() != null)
+            project.setStatus(projectUpdateRequestDto.getStatus());
         return projectRepository.save(project);
     }
 

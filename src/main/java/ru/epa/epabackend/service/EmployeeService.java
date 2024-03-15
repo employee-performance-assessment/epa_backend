@@ -8,11 +8,11 @@ import ru.epa.epabackend.model.Employee;
 import java.util.List;
 
 public interface EmployeeService {
-    Employee create(EmployeeRequestDto employeeRtoRequest);
+    Employee create(EmployeeRequestDto employeeRequestDto);
 
     Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto);
 
-    Employee update(Long employeeId, EmployeeRequestDto employeeRtoRequest);
+    Employee update(Long employeeId, EmployeeRequestDto employeeRequestDto);
 
     void delete(Long employeeId);
 

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/projects")
+@RequestMapping("/admin/project")
 public class ProjectControllerAdmin {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
