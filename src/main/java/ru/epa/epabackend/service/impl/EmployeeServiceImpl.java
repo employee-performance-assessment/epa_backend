@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
-import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
@@ -56,14 +55,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             Long employeeId, EmployeeRequestDto employeeDtoRequest) {
         log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
         Employee oldEmployee = findById(employeeId);
-        String fullName = employeeDtoRequest.getFullName();
-        if (fullName != null && !fullName.isBlank()) {
-            String[] full = employeeDtoRequest.getFullName().split(" ");
-            if (full.length != 3) {
-                throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
-            }
-            oldEmployee.setFullName(fullName);
-        }
 
         updateFields(oldEmployee, employeeDtoRequest);
 
@@ -125,6 +116,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeDtoRequest) {
+        String fullName = employeeDtoRequest.getFullName();
+        if (fullName != null && !fullName.isBlank()) {
+            oldEmployee.setFullName(fullName);
+        }
         String nickName = employeeDtoRequest.getNickName();
         if (nickName != null && !nickName.isBlank()) {
             oldEmployee.setNickName(nickName);
