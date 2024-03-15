@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Класс ProjectControllerAdmin содержит ендпоинты, относящиеся к проектам администратора
+ * Класс ProjectControllerAdmin содержит эндпойнты для администратора, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
@@ -40,7 +40,7 @@ public class ProjectControllerAdmin {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпоинт добавления нового проекта
+     * Эндпойнт добавления нового проекта
      */
     @Operation(
             summary = "Добавление нового проекта",
@@ -53,7 +53,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт добавления сотрудника в проект
+     * Эндпойнт добавления сотрудника в проект
      */
     @Operation(
             summary = "Добавление сотрудника в проект",
@@ -74,7 +74,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт получения списка сотрудников, участвующих в проекте
+     * Эндпойнт получения списка сотрудников, участвующих в проекте
      */
     @Operation(
             summary = "Получение списка сотрудников, участвующих в проекте",
@@ -90,7 +90,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт изменения информации о проекте
+     * Эндпойнт изменения информации о проекте
      */
     @Operation(
             summary = "Изменение информации о проекте",
@@ -108,7 +108,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт удаления проекта
+     * Эндпойнт удаления проекта
      */
     @Operation(
             summary = "Удаление проекта",
@@ -124,7 +124,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт удаления сотрудника из проекта
+     * Эндпойнт удаления сотрудника из проекта
      */
     @Operation(
             summary = "Удаление сотрудника из проекта",

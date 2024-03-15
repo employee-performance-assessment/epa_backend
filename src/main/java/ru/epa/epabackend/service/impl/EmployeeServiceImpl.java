@@ -22,6 +22,11 @@ import java.util.List;
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
 import static ru.epa.epabackend.util.Role.ROLE_USER;
 
+/**
+ * Класс EmployeeServiceImpl содержит бизнес-логику работы с сотрудниками
+ *
+ * @author Валентина Вахламова
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PasswordEncoder passwordEncoder;
     private final EmployeeMapper employeeMapper;
 
+    /**
+     * Создание нового сотрудника
+     */
     @Override
     public Employee create(EmployeeRequestDto employeeDtoRequest) {
         log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
@@ -41,9 +49,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(employeeToSave);
     }
 
+    /**
+     * Саморегистрация администратора
+     */
     @Override
-    public Employee createSelfRegister(
-            EmployeeShortRequestDto employeeShortRequestDto) {
+    public Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto) {
         log.info("Создание нового сотрудника {}", employeeShortRequestDto.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeShortRequestDto);
         employeeToSave.setPassword(passwordEncoder.encode(employeeShortRequestDto.getPassword()));
@@ -51,9 +61,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(employeeToSave);
     }
 
+    /**
+     * Обновление сотрудника
+     */
     @Override
-    public Employee update(
-            Long employeeId, EmployeeRequestDto employeeDtoRequest) {
+    public Employee update(Long employeeId, EmployeeRequestDto employeeDtoRequest) {
         log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
         Employee oldEmployee = findById(employeeId);
         String fullName = employeeDtoRequest.getFullName();
@@ -82,6 +94,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(oldEmployee);
     }
 
+    /**
+     * Удаление сотрудника
+     */
     @Override
     public void delete(Long employeeId) {
         log.info("Удаление сотрудника по идентификатору {}", employeeId);
@@ -92,6 +107,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    /**
+     * Получение всех сотрудников
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Employee> findAll() {
@@ -99,6 +117,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findAll();
     }
 
+    /**
+     * Получение сотрудника по id
+     */
     @Override
     @Transactional(readOnly = true)
     public Employee findByIdDto(Long employeeId) {
@@ -106,11 +127,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         return findById(employeeId);
     }
 
+    /**
+     * Получение данных сотрудникаи для аутентификации
+     */
     @Override
     public UserDetailsService userDetailsService() {
         return this::findByEmail;
     }
 
+    /**
+     * Получение сотрудника по email
+     */
     @Override
     @Transactional(readOnly = true)
     public Employee findByEmail(String email) {
@@ -118,6 +145,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException(String.format("Сотрудник с email %s не найден", email)));
     }
 
+    /**
+     * Получение сотрудника по id и проверка его наличия в базе данных
+     */
     @Override
     public Employee findById(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
