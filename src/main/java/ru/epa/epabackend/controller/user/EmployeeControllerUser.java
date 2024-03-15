@@ -22,7 +22,6 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 @Tag(name = "Private: Сотрудники", description = "Закрытый API для работы с пользователями")
 @SecurityRequirement(name = "JWT")
-@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/employees")
@@ -39,7 +38,6 @@ public class EmployeeControllerUser {
     public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
                                                   @Validated(Update.class) @Parameter(required = true) @RequestBody
                                                   EmployeeRequestDto employeeDtoRequest) {
-        log.info("PATCH / employees / {}", employeeId);
         return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeDtoRequest));
     }
 
@@ -49,7 +47,6 @@ public class EmployeeControllerUser {
     )
     @GetMapping
     public List<EmployeeShortResponseDto> findAll() {
-        log.info("GET / employees");
         List<Employee> employees = employeeService.findAll();
         return employeeMapper.mapList(employees);
     }
@@ -60,7 +57,6 @@ public class EmployeeControllerUser {
     )
     @GetMapping("/{employeeId}")
     public EmployeeFullResponseDto findByIdDto(@PathVariable @Parameter(required = true) Long employeeId) {
-        log.info("GET / employees / {}", employeeId);
         return employeeMapper.mapToFullDto(employeeService.findByIdDto(employeeId));
     }
 
