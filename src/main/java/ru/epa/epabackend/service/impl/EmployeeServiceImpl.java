@@ -33,17 +33,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     @Override
-    public Employee create(EmployeeRequestDto employeeDtoRequest) {
-        log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
-        Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
-        employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
+    public Employee create(EmployeeRequestDto employeeRequestDto) {
+        log.info("Создание нового сотрудника {}", employeeRequestDto.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeRequestDto);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
         return employeeRepository.save(employeeToSave);
     }
 
     @Override
-    public Employee createSelfRegister(
-            EmployeeShortRequestDto employeeShortRequestDto) {
+    public Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto) {
         log.info("Создание нового сотрудника {}", employeeShortRequestDto.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeShortRequestDto);
         employeeToSave.setPassword(passwordEncoder.encode(employeeShortRequestDto.getPassword()));
@@ -52,30 +51,29 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee update(
-            Long employeeId, EmployeeRequestDto employeeDtoRequest) {
-        log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
+    public Employee update(Long employeeId, EmployeeRequestDto employeeRequestDto) {
+        log.info("Обновление существующего сотрудника {}", employeeRequestDto.getFullName());
         Employee oldEmployee = findById(employeeId);
-        String fullName = employeeDtoRequest.getFullName();
+        String fullName = employeeRequestDto.getFullName();
         if (fullName != null && !fullName.isBlank()) {
-            String[] full = employeeDtoRequest.getFullName().split(" ");
+            String[] full = employeeRequestDto.getFullName().split(" ");
             if (full.length != 3) {
                 throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
             }
             oldEmployee.setFullName(fullName);
         }
 
-        updateFields(oldEmployee, employeeDtoRequest);
+        updateFields(oldEmployee, employeeRequestDto);
 
-        Role role = employeeDtoRequest.getRole();
+        Role role = employeeRequestDto.getRole();
         if (role != null) {
             oldEmployee.setRole(role);
         }
-        String position = employeeDtoRequest.getPosition();
+        String position = employeeRequestDto.getPosition();
         if (position != null && !position.isBlank()) {
             oldEmployee.setPosition(position);
         }
-        String department = employeeDtoRequest.getDepartment();
+        String department = employeeRequestDto.getDepartment();
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
@@ -124,24 +122,24 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
     }
 
-    private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeDtoRequest) {
-        String nickName = employeeDtoRequest.getNickName();
+    private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeRequestDto) {
+        String nickName = employeeRequestDto.getNickName();
         if (nickName != null && !nickName.isBlank()) {
             oldEmployee.setNickName(nickName);
         }
-        String city = employeeDtoRequest.getCity();
+        String city = employeeRequestDto.getCity();
         if (city != null && !city.isBlank()) {
             oldEmployee.setCity(city);
         }
-        String email = employeeDtoRequest.getEmail();
+        String email = employeeRequestDto.getEmail();
         if (email != null && !email.isBlank()) {
             oldEmployee.setEmail(email);
         }
-        String password = employeeDtoRequest.getPassword();
+        String password = employeeRequestDto.getPassword();
         if (password != null && !password.isBlank()) {
             oldEmployee.setPassword(passwordEncoder.encode(password));
         }
-        LocalDate birthday = employeeDtoRequest.getBirthday();
+        LocalDate birthday = employeeRequestDto.getBirthday();
         if (birthday != null) {
             oldEmployee.setBirthday(birthday);
         }

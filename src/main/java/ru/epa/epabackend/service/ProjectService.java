@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProjectService {
     Project findById(Long projectId);
 
-    Project create(ProjectCreateRequestDto newProjectRto, String email);
+    Project create(ProjectCreateRequestDto projectCreateRequestDto, String email);
 
     Project findDtoById(Long projectId, String email);
 
@@ -22,7 +22,7 @@ public interface ProjectService {
 
     List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email);
 
-    Project update(Long projectId, ProjectUpdateRequestDto updateProjectRto, String email);
+    Project update(Long projectId, ProjectUpdateRequestDto projectUpdateRequestDto, String email);
 
     void delete(Long projectId, String email);
 
