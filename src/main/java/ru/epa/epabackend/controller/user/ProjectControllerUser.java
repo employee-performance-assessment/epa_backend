@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Класс ProjectControllerUser содержит ендпоинты, относящиеся к проектам пользователя
+ * Класс ProjectControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
@@ -27,11 +27,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/user/projects")
 public class ProjectControllerUser {
+
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
 
     /**
-     * Эндпоинт получения короткой информации о проекте
+     * Эндпойнт получения короткой информации о проекте
      */
     @Operation(
             summary = "Получение короткой информации о проекте",
@@ -45,7 +46,7 @@ public class ProjectControllerUser {
     }
 
     /**
-     * Эндпоинт получения списка проектов пользователя с короткой информацией о проектах
+     * Эндпойнт получения списка проектов пользователя с короткой информацией о проектах
      */
     @Operation(
             summary = "Получение списка проектов пользователя с короткой информацией о проектах",

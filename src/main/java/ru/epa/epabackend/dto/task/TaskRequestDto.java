@@ -14,8 +14,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TaskInDto содержит структуру данных, которая используется для передачи
- * информации между различными слоями приложения.
+ * Класс TaskRequestDto для передачи тела запроса на сервер с данными для создания и обновления задачи
  *
  * @author Владислав Осипов
  */

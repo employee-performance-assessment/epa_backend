@@ -66,7 +66,7 @@ public class Employee implements UserDetails {
 
     /**
      * Роль/грейд
-     * Возможные роли: ADMIN, SENIOR, MIDDLE, JUNIOR.
+     * Возможные роли: ADMIN, USER.
      */
     @Enumerated(EnumType.STRING)
     private Role role;
