@@ -1,7 +1,6 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
-import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;

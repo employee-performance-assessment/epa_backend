@@ -1,10 +1,8 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
-import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
-import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Technology;
 
 import java.util.List;

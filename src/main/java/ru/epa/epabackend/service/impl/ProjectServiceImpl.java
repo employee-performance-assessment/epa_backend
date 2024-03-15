@@ -82,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        projectMapper.updateFields(updateProjectRto, project);
+        projectMapper.updateFields(projectUpdateRequestDto, project);
         return projectRepository.save(project);
     }
 

@@ -15,7 +15,6 @@ import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.util.Role;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
@@ -68,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info("Обновление существующего сотрудника {}", employeeRequestDto.getFullName());
         Employee oldEmployee = findById(employeeId);
 
-        employeeMapper.updateFields(employeeDtoRequest, oldEmployee);
+        employeeMapper.updateFields(employeeRequestDto, oldEmployee);
 
         Role role = employeeRequestDto.getRole();
         if (role != null) {

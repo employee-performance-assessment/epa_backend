@@ -1,7 +1,6 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
-import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
@@ -59,4 +58,3 @@ public interface TaskMapper {
     Task updateFields(TaskRequestDto taskCreateUpdateRequestDto, Project project, Employee executor,
                       @MappingTarget Task oldTask);
 }
-
