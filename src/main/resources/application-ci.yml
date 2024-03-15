@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        ddl-auto: none
+        show-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: info
+          JpaTransactionManager: debug
+        transaction: info
+    spring security: info
+    web: info
+
+token:
+  secret: ${TOKEN_SECRET}
+  duration: ${TOKEN_DURATION}
+admin:
+  login: admin
+  password: admin

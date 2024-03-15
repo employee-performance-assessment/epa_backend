@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/epa-backend
+    username: postgres
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        ddl-auto: none
+        show-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    org:
+      zalando:
+        logbook: TRACE
+      springframework:
+        orm:
+          jpa: info
+          JpaTransactionManager: debug
+        transaction: info
+        web:
+          servlet:
+            DispatcherServlet: debug
+    spring security: info
+    web: info
+
+token:
+  secret: 51Ph61VOzrdwNvRa9FZclUpZRU160G1O
+  duration: 60m
+admin:
+  login: admin
+  password: admin

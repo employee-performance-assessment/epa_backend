@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  epa-db:
+    image: postgres:16-alpine
+    container_name: epa-db
+    ports:
+      - "6543:5432"
+    environment:
+      - POSTGRES_DB=epa-backend
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+
+  epa-backend:
+    image: jackobthelion/epa-backend:latest
+    container_name: epa-backend
+    ports:
+      - "60606:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=ci
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://epa-db:5432/epa-backend
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - TOKEN_SECRET=5CB2F9DDACE539F2E89ED3C7B2FB9
+      - TOKEN_DURATION=60m
