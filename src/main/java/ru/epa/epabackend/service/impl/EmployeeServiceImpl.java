@@ -145,12 +145,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
     }
 
-    private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeDtoRequest) {
-        String fullName = employeeDtoRequest.getFullName();
+    private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeRequestDto) {
+        String fullName = employeeRequestDto.getFullName();
         if (fullName != null && !fullName.isBlank()) {
             oldEmployee.setFullName(fullName);
         }
-        String nickName = employeeDtoRequest.getNickName();
+        String nickName = employeeRequestDto.getNickName();
         if (nickName != null && !nickName.isBlank()) {
             oldEmployee.setNickName(nickName);
         }
