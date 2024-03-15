@@ -23,7 +23,9 @@ import ru.epa.epabackend.service.AuthenticationService;
 import ru.epa.epabackend.service.EmployeeService;
 
 /**
+ * Класс PublicController представляет из себя публичный API для получения токена и саморегистрации администратора.
  *
+ * @author Егор Яковлев
  */
 @Tag(name = "Open: открытые эндпоинты")
 @Slf4j
@@ -36,6 +38,9 @@ public class PublicController {
     private final EmployeeService employeeService;
     private final EmployeeMapper employeeMapper;
 
+    /**
+     * Эндпойнт для получения токена при входе сотрудника
+     */
     @Operation(
             summary = "Получение JWT токена по паре логин пароль"
     )
@@ -49,10 +54,12 @@ public class PublicController {
                     schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping("/auth")
     public JwtResponse getToken(@RequestBody @Parameter(required = true) JwtRequest jwtRequest) {
-        log.info("POST / jwtRequest / {}", jwtRequest);
         return authenticationService.getToken(jwtRequest);
     }
 
+    /**
+     * Эндпойнт для саморегистрации администратора
+     */
     @Operation(
             summary = "Саморегистрация администратора"
     )

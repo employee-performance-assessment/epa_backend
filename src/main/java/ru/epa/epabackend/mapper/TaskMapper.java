@@ -9,6 +9,9 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Интерфейс TaskMapper содержит преобразование сущности.
  *
@@ -40,6 +43,10 @@ public interface TaskMapper {
      */
     TaskShortResponseDto mapToShortDto(Task task);
 
+    default List<TaskShortResponseDto> mapList(List<Task> tasks) {
+        return tasks.stream().map(this::mapToShortDto).collect(Collectors.toList());
+    }
+  
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", source = "taskCreateUpdateRequestDto.status")
@@ -52,3 +59,4 @@ public interface TaskMapper {
     Task updateFields(TaskRequestDto taskCreateUpdateRequestDto, Project project, Employee executor,
                       @MappingTarget Task oldTask);
 }
+

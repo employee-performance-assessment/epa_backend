@@ -60,13 +60,12 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-    public Task create(TaskRequestDto taskCreateUpdateRequestDto) {
-        Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
-        Employee executor = employeeService.findById(taskCreateUpdateRequestDto.getExecutorId());
-        taskCreateUpdateRequestDto.setStatus("NEW");
+    public Task create(TaskRequestDto taskRequestDto) {
+        Project project = projectService.findById(taskRequestDto.getProjectId());
+        Employee executor = employeeService.findById(taskRequestDto.getExecutorId());
+        taskRequestDto.setStatus("NEW");
         checkProjectContainsExecutor(project, executor);
-        return taskRepository.save(taskMapper.mapToEntity(taskCreateUpdateRequestDto, project, executor));
-
+        return taskRepository.save(taskMapper.mapToEntity(taskRequestDto, project, executor));
     }
 
     /**
@@ -78,7 +77,6 @@ public class TaskServiceImpl implements TaskService {
         Task oldTask = findById(taskId);
         Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
         Employee executor = checkExecutor(taskCreateUpdateRequestDto, oldTask);
-
         taskMapper.updateFields(taskCreateUpdateRequestDto, project, executor, oldTask);
         if (oldTask.getStatus() == TaskStatus.DONE) {
             setPointsToEmployeeAfterTaskDone(taskCreateUpdateRequestDto, oldTask);

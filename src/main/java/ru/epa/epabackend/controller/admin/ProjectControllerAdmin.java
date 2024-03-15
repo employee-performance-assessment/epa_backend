@@ -15,16 +15,16 @@ import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Класс ProjectControllerAdmin содержит ендпоинты, относящиеся к проектам администратора
+ * Класс ProjectControllerAdmin содержит эндпойнты для администратора, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/projects")
+@RequestMapping("/admin/project")
 public class ProjectControllerAdmin {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпоинт добавления нового проекта
+     * Эндпойнт добавления нового проекта
      */
     @Operation(
             summary = "Добавление нового проекта",
@@ -53,7 +53,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт добавления сотрудника в проект
+     * Эндпойнт добавления сотрудника в проект
      */
     @Operation(
             summary = "Добавление сотрудника в проект",
@@ -69,12 +69,11 @@ public class ProjectControllerAdmin {
                                                                @RequestParam Long employeeId,
                                                                Principal principal) {
         Project project = projectService.saveWithEmployee(projectId, employeeId, principal.getName());
-        return projectMapper.mapToProjectEmployeesDto(project, project.getEmployees()
-                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList()));
+        return projectMapper.mapToProjectEmployeesDto(project, employeeMapper.mapList(project.getEmployees()));
     }
 
     /**
-     * Эндпоинт получения списка сотрудников, участвующих в проекте
+     * Эндпойнт получения списка сотрудников, участвующих в проекте
      */
     @Operation(
             summary = "Получение списка сотрудников, участвующих в проекте",
@@ -85,12 +84,12 @@ public class ProjectControllerAdmin {
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeShortResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
-        return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName())
-                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList());
+        List<Employee> allByProjectIdAndRole = projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
+        return employeeMapper.mapList(allByProjectIdAndRole);
     }
 
     /**
-     * Эндпоинт изменения информации о проекте
+     * Эндпойнт изменения информации о проекте
      */
     @Operation(
             summary = "Изменение информации о проекте",
@@ -108,7 +107,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт удаления проекта
+     * Эндпойнт удаления проекта
      */
     @Operation(
             summary = "Удаление проекта",
@@ -124,7 +123,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт удаления сотрудника из проекта
+     * Эндпойнт удаления сотрудника из проекта
      */
     @Operation(
             summary = "Удаление сотрудника из проекта",

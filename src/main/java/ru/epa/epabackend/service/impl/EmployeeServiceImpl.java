@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
-import ru.epa.epabackend.exception.exceptions.WrongFullNameException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
@@ -22,6 +21,11 @@ import java.util.List;
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
 import static ru.epa.epabackend.util.Role.ROLE_USER;
 
+/**
+ * Класс EmployeeServiceImpl содержит бизнес-логику работы с сотрудниками
+ *
+ * @author Валентина Вахламова
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,18 +36,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PasswordEncoder passwordEncoder;
     private final EmployeeMapper employeeMapper;
 
+    /**
+     * Создание нового сотрудника
+     */
     @Override
-    public Employee create(EmployeeRequestDto employeeDtoRequest) {
-        log.info("Создание нового сотрудника {}", employeeDtoRequest.getFullName());
-        Employee employeeToSave = employeeMapper.mapToEntity(employeeDtoRequest);
-        employeeToSave.setPassword(passwordEncoder.encode(employeeDtoRequest.getPassword()));
+    public Employee create(EmployeeRequestDto employeeRequestDto) {
+        log.info("Создание нового сотрудника {}", employeeRequestDto.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(employeeRequestDto);
+        employeeToSave.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
         return employeeRepository.save(employeeToSave);
     }
 
+    /**
+     * Саморегистрация администратора
+     */
     @Override
-    public Employee createSelfRegister(
-            EmployeeShortRequestDto employeeShortRequestDto) {
+    public Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto) {
         log.info("Создание нового сотрудника {}", employeeShortRequestDto.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeShortRequestDto);
         employeeToSave.setPassword(passwordEncoder.encode(employeeShortRequestDto.getPassword()));
@@ -51,37 +60,34 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(employeeToSave);
     }
 
+    /**
+     * Обновление сотрудника
+     */
     @Override
-    public Employee update(
-            Long employeeId, EmployeeRequestDto employeeDtoRequest) {
-        log.info("Обновление существующего сотрудника {}", employeeDtoRequest.getFullName());
+    public Employee update(Long employeeId, EmployeeRequestDto employeeRequestDto) {
+        log.info("Обновление существующего сотрудника {}", employeeRequestDto.getFullName());
         Employee oldEmployee = findById(employeeId);
-        String fullName = employeeDtoRequest.getFullName();
-        if (fullName != null && !fullName.isBlank()) {
-            String[] full = employeeDtoRequest.getFullName().split(" ");
-            if (full.length != 3) {
-                throw new WrongFullNameException("Поле ФИО должно состоять из трёх слов!");
-            }
-            oldEmployee.setFullName(fullName);
-        }
 
         employeeMapper.updateFields(employeeDtoRequest, oldEmployee);
 
-        Role role = employeeDtoRequest.getRole();
+        Role role = employeeRequestDto.getRole();
         if (role != null) {
             oldEmployee.setRole(role);
         }
-        String position = employeeDtoRequest.getPosition();
+        String position = employeeRequestDto.getPosition();
         if (position != null && !position.isBlank()) {
             oldEmployee.setPosition(position);
         }
-        String department = employeeDtoRequest.getDepartment();
+        String department = employeeRequestDto.getDepartment();
         if (department != null && !department.isBlank()) {
             oldEmployee.setDepartment(department);
         }
         return employeeRepository.save(oldEmployee);
     }
 
+    /**
+     * Удаление сотрудника
+     */
     @Override
     public void delete(Long employeeId) {
         log.info("Удаление сотрудника по идентификатору {}", employeeId);
@@ -92,6 +98,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    /**
+     * Получение всех сотрудников
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Employee> findAll() {
@@ -99,6 +108,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findAll();
     }
 
+    /**
+     * Получение сотрудника по id
+     */
     @Override
     @Transactional(readOnly = true)
     public Employee findByIdDto(Long employeeId) {
@@ -106,11 +118,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         return findById(employeeId);
     }
 
+    /**
+     * Получение данных сотрудникаи для аутентификации
+     */
     @Override
     public UserDetailsService userDetailsService() {
         return this::findByEmail;
     }
 
+    /**
+     * Получение сотрудника по email
+     */
     @Override
     @Transactional(readOnly = true)
     public Employee findByEmail(String email) {
@@ -118,6 +136,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException(String.format("Сотрудник с email %s не найден", email)));
     }
 
+    /**
+     * Получение сотрудника по id и проверка его наличия в базе данных
+     */
     @Override
     public Employee findById(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->

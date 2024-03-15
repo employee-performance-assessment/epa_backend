@@ -19,7 +19,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TaskAdminController содержит ендпоинты задач для администратора.
+ * Класс TaskControllerAdmin содержит эндпойнты для администратора, относящиеся к задачам.
  *
  * @author Владислав Осипов
  */
@@ -44,7 +44,7 @@ public class TaskControllerAdmin {
     )
     @GetMapping
     public List<TaskShortResponseDto> findAllByAdmin() {
-        return taskService.findAll().stream().map(taskMapper::mapToShortDto).toList();
+        return taskMapper.mapList(taskService.findAll());
     }
 
     /**

@@ -13,6 +13,11 @@ import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
+/**
+ * Класс EmployeeRequestDto для передачи тела запроса на сервер с полными данными для создания и обновления сотрудника
+ *
+ * @author Валентина Вахламова
+ */
 @Builder
 @Data
 @AllArgsConstructor
