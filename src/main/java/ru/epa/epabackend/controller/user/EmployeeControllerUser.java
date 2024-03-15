@@ -5,18 +5,17 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.service.EmployeeService;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -27,7 +26,6 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
  */
 @Tag(name = "Private: Сотрудники", description = "Закрытый API для работы с пользователями")
 @SecurityRequirement(name = "JWT")
-@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/employees")
@@ -59,8 +57,8 @@ public class EmployeeControllerUser {
     )
     @GetMapping
     public List<EmployeeShortResponseDto> findAll() {
-        return employeeService.findAll().stream().map(employeeMapper::mapToShortDto)
-                .collect(Collectors.toList());
+        List<Employee> employees = employeeService.findAll();
+        return employeeMapper.mapList(employees);
     }
 
     /**

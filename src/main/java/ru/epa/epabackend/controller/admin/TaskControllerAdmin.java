@@ -44,7 +44,7 @@ public class TaskControllerAdmin {
     )
     @GetMapping
     public List<TaskShortResponseDto> findAllByAdmin() {
-        return taskService.findAll().stream().map(taskMapper::mapToShortDto).toList();
+        return taskMapper.mapList(taskService.findAll());
     }
 
     /**

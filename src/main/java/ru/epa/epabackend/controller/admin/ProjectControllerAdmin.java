@@ -15,13 +15,13 @@ import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Класс ProjectControllerAdmin содержит эндпойнты для администратора, относящиеся к проектам.
@@ -69,8 +69,7 @@ public class ProjectControllerAdmin {
                                                                @RequestParam Long employeeId,
                                                                Principal principal) {
         Project project = projectService.saveWithEmployee(projectId, employeeId, principal.getName());
-        return projectMapper.mapToProjectEmployeesDto(project, project.getEmployees()
-                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList()));
+        return projectMapper.mapToProjectEmployeesDto(project, employeeMapper.mapList(project.getEmployees()));
     }
 
     /**
@@ -85,8 +84,8 @@ public class ProjectControllerAdmin {
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeShortResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
-        return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName())
-                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList());
+        List<Employee> allByProjectIdAndRole = projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
+        return employeeMapper.mapList(allByProjectIdAndRole);
     }
 
     /**

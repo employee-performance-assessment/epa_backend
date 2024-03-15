@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
 import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.mapper.TechnologyMapper;
+import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Класс TechnologyController содержит эндпойнты для администратора, относящиеся к технологиям.
@@ -63,7 +63,8 @@ public class TechnologyControllerAdmin {
     )
     @GetMapping
     public List<TechnologyResponseDto> getAllTechnologies() {
-        return technologyService.findAll().stream().map(technologyMapper::mapToDto).collect(Collectors.toList());
+        List<Technology> technologies = technologyService.findAll();
+        return technologyMapper.mapList(technologies);
     }
 
     /**
