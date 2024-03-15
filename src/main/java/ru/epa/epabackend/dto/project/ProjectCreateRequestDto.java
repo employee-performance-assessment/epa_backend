@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Класс NewProjectRto для передачи тела запроса создания проекта на сервер
+ * Класс ProjectCreateRequestDto для передачи тела запроса создания проекта на сервер
  *
  * @author Константин Осипов
  */

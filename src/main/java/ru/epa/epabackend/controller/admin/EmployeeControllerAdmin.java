@@ -16,6 +16,11 @@ import ru.epa.epabackend.service.EmployeeService;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 
+/**
+ * Класс EmployeeControllerAdmin содержит эндпойнты для администратора, относящиеся к сотрудникам.
+ *
+ * @author Валентина Вахламова
+ */
 @Tag(name = "Admin: Сотрудники", description = "API для работы с пользователями")
 @SecurityRequirement(name = "JWT")
 @Slf4j
@@ -27,6 +32,9 @@ public class EmployeeControllerAdmin {
     private final EmployeeService employeeService;
     private final EmployeeMapper employeeMapper;
 
+    /**
+     * Эндпойнт добавления нового сотрудника
+     */
     @Operation(
             summary = "Добавление нового сотрудника"
     )
@@ -39,6 +47,9 @@ public class EmployeeControllerAdmin {
         return employeeMapper.mapToFullDto(employeeService.create(employeeRtoRequest));
     }
 
+    /**
+     * Эндпойнт удаления сотрудника
+     */
     @Operation(
             summary = "Удаление сотрудника",
             description = "Удаляет сотрудника, если он существует в базе данных."

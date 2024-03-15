@@ -20,6 +20,11 @@ import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
+/**
+ * Класс EmployeeControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к сотрудникам.
+ *
+ * @author Валентина Вахламова
+ */
 @Tag(name = "Private: Сотрудники", description = "Закрытый API для работы с пользователями")
 @SecurityRequirement(name = "JWT")
 @Slf4j
@@ -31,6 +36,9 @@ public class EmployeeControllerUser {
     private final EmployeeService employeeService;
     private final EmployeeMapper employeeMapper;
 
+    /**
+     * Эндпойнт по обновлению существующего сотрудника
+     */
     @Operation(
             summary = "Обновление сотрудника"
     )
@@ -42,6 +50,9 @@ public class EmployeeControllerUser {
         return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeDtoRequest));
     }
 
+    /**
+     * Эндпойнт получения всех сотрудников в скоращенном виде
+     */
     @Operation(
             summary = "Получение всех сотрудников",
             description = "Возвращает список сотрудников в сокращенном виде\n\nВ случае, если не найдено ни одного сотрудника, возвращает пустой список."
@@ -52,6 +63,9 @@ public class EmployeeControllerUser {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Эндпойнт получения полных данных о сотрднике по id
+     */
     @Operation(
             summary = "Получение информации о сотруднике по id",
             description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибку 404"
@@ -61,6 +75,9 @@ public class EmployeeControllerUser {
         return employeeMapper.mapToFullDto(employeeService.findByIdDto(employeeId));
     }
 
+    /**
+     * Эндпойнт получения полных данных о сотрднике по токену
+     */
     @Operation(
             summary = "Получение информации о владельце токена",
             description = "Возвращает полную информацию о владельце токена, если он существует в базе данных."

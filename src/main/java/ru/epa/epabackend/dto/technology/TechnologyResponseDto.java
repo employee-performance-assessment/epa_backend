@@ -3,8 +3,7 @@ package ru.epa.epabackend.dto.technology;
 import lombok.*;
 
 /**
- * Класс TechnologyDto содержит структуру данных, которая используется для передачи
- * информации между различными слоями приложения.
+ * Класс TechnologyResponseDto для передачи информации о технологии
  *
  * @author Артем Масалкин
  */

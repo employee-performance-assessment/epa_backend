@@ -10,6 +10,11 @@ import java.time.LocalDate;
 
 import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
 
+/**
+ * Класс EmployeeFullResponseDto для передачи полной информации о сотруднике
+ *
+ * @author Валентина Вахламова
+ */
 @Builder
 @Data
 @AllArgsConstructor
