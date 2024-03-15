@@ -8,6 +8,9 @@ import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
 
@@ -26,4 +29,9 @@ public interface EmployeeMapper {
     Employee mapToEntity(EmployeeShortRequestDto employeeShortRequestDto);
 
     EmployeeShortResponseDto mapToShortDto(Employee employee);
+
+    default List<EmployeeShortResponseDto> mapList(List<Employee> employees) {
+        return employees.stream().map(this::mapToShortDto).collect(Collectors.toList());
+    }
+
 }

@@ -10,6 +10,7 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс ProjectMapper содержит преобразование сущности.
@@ -31,4 +32,8 @@ public interface ProjectMapper {
     Project mapToEntity(ProjectShortResponseDto projectShortDto);
 
     ProjectSaveWithEmployeeResponseDto mapToProjectEmployeesDto(Project project, List<EmployeeShortResponseDto> employeeShortDtoList);
+
+    default List<ProjectShortResponseDto> mapAsList(List<Project> projects) {
+        return projects.stream().map(this::mapToShortDto).collect(Collectors.toList());
+    }
 }

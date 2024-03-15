@@ -9,11 +9,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Класс ProjectControllerUser содержит ендпоинты, относящиеся к проектам пользователя
@@ -55,7 +55,7 @@ public class ProjectControllerUser {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProjectShortResponseDto> findByUserEmail(Principal principal) {
-        return projectService.findAllByUserEmail(principal.getName()).stream()
-                .map(projectMapper::mapToShortDto).collect(Collectors.toList());
+        List<Project> allByUserEmail = projectService.findAllByUserEmail(principal.getName());
+        return projectMapper.mapAsList(allByUserEmail);
     }
 }

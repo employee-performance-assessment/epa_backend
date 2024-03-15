@@ -12,11 +12,11 @@ import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.service.EmployeeService;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -50,8 +50,8 @@ public class EmployeeControllerUser {
     @GetMapping
     public List<EmployeeShortResponseDto> findAll() {
         log.info("GET / employees");
-        return employeeService.findAll().stream().map(employeeMapper::mapToShortDto)
-                .collect(Collectors.toList());
+        List<Employee> employees = employeeService.findAll();
+        return employeeMapper.mapList(employees);
     }
 
     @Operation(
