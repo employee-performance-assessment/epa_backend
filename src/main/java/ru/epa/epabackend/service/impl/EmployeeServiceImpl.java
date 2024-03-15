@@ -65,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             oldEmployee.setFullName(fullName);
         }
 
-        updateFields(oldEmployee, employeeDtoRequest);
+        employeeMapper.updateFields(employeeDtoRequest, oldEmployee);
 
         Role role = employeeDtoRequest.getRole();
         if (role != null) {
@@ -122,28 +122,5 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findById(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
-    }
-
-    private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeDtoRequest) {
-        String nickName = employeeDtoRequest.getNickName();
-        if (nickName != null && !nickName.isBlank()) {
-            oldEmployee.setNickName(nickName);
-        }
-        String city = employeeDtoRequest.getCity();
-        if (city != null && !city.isBlank()) {
-            oldEmployee.setCity(city);
-        }
-        String email = employeeDtoRequest.getEmail();
-        if (email != null && !email.isBlank()) {
-            oldEmployee.setEmail(email);
-        }
-        String password = employeeDtoRequest.getPassword();
-        if (password != null && !password.isBlank()) {
-            oldEmployee.setPassword(passwordEncoder.encode(password));
-        }
-        LocalDate birthday = employeeDtoRequest.getBirthday();
-        if (birthday != null) {
-            oldEmployee.setBirthday(birthday);
-        }
     }
 }

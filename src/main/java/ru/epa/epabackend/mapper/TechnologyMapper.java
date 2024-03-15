@@ -1,9 +1,10 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
+import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
+import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Technology;
 
 /**
@@ -25,4 +26,9 @@ public interface TechnologyMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "employees", ignore = true)
     Technology mapToEntity(TechnologyRequestDto technologyDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "employees", ignore = true)
+    Technology updateFields(TechnologyRequestDto technologyDto, @MappingTarget Technology oldTechnology);
 }

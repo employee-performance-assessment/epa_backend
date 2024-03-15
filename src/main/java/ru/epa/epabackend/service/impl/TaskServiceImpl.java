@@ -75,13 +75,16 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task update(
             Long taskId, TaskRequestDto taskCreateUpdateRequestDto) {
-        Task task = findById(taskId);
-        setNotNullParamToEntity(taskCreateUpdateRequestDto, task);
-        if (task.getStatus() == TaskStatus.DONE) {
-            setPointsToEmployeeAfterTaskDone(taskCreateUpdateRequestDto, task);
-            task.setFinishDate(LocalDate.now());
+        Task oldTask = findById(taskId);
+        Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
+        Employee executor = checkExecutor(taskCreateUpdateRequestDto, oldTask);
+
+        taskMapper.updateFields(taskCreateUpdateRequestDto, project, executor, oldTask);
+        if (oldTask.getStatus() == TaskStatus.DONE) {
+            setPointsToEmployeeAfterTaskDone(taskCreateUpdateRequestDto, oldTask);
+            oldTask.setFinishDate(LocalDate.now());
         }
-        return taskRepository.save(task);
+        return taskRepository.save(oldTask);
     }
 
     /**
@@ -159,39 +162,6 @@ public class TaskServiceImpl implements TaskService {
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
-    private void setNotNullParamToEntity(TaskRequestDto dto, Task task) {
-        if (dto.getName() != null) {
-            task.setName(dto.getName());
-        }
-
-        if (dto.getDescription() != null) {
-            task.setDescription(dto.getDescription());
-        }
-
-        if (dto.getExecutorId() != null) {
-            Employee employee = employeeService.findById(dto.getExecutorId());
-            checkProjectContainsExecutor(task.getProject(), employee);
-            task.setExecutor(employeeService.findById(dto.getExecutorId()));
-
-        }
-
-        if (dto.getBasicPoints() != null) {
-            task.setBasicPoints(dto.getBasicPoints());
-        }
-
-        if (dto.getPenaltyPoints() != null) {
-            task.setPenaltyPoints(dto.getPenaltyPoints());
-        }
-
-        if (dto.getStatus() != null) {
-            try {
-                task.setStatus(EnumUtils.getEnum(TaskStatus.class, dto.getStatus()));
-            } catch (IllegalArgumentException exception) {
-                throw new BadRequestException("Unknown status: " + dto.getStatus());
-            }
-        }
-    }
-
     private void checkProjectContainsExecutor(Project project, Employee employee) {
         if (!project.getEmployees().contains(employee)) {
             throw new EntityNotFoundException(String.format("Пользователя с id %d нет в проекте с id %d",
@@ -213,5 +183,15 @@ public class TaskServiceImpl implements TaskService {
     private Task findById(Long taskId) {
         return taskRepository.findById(taskId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
+    }
+
+    private Employee checkExecutor(TaskRequestDto taskCreateUpdateRequestDto, Task oldTask) {
+        Employee executor;
+        if (taskCreateUpdateRequestDto.getExecutorId() != null) {
+            executor = employeeService.findById(taskCreateUpdateRequestDto.getExecutorId());
+        } else {
+            executor = oldTask.getExecutor();
+        }
+        return executor;
     }
 }

@@ -1,7 +1,7 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
+import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
@@ -39,4 +39,16 @@ public interface TaskMapper {
      * Преобразование из сущности в DTO, краткое.
      */
     TaskShortResponseDto mapToShortDto(Task task);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", source = "taskCreateUpdateRequestDto.status")
+    @Mapping(target = "project", source = "project")
+    @Mapping(target = "executor", source = "executor")
+    @Mapping(target = "startDate", ignore = true)
+    @Mapping(target = "finishDate", ignore = true)
+    @Mapping(target = "points", ignore = true)
+    @Mapping(target = "name", source = "taskCreateUpdateRequestDto.name")
+    Task updateFields(TaskRequestDto taskCreateUpdateRequestDto, Project project, Employee executor,
+                      @MappingTarget Task oldTask);
 }
