@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Класс TechnologyController содержит ендпоинты для технологии.
+ * Класс TechnologyController содержит эндпойнты для администратора, относящиеся к технологиям.
  *
  * @author Артем Масалкин
  */
@@ -31,7 +31,7 @@ public class TechnologyControllerAdmin {
     private final TechnologyMapper technologyMapper;
 
     /**
-     * Эндпоинт создания технологии.
+     * Эндпойнт создания технологии.
      */
     @Operation(
             summary = "Создание новой технологии"
@@ -42,7 +42,7 @@ public class TechnologyControllerAdmin {
     }
 
     /**
-     * Эндпоинт обновления технологии.
+     * Эндпойнт обновления технологии.
      */
     @Operation(
             summary = "Обновление технологии",
@@ -56,7 +56,7 @@ public class TechnologyControllerAdmin {
     }
 
     /**
-     * Эндпоинт выведения списка всех технологий.
+     * Эндпойнт выведения списка всех технологий.
      */
     @Operation(
             summary = "Возвращает список всех технологий"
@@ -67,7 +67,7 @@ public class TechnologyControllerAdmin {
     }
 
     /**
-     * Эндпоинт удаления технологии.
+     * Эндпойнт удаления технологии.
      */
     @Operation(
             summary = "Удаляет технологию",

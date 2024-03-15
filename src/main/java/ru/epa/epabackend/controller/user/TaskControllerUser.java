@@ -18,7 +18,7 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Класс TaskEmployeeController содержит ендпоинты задач для не администратора.
+ * Класс TaskControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к задачам.
  *
  * @author Владислав Осипов
  */
