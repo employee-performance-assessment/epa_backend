@@ -13,7 +13,6 @@ import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.service.EmployeeService;
-import ru.epa.epabackend.util.Role;
 
 import java.util.List;
 
@@ -66,21 +65,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee update(Long employeeId, EmployeeRequestDto employeeRequestDto) {
         log.info("Обновление существующего сотрудника {}", employeeRequestDto.getFullName());
         Employee oldEmployee = findById(employeeId);
+        String password = employeeRequestDto.getPassword();
+
+        if (password != null && !password.isBlank()) {
+            oldEmployee.setPassword(passwordEncoder.encode(password));
+        }
 
         employeeMapper.updateFields(employeeRequestDto, oldEmployee);
-
-        Role role = employeeRequestDto.getRole();
-        if (role != null) {
-            oldEmployee.setRole(role);
-        }
-        String position = employeeRequestDto.getPosition();
-        if (position != null && !position.isBlank()) {
-            oldEmployee.setPosition(position);
-        }
-        String department = employeeRequestDto.getDepartment();
-        if (department != null && !department.isBlank()) {
-            oldEmployee.setDepartment(department);
-        }
         return employeeRepository.save(oldEmployee);
     }
 
