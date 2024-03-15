@@ -160,7 +160,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 3').to.eql(3);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -207,13 +208,13 @@
 							"raw": "{\r\n  \"fullName\": \"Ivanov Ivan Ivanovich\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/employees",
+							"raw": "{{baseUrl}}/admin/employee",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"employees"
+								"employee"
 							]
 						}
 					},
@@ -446,7 +447,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -469,13 +471,13 @@
 							"raw": "{\r\n  \"fullName\": \"Ivanov Test Ivanovich\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/employees",
+							"raw": "{{baseUrl}}/admin/employee",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"employees"
+								"employee"
 							]
 						}
 					},
@@ -580,7 +582,8 @@
 									"    pm.response.to.have.status(204);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -598,13 +601,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/employees/3",
+							"raw": "{{baseUrl}}/admin/employee/3",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"employees",
+								"employee",
 								"3"
 							]
 						}
@@ -656,7 +659,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -673,13 +677,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects",
+							"raw": "{{baseUrl}}/admin/project",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects"
+								"project"
 							]
 						}
 					},
@@ -705,7 +709,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -722,13 +727,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects",
+							"raw": "{{baseUrl}}/admin/project",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects"
+								"project"
 							]
 						}
 					},
@@ -754,7 +759,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 5').to.eql(5);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -801,13 +807,13 @@
 							"raw": "{\r\n  \"fullName\": \"Oklahom Boris Jovanski\",\r\n  \"nickName\": \"@appalachi\",\r\n  \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/employees",
+							"raw": "{{baseUrl}}/admin/employee",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"employees"
+								"employee"
 							]
 						}
 					},
@@ -833,7 +839,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 6').to.eql(6);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -880,13 +887,13 @@
 							"raw": "{\r\n  \"fullName\": \"Bogdan Hmelnitskii\",\r\n  \"nickName\": \"@kazak\",\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/employees",
+							"raw": "{{baseUrl}}/admin/employee",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"employees"
+								"employee"
 							]
 						}
 					},
@@ -912,7 +919,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 7').to.eql(7);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -959,13 +967,13 @@
 							"raw": "{\r\n  \"fullName\": \"Recsar Evilskii\",\r\n  \"nickName\": \"@klyk\",\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/employees",
+							"raw": "{{baseUrl}}/admin/employee",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"employees"
+								"employee"
 							]
 						}
 					},
@@ -986,7 +994,8 @@
 									"    pm.response.to.be.json;",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1029,13 +1038,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects/1?employeeId=5",
+							"raw": "{{baseUrl}}/admin/project/1?employeeId=5",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects",
+								"project",
 								"1"
 							],
 							"query": [
@@ -1063,7 +1072,8 @@
 									"    pm.response.to.be.json;\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1106,13 +1116,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects/1?employeeId=6",
+							"raw": "{{baseUrl}}/admin/project/1?employeeId=6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects",
+								"project",
 								"1"
 							],
 							"query": [
@@ -1140,7 +1150,8 @@
 									"    pm.response.to.be.json;\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1183,13 +1194,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects/2?employeeId=7",
+							"raw": "{{baseUrl}}/admin/project/2?employeeId=7",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects",
+								"project",
 								"2"
 							],
 							"query": [
@@ -1287,7 +1298,8 @@
 									"    pm.response.to.be.json;\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1330,13 +1342,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects/1",
+							"raw": "{{baseUrl}}/admin/project/1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects",
+								"project",
 								"1"
 							]
 						}
@@ -1358,7 +1370,8 @@
 									"    pm.response.to.be.json;\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1401,13 +1414,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects/2",
+							"raw": "{{baseUrl}}/admin/project/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects",
+								"project",
 								"2"
 							]
 						}
@@ -1434,7 +1447,8 @@
 									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1451,13 +1465,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/projects/1",
+							"raw": "{{baseUrl}}/admin/project/1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"projects",
+								"project",
 								"1"
 							]
 						}
@@ -1479,7 +1493,8 @@
 									"    pm.response.to.be.json;\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
