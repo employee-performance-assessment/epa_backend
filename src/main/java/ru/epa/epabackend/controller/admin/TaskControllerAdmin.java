@@ -67,8 +67,8 @@ public class TaskControllerAdmin {
     )
     @PostMapping()
     public TaskFullResponseDto createByAdmin(@Validated(Create.class) @Parameter(required = true)
-                                             @RequestBody TaskRequestDto taskInDto) {
-        return taskService.create(taskInDto);
+                                             @RequestBody TaskRequestDto taskRequestDto) {
+        return taskService.create(taskRequestDto);
     }
 
     /**

@@ -70,7 +70,6 @@ public class TaskServiceImpl implements TaskService {
         checkProjectContainsExecutor(project, executor);
         Task task = taskRepository.save(taskMapper.mapToEntity(taskCreateUpdateRequestDto, project, executor));
         return taskMapper.mapToFullDto(task);
-
     }
 
     /**

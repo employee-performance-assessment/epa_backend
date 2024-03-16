@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.employee.*;
 import ru.epa.epabackend.service.AuthenticationService;
 import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.util.ValidationGroups.Create;
 
 /**
  *
@@ -38,7 +40,7 @@ public class PublicController {
             summary = "Саморегистрация администратора"
     )
     @PostMapping("/register")
-    public EmployeeFullResponseDto register(@RequestBody EmployeeShortRequestDto employeeShortRequestDto) {
+    public EmployeeFullResponseDto register(@Validated(Create.class) @RequestBody EmployeeShortRequestDto employeeShortRequestDto) {
         return employeeService.createSelfRegister(employeeShortRequestDto);
     }
 }

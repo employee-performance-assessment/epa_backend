@@ -19,20 +19,24 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class EmployeeRequestDto {
 
     @NotBlank
-    @Size(min = 8, max = 512, groups = {Create.class, Update.class})
+    @Pattern(regexp = "^[а-яА-ЯЁё\\s\\-]+$")
+    @Size(min = 1, max = 255, groups = {Create.class, Update.class})
     private String fullName;
 
-    @Size(min = 2, max = 50, groups = {Create.class, Update.class})
+    @Size(min = 5, max = 32, groups = {Create.class, Update.class})
+    @Pattern(regexp = "^@{1}[a-zA-Z0-9\\_]+$")
     private String nickName;
 
     private String city;
 
     @NotBlank(groups = {Create.class})
     @Email(groups = {Create.class, Update.class})
-    @Size(max = 512, groups = {Create.class, Update.class})
+    @Size(min = 5, max = 50, groups = {Create.class, Update.class})
     private String email;
 
     @NotEmpty(groups = {Create.class})
+    @Pattern(regexp = "^[a-zA-Z0-9\\.\\,\\:\\;\\?\\!\\*\\+\\%\\-\\<\\>\\@\\[\\]\\{\\}\\/\\\\\\_\\$\\#]+$",
+            groups = {Create.class, Update.class})
     @Size(min = 8, max = 14, groups = {Create.class, Update.class})
     private String password;
 
@@ -42,7 +46,8 @@ public class EmployeeRequestDto {
 
     private Role role;
 
-    @Size(min = 2, max = 255, groups = {Create.class, Update.class})
+    @Size(min = 1, max = 255, groups = {Create.class, Update.class})
+    @Pattern(regexp = "^[а-яА-ЯЁёa-zA-Z\\s\\-]+$")
     private String position;
 
     @Size(min = 2, max = 255, groups = {Create.class, Update.class})
