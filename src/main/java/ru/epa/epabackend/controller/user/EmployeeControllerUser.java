@@ -28,7 +28,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @SecurityRequirement(name = "JWT")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user/employees")
+@RequestMapping("/user/employee")
 public class EmployeeControllerUser {
 
     private final EmployeeService employeeService;

@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS employees (
   nick_name  VARCHAR(32),
   city       VARCHAR(255),
   email      VARCHAR(50) NOT NULL,
-  password   VARCHAR(14) NOT NULL,
+  password   VARCHAR NOT NULL,
   birthday   DATE,
   role       VARCHAR(100),
   position   VARCHAR(255),
