@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import ru.epa.epabackend.util.ValidationGroups;
 
+/**
+ * Класс EmployeeShortRequestDto для передачи тела запроса на сервер с сокращенными данными для саморегистрации админа
+ *
+ * @author Валентина Вахламова
+ */
 @Builder
 @Data
 @AllArgsConstructor

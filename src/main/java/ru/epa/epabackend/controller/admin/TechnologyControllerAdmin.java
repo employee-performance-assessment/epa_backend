@@ -8,12 +8,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
 import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
+import ru.epa.epabackend.mapper.TechnologyMapper;
+import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
 
 /**
- * Класс TechnologyController содержит ендпоинты для технологии.
+ * Класс TechnologyController содержит эндпойнты для администратора, относящиеся к технологиям.
  *
  * @author Артем Масалкин
  */
@@ -26,20 +28,21 @@ import java.util.List;
 @Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
 public class TechnologyControllerAdmin {
     private final TechnologyService technologyService;
+    private final TechnologyMapper technologyMapper;
 
     /**
-     * Эндпоинт создания технологии.
+     * Эндпойнт создания технологии.
      */
     @Operation(
             summary = "Создание новой технологии"
     )
     @PostMapping
     public TechnologyResponseDto createTechnology(@RequestBody TechnologyRequestDto technologyDto) {
-        return technologyService.create(technologyDto);
+        return technologyMapper.mapToDto(technologyService.create(technologyDto));
     }
 
     /**
-     * Эндпоинт обновления технологии.
+     * Эндпойнт обновления технологии.
      */
     @Operation(
             summary = "Обновление технологии",
@@ -49,22 +52,23 @@ public class TechnologyControllerAdmin {
     public TechnologyResponseDto updateTechnology(
             @RequestBody TechnologyRequestDto technologyDto,
             @PathVariable("technologyId") Long technologyId) {
-        return technologyService.update(technologyDto, technologyId);
+        return technologyMapper.mapToDto(technologyService.update(technologyDto, technologyId));
     }
 
     /**
-     * Эндпоинт выведения списка всех технологий.
+     * Эндпойнт выведения списка всех технологий.
      */
     @Operation(
             summary = "Возвращает список всех технологий"
     )
     @GetMapping
     public List<TechnologyResponseDto> getAllTechnologies() {
-        return technologyService.findAll();
+        List<Technology> technologies = technologyService.findAll();
+        return technologyMapper.mapList(technologies);
     }
 
     /**
-     * Эндпоинт удаления технологии.
+     * Эндпойнт удаления технологии.
      */
     @Operation(
             summary = "Удаляет технологию",

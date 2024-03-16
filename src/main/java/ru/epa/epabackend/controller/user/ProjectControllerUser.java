@@ -8,13 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
+import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 
 import java.security.Principal;
 import java.util.List;
 
 /**
- * Класс ProjectControllerUser содержит ендпоинты, относящиеся к проектам пользователя
+ * Класс ProjectControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
@@ -25,10 +27,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/user/projects")
 public class ProjectControllerUser {
+
     private final ProjectService projectService;
+    private final ProjectMapper projectMapper;
 
     /**
-     * Эндпоинт получения короткой информации о проекте
+     * Эндпойнт получения короткой информации о проекте
      */
     @Operation(
             summary = "Получение короткой информации о проекте",
@@ -38,11 +42,11 @@ public class ProjectControllerUser {
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public ProjectShortResponseDto findProject(@PathVariable Long projectId, Principal principal) {
-        return projectService.findDtoById(projectId, principal.getName());
+        return projectMapper.mapToShortDto(projectService.findDtoById(projectId, principal.getName()));
     }
 
     /**
-     * Эндпоинт получения списка проектов пользователя с короткой информацией о проектах
+     * Эндпойнт получения списка проектов пользователя с короткой информацией о проектах
      */
     @Operation(
             summary = "Получение списка проектов пользователя с короткой информацией о проектах",
@@ -52,6 +56,7 @@ public class ProjectControllerUser {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProjectShortResponseDto> findByUserEmail(Principal principal) {
-        return projectService.findAllByUserEmail(principal.getName());
+        List<Project> allByUserEmail = projectService.findAllByUserEmail(principal.getName());
+        return projectMapper.mapAsList(allByUserEmail);
     }
 }

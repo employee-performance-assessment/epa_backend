@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.service.TaskService;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TaskAdminController содержит ендпоинты задач для администратора.
+ * Класс TaskControllerAdmin содержит эндпойнты для администратора, относящиеся к задачам.
  *
  * @author Владислав Осипов
  */
@@ -31,6 +32,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class TaskControllerAdmin {
 
     private final TaskService taskService;
+    private final TaskMapper taskMapper;
 
     /**
      * Эндпойнт поиска всех задач администратором.
@@ -42,7 +44,7 @@ public class TaskControllerAdmin {
     )
     @GetMapping
     public List<TaskShortResponseDto> findAllByAdmin() {
-        return taskService.findAll();
+        return taskMapper.mapList(taskService.findAll());
     }
 
     /**
@@ -55,7 +57,7 @@ public class TaskControllerAdmin {
     )
     @GetMapping("/{taskId}")
     public TaskFullResponseDto findByIdByAdmin(@Parameter(required = true) @PathVariable Long taskId) {
-        return taskService.findDtoById(taskId);
+        return taskMapper.mapToFullDto(taskService.findDtoById(taskId));
     }
 
     /**
@@ -68,7 +70,7 @@ public class TaskControllerAdmin {
     @PostMapping()
     public TaskFullResponseDto createByAdmin(@Validated(Create.class) @Parameter(required = true)
                                              @RequestBody TaskRequestDto taskRequestDto) {
-        return taskService.create(taskRequestDto);
+        return taskMapper.mapToFullDto(taskService.create(taskRequestDto));
     }
 
     /**
@@ -82,7 +84,7 @@ public class TaskControllerAdmin {
     public TaskFullResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
                                              @Validated(Update.class) @Parameter(required = true)
                                              @RequestBody TaskRequestDto taskInDto) {
-        return taskService.update(taskId, taskInDto);
+        return taskMapper.mapToFullDto(taskService.update(taskId, taskInDto));
     }
 
     /**

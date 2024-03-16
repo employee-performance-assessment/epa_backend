@@ -1,4 +1,4 @@
-name: CI/CD
+name: Build and push to Docker
 
 on:
   pull_request:

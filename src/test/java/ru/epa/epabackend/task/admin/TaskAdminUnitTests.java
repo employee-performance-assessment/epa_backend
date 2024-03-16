@@ -111,8 +111,7 @@ class TaskAdminUnitTests {
     @Test
     void findAllTasks_shouldCallRepository() {
         when(taskRepository.findAll()).thenReturn(List.of(task));
-        when((taskMapper.mapToShortDto(task))).thenReturn(taskShortDto);
-        List<TaskShortResponseDto> tasksResult = taskService.findAll();
+        List<Task> tasksResult = taskService.findAll();
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
@@ -123,13 +122,12 @@ class TaskAdminUnitTests {
     @Test
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
-        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.findDtoById(task.getId());
+        Task task = taskService.findDtoById(this.task.getId());
 
         int expectedId = 1;
-        assertNotNull(taskOutDtoResult);
-        assertEquals(expectedId, taskOutDtoResult.getId());
+        assertNotNull(task);
+        assertEquals(expectedId, task.getId());
         verify(taskRepository, times(1)).findById(admin.getId());
     }
 
@@ -139,14 +137,13 @@ class TaskAdminUnitTests {
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskMapper.mapToEntity(taskInDto, project, employee)).thenReturn(task);
-        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.create(taskInDto);
+        Task task = taskService.create(taskInDto);
 
         int expectedId = 1;
-        assertNotNull(taskOutDtoResult);
-        assertEquals(expectedId, taskOutDtoResult.getId());
-        verify(taskRepository, times(1)).save(task);
+        assertNotNull(task);
+        assertEquals(expectedId, task.getId());
+        verify(taskRepository, times(1)).save(this.task);
     }
 
     @Test
@@ -154,14 +151,13 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+        Task task = taskService.update(ID_1, taskInDto);
 
         int expectedId = 1;
-        assertNotNull(taskOutDtoResult);
-        assertEquals(expectedId, taskOutDtoResult.getId());
-        verify(taskRepository, times(1)).save(task);
+        assertNotNull(task);
+        assertEquals(expectedId, task.getId());
+        verify(taskRepository, times(1)).save(this.task);
     }
 
     @Test
@@ -170,14 +166,13 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.mapToFullDto(task)).thenReturn(taskOutDto);
 
-        TaskFullResponseDto taskOutDtoResult = taskService.update(ID_1, taskInDto);
+        Task task = taskService.update(ID_1, taskInDto);
 
         int expectedId = 1;
-        assertNotNull(taskOutDtoResult);
-        assertEquals(expectedId, taskOutDtoResult.getId());
-        verify(taskRepository, times(1)).save(task);
+        assertNotNull(task);
+        assertEquals(expectedId, task.getId());
+        verify(taskRepository, times(1)).save(this.task);
     }
 
     @Test

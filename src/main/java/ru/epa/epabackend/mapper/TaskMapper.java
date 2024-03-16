@@ -9,6 +9,9 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Интерфейс TaskMapper содержит преобразование сущности.
  *
@@ -39,4 +42,8 @@ public interface TaskMapper {
      * Преобразование из сущности в DTO, краткое.
      */
     TaskShortResponseDto mapToShortDto(Task task);
+
+    default List<TaskShortResponseDto> mapList(List<Task> tasks) {
+        return tasks.stream().map(this::mapToShortDto).collect(Collectors.toList());
+    }
 }

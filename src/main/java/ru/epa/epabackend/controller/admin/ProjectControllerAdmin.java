@@ -9,10 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
+import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
@@ -20,7 +24,7 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Класс ProjectControllerAdmin содержит ендпоинты, относящиеся к проектам администратора
+ * Класс ProjectControllerAdmin содержит эндпойнты для администратора, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
@@ -29,12 +33,14 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/projects")
+@RequestMapping("/admin/project")
 public class ProjectControllerAdmin {
     private final ProjectService projectService;
+    private final ProjectMapper projectMapper;
+    private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпоинт добавления нового проекта
+     * Эндпойнт добавления нового проекта
      */
     @Operation(
             summary = "Добавление нового проекта",
@@ -43,11 +49,11 @@ public class ProjectControllerAdmin {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProjectShortResponseDto save(@Valid @RequestBody ProjectCreateRequestDto newProjectRto, Principal principal) {
-        return projectService.create(newProjectRto, principal.getName());
+        return projectMapper.mapToShortDto(projectService.create(newProjectRto, principal.getName()));
     }
 
     /**
-     * Эндпоинт добавления сотрудника в проект
+     * Эндпойнт добавления сотрудника в проект
      */
     @Operation(
             summary = "Добавление сотрудника в проект",
@@ -62,11 +68,12 @@ public class ProjectControllerAdmin {
     public ProjectSaveWithEmployeeResponseDto saveWithEmployee(@PathVariable Long projectId,
                                                                @RequestParam Long employeeId,
                                                                Principal principal) {
-        return projectService.saveWithEmployee(projectId, employeeId, principal.getName());
+        Project project = projectService.saveWithEmployee(projectId, employeeId, principal.getName());
+        return projectMapper.mapToProjectEmployeesDto(project, employeeMapper.mapList(project.getEmployees()));
     }
 
     /**
-     * Эндпоинт получения списка сотрудников, участвующих в проекте
+     * Эндпойнт получения списка сотрудников, участвующих в проекте
      */
     @Operation(
             summary = "Получение списка сотрудников, участвующих в проекте",
@@ -77,11 +84,12 @@ public class ProjectControllerAdmin {
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeShortResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
-        return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
+        List<Employee> allByProjectIdAndRole = projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
+        return employeeMapper.mapList(allByProjectIdAndRole);
     }
 
     /**
-     * Эндпоинт изменения информации о проекте
+     * Эндпойнт изменения информации о проекте
      */
     @Operation(
             summary = "Изменение информации о проекте",
@@ -95,11 +103,11 @@ public class ProjectControllerAdmin {
     @ResponseStatus(HttpStatus.OK)
     public ProjectShortResponseDto update(@PathVariable Long projectId, @Valid @RequestBody ProjectUpdateRequestDto updateProjectRto,
                                           Principal principal) {
-        return projectService.update(projectId, updateProjectRto, principal.getName());
+        return projectMapper.mapToShortDto(projectService.update(projectId, updateProjectRto, principal.getName()));
     }
 
     /**
-     * Эндпоинт удаления проекта
+     * Эндпойнт удаления проекта
      */
     @Operation(
             summary = "Удаление проекта",
@@ -115,7 +123,7 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт удаления сотрудника из проекта
+     * Эндпойнт удаления сотрудника из проекта
      */
     @Operation(
             summary = "Удаление сотрудника из проекта",
