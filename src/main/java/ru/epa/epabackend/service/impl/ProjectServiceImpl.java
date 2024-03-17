@@ -86,10 +86,7 @@ public class ProjectServiceImpl implements ProjectService {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        if (projectUpdateRequestDto.getName() != null)
-            project.setName(projectUpdateRequestDto.getName());
-        if (projectUpdateRequestDto.getStatus() != null)
-            project.setStatus(projectUpdateRequestDto.getStatus());
+        projectMapper.updateFields(projectUpdateRequestDto, project);
         return projectRepository.save(project);
     }
 

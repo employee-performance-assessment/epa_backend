@@ -14,7 +14,6 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.service.EmployeeService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
@@ -68,17 +67,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee update(Long employeeId, EmployeeRequestDto employeeRequestDto) {
         log.info("Обновление существующего сотрудника {}", employeeRequestDto.getFullName());
         Employee oldEmployee = findById(employeeId);
+        String password = employeeRequestDto.getPassword();
 
-        updateFields(oldEmployee, employeeRequestDto);
+        if (password != null && !password.isBlank()) {
+            oldEmployee.setPassword(passwordEncoder.encode(password));
+        }
 
-        String position = employeeRequestDto.getPosition();
-        if (position != null && !position.isBlank()) {
-            oldEmployee.setPosition(position);
-        }
-        String department = employeeRequestDto.getDepartment();
-        if (department != null && !department.isBlank()) {
-            oldEmployee.setDepartment(department);
-        }
+        employeeMapper.updateFields(employeeRequestDto, oldEmployee);
         return employeeRepository.save(oldEmployee);
     }
 
@@ -140,32 +135,5 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findById(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
-    }
-
-    private void updateFields(Employee oldEmployee, EmployeeRequestDto employeeRequestDto) {
-        String fullName = employeeRequestDto.getFullName();
-        if (fullName != null && !fullName.isBlank()) {
-            oldEmployee.setFullName(fullName);
-        }
-        String nickName = employeeRequestDto.getNickName();
-        if (nickName != null && !nickName.isBlank()) {
-            oldEmployee.setNickName(nickName);
-        }
-        String city = employeeRequestDto.getCity();
-        if (city != null && !city.isBlank()) {
-            oldEmployee.setCity(city);
-        }
-        String email = employeeRequestDto.getEmail();
-        if (email != null && !email.isBlank()) {
-            oldEmployee.setEmail(email);
-        }
-        String password = employeeRequestDto.getPassword();
-        if (password != null && !password.isBlank()) {
-            oldEmployee.setPassword(passwordEncoder.encode(password));
-        }
-        LocalDate birthday = employeeRequestDto.getBirthday();
-        if (birthday != null) {
-            oldEmployee.setBirthday(birthday);
-        }
     }
 }
