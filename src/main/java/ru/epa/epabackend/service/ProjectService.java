@@ -18,7 +18,7 @@ public interface ProjectService {
 
     Project saveWithEmployee(Long projectId, Long employeeId, String email);
 
-    List<Project> findAllByUserEmail(String email);
+    List<Project> findAllByEmployeeCreatorEmail(String email);
 
     List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email);
 

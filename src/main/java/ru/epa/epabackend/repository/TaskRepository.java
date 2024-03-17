@@ -17,6 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "from Task t " +
             "where (nullif((:status), null) is null or t.status = :status)" +
             "and t.executor.id = :employeeId ")
-
     List<Task> findAllByExecutorIdFilters(Long employeeId, TaskStatus status);
+
+    List<Task> findAllByOwnerEmail(String email);
 }

@@ -37,8 +37,8 @@ public class TechnologyControllerAdmin {
             summary = "Создание новой технологии"
     )
     @PostMapping
-    public TechnologyResponseDto createTechnology(@RequestBody TechnologyRequestDto technologyDto) {
-        return technologyMapper.mapToDto(technologyService.create(technologyDto));
+    public TechnologyResponseDto createTechnology(@RequestBody TechnologyRequestDto technologyRequestDto) {
+        return technologyMapper.mapToDto(technologyService.create(technologyRequestDto));
     }
 
     /**
@@ -50,9 +50,9 @@ public class TechnologyControllerAdmin {
     )
     @PatchMapping("/{technologyId}")
     public TechnologyResponseDto updateTechnology(
-            @RequestBody TechnologyRequestDto technologyDto,
+            @RequestBody TechnologyRequestDto technologyRequestDto,
             @PathVariable("technologyId") Long technologyId) {
-        return technologyMapper.mapToDto(technologyService.update(technologyDto, technologyId));
+        return technologyMapper.mapToDto(technologyService.update(technologyRequestDto, technologyId));
     }
 
     /**

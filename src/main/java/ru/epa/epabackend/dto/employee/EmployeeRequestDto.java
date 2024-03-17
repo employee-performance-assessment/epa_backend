@@ -5,7 +5,6 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
 
@@ -49,8 +48,6 @@ public class EmployeeRequestDto {
     @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate birthday;
 
-    private Role role;
-
     @Size(min = 1, max = 255, groups = {Create.class, Update.class})
     @Pattern(regexp = "^[а-яА-ЯЁёa-zA-Z\\s\\-]+$")
     private String position;
@@ -67,7 +64,6 @@ public class EmployeeRequestDto {
                 ", email='" + email + '\'' +
                 ", password={masked}" +
                 ", birthday=" + birthday +
-                ", role=" + role +
                 ", position=" + position +
                 ", department=" + department +
                 '}';

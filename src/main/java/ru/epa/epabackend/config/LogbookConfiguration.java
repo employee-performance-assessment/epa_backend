@@ -17,8 +17,8 @@ public class LogbookConfiguration {
     @Bean
     public BodyFilter bodyFilter() {
         Set<String> properties = Set.of(
-                        "password",
-                        "token");
+                "password",
+                "token");
 
         return merge(
                 defaultValue(),
@@ -28,7 +28,7 @@ public class LogbookConfiguration {
     @Bean
     public HeaderFilter headerFilter() {
         Set<String> headers = Set.of(
-                        "Authorization");
+                "Authorization");
 
         return HeaderFilters.replaceHeaders(headers, "{masked}");
     }

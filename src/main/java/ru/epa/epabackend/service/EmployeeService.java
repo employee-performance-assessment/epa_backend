@@ -8,7 +8,7 @@ import ru.epa.epabackend.model.Employee;
 import java.util.List;
 
 public interface EmployeeService {
-    Employee create(EmployeeRequestDto employeeRequestDto);
+    Employee create(EmployeeRequestDto employeeRequestDto, String email);
 
     Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto);
 

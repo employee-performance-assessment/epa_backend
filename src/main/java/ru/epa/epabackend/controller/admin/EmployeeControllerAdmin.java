@@ -14,6 +14,8 @@ import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.EmployeeService;
 
+import java.security.Principal;
+
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 
 /**
@@ -43,8 +45,8 @@ public class EmployeeControllerAdmin {
 
     public EmployeeFullResponseDto addEmployee(
             @Validated(Create.class) @RequestBody @Parameter(required = true)
-            EmployeeRequestDto employeeRtoRequest) {
-        return employeeMapper.mapToFullDto(employeeService.create(employeeRtoRequest));
+            EmployeeRequestDto employeeRequestDto, Principal principal) {
+        return employeeMapper.mapToFullDto(employeeService.create(employeeRequestDto, principal.getName()));
     }
 
     /**

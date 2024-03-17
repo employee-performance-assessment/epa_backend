@@ -13,7 +13,6 @@ import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.service.EmployeeService;
-import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,11 +39,13 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Создание нового сотрудника
      */
     @Override
-    public Employee create(EmployeeRequestDto employeeRequestDto) {
+    public Employee create(EmployeeRequestDto employeeRequestDto, String email) {
         log.info("Создание нового сотрудника {}", employeeRequestDto.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeRequestDto);
         employeeToSave.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
+        Employee admin = findByEmail(email);
+        employeeToSave.setCreator(admin);
         return employeeRepository.save(employeeToSave);
     }
 
@@ -70,10 +71,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         updateFields(oldEmployee, employeeRequestDto);
 
-        Role role = employeeRequestDto.getRole();
-        if (role != null) {
-            oldEmployee.setRole(role);
-        }
         String position = employeeRequestDto.getPosition();
         if (position != null && !position.isBlank()) {
             oldEmployee.setPosition(position);

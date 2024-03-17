@@ -3,9 +3,9 @@ package ru.epa.epabackend.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 

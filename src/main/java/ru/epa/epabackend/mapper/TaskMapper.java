@@ -24,14 +24,15 @@ public interface TaskMapper {
      * Преобразование из DTO в сущность.
      */
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", source = "taskInDto.status")
+    @Mapping(target = "status", source = "taskRequestDto.status")
     @Mapping(target = "project", source = "project")
     @Mapping(target = "executor", source = "executor")
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
     @Mapping(target = "points", ignore = true)
-    @Mapping(target = "name", source = "taskInDto.name")
-    Task mapToEntity(TaskRequestDto taskInDto, Project project, Employee executor);
+    @Mapping(target = "name", source = "taskRequestDto.name")
+    @Mapping(target = "owner", source = "owner")
+    Task mapToEntity(TaskRequestDto taskRequestDto, Project project, Employee executor, Employee owner);
 
     /**
      * Преобразование из сущности в DTO, при создании.

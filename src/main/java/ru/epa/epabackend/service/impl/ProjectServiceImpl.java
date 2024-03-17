@@ -65,8 +65,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findAllByUserEmail(String email) {
-        return projectRepository.findByEmployees(employeeService.findByEmail(email));
+    public List<Project> findAllByEmployeeCreatorEmail(String email) {
+        Employee employee = employeeService.findByEmail(email);
+        if (employee.getRole() == Role.ROLE_ADMIN)
+            return projectRepository.findByEmployees(employee);
+        else
+            return projectRepository.findByEmployees(employee.getCreator());
     }
 
     @Override

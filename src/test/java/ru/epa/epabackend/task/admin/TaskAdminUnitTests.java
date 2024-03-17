@@ -110,20 +110,20 @@ class TaskAdminUnitTests {
 
     @Test
     void findAllTasks_shouldCallRepository() {
-        when(taskRepository.findAll()).thenReturn(List.of(task));
-        List<Task> tasksResult = taskService.findAll();
+        when(taskRepository.findAllByOwnerEmail(email)).thenReturn(List.of(task));
+        List<Task> tasksResult = taskService.findAll(email);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
         assertEquals(expectedSize, tasksResult.size());
-        verify(taskRepository, times(1)).findAll();
+        verify(taskRepository, times(1)).findAllByOwnerEmail(email);
     }
 
     @Test
     void findTaskById_shouldCallRepository() {
         when(taskRepository.findById(task.getId())).thenReturn(Optional.ofNullable(task));
 
-        Task task = taskService.findDtoById(this.task.getId());
+        Task task = taskService.findDtoById(this.task.getId(), email);
 
         int expectedId = 1;
         assertNotNull(task);
@@ -135,10 +135,11 @@ class TaskAdminUnitTests {
     void createTask_shouldCallRepository() {
         when(projectService.findById(project.getId())).thenReturn(project);
         when(employeeService.findById(employee.getId())).thenReturn(employee);
+        when(employeeService.findByEmail(email)).thenReturn(admin);
         when(taskRepository.save(task)).thenReturn(task);
-        when(taskMapper.mapToEntity(taskInDto, project, employee)).thenReturn(task);
+        when(taskMapper.mapToEntity(taskInDto, project, employee, admin)).thenReturn(task);
 
-        Task task = taskService.create(taskInDto);
+        Task task = taskService.create(taskInDto, email);
 
         int expectedId = 1;
         assertNotNull(task);
@@ -152,7 +153,7 @@ class TaskAdminUnitTests {
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
 
-        Task task = taskService.update(ID_1, taskInDto);
+        Task task = taskService.update(ID_1, taskInDto, email);
 
         int expectedId = 1;
         assertNotNull(task);
@@ -167,7 +168,7 @@ class TaskAdminUnitTests {
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
 
-        Task task = taskService.update(ID_1, taskInDto);
+        Task task = taskService.update(ID_1, taskInDto, email);
 
         int expectedId = 1;
         assertNotNull(task);
@@ -179,7 +180,7 @@ class TaskAdminUnitTests {
     void deleteTask_shouldCallRepository() {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
 
-        taskService.delete(ID_1);
+        taskService.delete(ID_1, email);
 
         verify(taskRepository, times(1)).delete(task);
     }
@@ -187,6 +188,6 @@ class TaskAdminUnitTests {
     @Test
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> taskService.findDtoById(ID_1));
+        assertThrows(EntityNotFoundException.class, () -> taskService.findDtoById(ID_1, email));
     }
 }

@@ -13,6 +13,7 @@ import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.service.TaskService;
 
+import java.security.Principal;
 import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
@@ -43,8 +44,8 @@ public class TaskControllerAdmin {
                     "В случае, если не найдено ни одной задачи, возвращает пустой список."
     )
     @GetMapping
-    public List<TaskShortResponseDto> findAllByAdmin() {
-        return taskMapper.mapList(taskService.findAll());
+    public List<TaskShortResponseDto> findAllByAdmin(Principal principal) {
+        return taskMapper.mapList(taskService.findAll(principal.getName()));
     }
 
     /**
@@ -56,8 +57,9 @@ public class TaskControllerAdmin {
                     "В случае, если задачи не найдено, возвращает ошибкую 404"
     )
     @GetMapping("/{taskId}")
-    public TaskFullResponseDto findByIdByAdmin(@Parameter(required = true) @PathVariable Long taskId) {
-        return taskMapper.mapToFullDto(taskService.findDtoById(taskId));
+    public TaskFullResponseDto findByIdByAdmin(@Parameter(required = true) @PathVariable Long taskId,
+                                               Principal principal) {
+        return taskMapper.mapToFullDto(taskService.findDtoById(taskId, principal.getName()));
     }
 
     /**
@@ -69,8 +71,8 @@ public class TaskControllerAdmin {
     )
     @PostMapping()
     public TaskFullResponseDto createByAdmin(@Validated(Create.class) @Parameter(required = true)
-                                             @RequestBody TaskRequestDto taskRequestDto) {
-        return taskMapper.mapToFullDto(taskService.create(taskRequestDto));
+                                             @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
+        return taskMapper.mapToFullDto(taskService.create(taskRequestDto, principal.getName()));
     }
 
     /**
@@ -83,8 +85,8 @@ public class TaskControllerAdmin {
     @PatchMapping("/{taskId}")
     public TaskFullResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
                                              @Validated(Update.class) @Parameter(required = true)
-                                             @RequestBody TaskRequestDto taskInDto) {
-        return taskMapper.mapToFullDto(taskService.update(taskId, taskInDto));
+                                             @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
+        return taskMapper.mapToFullDto(taskService.update(taskId, taskRequestDto, principal.getName()));
     }
 
     /**
@@ -95,7 +97,7 @@ public class TaskControllerAdmin {
             description = "Удаляет задачу, если она существует в базе данных."
     )
     @DeleteMapping("/{taskId}")
-    public void deleteByAdmin(@Parameter(required = true) @PathVariable Long taskId) {
-        taskService.delete(taskId);
+    public void deleteByAdmin(@Parameter(required = true) @PathVariable Long taskId, Principal principal) {
+        taskService.delete(taskId, principal.getName());
     }
 }
