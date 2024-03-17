@@ -1,7 +1,6 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
@@ -34,4 +33,11 @@ public interface EmployeeMapper {
         return employees.stream().map(this::mapToShortDto).collect(Collectors.toList());
     }
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "technologies", ignore = true)
+    @Mapping(target = "projects", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    Employee updateFields(EmployeeRequestDto employeeDtoRequest,  @MappingTarget Employee oldEmployee);
 }
