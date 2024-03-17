@@ -44,8 +44,8 @@ public class EmployeeControllerUser {
 
     public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
                                                   @Validated(Update.class) @Parameter(required = true) @RequestBody
-                                                  EmployeeRequestDto employeeDtoRequest) {
-        return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeDtoRequest));
+                                                  EmployeeRequestDto employeeRequestDto) {
+        return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeRequestDto));
     }
 
     /**
@@ -53,7 +53,8 @@ public class EmployeeControllerUser {
      */
     @Operation(
             summary = "Получение всех сотрудников",
-            description = "Возвращает список сотрудников в сокращенном виде\n\nВ случае, если не найдено ни одного сотрудника, возвращает пустой список."
+            description = "Возвращает список сотрудников в сокращенном виде\n\n" +
+                    "В случае, если не найдено ни одного сотрудника, возвращает пустой список."
     )
     @GetMapping
     public List<EmployeeShortResponseDto> findAll() {
@@ -62,11 +63,12 @@ public class EmployeeControllerUser {
     }
 
     /**
-     * Эндпойнт получения полных данных о сотрднике по id
+     * Эндпойнт получения полных данных о сотруднике по id
      */
     @Operation(
             summary = "Получение информации о сотруднике по id",
-            description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\nВ случае, если сотрудника не найдено , возвращает ошибку 404"
+            description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.\n\n" +
+                    "В случае, если сотрудника не найдено , возвращает ошибку 404"
     )
     @GetMapping("/{employeeId}")
     public EmployeeFullResponseDto findByIdDto(@PathVariable @Parameter(required = true) Long employeeId) {

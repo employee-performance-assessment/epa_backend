@@ -65,8 +65,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findAllByUserEmail(String email) {
-        return projectRepository.findByEmployees(employeeService.findByEmail(email));
+    public List<Project> findAllByEmployeeCreatorEmail(String email) {
+        Employee employee = employeeService.findByEmail(email);
+        if (employee.getRole() == Role.ROLE_ADMIN)
+            return projectRepository.findByEmployees(employee);
+        else
+            return projectRepository.findByEmployees(employee.getCreator());
     }
 
     @Override
@@ -82,7 +86,10 @@ public class ProjectServiceImpl implements ProjectService {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        projectMapper.updateFields(projectUpdateRequestDto, project);
+        if (projectUpdateRequestDto.getName() != null)
+            project.setName(projectUpdateRequestDto.getName());
+        if (projectUpdateRequestDto.getStatus() != null)
+            project.setStatus(projectUpdateRequestDto.getStatus());
         return projectRepository.save(project);
     }
 

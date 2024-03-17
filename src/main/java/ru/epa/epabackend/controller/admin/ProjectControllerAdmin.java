@@ -48,8 +48,9 @@ public class ProjectControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectShortResponseDto save(@Valid @RequestBody ProjectCreateRequestDto newProjectRto, Principal principal) {
-        return projectMapper.mapToShortDto(projectService.create(newProjectRto, principal.getName()));
+    public ProjectShortResponseDto save(@Valid @RequestBody ProjectCreateRequestDto projectCreateRequestDto,
+                                        Principal principal) {
+        return projectMapper.mapToShortDto(projectService.create(projectCreateRequestDto, principal.getName()));
     }
 
     /**
@@ -57,7 +58,8 @@ public class ProjectControllerAdmin {
      */
     @Operation(
             summary = "Добавление сотрудника в проект",
-            description = "Добавляет сотрудника в проект, если сотрудник и проект существуют.\n" +
+            description = "!!!Не предусмотрено текущим дизайном. " +
+                    "Добавляет сотрудника в проект, если сотрудник и проект существуют.\n" +
                     "При успешном добавлении возвращается код 201 Created.\n " +
                     "В случае отсутствия сотрудника или проекта возвращается ошибка 404 Not Found.\n" +
                     "Когда проект не относится к администратору получаем 409 Conflict.\n" +
@@ -77,14 +79,16 @@ public class ProjectControllerAdmin {
      */
     @Operation(
             summary = "Получение списка сотрудников, участвующих в проекте",
-            description = "При успешном получении списка сотрудников проекта возвращается 200 Ok.\n" +
+            description = "!!!Не предусмотрено текущим дизайном. " +
+                    "При успешном получении списка сотрудников проекта возвращается 200 Ok.\n" +
                     "В случае отсутствия проекта или email'а администратора возвращается 404 Not Found.\n" +
                     "Когда проект не относится к администратору получаем 409 Conflict."
     )
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeShortResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
-        List<Employee> allByProjectIdAndRole = projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName());
+        List<Employee> allByProjectIdAndRole = projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER,
+                principal.getName());
         return employeeMapper.mapList(allByProjectIdAndRole);
     }
 
@@ -101,9 +105,10 @@ public class ProjectControllerAdmin {
     )
     @PatchMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProjectShortResponseDto update(@PathVariable Long projectId, @Valid @RequestBody ProjectUpdateRequestDto updateProjectRto,
+    public ProjectShortResponseDto update(@PathVariable Long projectId,
+                                          @Valid @RequestBody ProjectUpdateRequestDto projectUpdateRequestDto,
                                           Principal principal) {
-        return projectMapper.mapToShortDto(projectService.update(projectId, updateProjectRto, principal.getName()));
+        return projectMapper.mapToShortDto(projectService.update(projectId, projectUpdateRequestDto, principal.getName()));
     }
 
     /**
@@ -127,7 +132,8 @@ public class ProjectControllerAdmin {
      */
     @Operation(
             summary = "Удаление сотрудника из проекта",
-            description = "При успешном удалении - 204 No Content\n" +
+            description = "!!!Не предусмотрено текущим дизайном. " +
+                    "При успешном удалении - 204 No Content\n" +
                     "Если сотрудника или проекта с указанными id не существует возвращается 404 Not Found.\n" +
                     "В случае отсутствия проекта с указанным id или отсутствия email администратора в базе данных " +
                     "вернётся ошибка 404 Not Found.\n" +
