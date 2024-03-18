@@ -42,11 +42,12 @@ create table if not exists tasks
     basic_points   INTEGER                                 NOT NULL,
     points         INTEGER,
     penalty_points INTEGER                                 NOT NULL,
-    owner_id       BIGINT REFERENCES employees (id)            NOT NULL,
+    owner_id       BIGINT                                  NOT NULL,
     CONSTRAINT pk_task PRIMARY KEY (id),
     CONSTRAINT fk_comeve_on_project foreign key (project_id) references projects (id),
     CONSTRAINT fk_comeve_on_executor foreign key (executor_id) references employees (id),
-    CONSTRAINT uq_tasks_for_name UNIQUE (name)
+    CONSTRAINT fk_comeve_on_owner foreign key (owner_id) references employees (id),
+        CONSTRAINT uq_tasks_for_name UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS technologies

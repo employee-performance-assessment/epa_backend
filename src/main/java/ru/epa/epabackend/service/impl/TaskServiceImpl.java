@@ -100,7 +100,7 @@ public class TaskServiceImpl implements TaskService {
         Project project = task.getProject();
         Employee admin = employeeService.findByEmail(email);
         projectService.checkUserAndProject(admin, project);
-        taskRepository.delete(findById(taskId));
+        taskRepository.delete(task);
     }
 
     /**
