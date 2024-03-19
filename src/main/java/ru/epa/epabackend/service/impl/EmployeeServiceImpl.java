@@ -38,11 +38,13 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Создание нового сотрудника
      */
     @Override
-    public Employee create(EmployeeRequestDto employeeRequestDto) {
+    public Employee create(EmployeeRequestDto employeeRequestDto, String email) {
         log.info("Создание нового сотрудника {}", employeeRequestDto.getFullName());
         Employee employeeToSave = employeeMapper.mapToEntity(employeeRequestDto);
         employeeToSave.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
+        Employee admin = findByEmail(email);
+        employeeToSave.setCreator(admin);
         return employeeRepository.save(employeeToSave);
     }
 

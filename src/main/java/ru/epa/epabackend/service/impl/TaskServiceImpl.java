@@ -43,8 +43,8 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAll() {
-        return taskRepository.findAll();
+    public List<Task> findAll(String email) {
+        return taskRepository.findAllByOwnerEmail(email);
     }
 
     /**
@@ -52,34 +52,40 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Task findDtoById(Long taskId) {
-        return findById(taskId);
+    public Task findDtoById(Long taskId, String email) {
+        Task task = findById(taskId);
+        Project project = task.getProject();
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
+        return task;
     }
 
     /**
      * Создание задачи админом
      */
     @Override
-    public Task create(TaskRequestDto taskRequestDto) {
+    public Task create(TaskRequestDto taskRequestDto, String email) {
         Project project = projectService.findById(taskRequestDto.getProjectId());
         Employee executor = employeeService.findById(taskRequestDto.getExecutorId());
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
         taskRequestDto.setStatus("NEW");
-        checkProjectContainsExecutor(project, executor);
-        return taskRepository.save(taskMapper.mapToEntity(taskRequestDto, project, executor));
+        return taskRepository.save(taskMapper.mapToEntity(taskRequestDto, project, executor, admin));
     }
 
     /**
      * Обновление задачи админом
      */
     @Override
-    public Task update(
-            Long taskId, TaskRequestDto taskCreateUpdateRequestDto) {
+    public Task update(Long taskId, TaskRequestDto taskRequestDto, String email) {
         Task oldTask = findById(taskId);
-        Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
-        Employee executor = checkExecutor(taskCreateUpdateRequestDto, oldTask);
-        taskMapper.updateFields(taskCreateUpdateRequestDto, project, executor, oldTask);
+        Project project = oldTask.getProject();
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
+        Employee executor = checkExecutor(taskRequestDto, oldTask);
+        taskMapper.updateFields(taskRequestDto, project, executor, oldTask);
         if (oldTask.getStatus() == TaskStatus.DONE) {
-            setPointsToEmployeeAfterTaskDone(taskCreateUpdateRequestDto, oldTask);
+            setPointsToEmployeeAfterTaskDone(taskRequestDto, oldTask);
             oldTask.setFinishDate(LocalDate.now());
         }
         return taskRepository.save(oldTask);
@@ -89,8 +95,12 @@ public class TaskServiceImpl implements TaskService {
      * Удаление задачи админом
      */
     @Override
-    public void delete(Long taskId) {
-        taskRepository.delete(findById(taskId));
+    public void delete(Long taskId, String email) {
+        Task task = findById(taskId);
+        Project project = task.getProject();
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
+        taskRepository.delete(task);
     }
 
     /**
@@ -158,13 +168,6 @@ public class TaskServiceImpl implements TaskService {
         Period period = Period.between(LocalDate.now(), dto.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
-    }
-
-    private void checkProjectContainsExecutor(Project project, Employee employee) {
-        if (!project.getEmployees().contains(employee)) {
-            throw new EntityNotFoundException(String.format("Пользователя с id %d нет в проекте с id %d",
-                    employee.getId(), project.getId()));
-        }
     }
 
     private TaskStatus getTaskStatus(String status) {

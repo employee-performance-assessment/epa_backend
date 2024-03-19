@@ -29,27 +29,27 @@ public interface TaskService {
     /**
      * Получение списка всех задач
      */
-    List<Task> findAll();
+    List<Task> findAll(String email);
 
     /**
      * Создание задачи
      */
-    Task create(TaskRequestDto taskDto);
+    Task create(TaskRequestDto taskDto, String email);
 
     /**
      * Найти задачу по ID
      */
-    Task findDtoById(Long taskId);
+    Task findDtoById(Long taskId, String email);
 
     /**
      * Обновление задачи
      */
-    Task update(Long taskId, TaskRequestDto taskDto);
+    Task update(Long taskId, TaskRequestDto taskDto, String email);
 
     /**
      * Удаление задачи
      */
-    void delete(Long taskId);
+    void delete(Long taskId, String email);
 
     /**
      * Получение списка задач проекта с определенным статусом задач

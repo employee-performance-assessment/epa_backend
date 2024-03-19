@@ -46,17 +46,19 @@ public class ProjectControllerUser {
     }
 
     /**
-     * Эндпойнт получения списка проектов пользователя с короткой информацией о проектах
+     * Эндпойнт получения списка проектов администратора с короткой информацией о проектах.
+     * Пользователи закреплены за определенным админом и также могут видеть все его проекты
      */
     @Operation(
-            summary = "Получение списка проектов пользователя с короткой информацией о проектах",
-            description = "При успешном получении списка возвращается 200 Ok.\n" +
+            summary = "Получение списка проектов администратора с короткой информацией о проектах",
+            description = "Пользователи закреплены за определенным админом и также могут видеть все его проекты." +
+                    "При успешном получении списка возвращается 200 Ok.\n" +
                     "В случае отсутствия указанного email в базе данных возвращается 404 Not Found."
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProjectShortResponseDto> findByUserEmail(Principal principal) {
-        List<Project> allByUserEmail = projectService.findAllByUserEmail(principal.getName());
+    public List<ProjectShortResponseDto> findAllByCreator(Principal principal) {
+        List<Project> allByUserEmail = projectService.findAllByCreator(principal.getName());
         return projectMapper.mapAsList(allByUserEmail);
     }
 }
