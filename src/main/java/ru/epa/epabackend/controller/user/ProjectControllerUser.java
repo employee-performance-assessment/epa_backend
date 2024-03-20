@@ -57,8 +57,8 @@ public class ProjectControllerUser {
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProjectShortResponseDto> findAllByEmployeeCreatorEmail(Principal principal) {
-        List<Project> allByUserEmail = projectService.findAllByEmployeeCreatorEmail(principal.getName());
+    public List<ProjectShortResponseDto> findAllByCreator(Principal principal) {
+        List<Project> allByUserEmail = projectService.findAllByCreator(principal.getName());
         return projectMapper.mapAsList(allByUserEmail);
     }
 }

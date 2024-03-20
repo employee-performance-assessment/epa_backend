@@ -43,9 +43,9 @@ public class EmployeeControllerAdmin {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
 
-    public EmployeeFullResponseDto addEmployee(
-            @Validated(Create.class) @RequestBody @Parameter(required = true)
-            EmployeeRequestDto employeeRequestDto, Principal principal) {
+    public EmployeeFullResponseDto addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
+                                               EmployeeRequestDto employeeRequestDto,
+                                               Principal principal) {
         return employeeMapper.mapToFullDto(employeeService.create(employeeRequestDto, principal.getName()));
     }
 

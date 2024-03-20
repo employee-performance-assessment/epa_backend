@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "89197f58-d520-4d24-9a49-e48f0cbd0c0f",
-		"name": "epa_24_03_17",
+		"_postman_id": "a1a2ed9e-8327-48c9-b66d-f3dfe45c49d0",
+		"name": "epa_24_03_20",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29026398"
+		"_exporter_id": "21428156"
 	},
 	"item": [
 		{
@@ -1406,7 +1406,8 @@
 									"});\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1461,7 +1462,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1514,7 +1516,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1570,7 +1573,8 @@
 									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1666,7 +1670,8 @@
 									"});\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1739,7 +1744,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1933,7 +1939,8 @@
 									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");   \r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
