@@ -53,7 +53,7 @@ public class TaskFullResponseDto {
     private LocalDate startDate;
 
     /**
-     * Дата до которой должна выполниться задача..
+     * Дата до которой должна выполниться задача.
      */
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)
     private LocalDate deadLine;

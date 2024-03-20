@@ -9,7 +9,6 @@ import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Интерфейс TaskMapper содержит преобразование сущности.
@@ -24,13 +23,10 @@ public interface TaskMapper {
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", source = "taskRequestDto.status")
-    @Mapping(target = "project", source = "project")
-    @Mapping(target = "executor", source = "executor")
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
     @Mapping(target = "points", ignore = true)
     @Mapping(target = "name", source = "taskRequestDto.name")
-    @Mapping(target = "owner", source = "owner")
     Task mapToEntity(TaskRequestDto taskRequestDto, Project project, Employee executor, Employee owner);
 
     /**
@@ -39,14 +35,13 @@ public interface TaskMapper {
     TaskFullResponseDto mapToFullDto(Task task);
 
     /**
-     * Преобразование из сущности в DTO, краткое.
+     * Преобразование из списка задач в список с краткой информацией о задаче.
      */
-    TaskShortResponseDto mapToShortDto(Task task);
+    List<TaskShortResponseDto> mapList(List<Task> tasks);
 
-    default List<TaskShortResponseDto> mapList(List<Task> tasks) {
-        return tasks.stream().map(this::mapToShortDto).collect(Collectors.toList());
-    }
-
+    /**
+     * Обновление полей при обновлении задачи.
+     */
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", source = "taskCreateUpdateRequestDto.status")
@@ -55,6 +50,7 @@ public interface TaskMapper {
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
     @Mapping(target = "points", ignore = true)
+    @Mapping(target = "owner", ignore = true)
     @Mapping(target = "name", source = "taskCreateUpdateRequestDto.name")
     Task updateFields(TaskRequestDto taskCreateUpdateRequestDto, Project project, Employee executor,
                       @MappingTarget Task oldTask);
