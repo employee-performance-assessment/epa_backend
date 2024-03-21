@@ -20,10 +20,10 @@ public class EmployeeEvaluationResponseDto {
     /**
      * Сотрудник, которого оценили.
      */
-    private Long appraiserId;
+    private Long criteriaId;
 
     /**
      * Список оценок.
      */
-    private HashMap<EvaluationResponseDto, Double> evaluations;
+    private HashMap<CriteriaResponseDto, Double> evaluations;
 }

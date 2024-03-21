@@ -9,7 +9,7 @@ import lombok.*;
  * @author Михаил Безуглов
  */
 @Entity
-@Table(name = "evaluations")
+@Table(name = "criteria")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,7 +17,7 @@ import lombok.*;
 @Builder
 @ToString
 @EqualsAndHashCode(of = {"id", "name"})
-public class Evaluation {
+public class Criteria {
 
     /**
      * Идентификатор оценки.

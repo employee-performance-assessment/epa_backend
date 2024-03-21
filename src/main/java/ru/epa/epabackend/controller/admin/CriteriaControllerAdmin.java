@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.evaluation.EvaluationDto;
-import ru.epa.epabackend.dto.evaluation.EvaluationRequestDto;
-import ru.epa.epabackend.mapper.EvaluationMapper;
-import ru.epa.epabackend.service.EvaluationService;
+import ru.epa.epabackend.dto.evaluation.CriteriaDto;
+import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
+import ru.epa.epabackend.mapper.CriteriaMapper;
+import ru.epa.epabackend.service.CriteriaService;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/evaluation")
-public class EvaluationControllerAdmin {
+@RequestMapping("/admin/criteria")
+public class CriteriaControllerAdmin {
 
-    private final EvaluationService evaluationService;
-    private final EvaluationMapper evaluationMapper;
+    private final CriteriaService criteriaService;
+    private final CriteriaMapper criteriaMapper;
 
     /**
      * Эндпойнт добавления нового критерия оценки
@@ -40,8 +40,8 @@ public class EvaluationControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EvaluationDto save(@RequestBody EvaluationRequestDto evaluationRequestDto) {
-        return evaluationMapper.mapToDto(evaluationService.create(evaluationRequestDto));
+    public CriteriaDto save(@RequestBody CriteriaRequestDto criteriaRequestDto) {
+        return criteriaMapper.mapToDto(criteriaService.create(criteriaRequestDto));
     }
 
     /**
@@ -53,8 +53,8 @@ public class EvaluationControllerAdmin {
                     "В случае, если не найдено ни одного критерия оценки, возвращает пустой список."
     )
     @GetMapping
-    public List<EvaluationDto> findAll() {
-        return evaluationMapper.mapList(evaluationService.findAll());
+    public List<CriteriaDto> findAll() {
+        return criteriaMapper.mapList(criteriaService.findAll());
     }
 
     /**
@@ -65,8 +65,8 @@ public class EvaluationControllerAdmin {
             description = "Возвращает название критерия оценки и её ID, если она существует в базе данных. " +
                     "В случае, если критерия оценки не найдено, возвращает ошибку 404"
     )
-    @GetMapping("/{evaluationId}")
-    public EvaluationDto findById(@Parameter(required = true) @PathVariable Long evaluationId) {
-        return evaluationMapper.mapToDto(evaluationService.findById(evaluationId));
+    @GetMapping("/{criteriaId}")
+    public CriteriaDto findById(@Parameter(required = true) @PathVariable Long criteriaId) {
+        return criteriaMapper.mapToDto(criteriaService.findById(criteriaId));
     }
 }

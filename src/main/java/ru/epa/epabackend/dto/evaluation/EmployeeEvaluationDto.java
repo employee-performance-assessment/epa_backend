@@ -26,12 +26,12 @@ public class EmployeeEvaluationDto {
     /**
      * Сотрудник, которого оцениваем.
      */
-    private EmployeeShortResponseDto appraiser;
+    private EmployeeShortResponseDto evaluated;
 
     /**
      * Сотрудник, который оценивает.
      */
-    private EmployeeShortResponseDto employee;
+    private EmployeeShortResponseDto evaluator;
 
     /**
      * Дата оценки.
@@ -41,10 +41,10 @@ public class EmployeeEvaluationDto {
     /**
      * Название оценки.
      */
-    private EvaluationResponseDto evaluation;
+    private CriteriaResponseDto criteria;
 
     /**
      * Количество звезд.
      */
-    private Integer countStar;
+    private Integer score;
 }
