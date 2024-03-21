@@ -13,6 +13,7 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -44,8 +45,8 @@ public class EmployeeEvaluation {
     /**
      * Дата оценки.
      */
-    @Column(name = "day_create")
-    private LocalDate dayCreate;
+    @Column(name = "create_day")
+    private LocalDate createDay;
 
     /**
      * Название оценки.
@@ -53,4 +54,10 @@ public class EmployeeEvaluation {
     @ManyToOne
     @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
     private Evaluation evaluation;
+
+    /**
+     * Количество звезд.
+     */
+    @JoinColumn(name = "count_star")
+    private Integer countStar;
 }

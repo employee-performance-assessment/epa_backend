@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a1a2ed9e-8327-48c9-b66d-f3dfe45c49d0",
-		"name": "epa_24_03_17",
+		"_postman_id": "eda0d12a-2431-4f33-a134-600ba4c143ad",
+		"name": "epa_24_03_19",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21428156"
+		"_exporter_id": "26228792"
 	},
 	"item": [
 		{
@@ -987,6 +987,240 @@
 					"response": []
 				},
 				{
+					"name": "add employee 5 to project 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Has employee create response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Host",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Postman-Token",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/project/1?employeeId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"project",
+								"1"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add employee 6 to project 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Host",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Postman-Token",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/project/1?employeeId=6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"project",
+								"1"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add employee 7 to project 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Host",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Postman-Token",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/project/2?employeeId=7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"project",
+								"2"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get admin projects",
 					"event": [
 						{
@@ -1051,7 +1285,151 @@
 							],
 							"path": [
 								"user",
-								"project"
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get project 1 employees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Host",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Postman-Token",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/project/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"project",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get project 2 employees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Host",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Postman-Token",
+								"value": "<calculated when request is sent>",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/project/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"project",
+								"2"
 							]
 						}
 					},
@@ -2076,6 +2454,170 @@
 		{
 			"name": "Technologies",
 			"item": []
+		},
+		{
+			"name": "Evaluations",
+			"item": [
+				{
+					"name": "add evaluation 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Танцы\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Пенее\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evaluationId\": 1,\r\n  \"countStar\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/5?employeeId=7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"5"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evaluationId\": 2,\r\n  \"countStar\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/5?employeeId=7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"5"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

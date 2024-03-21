@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 /**
- * Класс EvaluationRequestDto для передачи тела запроса на сервер для создания оценки
+ * Класс EvaluationRequestDto для передачи тела запроса на сервер для создания критерия оценки.
  *
  * @author Михаил Безуглов
  */
@@ -17,6 +17,9 @@ import lombok.*;
 @Builder
 public class EvaluationRequestDto {
 
+    /**
+     * Название критерия оценки.
+     */
     @NotBlank
     @Size(min = 2, max = 250)
     private String name;
