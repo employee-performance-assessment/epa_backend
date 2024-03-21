@@ -28,6 +28,7 @@ public interface EmployeeEvaluationMapper {
     @Mapping(target = "id", ignore = true)
     EmployeeEvaluation mapToEntity(EmployeeEvaluationRequestDto evaluationRequestDto,
                                    Employee evaluated, Employee evaluator, Criteria criteria);
+
     /**
      * Преобразование списка сущностей в список DTO.
      */

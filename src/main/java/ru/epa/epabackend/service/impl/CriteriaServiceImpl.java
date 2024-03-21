@@ -30,7 +30,8 @@ public class CriteriaServiceImpl implements CriteriaService {
      */
     @Override
     public Criteria create(CriteriaRequestDto criteriaRequestDto) {
-        return criteriaRepository.save(criteriaMapper.mapToEntity(criteriaRequestDto));
+        Criteria criteria = criteriaRepository.save(criteriaMapper.mapToEntity(criteriaRequestDto));
+        return criteria;
     }
 
     /**
@@ -38,8 +39,9 @@ public class CriteriaServiceImpl implements CriteriaService {
      */
     @Override
     public Criteria findById(Long criteriaId) {
-        return criteriaRepository.findById(criteriaId).orElseThrow(() ->
+        Criteria criteria = criteriaRepository.findById(criteriaId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Оценка с id %s не найдена", criteriaId)));
+        return criteria;
     }
 
     /**
