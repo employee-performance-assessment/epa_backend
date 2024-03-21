@@ -17,6 +17,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import java.security.Principal;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
+import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
  * Класс EmployeeControllerAdmin содержит эндпойнты для администратора, относящиеся к сотрудникам.
@@ -42,7 +43,6 @@ public class EmployeeControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-
     public EmployeeFullResponseDto addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
                                                EmployeeRequestDto employeeRequestDto,
                                                Principal principal) {
@@ -50,11 +50,25 @@ public class EmployeeControllerAdmin {
     }
 
     /**
+     * Эндпойнт по обновлению существующего сотрудника
+     */
+    @Operation(
+            summary = "Обновление сотрудника",
+            description = "Обновляет данные сотрудника, если он существует в базе данных."
+    )
+    @PatchMapping("/{employeeId}")
+    public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
+                                                  @Validated(Update.class) @RequestBody @Parameter(required = true)
+                                                  EmployeeRequestDto employeeRequestDto) {
+        return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeRequestDto));
+    }
+
+    /**
      * Эндпойнт удаления сотрудника
      */
     @Operation(
             summary = "Удаление сотрудника",
-            description = "Удаляет сотрудника, если он существует в базе данных."
+            description = "Удаляет данные сотрудника, если он существует в базе данных."
     )
     @DeleteMapping("/{employeeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b229afcd-1fd6-48ee-adfc-07cbbc70d24d",
-		"name": "epa_24_03_16",
+		"_postman_id": "4b394718-c1ac-4355-ba22-ebe0cc4490ae",
+		"name": "epa_24_03_17",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21428156"
+		"_exporter_id": "26701489"
 	},
 	"item": [
 		{
@@ -367,12 +367,12 @@
 							"raw": "{\r\n  \"fullName\": \"Иванов Джон Иванович\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/user/employee/3",
+							"raw": "{{baseUrl}}/admin/employee/3",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"user",
+								"admin",
 								"employee",
 								"3"
 							]
@@ -419,12 +419,12 @@
 							"raw": "{\r\n  \"fullName\": \"Иванов Джон Иванович\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/user/employee/999",
+							"raw": "{{baseUrl}}/admin/employee/999",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"user",
+								"admin",
 								"employee",
 								"999"
 							]
@@ -981,243 +981,6 @@
 							"path": [
 								"admin",
 								"employee"
-<<<<<<<< HEAD:postman/epa_24_03_17.json
-========
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add employee 5 to project 1",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
-									"});",
-									"pm.test(\"Has employee create response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/1?employeeId=5",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"1"
-							],
-							"query": [
-								{
-									"key": "employeeId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add employee 6 to project 1",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/1?employeeId=6",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"1"
-							],
-							"query": [
-								{
-									"key": "employeeId",
-									"value": "6"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add employee 7 to project 2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/2?employeeId=7",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"2"
-							],
-							"query": [
-								{
-									"key": "employeeId",
-									"value": "7"
-								}
->>>>>>>> dev:postman/epa_24_03_15.json
 							]
 						}
 					},
@@ -1288,155 +1051,7 @@
 							],
 							"path": [
 								"user",
-<<<<<<<< HEAD:postman/epa_24_03_17.json
 								"project"
-========
-								"projects"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get project 1 employees",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/1",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get project 2 employees",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/2",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"2"
->>>>>>>> dev:postman/epa_24_03_15.json
 							]
 						}
 					},
@@ -1480,11 +1095,7 @@
 							}
 						},
 						"url": {
-<<<<<<<< HEAD:postman/epa_24_03_17.json
 							"raw": "{{baseUrl}}/admin/project/1?employeeId=5",
-========
-							"raw": "{{baseUrl}}/admin/project/1",
->>>>>>>> dev:postman/epa_24_03_15.json
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1795,7 +1406,8 @@
 									"});\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1850,7 +1462,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1903,7 +1516,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1959,7 +1573,8 @@
 									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2055,7 +1670,8 @@
 									"});\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2128,7 +1744,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2322,7 +1939,8 @@
 									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");   \r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2457,26 +2075,7 @@
 		},
 		{
 			"name": "Technologies",
-			"item": [
-				{
-					"name": "get technologies",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/technologies",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"technologies"
-							]
-						}
-					},
-					"response": []
-				}
-			]
+			"item": []
 		}
 	],
 	"auth": {
