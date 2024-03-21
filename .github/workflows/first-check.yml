@@ -57,9 +57,8 @@ jobs:
             exit 1
           fi
 
-      # TODO - когда появятся Postman тесты, нужно будет указать их тут для автоматической проверки
-      #- name: Проход Postman тестов с baseUrl http://localhost:8080
-      #  run: npx newman run ./postman/epa-backend.json --env-var baseUrl=http://localhost:8080
+      - name: Проход Postman тестов с baseUrl http://localhost:8080
+        run: npx newman run ./postman/epa*.json --env-var baseUrl=http://localhost:8080
 
       - name: Остановка Spring Boot
         run: mvn spring-boot:stop

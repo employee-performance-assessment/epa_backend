@@ -164,12 +164,18 @@ public class TaskServiceImpl implements TaskService {
                         taskId, employeeId)));
     }
 
+    /**
+     * Проставление очков после того как задача выполнена
+     */
     private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
         Period period = Period.between(LocalDate.now(), dto.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
+    /**
+     * Получение корректного статуса задачи
+     */
     private TaskStatus getTaskStatus(String status) {
         TaskStatus taskStatus = null;
         if (status != null) {
@@ -186,10 +192,15 @@ public class TaskServiceImpl implements TaskService {
                 new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
     }
 
-    private Employee checkExecutor(TaskRequestDto taskCreateUpdateRequestDto, Task oldTask) {
+    /**
+     * Проверка исполнителя задач при обновлении задачи. Если исполнитель поменялся, то
+     * ищем его айди в репозитории, если находим, то возвращаем его. Если не найден, то
+     * берем из задачи старого исполнителя.
+     */
+    private Employee checkExecutor(TaskRequestDto taskRequestDto, Task oldTask) {
         Employee executor;
-        if (taskCreateUpdateRequestDto.getExecutorId() != null) {
-            executor = employeeService.findById(taskCreateUpdateRequestDto.getExecutorId());
+        if (taskRequestDto.getExecutorId() != null) {
+            executor = employeeService.findById(taskRequestDto.getExecutorId());
         } else {
             executor = oldTask.getExecutor();
         }
