@@ -39,12 +39,12 @@ public class EmployeeEvaluationControllerUser {
             summary = "Сохранения оценок сотрудника своего коллеги",
             description = "При успешном добавлении возвращается код 201 Created."
     )
-    @PostMapping("/{appraiserId}")
+    @PostMapping("/{evaluatedId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeEvaluationDto save(@PathVariable("appraiserId") Long appraiserId,
-                                      @RequestParam(required = true) Long employeeId,
+    public EmployeeEvaluationDto save(@PathVariable("evaluatedId") Long evaluatedId,
+                                      @RequestParam(required = true) Long evaluatorId,
                                       @Valid @RequestBody EmployeeEvaluationRequestDto employeeEvaluationRequestDto) {
-        return employeeEvaluationMapper.mapToDto(employeeEvaluationService.create(employeeId, appraiserId, employeeEvaluationRequestDto));
+        return employeeEvaluationMapper.mapToDto(employeeEvaluationService.create(evaluatorId, evaluatedId, employeeEvaluationRequestDto));
     }
 
     /**
@@ -55,9 +55,9 @@ public class EmployeeEvaluationControllerUser {
             description = "Возвращает список всех оценок коллег о себе (усредненный по оценкам)" +
                     "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список."
     )
-    @GetMapping("/{appraiserId}")
-    public List<EmployeeEvaluationDto> findAllByAppraiserId(@PathVariable @Parameter(required = true) Long appraiserId) {
-        List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationService.findAllByAppraiserId(appraiserId);
+    @GetMapping("/{evaluatedId}")
+    public List<EmployeeEvaluationDto> findAllByAppraiserId(@PathVariable @Parameter(required = true) Long evaluatedId) {
+        List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationService.findAllByAppraiserId(evaluatedId);
         return employeeEvaluationMapper.mapList(employeeEvaluations);
     }
 }

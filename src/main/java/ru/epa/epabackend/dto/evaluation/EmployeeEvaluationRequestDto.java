@@ -23,10 +23,10 @@ public class EmployeeEvaluationRequestDto {
      */
     @NotNull(groups = {ValidationGroups.Create.class})
     @Positive(groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
-    private Long evaluationId;
+    private Long criteriaId;
 
     /**
      * Количество звезд.
      */
-    private Integer countStar;
+    private Integer score;
 }

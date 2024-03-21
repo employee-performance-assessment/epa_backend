@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "employee_evaluations")
+@Table(name = "employee_evaluation")
 public class EmployeeEvaluation {
 
     /**
@@ -32,32 +32,32 @@ public class EmployeeEvaluation {
      * Сотрудник, которого оцениваем.
      */
     @ManyToOne
-    @JoinColumn(name = "appraiser_id")
-    private Employee appraiser;
+    @JoinColumn(name = "evaluated_id", referencedColumnName = "id")
+    private Employee evaluated;
 
     /**
      * Сотрудник, который оценивает.
      */
     @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+    @JoinColumn(name = "evaluator_id", referencedColumnName = "id")
+    private Employee evaluator;
 
     /**
      * Дата оценки.
      */
     @Column(name = "create_day")
-    private LocalDate createDay;
+    private LocalDate createDay = LocalDate.now();
 
     /**
      * Название оценки.
      */
     @ManyToOne
-    @JoinColumn(name = "evaluation_id", referencedColumnName = "id")
-    private Evaluation evaluation;
+    @JoinColumn(name = "criteria_id", referencedColumnName = "id")
+    private Criteria criteria;
 
     /**
      * Количество звезд.
      */
-    @JoinColumn(name = "count_star")
-    private Integer countStar;
+    @JoinColumn(name = "score")
+    private Integer score;
 }

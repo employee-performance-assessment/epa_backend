@@ -15,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EvaluationRequestDto {
+public class CriteriaRequestDto {
 
     /**
      * Название критерия оценки.
