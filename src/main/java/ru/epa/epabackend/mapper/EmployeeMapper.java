@@ -1,4 +1,3 @@
-
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
