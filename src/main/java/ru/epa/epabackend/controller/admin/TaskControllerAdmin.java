@@ -27,7 +27,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Admin: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
-@RequestMapping("/admin/tasks")
+@RequestMapping("/admin/task")
 @RequiredArgsConstructor
 @Validated
 public class TaskControllerAdmin {

@@ -66,4 +66,3 @@ public class TechnologyServiceImpl implements TechnologyService {
         technologyRepository.deleteById(technologyId);
     }
 }
-
