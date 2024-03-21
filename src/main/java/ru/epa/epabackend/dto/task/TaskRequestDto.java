@@ -8,6 +8,7 @@ import ru.epa.epabackend.util.DateConstant;
 
 import java.time.LocalDate;
 
+import static ru.epa.epabackend.util.StringPatterns.CYRILIC_LATIN_ALPHABET_AND_NUMBERS;
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -28,7 +29,7 @@ public class TaskRequestDto {
      */
     @NotBlank(groups = {Create.class})
     @Size(min = 2, max = 250, groups = {Create.class, Update.class})
-    @Pattern(regexp = "^[a-zA-Zа-яА-ЯЁё0-9\\s\\-\\.\\,]+$")
+    @Pattern(regexp = CYRILIC_LATIN_ALPHABET_AND_NUMBERS)
     private String name;
 
     /**
@@ -36,7 +37,7 @@ public class TaskRequestDto {
      */
     @NotBlank(groups = {Create.class})
     @Size(min = 2, max = 250, groups = {Create.class, Update.class})
-    @Pattern(regexp = "^[a-zA-Zа-яА-ЯЁё0-9\\s\\-\\.\\,]+$")
+    @Pattern(regexp = CYRILIC_LATIN_ALPHABET_AND_NUMBERS)
     private String description;
 
     /**

@@ -8,21 +8,24 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Интерфейс TaskAdminService содержит методы действий с задачами для администратора.
+ * Интерфейс TaskService содержит методы действий с задачами .
  *
  * @author Владислав Осипов
  */
 public interface TaskService {
 
+    /**
+     * Получение списка задач по ID исполнителя и статусу задачи
+     */
     List<Task> findAllByExecutorIdFilters(String status, Principal principal);
 
     /**
-     * Найти задачу по ID
+     * Найти задачу по ID задачи и ID исполнителя
      */
     Task findByIdAndExecutorId(Principal principal, Long taskId);
 
     /**
-     * Обновление задачи
+     * Обновление статуса задачи
      */
     Task updateStatus(Long taskId, String status, Principal principal);
 
