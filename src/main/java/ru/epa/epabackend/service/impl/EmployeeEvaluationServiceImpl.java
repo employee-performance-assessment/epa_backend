@@ -39,9 +39,9 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         Employee evaluated = employeeService.findById(evaluatedId);
         Employee evaluator = employeeService.findById(evaluatorId);
         Criteria criteria = criteriaService.findById(employeeEvaluationRequestDto.getCriteriaId());
-        //LocalDate createDay = LocalDate.now();
-        return employeeEvaluationRepository.save(employeeEvaluationMapper
-                .mapToEntity(employeeEvaluationRequestDto, evaluated, evaluator, criteria));
+        EmployeeEvaluation employeeEvaluation = employeeEvaluationMapper
+                .mapToEntity(employeeEvaluationRequestDto, evaluated, evaluator, criteria);
+        return employeeEvaluationRepository.save(employeeEvaluation);
     }
 
     /**
@@ -49,9 +49,10 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     public EmployeeEvaluation findById(Long evaluationEvaluationId) {
-        return employeeEvaluationRepository.findById(evaluationEvaluationId).orElseThrow(() ->
+        EmployeeEvaluation employeeEvaluation = employeeEvaluationRepository.findById(evaluationEvaluationId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
                         evaluationEvaluationId)));
+        return employeeEvaluation;
     }
 
     /**
