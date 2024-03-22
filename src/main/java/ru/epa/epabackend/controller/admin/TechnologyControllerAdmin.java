@@ -13,10 +13,10 @@ import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.service.TechnologyService;
 
+import java.util.List;
+
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
-
-import java.util.List;
 
 /**
  * Класс TechnologyController содержит эндпойнты для администратора, относящиеся к технологиям.

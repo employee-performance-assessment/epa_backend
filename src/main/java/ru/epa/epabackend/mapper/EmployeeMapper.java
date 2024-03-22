@@ -39,5 +39,5 @@ public interface EmployeeMapper {
     @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
     @Mapping(target = "password", ignore = true)
-    Employee updateFields(EmployeeRequestDto employeeDtoRequest,  @MappingTarget Employee oldEmployee);
+    Employee updateFields(EmployeeRequestDto employeeDtoRequest, @MappingTarget Employee oldEmployee);
 }
