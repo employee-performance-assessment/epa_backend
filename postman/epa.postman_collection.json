@@ -1309,7 +1309,6 @@
 							}
 						},
 						"url": {
-
 							"raw": "{{baseUrl}}/admin/task",
 							"host": [
 								"{{baseUrl}}"
@@ -1369,7 +1368,6 @@
 							}
 						},
 						"url": {
-
 							"raw": "{{baseUrl}}/admin/task",
 							"host": [
 								"{{baseUrl}}"
@@ -1432,7 +1430,6 @@
 							}
 						],
 						"url": {
-
 							"raw": "{{baseUrl}}/admin/task",
 							"host": [
 								"{{baseUrl}}"
@@ -1479,7 +1476,6 @@
 							}
 						],
 						"url": {
-
 							"raw": "{{baseUrl}}/admin/task/:id",
 							"host": [
 								"{{baseUrl}}"
@@ -1552,6 +1548,7 @@
 								"{{baseUrl}}"
 							],
 							"path": [
+								"admin",
 								"task",
 								":id"
 							],
