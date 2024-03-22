@@ -2,15 +2,14 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Класс ProjectMapper содержит преобразование сущности.
