@@ -1,6 +1,7 @@
 package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,9 @@ import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.service.TechnologyService;
 
+import static ru.epa.epabackend.util.ValidationGroups.Create;
+import static ru.epa.epabackend.util.ValidationGroups.Update;
+
 import java.util.List;
 
 /**
@@ -22,7 +26,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/admin/technologies")
+@RequestMapping("/admin/technology")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
@@ -37,8 +41,9 @@ public class TechnologyControllerAdmin {
             summary = "Создание новой технологии"
     )
     @PostMapping
-    public TechnologyResponseDto createTechnology(@RequestBody TechnologyRequestDto technologyRequestDto) {
-        return technologyMapper.mapToDto(technologyService.create(technologyRequestDto));
+    public TechnologyResponseDto createTechnology(@Validated(Create.class) @Parameter(required = true)
+                                                  @RequestBody TechnologyRequestDto technologyDto) {
+        return technologyMapper.mapToDto(technologyService.create(technologyDto));
     }
 
     /**
@@ -49,10 +54,22 @@ public class TechnologyControllerAdmin {
             description = "Обновляет технологию, если она существует в базе данных."
     )
     @PatchMapping("/{technologyId}")
-    public TechnologyResponseDto updateTechnology(
-            @RequestBody TechnologyRequestDto technologyRequestDto,
-            @PathVariable("technologyId") Long technologyId) {
-        return technologyMapper.mapToDto(technologyService.update(technologyRequestDto, technologyId));
+    public TechnologyResponseDto updateTechnology(@Validated(Update.class) @Parameter(required = true)
+                                                  @RequestBody TechnologyRequestDto technologyDto,
+                                                  @PathVariable("technologyId") Long technologyId) {
+        return technologyMapper.mapToDto(technologyService.update(technologyDto, technologyId));
+    }
+
+    /**
+     * Эндпойнт получения данных технологии по id
+     */
+    @Operation(
+            summary = "Получение информации о технологии по id",
+            description = "Возвращает полную информацию о технологии по id, если он существует в базе данных."
+    )
+    @GetMapping("/{technologyId}")
+    public TechnologyResponseDto findByIdDto(@PathVariable @Parameter(required = true) Long technologyId) {
+        return technologyMapper.mapToDto(technologyService.findById(technologyId));
     }
 
     /**

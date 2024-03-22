@@ -5,10 +5,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
-import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
@@ -16,8 +17,6 @@ import ru.epa.epabackend.service.EmployeeService;
 
 import java.security.Principal;
 import java.util.List;
-
-import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
  * Класс EmployeeControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к сотрудникам.
@@ -35,21 +34,7 @@ public class EmployeeControllerUser {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпойнт по обновлению существующего сотрудника
-     */
-    @Operation(
-            summary = "Обновление сотрудника"
-    )
-    @PatchMapping("/{employeeId}")
-
-    public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
-                                                  @Validated(Update.class) @Parameter(required = true) @RequestBody
-                                                  EmployeeRequestDto employeeRequestDto) {
-        return employeeMapper.mapToFullDto(employeeService.update(employeeId, employeeRequestDto));
-    }
-
-    /**
-     * Эндпойнт получения всех сотрудников в скоращенном виде
+     * Эндпойнт получения всех сотрудников в сокращенном виде
      */
     @Operation(
             summary = "Получение всех сотрудников",
@@ -76,7 +61,7 @@ public class EmployeeControllerUser {
     }
 
     /**
-     * Эндпойнт получения полных данных о сотрднике по токену
+     * Эндпойнт получения полных данных о сотруднике по токену
      */
     @Operation(
             summary = "Получение информации о владельце токена",

@@ -16,6 +16,11 @@ import lombok.*;
 public class TechnologyResponseDto {
 
     /**
+     * Id технологии.
+     */
+    private Long id;
+
+    /**
      * Название технологии.
      */
     private String name;
