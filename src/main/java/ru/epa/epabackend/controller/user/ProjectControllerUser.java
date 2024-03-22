@@ -9,14 +9,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Класс ProjectControllerUser содержит ендпоинты, относящиеся к проектам пользователя
+ * Класс ProjectControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
@@ -25,13 +25,14 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/projects")
+@RequestMapping("/user/project")
 public class ProjectControllerUser {
+
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
 
     /**
-     * Эндпоинт получения короткой информации о проекте
+     * Эндпойнт получения короткой информации о проекте
      */
     @Operation(
             summary = "Получение короткой информации о проекте",
@@ -45,17 +46,19 @@ public class ProjectControllerUser {
     }
 
     /**
-     * Эндпоинт получения списка проектов пользователя с короткой информацией о проектах
+     * Эндпойнт получения списка проектов администратора с короткой информацией о проектах.
+     * Пользователи закреплены за определенным админом и также могут видеть все его проекты
      */
     @Operation(
-            summary = "Получение списка проектов пользователя с короткой информацией о проектах",
-            description = "При успешном получении списка возвращается 200 Ok.\n" +
+            summary = "Получение списка проектов администратора с короткой информацией о проектах",
+            description = "Пользователи закреплены за определенным админом и также могут видеть все его проекты." +
+                    "При успешном получении списка возвращается 200 Ok.\n" +
                     "В случае отсутствия указанного email в базе данных возвращается 404 Not Found."
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProjectShortResponseDto> findByUserEmail(Principal principal) {
-        return projectService.findAllByUserEmail(principal.getName()).stream()
-                .map(projectMapper::mapToShortDto).collect(Collectors.toList());
+    public List<ProjectShortResponseDto> findAllByCreator(Principal principal) {
+        List<Project> allByUserEmail = projectService.findAllByCreator(principal.getName());
+        return projectMapper.mapAsList(allByUserEmail);
     }
 }

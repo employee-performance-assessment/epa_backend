@@ -1,21 +1,19 @@
 package ru.epa.epabackend.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import ru.epa.epabackend.util.DateConstant;
 
 import java.time.LocalDate;
 
+import static ru.epa.epabackend.util.StringPatterns.CYRILIC_LATIN_ALPHABET_AND_NUMBERS;
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TaskInDto содержит структуру данных, которая используется для передачи
- * информации между различными слоями приложения.
+ * Класс TaskRequestDto для передачи тела запроса на сервер с данными для создания и обновления задачи
  *
  * @author Владислав Осипов
  */
@@ -30,14 +28,16 @@ public class TaskRequestDto {
      * Название задачи.
      */
     @NotBlank(groups = {Create.class})
-    @Size(min = 2, max = 255, groups = {Create.class, Update.class})
+    @Size(min = 2, max = 250, groups = {Create.class, Update.class})
+    @Pattern(regexp = CYRILIC_LATIN_ALPHABET_AND_NUMBERS)
     private String name;
 
     /**
      * Описание задачи.
      */
     @NotBlank(groups = {Create.class})
-    @Size(min = 2, max = 255, groups = {Create.class, Update.class})
+    @Size(min = 2, max = 250, groups = {Create.class, Update.class})
+    @Pattern(regexp = CYRILIC_LATIN_ALPHABET_AND_NUMBERS)
     private String description;
 
     /**
@@ -70,6 +70,7 @@ public class TaskRequestDto {
      * Сложность задачи измеряемая в баллах, задается руководителем.
      */
     @Positive(groups = {Create.class, Update.class})
+    @Range(min = 0, max = 99999, groups = {Create.class, Update.class})
     private Integer basicPoints;
 
     /**
@@ -77,5 +78,6 @@ public class TaskRequestDto {
      * выполнил ли в срок задачу исполнитель. Задаются руководителем.
      */
     @Positive(groups = {Create.class, Update.class})
+    @Range(min = 0, max = 99999, groups = {Create.class, Update.class})
     private Integer penaltyPoints;
 }

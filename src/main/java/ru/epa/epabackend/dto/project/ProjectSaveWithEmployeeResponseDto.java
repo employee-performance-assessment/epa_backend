@@ -9,7 +9,7 @@ import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import java.util.List;
 
 /**
- * Класс ProjectEmployeesDto для передачи информации о проекте включая список сотрудников
+ * Класс ProjectSaveWithEmployeeResponseDto для передачи информации о проекте включая список сотрудников
  *
  * @author Константин Осипов
  */

@@ -43,8 +43,8 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAll() {
-        return taskRepository.findAll();
+    public List<Task> findAll(String email) {
+        return taskRepository.findAllByOwnerEmail(email);
     }
 
     /**
@@ -52,44 +52,55 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Task findDtoById(Long taskId) {
-        return findById(taskId);
+    public Task findDtoById(Long taskId, String email) {
+        Task task = findById(taskId);
+        Project project = task.getProject();
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
+        return task;
     }
 
     /**
      * Создание задачи админом
      */
     @Override
-    public Task create(TaskRequestDto taskCreateUpdateRequestDto) {
-        Project project = projectService.findById(taskCreateUpdateRequestDto.getProjectId());
-        Employee executor = employeeService.findById(taskCreateUpdateRequestDto.getExecutorId());
-        taskCreateUpdateRequestDto.setStatus("NEW");
-        checkProjectContainsExecutor(project, executor);
-        return taskRepository.save(taskMapper.mapToEntity(taskCreateUpdateRequestDto, project, executor));
-
+    public Task create(TaskRequestDto taskRequestDto, String email) {
+        Project project = projectService.findById(taskRequestDto.getProjectId());
+        Employee executor = employeeService.findById(taskRequestDto.getExecutorId());
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
+        taskRequestDto.setStatus("NEW");
+        return taskRepository.save(taskMapper.mapToEntity(taskRequestDto, project, executor, admin));
     }
 
     /**
      * Обновление задачи админом
      */
     @Override
-    public Task update(
-            Long taskId, TaskRequestDto taskCreateUpdateRequestDto) {
-        Task task = findById(taskId);
-        setNotNullParamToEntity(taskCreateUpdateRequestDto, task);
-        if (task.getStatus() == TaskStatus.DONE) {
-            setPointsToEmployeeAfterTaskDone(taskCreateUpdateRequestDto, task);
-            task.setFinishDate(LocalDate.now());
+    public Task update(Long taskId, TaskRequestDto taskRequestDto, String email) {
+        Task oldTask = findById(taskId);
+        Project project = oldTask.getProject();
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
+        Employee executor = checkExecutor(taskRequestDto, oldTask);
+        taskMapper.updateFields(taskRequestDto, project, executor, oldTask);
+        if (oldTask.getStatus() == TaskStatus.DONE) {
+            setPointsToEmployeeAfterTaskDone(taskRequestDto, oldTask);
+            oldTask.setFinishDate(LocalDate.now());
         }
-        return taskRepository.save(task);
+        return taskRepository.save(oldTask);
     }
 
     /**
      * Удаление задачи админом
      */
     @Override
-    public void delete(Long taskId) {
-        taskRepository.delete(findById(taskId));
+    public void delete(Long taskId, String email) {
+        Task task = findById(taskId);
+        Project project = task.getProject();
+        Employee admin = employeeService.findByEmail(email);
+        projectService.checkUserAndProject(admin, project);
+        taskRepository.delete(task);
     }
 
     /**
@@ -153,52 +164,18 @@ public class TaskServiceImpl implements TaskService {
                         taskId, employeeId)));
     }
 
+    /**
+     * Проставление очков после того как задача выполнена
+     */
     private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
         Period period = Period.between(LocalDate.now(), dto.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
-    private void setNotNullParamToEntity(TaskRequestDto dto, Task task) {
-        if (dto.getName() != null) {
-            task.setName(dto.getName());
-        }
-
-        if (dto.getDescription() != null) {
-            task.setDescription(dto.getDescription());
-        }
-
-        if (dto.getExecutorId() != null) {
-            Employee employee = employeeService.findById(dto.getExecutorId());
-            checkProjectContainsExecutor(task.getProject(), employee);
-            task.setExecutor(employeeService.findById(dto.getExecutorId()));
-
-        }
-
-        if (dto.getBasicPoints() != null) {
-            task.setBasicPoints(dto.getBasicPoints());
-        }
-
-        if (dto.getPenaltyPoints() != null) {
-            task.setPenaltyPoints(dto.getPenaltyPoints());
-        }
-
-        if (dto.getStatus() != null) {
-            try {
-                task.setStatus(EnumUtils.getEnum(TaskStatus.class, dto.getStatus()));
-            } catch (IllegalArgumentException exception) {
-                throw new BadRequestException("Unknown status: " + dto.getStatus());
-            }
-        }
-    }
-
-    private void checkProjectContainsExecutor(Project project, Employee employee) {
-        if (!project.getEmployees().contains(employee)) {
-            throw new EntityNotFoundException(String.format("Пользователя с id %d нет в проекте с id %d",
-                    employee.getId(), project.getId()));
-        }
-    }
-
+    /**
+     * Получение корректного статуса задачи
+     */
     private TaskStatus getTaskStatus(String status) {
         TaskStatus taskStatus = null;
         if (status != null) {
@@ -213,5 +190,20 @@ public class TaskServiceImpl implements TaskService {
     private Task findById(Long taskId) {
         return taskRepository.findById(taskId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
+    }
+
+    /**
+     * Проверка исполнителя задач при обновлении задачи. Если исполнитель поменялся, то
+     * ищем его айди в репозитории, если находим, то возвращаем его. Если не найден, то
+     * берем из задачи старого исполнителя.
+     */
+    private Employee checkExecutor(TaskRequestDto taskRequestDto, Task oldTask) {
+        Employee executor;
+        if (taskRequestDto.getExecutorId() != null) {
+            executor = employeeService.findById(taskRequestDto.getExecutorId());
+        } else {
+            executor = oldTask.getExecutor();
+        }
+        return executor;
     }
 }

@@ -10,8 +10,7 @@ import ru.epa.epabackend.util.TaskStatus;
 import java.time.LocalDate;
 
 /**
- * Класс TaskOutDto содержит структуру данных, которая используется для передачи
- * информации между различными слоями приложения.
+ * Класс TaskFullResponseDto для передачи полной информации о задаче
  *
  * @author Владислав Осипов
  */
@@ -54,7 +53,7 @@ public class TaskFullResponseDto {
     private LocalDate startDate;
 
     /**
-     * Дата до которой должна выполниться задача..
+     * Дата до которой должна выполниться задача.
      */
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)
     private LocalDate deadLine;

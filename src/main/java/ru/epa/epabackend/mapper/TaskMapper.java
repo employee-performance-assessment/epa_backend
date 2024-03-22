@@ -1,13 +1,14 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
+
+import java.util.List;
 
 /**
  * Интерфейс TaskMapper содержит преобразование сущности.
@@ -21,14 +22,12 @@ public interface TaskMapper {
      * Преобразование из DTO в сущность.
      */
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", source = "taskInDto.status")
-    @Mapping(target = "project", source = "project")
-    @Mapping(target = "executor", source = "executor")
+    @Mapping(target = "status", source = "taskRequestDto.status")
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
     @Mapping(target = "points", ignore = true)
-    @Mapping(target = "name", source = "taskInDto.name")
-    Task mapToEntity(TaskRequestDto taskInDto, Project project, Employee executor);
+    @Mapping(target = "name", source = "taskRequestDto.name")
+    Task mapToEntity(TaskRequestDto taskRequestDto, Project project, Employee executor, Employee owner);
 
     /**
      * Преобразование из сущности в DTO, при создании.
@@ -36,7 +35,23 @@ public interface TaskMapper {
     TaskFullResponseDto mapToFullDto(Task task);
 
     /**
-     * Преобразование из сущности в DTO, краткое.
+     * Преобразование из списка задач в список с краткой информацией о задаче.
      */
-    TaskShortResponseDto mapToShortDto(Task task);
+    List<TaskShortResponseDto> mapList(List<Task> tasks);
+
+    /**
+     * Обновление полей при обновлении задачи.
+     */
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", source = "taskCreateUpdateRequestDto.status")
+    @Mapping(target = "project", source = "project")
+    @Mapping(target = "executor", source = "executor")
+    @Mapping(target = "startDate", ignore = true)
+    @Mapping(target = "finishDate", ignore = true)
+    @Mapping(target = "points", ignore = true)
+    @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "name", source = "taskCreateUpdateRequestDto.name")
+    Task updateFields(TaskRequestDto taskCreateUpdateRequestDto, Project project, Employee executor,
+                      @MappingTarget Task oldTask);
 }

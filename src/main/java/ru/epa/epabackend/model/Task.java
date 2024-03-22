@@ -101,6 +101,10 @@ public class Task {
      */
     private Integer penaltyPoints;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Employee owner;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

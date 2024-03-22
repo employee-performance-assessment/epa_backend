@@ -1,10 +1,11 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
+import org.mapstruct.*;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
+import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.model.Technology;
+
+import java.util.List;
 
 /**
  * Класс TechnologyMapper содержит преобразование сущности.
@@ -25,4 +26,11 @@ public interface TechnologyMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "employees", ignore = true)
     Technology mapToEntity(TechnologyRequestDto technologyDto);
+
+    List<TechnologyResponseDto> mapList(List<Technology> technologies);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "employees", ignore = true)
+    Technology updateFields(TechnologyRequestDto technologyDto, @MappingTarget Technology oldTechnology);
 }

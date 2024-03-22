@@ -1,6 +1,7 @@
 package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -9,20 +10,23 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
 import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.mapper.TechnologyMapper;
+import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.service.TechnologyService;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static ru.epa.epabackend.util.ValidationGroups.Create;
+import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TechnologyController содержит ендпоинты для технологии.
+ * Класс TechnologyController содержит эндпойнты для администратора, относящиеся к технологиям.
  *
  * @author Артем Масалкин
  */
 
 @Validated
 @RestController
-@RequestMapping("/admin/technologies")
+@RequestMapping("/admin/technology")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
@@ -31,43 +35,57 @@ public class TechnologyControllerAdmin {
     private final TechnologyMapper technologyMapper;
 
     /**
-     * Эндпоинт создания технологии.
+     * Эндпойнт создания технологии.
      */
     @Operation(
             summary = "Создание новой технологии"
     )
     @PostMapping
-    public TechnologyResponseDto createTechnology(@RequestBody TechnologyRequestDto technologyDto) {
+    public TechnologyResponseDto createTechnology(@Validated(Create.class) @Parameter(required = true)
+                                                  @RequestBody TechnologyRequestDto technologyDto) {
         return technologyMapper.mapToDto(technologyService.create(technologyDto));
     }
 
     /**
-     * Эндпоинт обновления технологии.
+     * Эндпойнт обновления технологии.
      */
     @Operation(
             summary = "Обновление технологии",
             description = "Обновляет технологию, если она существует в базе данных."
     )
     @PatchMapping("/{technologyId}")
-    public TechnologyResponseDto updateTechnology(
-            @RequestBody TechnologyRequestDto technologyDto,
-            @PathVariable("technologyId") Long technologyId) {
+    public TechnologyResponseDto updateTechnology(@Validated(Update.class) @Parameter(required = true)
+                                                  @RequestBody TechnologyRequestDto technologyDto,
+                                                  @PathVariable("technologyId") Long technologyId) {
         return technologyMapper.mapToDto(technologyService.update(technologyDto, technologyId));
     }
 
     /**
-     * Эндпоинт выведения списка всех технологий.
+     * Эндпойнт получения данных технологии по id
+     */
+    @Operation(
+            summary = "Получение информации о технологии по id",
+            description = "Возвращает полную информацию о технологии по id, если он существует в базе данных."
+    )
+    @GetMapping("/{technologyId}")
+    public TechnologyResponseDto findByIdDto(@PathVariable @Parameter(required = true) Long technologyId) {
+        return technologyMapper.mapToDto(technologyService.findById(technologyId));
+    }
+
+    /**
+     * Эндпойнт выведения списка всех технологий.
      */
     @Operation(
             summary = "Возвращает список всех технологий"
     )
     @GetMapping
     public List<TechnologyResponseDto> getAllTechnologies() {
-        return technologyService.findAll().stream().map(technologyMapper::mapToDto).collect(Collectors.toList());
+        List<Technology> technologies = technologyService.findAll();
+        return technologyMapper.mapList(technologies);
     }
 
     /**
-     * Эндпоинт удаления технологии.
+     * Эндпойнт удаления технологии.
      */
     @Operation(
             summary = "Удаляет технологию",

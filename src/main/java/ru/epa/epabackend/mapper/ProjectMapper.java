@@ -1,11 +1,11 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
+import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 
@@ -31,4 +31,11 @@ public interface ProjectMapper {
     Project mapToEntity(ProjectShortResponseDto projectShortDto);
 
     ProjectSaveWithEmployeeResponseDto mapToProjectEmployeesDto(Project project, List<EmployeeShortResponseDto> employeeShortDtoList);
+
+    List<ProjectShortResponseDto> mapAsList(List<Project> projects);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "employees", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    Project updateFields(ProjectUpdateRequestDto updateProjectRto, @MappingTarget Project oldProject);
 }

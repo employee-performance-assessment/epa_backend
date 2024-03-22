@@ -8,48 +8,51 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Интерфейс TaskAdminService содержит методы действий с задачами для администратора.
+ * Интерфейс TaskService содержит методы действий с задачами .
  *
  * @author Владислав Осипов
  */
 public interface TaskService {
 
+    /**
+     * Получение списка задач по ID исполнителя и статусу задачи
+     */
     List<Task> findAllByExecutorIdFilters(String status, Principal principal);
 
     /**
-     * Найти задачу по ID
+     * Найти задачу по ID задачи и ID исполнителя
      */
     Task findByIdAndExecutorId(Principal principal, Long taskId);
 
     /**
-     * Обновление задачи
+     * Обновление статуса задачи
      */
     Task updateStatus(Long taskId, String status, Principal principal);
 
     /**
      * Получение списка всех задач
      */
-    List<Task> findAll();
+    List<Task> findAll(String email);
 
     /**
      * Создание задачи
      */
-    Task create(TaskRequestDto taskDto);
+    Task create(TaskRequestDto taskDto, String email);
 
     /**
      * Найти задачу по ID
      */
-    Task findDtoById(Long taskId);
+    Task findDtoById(Long taskId, String email);
 
     /**
      * Обновление задачи
      */
-    Task update(Long taskId, TaskRequestDto taskDto);
+    Task update(Long taskId, TaskRequestDto taskDto, String email);
 
     /**
      * Удаление задачи
      */
-    void delete(Long taskId);
+    void delete(Long taskId, String email);
 
     /**
      * Получение списка задач проекта с определенным статусом задач

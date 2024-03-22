@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.epa.epabackend.util.Role;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -66,7 +67,7 @@ public class Employee implements UserDetails {
 
     /**
      * Роль/грейд
-     * Возможные роли: ADMIN, SENIOR, MIDDLE, JUNIOR.
+     * Возможные роли: ADMIN, USER.
      */
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -80,6 +81,11 @@ public class Employee implements UserDetails {
      * Отдел/подразделение.
      */
     private String department;
+
+    @OneToOne
+    @JoinColumn(name = "creator_id")
+    @Nullable
+    private Employee creator;
 
     /**
      * Список задач сотрудника.

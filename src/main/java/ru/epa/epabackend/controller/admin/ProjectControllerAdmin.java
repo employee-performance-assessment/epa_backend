@@ -15,16 +15,16 @@ import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Класс ProjectControllerAdmin содержит ендпоинты, относящиеся к проектам администратора
+ * Класс ProjectControllerAdmin содержит эндпойнты для администратора, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/projects")
+@RequestMapping("/admin/project")
 public class ProjectControllerAdmin {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпоинт добавления нового проекта
+     * Эндпойнт добавления нового проекта
      */
     @Operation(
             summary = "Добавление нового проекта",
@@ -48,12 +48,13 @@ public class ProjectControllerAdmin {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectShortResponseDto save(@Valid @RequestBody ProjectCreateRequestDto newProjectRto, Principal principal) {
-        return projectMapper.mapToShortDto(projectService.create(newProjectRto, principal.getName()));
+    public ProjectShortResponseDto save(@Valid @RequestBody ProjectCreateRequestDto projectCreateRequestDto,
+                                        Principal principal) {
+        return projectMapper.mapToShortDto(projectService.create(projectCreateRequestDto, principal.getName()));
     }
 
     /**
-     * Эндпоинт добавления сотрудника в проект
+     * Эндпойнт добавления сотрудника в проект
      */
     @Operation(
             summary = "Добавление сотрудника в проект",
@@ -69,28 +70,29 @@ public class ProjectControllerAdmin {
                                                                @RequestParam Long employeeId,
                                                                Principal principal) {
         Project project = projectService.saveWithEmployee(projectId, employeeId, principal.getName());
-        return projectMapper.mapToProjectEmployeesDto(project, project.getEmployees()
-                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList()));
+        return projectMapper.mapToProjectEmployeesDto(project, employeeMapper.mapList(project.getEmployees()));
     }
 
     /**
-     * Эндпоинт получения списка сотрудников, участвующих в проекте
+     * Эндпойнт получения списка сотрудников, участвующих в проекте
      */
     @Operation(
             summary = "Получение списка сотрудников, участвующих в проекте",
-            description = "При успешном получении списка сотрудников проекта возвращается 200 Ok.\n" +
+            description = "!!!Не предусмотрено текущим дизайном. " +
+                    "При успешном получении списка сотрудников проекта возвращается 200 Ok.\n" +
                     "В случае отсутствия проекта или email'а администратора возвращается 404 Not Found.\n" +
                     "Когда проект не относится к администратору получаем 409 Conflict."
     )
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeShortResponseDto> findByProjectIdAndRole(@PathVariable Long projectId, Principal principal) {
-        return projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER, principal.getName())
-                .stream().map(employeeMapper::mapToShortDto).collect(Collectors.toList());
+        List<Employee> allByProjectIdAndRole = projectService.findAllByProjectIdAndRole(projectId, Role.ROLE_USER,
+                principal.getName());
+        return employeeMapper.mapList(allByProjectIdAndRole);
     }
 
     /**
-     * Эндпоинт изменения информации о проекте
+     * Эндпойнт изменения информации о проекте
      */
     @Operation(
             summary = "Изменение информации о проекте",
@@ -102,13 +104,14 @@ public class ProjectControllerAdmin {
     )
     @PatchMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProjectShortResponseDto update(@PathVariable Long projectId, @Valid @RequestBody ProjectUpdateRequestDto updateProjectRto,
+    public ProjectShortResponseDto update(@PathVariable Long projectId,
+                                          @Valid @RequestBody ProjectUpdateRequestDto projectUpdateRequestDto,
                                           Principal principal) {
-        return projectMapper.mapToShortDto(projectService.update(projectId, updateProjectRto, principal.getName()));
+        return projectMapper.mapToShortDto(projectService.update(projectId, projectUpdateRequestDto, principal.getName()));
     }
 
     /**
-     * Эндпоинт удаления проекта
+     * Эндпойнт удаления проекта
      */
     @Operation(
             summary = "Удаление проекта",
@@ -124,11 +127,12 @@ public class ProjectControllerAdmin {
     }
 
     /**
-     * Эндпоинт удаления сотрудника из проекта
+     * Эндпойнт удаления сотрудника из проекта
      */
     @Operation(
             summary = "Удаление сотрудника из проекта",
-            description = "При успешном удалении - 204 No Content\n" +
+            description = "!!!Не предусмотрено текущим дизайном. " +
+                    "При успешном удалении - 204 No Content\n" +
                     "Если сотрудника или проекта с указанными id не существует возвращается 404 Not Found.\n" +
                     "В случае отсутствия проекта с указанным id или отсутствия email администратора в базе данных " +
                     "вернётся ошибка 404 Not Found.\n" +

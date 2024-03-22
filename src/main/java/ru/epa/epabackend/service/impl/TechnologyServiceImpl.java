@@ -46,7 +46,7 @@ public class TechnologyServiceImpl implements TechnologyService {
     @Transactional
     public Technology update(TechnologyRequestDto technologyDto, Long technologyId) {
         Technology oldTechnology = findById(technologyId);
-        oldTechnology.setName(technologyDto.getName());
+        technologyMapper.updateFields(technologyDto, oldTechnology);
         return oldTechnology;
     }
 
@@ -66,4 +66,3 @@ public class TechnologyServiceImpl implements TechnologyService {
         technologyRepository.deleteById(technologyId);
     }
 }
-

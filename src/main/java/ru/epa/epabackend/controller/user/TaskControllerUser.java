@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.mapper.TaskMapper;
+import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -18,14 +19,14 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Класс TaskEmployeeController содержит ендпоинты задач для не администратора.
+ * Класс TaskControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к задачам.
  *
  * @author Владислав Осипов
  */
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Private: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
-@RequestMapping("user/tasks")
+@RequestMapping("user/task")
 @RequiredArgsConstructor
 @Validated
 public class TaskControllerUser {
@@ -44,8 +45,8 @@ public class TaskControllerUser {
     @GetMapping
     public List<TaskShortResponseDto> findAllTasksByEmployeeIdFilters(Principal principal,
                                                                       @RequestParam(required = false) String status) {
-        return taskEmployeeService.findAllByExecutorIdFilters(status, principal).stream()
-                .map(taskMapper::mapToShortDto).toList();
+        List<Task> allByExecutorIdFilters = taskEmployeeService.findAllByExecutorIdFilters(status, principal);
+        return taskMapper.mapList(allByExecutorIdFilters);
     }
 
     /**
@@ -89,7 +90,7 @@ public class TaskControllerUser {
     @ResponseStatus(HttpStatus.OK)
     public List<TaskShortResponseDto> findByProjectIdAndStatus(@PathVariable Long projectId,
                                                                @RequestParam TaskStatus status) {
-        return taskEmployeeService.findByProjectIdAndStatus(projectId, status)
-                .stream().map(taskMapper::mapToShortDto).toList();
+        List<Task> byProjectIdAndStatus = taskEmployeeService.findByProjectIdAndStatus(projectId, status);
+        return taskMapper.mapList(byProjectIdAndStatus);
     }
 }
