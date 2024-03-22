@@ -28,9 +28,7 @@ public interface TechnologyMapper {
     @Mapping(target = "employees", ignore = true)
     Technology mapToEntity(TechnologyRequestDto technologyDto);
 
-    default List<TechnologyResponseDto> mapList(List<Technology> technologies) {
-        return technologies.stream().map(this::mapToDto).collect(Collectors.toList());
-    }
+    List<TechnologyResponseDto> mapList(List<Technology> technologies);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
