@@ -2,6 +2,11 @@ package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.service.TaskService;
 
@@ -38,11 +44,19 @@ public class TaskControllerAdmin {
     /**
      * Эндпойнт поиска всех задач администратором.
      */
-    @Operation(
-            summary = "Получение всех задач администратором",
+    @Operation(summary = "Получение всех задач администратором",
             description = "Возвращает список задач в сокращенном виде. " +
-                    "В случае, если не найдено ни одной задачи, возвращает пустой список."
-    )
+                    "В случае, если не найдено ни одной задачи, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = TaskShortResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     public List<TaskShortResponseDto> findAllByAdmin(Principal principal) {
         return taskMapper.mapList(taskService.findAll(principal.getName()));
@@ -51,11 +65,19 @@ public class TaskControllerAdmin {
     /**
      * Эндпойнт поиска задачи по ID администратором.
      */
-    @Operation(
-            summary = "Получение информации о задаче администратором",
-            description = "Возвращает полную информацию о задаче, если она существует в базе данных. " +
-                    "В случае, если задачи не найдено, возвращает ошибкую 404"
-    )
+    @Operation(summary = "Получение информации о задаче администратором",
+            description = "Возвращает полную информацию о задаче, если она существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TaskFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{taskId}")
     public TaskFullResponseDto findByIdByAdmin(@Parameter(required = true) @PathVariable Long taskId,
                                                Principal principal) {
@@ -65,10 +87,18 @@ public class TaskControllerAdmin {
     /**
      * Эндпойнт создания задачи.
      */
-    @Operation(
-            summary = "Добавление новой задачи администратором",
-            description = "Создание новой задачи администратором"
-    )
+    @Operation(summary = "Добавление новой задачи администратором")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TaskFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
     public TaskFullResponseDto createByAdmin(@Validated(Create.class) @Parameter(required = true)
                                              @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
@@ -78,10 +108,20 @@ public class TaskControllerAdmin {
     /**
      * Эндпойнт обновления задачи.
      */
-    @Operation(
-            summary = "Обновление задачи администратором",
-            description = "Обновление задачи администратором"
-    )
+    @Operation(summary = "Обновление задачи администратором")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TaskFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{taskId}")
     public TaskFullResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
                                              @Validated(Update.class) @Parameter(required = true)
@@ -92,10 +132,17 @@ public class TaskControllerAdmin {
     /**
      * Эндпойнт удаления задачи.
      */
-    @Operation(
-            summary = "Удаление задачи администратором",
-            description = "Удаляет задачу, если она существует в базе данных."
-    )
+    @Operation(summary = "Удаление задачи администратором", description = "Удаляет задачу, если она существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping("/{taskId}")
     public void deleteByAdmin(@Parameter(required = true) @PathVariable Long taskId, Principal principal) {
         taskService.delete(taskId, principal.getName());

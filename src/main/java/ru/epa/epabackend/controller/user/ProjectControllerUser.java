@@ -1,6 +1,11 @@
 package ru.epa.epabackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
+import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.service.ProjectService;
@@ -34,11 +40,18 @@ public class ProjectControllerUser {
     /**
      * Эндпойнт получения короткой информации о проекте
      */
-    @Operation(
-            summary = "Получение короткой информации о проекте",
-            description = "При успешном получении возвращается 200 Ok\n" +
-                    "В случае отсутствия проекта с указанным id возвращается 404 Not Found"
-    )
+    @Operation(summary = "Получение короткой информации о проекте")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ProjectShortResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public ProjectShortResponseDto findProject(@PathVariable Long projectId, Principal principal) {
@@ -49,12 +62,20 @@ public class ProjectControllerUser {
      * Эндпойнт получения списка проектов администратора с короткой информацией о проектах.
      * Пользователи закреплены за определенным админом и также могут видеть все его проекты
      */
-    @Operation(
-            summary = "Получение списка проектов администратора с короткой информацией о проектах",
-            description = "Пользователи закреплены за определенным админом и также могут видеть все его проекты." +
-                    "При успешном получении списка возвращается 200 Ok.\n" +
-                    "В случае отсутствия указанного email в базе данных возвращается 404 Not Found."
-    )
+    @Operation(summary = "Получение списка проектов администратора с короткой информацией о проектах",
+            description = "Пользователи закреплены за определенным админом и также могут видеть все его проекты.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = ProjectShortResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProjectShortResponseDto> findAllByCreator(Principal principal) {

@@ -2,6 +2,10 @@ package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.EmployeeService;
 
@@ -38,9 +43,18 @@ public class EmployeeControllerAdmin {
     /**
      * Эндпойнт добавления нового сотрудника
      */
-    @Operation(
-            summary = "Добавление нового сотрудника"
-    )
+    @Operation(summary = "Добавление нового сотрудника")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = EmployeeFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public EmployeeFullResponseDto addEmployee(@Validated(Create.class) @RequestBody @Parameter(required = true)
@@ -52,10 +66,21 @@ public class EmployeeControllerAdmin {
     /**
      * Эндпойнт по обновлению существующего сотрудника
      */
-    @Operation(
-            summary = "Обновление сотрудника",
-            description = "Обновляет данные сотрудника, если он существует в базе данных."
-    )
+    @Operation(summary = "Обновление сотрудника",
+            description = "Обновляет данные сотрудника, если он существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = EmployeeFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{employeeId}")
     public EmployeeFullResponseDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
                                                   @Validated(Update.class) @RequestBody @Parameter(required = true)
@@ -66,10 +91,18 @@ public class EmployeeControllerAdmin {
     /**
      * Эндпойнт удаления сотрудника
      */
-    @Operation(
-            summary = "Удаление сотрудника",
-            description = "Удаляет данные сотрудника, если он существует в базе данных."
-    )
+    @Operation(summary = "Удаление сотрудника",
+            description = "Удаляет данные сотрудника, если он существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping("/{employeeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteEmployee(@PathVariable @Parameter(required = true) Long employeeId) {

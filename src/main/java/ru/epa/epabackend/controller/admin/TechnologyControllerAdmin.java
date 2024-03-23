@@ -2,6 +2,11 @@ package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
 import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
+import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.service.TechnologyService;
@@ -31,15 +37,25 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
 public class TechnologyControllerAdmin {
+
     private final TechnologyService technologyService;
     private final TechnologyMapper technologyMapper;
 
     /**
      * Эндпойнт создания технологии.
      */
-    @Operation(
-            summary = "Создание новой технологии"
-    )
+    @Operation(summary = "Создание новой технологии")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TechnologyResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping
     public TechnologyResponseDto createTechnology(@Validated(Create.class) @Parameter(required = true)
                                                   @RequestBody TechnologyRequestDto technologyDto) {
@@ -49,10 +65,20 @@ public class TechnologyControllerAdmin {
     /**
      * Эндпойнт обновления технологии.
      */
-    @Operation(
-            summary = "Обновление технологии",
-            description = "Обновляет технологию, если она существует в базе данных."
-    )
+    @Operation(summary = "Обновление технологии", description = "Обновляет технологию, если она существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TechnologyResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{technologyId}")
     public TechnologyResponseDto updateTechnology(@Validated(Update.class) @Parameter(required = true)
                                                   @RequestBody TechnologyRequestDto technologyDto,
@@ -63,10 +89,17 @@ public class TechnologyControllerAdmin {
     /**
      * Эндпойнт получения данных технологии по id
      */
-    @Operation(
-            summary = "Получение информации о технологии по id",
-            description = "Возвращает полную информацию о технологии по id, если он существует в базе данных."
-    )
+    @Operation(summary = "Получение информации о технологии по id",
+            description = "Возвращает полную информацию о технологии по id, если он существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TechnologyResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{technologyId}")
     public TechnologyResponseDto findByIdDto(@PathVariable @Parameter(required = true) Long technologyId) {
         return technologyMapper.mapToDto(technologyService.findById(technologyId));
@@ -75,9 +108,17 @@ public class TechnologyControllerAdmin {
     /**
      * Эндпойнт выведения списка всех технологий.
      */
-    @Operation(
-            summary = "Возвращает список всех технологий"
-    )
+    @Operation(summary = "Возвращает список всех технологий")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = TechnologyResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     public List<TechnologyResponseDto> getAllTechnologies() {
         List<Technology> technologies = technologyService.findAll();
@@ -87,10 +128,17 @@ public class TechnologyControllerAdmin {
     /**
      * Эндпойнт удаления технологии.
      */
-    @Operation(
-            summary = "Удаляет технологию",
-            description = "Удаляет технологию, если она существует в базе данных."
-    )
+    @Operation(summary = "Удаляет технологию", description = "Удаляет технологию, если она существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping("/{technologyId}")
     public void deleteTechnologyById(@PathVariable Long technologyId) {
         technologyService.delete(technologyId);
