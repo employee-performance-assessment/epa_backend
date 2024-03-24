@@ -2,15 +2,14 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectSaveWithEmployeeResponseDto;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Класс ProjectMapper содержит преобразование сущности.
@@ -33,9 +32,7 @@ public interface ProjectMapper {
 
     ProjectSaveWithEmployeeResponseDto mapToProjectEmployeesDto(Project project, List<EmployeeShortResponseDto> employeeShortDtoList);
 
-    default List<ProjectShortResponseDto> mapAsList(List<Project> projects) {
-        return projects.stream().map(this::mapToShortDto).collect(Collectors.toList());
-    }
+    List<ProjectShortResponseDto> mapAsList(List<Project> projects);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "employees", ignore = true)

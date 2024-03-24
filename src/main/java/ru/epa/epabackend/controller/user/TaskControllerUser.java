@@ -2,6 +2,11 @@ package ru.epa.epabackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.service.TaskService;
@@ -26,7 +32,7 @@ import java.util.List;
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Private: Задачи", description = "Закрытый API для работы с задачами")
 @RestController
-@RequestMapping("user/tasks")
+@RequestMapping("user/task")
 @RequiredArgsConstructor
 @Validated
 public class TaskControllerUser {
@@ -37,11 +43,19 @@ public class TaskControllerUser {
     /**
      * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
      */
-    @Operation(
-            summary = "Получение всех задач по ID сотрудника с возможной фильрацией по статусу задачи",
+    @Operation(summary = "Получение всех задач по ID сотрудника с возможной фильрацией по статусу задачи",
             description = "Возвращает список задач в сокращенном виде в случае, " +
-                    "если не найдено ни одной задачи, возвращает пустой список."
-    )
+                    "если не найдено ни одной задачи, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = TaskShortResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     public List<TaskShortResponseDto> findAllTasksByEmployeeIdFilters(Principal principal,
                                                                       @RequestParam(required = false) String status) {
@@ -52,11 +66,19 @@ public class TaskControllerUser {
     /**
      * Эндпойнт поиска задачи по ID сотрудника и ID задачи.
      */
-    @Operation(
-            summary = "Получение информации о задаче сотрудником",
-            description = "Возвращает полную информацию о задаче, если она существует в базе данных." +
-                    "В случае, если задачи не найдено, возвращает ошибкую 404"
-    )
+    @Operation(summary = "Получение информации о задаче сотрудником",
+            description = "Возвращает полную информацию о задаче, если она существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TaskFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{taskId}")
     public TaskFullResponseDto findTaskById(
             @Parameter(required = true) @PathVariable Long taskId,
@@ -67,9 +89,20 @@ public class TaskControllerUser {
     /**
      * Эндпойнт обновления статуса задачи.
      */
-    @Operation(
-            summary = "Обновление статуса выполнения задачи сотрудником"
-    )
+    @Operation(summary = "Обновление статуса выполнения задачи сотрудником")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TaskFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{taskId}")
     public TaskFullResponseDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
                                             @Parameter(required = true) @RequestParam String status,
@@ -81,11 +114,19 @@ public class TaskControllerUser {
     /**
      * Эндпоинт получения списка задач проекта с определенным статусом задач
      */
-    @Operation(
-            summary = "Получение списка задач проекта с определенным статусом задач",
-            description = "При успешном получении возвращается 200 Ok\n" +
-                    "В случае отсутствия проекта с указанным id возвращается 404 Not Found"
-    )
+    @Operation(summary = "Получение списка задач проекта с определенным статусом задач")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = TaskShortResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/project/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskShortResponseDto> findByProjectIdAndStatus(@PathVariable Long projectId,

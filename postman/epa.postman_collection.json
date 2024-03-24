@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b229afcd-1fd6-48ee-adfc-07cbbc70d24d",
-		"name": "epa_24_03_16",
+		"_postman_id": "83effc74-620f-4e59-afab-806d14acc6b1",
+		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21428156"
+		"_exporter_id": "26701489"
 	},
 	"item": [
 		{
@@ -11,6 +11,20 @@
 			"item": [
 				{
 					"name": "Register admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -47,7 +61,10 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -367,12 +384,12 @@
 							"raw": "{\r\n  \"fullName\": \"Иванов Джон Иванович\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/user/employee/3",
+							"raw": "{{baseUrl}}/admin/employee/3",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"user",
+								"admin",
 								"employee",
 								"3"
 							]
@@ -419,12 +436,12 @@
 							"raw": "{\r\n  \"fullName\": \"Иванов Джон Иванович\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/user/employee/999",
+							"raw": "{{baseUrl}}/admin/employee/999",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"user",
+								"admin",
 								"employee",
 								"999"
 							]
@@ -981,243 +998,6 @@
 							"path": [
 								"admin",
 								"employee"
-<<<<<<<< HEAD:postman/epa_24_03_17.json
-========
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add employee 5 to project 1",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
-									"});",
-									"pm.test(\"Has employee create response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/1?employeeId=5",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"1"
-							],
-							"query": [
-								{
-									"key": "employeeId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add employee 6 to project 1",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/1?employeeId=6",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"1"
-							],
-							"query": [
-								{
-									"key": "employeeId",
-									"value": "6"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add employee 7 to project 2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/2?employeeId=7",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"2"
-							],
-							"query": [
-								{
-									"key": "employeeId",
-									"value": "7"
-								}
->>>>>>>> dev:postman/epa_24_03_15.json
 							]
 						}
 					},
@@ -1288,155 +1068,7 @@
 							],
 							"path": [
 								"user",
-<<<<<<<< HEAD:postman/epa_24_03_17.json
 								"project"
-========
-								"projects"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get project 1 employees",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/1",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get project 2 employees",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has employee create response\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Host",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Postman-Token",
-								"value": "<calculated when request is sent>",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
-								"disabled": true
-							},
-							{
-								"key": "Cache-Control",
-								"value": "no-cache",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/project/2",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"project",
-								"2"
->>>>>>>> dev:postman/epa_24_03_15.json
 							]
 						}
 					},
@@ -1480,11 +1112,7 @@
 							}
 						},
 						"url": {
-<<<<<<<< HEAD:postman/epa_24_03_17.json
 							"raw": "{{baseUrl}}/admin/project/1?employeeId=5",
-========
-							"raw": "{{baseUrl}}/admin/project/1",
->>>>>>>> dev:postman/epa_24_03_15.json
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1698,13 +1326,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks",
+							"raw": "{{baseUrl}}/admin/task",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"tasks"
+								"task"
 							]
 						}
 					},
@@ -1757,13 +1385,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks",
+							"raw": "{{baseUrl}}/admin/task",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"tasks"
+								"task"
 							]
 						}
 					},
@@ -1795,7 +1423,8 @@
 									"});\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1818,13 +1447,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks",
+							"raw": "{{baseUrl}}/admin/task",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"tasks"
+								"task"
 							]
 						}
 					},
@@ -1850,7 +1479,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1863,13 +1493,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks/:id",
+							"raw": "{{baseUrl}}/admin/task/:id",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"tasks",
+								"task",
 								":id"
 							],
 							"variable": [
@@ -1903,7 +1533,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1929,13 +1560,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks/:id",
+							"raw": "{{baseUrl}}/admin/task/:id",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"tasks",
+								"task",
 								":id"
 							],
 							"variable": [
@@ -1959,7 +1590,8 @@
 									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1972,13 +1604,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/tasks/:id",
+							"raw": "{{baseUrl}}/admin/task/:id",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"tasks",
+								"task",
 								":id"
 							],
 							"variable": [
@@ -2055,7 +1687,8 @@
 									"});\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2068,13 +1701,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/tasks",
+							"raw": "{{baseUrl}}/user/task",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
-								"tasks"
+								"task"
 							]
 						}
 					},
@@ -2128,7 +1761,8 @@
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2141,13 +1775,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/tasks/:id1",
+							"raw": "{{baseUrl}}/user/task/:id1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
-								"tasks",
+								"task",
 								":id1"
 							],
 							"variable": [
@@ -2322,7 +1956,8 @@
 									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");   \r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2348,13 +1983,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/user/tasks/:id1?status=in_progress",
+							"raw": "{{baseUrl}}/user/task/:id1?status=in_progress",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
-								"tasks",
+								"task",
 								":id1"
 							],
 							"query": [
@@ -2459,18 +2094,781 @@
 			"name": "Technologies",
 			"item": [
 				{
-					"name": "get technologies",
+					"name": "Technology 1 create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+									"});",
+									"pm.test(\"Has technology create response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"pm.test(\"Test technology 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);",
+									"});",
+									"pm.test(\"Test technology 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData.name, '\"name\" must be \"Technology1\"').to.eql('Technology1');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "GET",
-						"header": [],
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Technology1\"\n}"
+						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/technologies",
+							"raw": "{{baseUrl}}/admin/technology",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"technologies"
+								"technology"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Technology 2 create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+									"});",
+									"pm.test(\"Has technology create response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"pm.test(\"Test technology 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);",
+									"});",
+									"pm.test(\"Test technology 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData.name, '\"name\" must be \"Technology2\"').to.eql('Technology2');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Technology2\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/technology",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"technology"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Technology create fail name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);",
+									"});\r",
+									"pm.test(\"Has error response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Te\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/technology",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"technology"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Technology 2 update name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.be.ok;",
+									"});",
+									"pm.test(\"Has user update response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"pm.test(\"Test technology 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);",
+									"});",
+									"pm.test(\"Test user 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData.name, '\"name\" must be \"updateTechnology2\"').to.eql('updateTechnology2');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"updateTechnology2\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/technology/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"technology",
+								"2"
+							],
+							"variable": [
+								{
+									"key": "technologyId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Technology update unknown",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([500, 404]);",
+									"});\r",
+									"pm.test(\"Has error response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Technology999\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/technology/999",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"technology",
+								"999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All technologies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.be.ok;",
+									"});\r",
+									"pm.test(\"Test list technologies response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);",
+									"});\r",
+									"pm.test(\"Test technology[1] 'name' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[1]).to.have.property('name');",
+									"    pm.expect(jsonData[1].name, '\"name\" must be \"updateTechnology2\"').to.eql('updateTechnology2');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/technology",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"technology"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get technology 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.be.ok;\r",
+									"});",
+									"pm.test(\"Has technology create response\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"pm.test(\"Test technology 'id' field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/technology/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"technology",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete technology 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 204\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/technology/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"technology",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "open api errors",
+			"item": [
+				{
+					"name": "Register admin 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register admin 409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token wrong email format 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igoryandexru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token no email 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token blank email 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \" \",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token no password 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token wrong password 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token not existed email 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor1@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
 							]
 						}
 					},
