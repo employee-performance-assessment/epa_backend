@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user/evaluations")
-public class EmployeeEvaluationControllerUser {
+public class UserEmployeeEvaluationController {
 
     private final EmployeeEvaluationService employeeEvaluationService;
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
@@ -44,7 +44,9 @@ public class EmployeeEvaluationControllerUser {
     public EmployeeEvaluationDto save(@PathVariable("evaluatedId") Long evaluatedId,
                                       @RequestParam(required = true) Long evaluatorId,
                                       @Valid @RequestBody EmployeeEvaluationRequestDto employeeEvaluationRequestDto) {
-        return employeeEvaluationMapper.mapToDto(employeeEvaluationService.create(evaluatorId, evaluatedId, employeeEvaluationRequestDto));
+        EmployeeEvaluation employeeEvaluation = employeeEvaluationService
+                .create(evaluatorId, evaluatedId, employeeEvaluationRequestDto);
+        return employeeEvaluationMapper.mapToDto(employeeEvaluation);
     }
 
     /**

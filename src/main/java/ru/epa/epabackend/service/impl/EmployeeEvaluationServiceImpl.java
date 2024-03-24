@@ -35,7 +35,8 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Сохранение оценки.
      */
     @Override
-    public EmployeeEvaluation create(Long evaluatorId, Long evaluatedId, EmployeeEvaluationRequestDto employeeEvaluationRequestDto) {
+    public EmployeeEvaluation create(Long evaluatorId, Long evaluatedId,
+                                     EmployeeEvaluationRequestDto employeeEvaluationRequestDto) {
         Employee evaluated = employeeService.findById(evaluatedId);
         Employee evaluator = employeeService.findById(evaluatorId);
         Criteria criteria = criteriaService.findById(employeeEvaluationRequestDto.getCriteriaId());
@@ -49,10 +50,10 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     public EmployeeEvaluation findById(Long evaluationEvaluationId) {
-        EmployeeEvaluation employeeEvaluation = employeeEvaluationRepository.findById(evaluationEvaluationId).orElseThrow(() ->
+        return employeeEvaluationRepository
+                .findById(evaluationEvaluationId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
                         evaluationEvaluationId)));
-        return employeeEvaluation;
     }
 
     /**

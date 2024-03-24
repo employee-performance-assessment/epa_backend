@@ -6,6 +6,6 @@ import ru.epa.epabackend.model.EmployeeEvaluation;
 import java.util.List;
 
 public interface EmployeeEvaluationRepository extends JpaRepository<EmployeeEvaluation, Long> {
+
     List<EmployeeEvaluation> findAllByEvaluatedId(Long evaluatedId);
 }
-

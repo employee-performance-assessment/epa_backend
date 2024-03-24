@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/criteria")
-public class CriteriaControllerAdmin {
+public class AdminCriteriaController {
 
     private final CriteriaService criteriaService;
     private final CriteriaMapper criteriaMapper;
