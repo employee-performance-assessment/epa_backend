@@ -5,8 +5,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.epa.epabackend.dto.employee.EmployeeShortAnalyticsResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.task.TaskAnalyticsFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskAnalyticsShortResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -15,12 +20,14 @@ import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.service.TaskService;
+import ru.epa.epabackend.util.DateConstant;
 import ru.epa.epabackend.util.EnumUtils;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +42,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
+    private final EmployeeMapper employeeMapper;
     private final ProjectService projectService;
     private final EmployeeService employeeService;
 
@@ -85,7 +93,7 @@ public class TaskServiceImpl implements TaskService {
         Employee executor = checkExecutor(taskRequestDto, oldTask);
         taskMapper.updateFields(taskRequestDto, project, executor, oldTask);
         if (oldTask.getStatus() == TaskStatus.DONE) {
-            setPointsToEmployeeAfterTaskDone(taskRequestDto, oldTask);
+            setPointsToEmployeeAfterTaskDone(oldTask);
             oldTask.setFinishDate(LocalDate.now());
         }
         return taskRepository.save(oldTask);
@@ -155,6 +163,150 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
+
+    /**
+     * Получение командной статистики для админа
+     */
+    @Override
+    public TaskAnalyticsFullResponseDto findTeamStatisticsByAdmin(String rangeStart, String rangeEnd, String email) {
+        double teamCompletedOnTime = 0;
+        double teamNotCompletedOnTime = 0;
+        int completedOnTime = 0;
+        int notCompletedOnTime = 0;
+        List<EmployeeShortResponseDto> leaders = new ArrayList<>();
+        List<EmployeeShortResponseDto> deadlineViolators = new ArrayList<>();
+        LocalDate startDate = LocalDate.parse(rangeStart, DateConstant.DATE_SPACE);
+        LocalDate endDate = LocalDate.parse(rangeEnd, DateConstant.DATE_SPACE);
+        Employee admin = employeeService.findByEmail(email);
+        List<Task> tasks = taskRepository.findAllByOwnerId(admin.getId(), startDate, endDate);
+        for (Task task : tasks) {
+            if (task.getFinishDate().isAfter(task.getDeadLine())) {
+                notCompletedOnTime++;
+                teamNotCompletedOnTime++;
+            } else {
+                completedOnTime++;
+                teamCompletedOnTime++;
+            }
+
+            if ((completedOnTime / (completedOnTime + notCompletedOnTime)) * 100 > 50) {
+                leaders.add(employeeMapper.mapToShortDto(task.getExecutor()));
+            } else {
+                deadlineViolators.add(employeeMapper.mapToShortDto(task.getExecutor()));
+            }
+            completedOnTime = 0;
+            notCompletedOnTime = 0;
+        }
+
+        double totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamNotCompletedOnTime;
+        if (totalNumbersOfTaskOfTeamCompleted != 0) {
+            return taskMapper.mapToAnalyticsDto(
+                    teamCompletedOnTime / totalNumbersOfTaskOfTeamCompleted * 100,
+                    teamNotCompletedOnTime / totalNumbersOfTaskOfTeamCompleted * 100,
+                    leaders,
+                    deadlineViolators);
+        } else {
+            return new TaskAnalyticsFullResponseDto();
+        }
+    }
+
+    /**
+     * Получение индивидуальной статистики для админа
+     */
+    @Override
+    public List<EmployeeShortAnalyticsResponseDto> findIndividualStatisticsByAdmin(String rangeStart, String rangeEnd,
+                                                                                   String email) {
+        double completedOnTime = 0;
+        double notCompletedOnTime = 0;
+        List<EmployeeShortAnalyticsResponseDto> employeesShortDto = new ArrayList<>();
+        Employee admin = employeeService.findByEmail(email);
+        LocalDate startDate = LocalDate.parse(rangeStart, DateConstant.DATE_SPACE);
+        LocalDate endDate = LocalDate.parse(rangeEnd, DateConstant.DATE_SPACE);
+        List<Employee> employees = employeeService.findAllByCreatorId(admin.getId());
+        for (Employee employee : employees) {
+            for (Task task : employee.getTasks()) {
+                if (isFinishDateBetweenStartDateAndEndDate(task, startDate, endDate)) {
+                    if (task.getFinishDate().isAfter(task.getDeadLine())) {
+                        notCompletedOnTime++;
+                    } else {
+                        completedOnTime++;
+                    }
+                }
+            }
+
+            double totalNumberOfTaskOfEmployeeCompleted = completedOnTime + notCompletedOnTime;
+            if (totalNumberOfTaskOfEmployeeCompleted != 0) {
+                employeesShortDto.add(employeeMapper.mapToShortAnalyticsDto(
+                        employee,
+                        completedOnTime / totalNumberOfTaskOfEmployeeCompleted * 100,
+                        notCompletedOnTime / totalNumberOfTaskOfEmployeeCompleted * 100));
+            }
+            completedOnTime = 0;
+            notCompletedOnTime = 0;
+        }
+        return employeesShortDto;
+    }
+
+    /**
+     * Получение командной статистики для сотрудника
+     */
+    @Override
+    public TaskAnalyticsShortResponseDto findTeamStatistics(String rangeStart, String rangeEnd, String email) {
+        double teamCompletedOnTime = 0;
+        double teamNotCompletedOnTime = 0;
+        Employee employee = employeeService.findByEmail(email);
+        LocalDate startDate = LocalDate.parse(rangeStart, DateConstant.DATE_SPACE);
+        LocalDate endDate = LocalDate.parse(rangeEnd, DateConstant.DATE_SPACE);
+        List<Task> tasks = taskRepository.findAllByOwnerId(employee.getCreator().getId(), startDate, endDate);
+        for (Task task : tasks) {
+            if (task.getFinishDate().isAfter(task.getDeadLine())) {
+                teamNotCompletedOnTime++;
+            } else {
+                teamCompletedOnTime++;
+            }
+        }
+
+        double totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamNotCompletedOnTime;
+        if (totalNumbersOfTaskOfTeamCompleted != 0) {
+            return taskMapper.mapToAnalyticsDto(
+                    teamCompletedOnTime / totalNumbersOfTaskOfTeamCompleted * 100,
+                    teamNotCompletedOnTime / totalNumbersOfTaskOfTeamCompleted * 100);
+        } else {
+            return new TaskAnalyticsShortResponseDto();
+        }
+    }
+
+    /**
+     * Получение индивидуальной статистики для сотрудника
+     */
+    @Override
+    public EmployeeShortAnalyticsResponseDto findIndividualStatistics(String rangeStart, String rangeEnd,
+                                                                      String email) {
+        double completedOnTime = 0;
+        double notCompletedOnTime = 0;
+        Employee employee = employeeService.findByEmail(email);
+        LocalDate startDate = LocalDate.parse(rangeStart, DateConstant.DATE_SPACE);
+        LocalDate endDate = LocalDate.parse(rangeEnd, DateConstant.DATE_SPACE);
+        for (Task task : employee.getTasks()) {
+            if (isFinishDateBetweenStartDateAndEndDate(task, startDate, endDate)) {
+                if (task.getFinishDate().isAfter(task.getDeadLine())) {
+                    notCompletedOnTime++;
+                } else {
+                    completedOnTime++;
+                }
+            }
+        }
+
+        double totalNumberOfTaskOfEmployeeCompleted = completedOnTime + notCompletedOnTime;
+        if (totalNumberOfTaskOfEmployeeCompleted != 0) {
+            return employeeMapper.mapToShortAnalyticsDto(
+                    employee,
+                    completedOnTime / totalNumberOfTaskOfEmployeeCompleted * 100,
+                    notCompletedOnTime / totalNumberOfTaskOfEmployeeCompleted * 100);
+        } else {
+            return new EmployeeShortAnalyticsResponseDto();
+        }
+    }
+
     /**
      * Получение задачи из репозитория по ID задачи и ID исполнителя
      */
@@ -167,8 +319,8 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Проставление очков после того как задача выполнена
      */
-    private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
-        Period period = Period.between(LocalDate.now(), dto.getDeadLine());
+    private void setPointsToEmployeeAfterTaskDone(Task task) {
+        Period period = Period.between(LocalDate.now(), task.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
@@ -205,5 +357,11 @@ public class TaskServiceImpl implements TaskService {
             executor = oldTask.getExecutor();
         }
         return executor;
+    }
+
+    private boolean isFinishDateBetweenStartDateAndEndDate(Task task, LocalDate startDate, LocalDate endDate) {
+        return task.getFinishDate() != null &&
+                task.getFinishDate().isAfter(startDate) &&
+                task.getFinishDate().isBefore(endDate);
     }
 }

@@ -136,4 +136,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
     }
+
+    @Override
+    public List<Employee> findAllByCreatorId(Long creatorId) {
+        return employeeRepository.findAllByCreatorId(creatorId);
+    }
 }
