@@ -170,6 +170,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение командной статистики для админа
      */
     @Override
+    @Transactional(readOnly = true)
     public TaskAnalyticsFullResponseDto findTeamStatisticsByAdmin(String rangeStart, String rangeEnd, String email) {
         double teamCompletedOnTime = 0;
         double teamNotCompletedOnTime = 0;
@@ -216,6 +217,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение индивидуальной статистики для админа
      */
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeShortAnalyticsResponseDto> findIndividualStatisticsByAdmin(String rangeStart, String rangeEnd,
                                                                                    String email) {
         double completedOnTime = 0;
@@ -253,6 +255,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение командной статистики для сотрудника
      */
     @Override
+    @Transactional(readOnly = true)
     public TaskAnalyticsShortResponseDto findTeamStatistics(String rangeStart, String rangeEnd, String email) {
         double teamCompletedOnTime = 0;
         double teamNotCompletedOnTime = 0;
@@ -282,6 +285,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение индивидуальной статистики для сотрудника
      */
     @Override
+    @Transactional(readOnly = true)
     public EmployeeShortAnalyticsResponseDto findIndividualStatistics(String rangeStart, String rangeEnd,
                                                                       String email) {
         double completedOnTime = 0;
