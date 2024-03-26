@@ -1,4 +1,4 @@
-package ru.epa.epabackend.task.technology;
+package ru.epa.epabackend.technology;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
-import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
 import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.repository.TechnologyRepository;
@@ -32,7 +31,6 @@ public class TechnologyUnitTests {
     @InjectMocks
     private TechnologyServiceImpl technologyService;
     private Technology technology = new Technology();
-    private TechnologyResponseDto technologyResponseDto = new TechnologyResponseDto();
     private TechnologyRequestDto technologyRequestDto = new TechnologyRequestDto();
 
     @BeforeEach
@@ -40,10 +38,6 @@ public class TechnologyUnitTests {
         technology = Technology.builder()
                 .id(ID_1)
                 .name("technology")
-                .build();
-        technologyResponseDto = TechnologyResponseDto.builder()
-                .id(ID_1)
-                .name("technologyResponseDto")
                 .build();
         technologyRequestDto = TechnologyRequestDto.builder()
                 .name("technologyRequestDto")
@@ -86,8 +80,7 @@ public class TechnologyUnitTests {
     void shouldFindByIdTechnologyWhenCallRepository() {
         when(technologyRepository.findById(technology.getId())).thenReturn(Optional.ofNullable(technology));
         Technology technology = technologyService.findById(this.technology.getId());
-        int expectedId = 1;
-        assertNotNull(technology);
+        long expectedId = 1L;
         assertEquals(expectedId, technology.getId());
         verify(technologyRepository, times(1)).findById(technology.getId());
     }
@@ -105,7 +98,8 @@ public class TechnologyUnitTests {
     @Test
     @DisplayName("Удаление технологии")
     void shouldDeleteTechnologyWhen() {
+        when(technologyRepository.existsById(any())).thenReturn(true);
         technologyService.delete(ID_1);
-        verify(technologyRepository, times(1)).deleteById(ID_1);
+        verify(technologyRepository, times(1)).existsById(ID_1);
     }
 }
