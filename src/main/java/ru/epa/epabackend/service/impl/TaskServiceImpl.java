@@ -40,6 +40,8 @@ import java.util.List;
 @Transactional
 public class TaskServiceImpl implements TaskService {
 
+    private static final int PERCENTAGE_OF_TASKS_COMPLETED_ON_TIME = 50;
+
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final EmployeeMapper employeeMapper;
@@ -188,7 +190,8 @@ public class TaskServiceImpl implements TaskService {
                 teamCompletedOnTime++;
             }
 
-            if ((completedOnTime / (completedOnTime + notCompletedOnTime)) * 100 > 50) {
+            if ((completedOnTime / (completedOnTime + notCompletedOnTime)) * 100 >
+                    PERCENTAGE_OF_TASKS_COMPLETED_ON_TIME) {
                 leaders.add(employeeMapper.mapToShortDto(task.getExecutor()));
             } else {
                 deadlineViolators.add(employeeMapper.mapToShortDto(task.getExecutor()));
