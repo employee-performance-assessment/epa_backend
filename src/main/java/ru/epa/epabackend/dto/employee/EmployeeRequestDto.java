@@ -9,6 +9,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
+import static ru.epa.epabackend.util.StringPatterns.*;
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -23,24 +24,23 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class EmployeeRequestDto {
 
     @NotBlank
-    @Pattern(regexp = "^[а-яА-ЯЁё\\s\\-]+$")
+    @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH)
     @Size(min = 1, max = 255, groups = {Create.class, Update.class})
     private String fullName;
 
     @Size(min = 5, max = 32, groups = {Create.class, Update.class})
-    @Pattern(regexp = "^@{1}[a-zA-Z0-9\\_]+$")
+    @Pattern(regexp = TELEGRAM)
     private String nickName;
 
     private String city;
 
     @NotBlank(groups = {Create.class})
     @Email(groups = {Create.class, Update.class})
-    @Size(min = 5, max = 50, groups = {Create.class, Update.class})
+    @Size(min = 3, max = 255, groups = {Create.class, Update.class})
     private String email;
 
     @NotEmpty(groups = {Create.class})
-    @Pattern(regexp = "^[a-zA-Z0-9\\.\\,\\:\\;\\?\\!\\*\\+\\%\\-\\<\\>\\@\\[\\]\\{\\}\\/\\\\\\_\\$\\#]+$",
-            groups = {Create.class, Update.class})
+    @Pattern(regexp = LATIN_NUMBERS_SPECIAL_CHARACTERS_AND_ONE_UPPERCASE_LETTER, groups = {Create.class, Update.class})
     @Size(min = 8, max = 14, groups = {Create.class, Update.class})
     private String password;
 
@@ -48,8 +48,9 @@ public class EmployeeRequestDto {
     @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate birthday;
 
+    @NotBlank(groups = {Create.class})
     @Size(min = 1, max = 255, groups = {Create.class, Update.class})
-    @Pattern(regexp = "^[а-яА-ЯЁёa-zA-Z\\s\\-]+$")
+    @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH, groups = {Create.class, Update.class})
     private String position;
 
     @Size(min = 2, max = 255, groups = {Create.class, Update.class})
