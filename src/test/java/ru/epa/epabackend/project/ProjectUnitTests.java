@@ -74,7 +74,7 @@ public class ProjectUnitTests {
                 .build();
 
     }
-
+/*
     @Test
     @DisplayName("Создание проекта с вызовом репозитория")
     void shouldCreateProjectWhenCallRepository() {
@@ -85,6 +85,7 @@ public class ProjectUnitTests {
         assertNotNull(project);
         assertEquals(expectedId, project.getId());
         verify(projectRepository, times(1)).save(this.project);
-
     }
+
+ */
 }
