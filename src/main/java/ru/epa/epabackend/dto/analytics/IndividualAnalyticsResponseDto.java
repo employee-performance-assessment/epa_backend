@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IndividualAnalyticsResponseDto {
-    private Long id;
-    private String fullName;
-    private String position;
+    private Long employeeId;
+    private String employeeFullName;
+    private String employeePosition;
     private Integer completedOnTimePercent;
     private Integer delayedPercent;
 }

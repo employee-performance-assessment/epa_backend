@@ -18,6 +18,8 @@ import ru.epa.epabackend.dto.analytics.TeamAnalyticsShortResponseDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
+import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
+import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.service.AnalyticsService;
@@ -44,6 +46,8 @@ public class TaskControllerUser {
     private final TaskService taskService;
     private final AnalyticsService analyticService;
     private final TaskMapper taskMapper;
+    private final AnalyticsIndividualMapper analyticsIndividualMapper;
+    private final AnalyticsTeamMapper analyticsTeamMapper;
 
     /**
      * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
@@ -159,8 +163,9 @@ public class TaskControllerUser {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String endDate,
             Principal principal) {
-        return analyticService.findTeamStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
-                principal.getName());
+        return analyticsTeamMapper.mapToShortDto(analyticService.
+                getTeamStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
+                        principal.getName()));
     }
 
     /**
@@ -182,7 +187,8 @@ public class TaskControllerUser {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String endDate,
             Principal principal) {
-        return analyticService.findIndividualStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
-                principal.getName());
+        return analyticsIndividualMapper.mapToEntityIndividual(analyticService.
+                getIndividualStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
+                        principal.getName()));
     }
 }

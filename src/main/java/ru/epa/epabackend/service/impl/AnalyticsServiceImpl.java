@@ -5,13 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.analytics.IndividualAnalyticsResponseDto;
-import ru.epa.epabackend.dto.analytics.TeamAnalyticsFullResponseDto;
-import ru.epa.epabackend.dto.analytics.TeamAnalyticsShortResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.model.IndividualAnalytics;
 import ru.epa.epabackend.model.Task;
+import ru.epa.epabackend.model.TeamAnalytics;
 import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.EmployeeService;
@@ -19,6 +18,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Класс AnalyticServiceImpl содержит методы для аналитики задач и оценок.
@@ -28,35 +28,35 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@PropertySource("classpath:analytic.properties")
+@PropertySource("classpath:application.yml")
 public class AnalyticsServiceImpl implements AnalyticsService {
-
-    @Value("${percentage_of_tasks_completed_on_time:80}")
-    private int percentageOfTasksCompletedOnTime;
-    @Value("${percentage_of_tasks_delayed:60}")
-    private int percentageOfTasksCompletedDelayed;
 
     private final TaskRepository taskRepository;
     private final EmployeeMapper employeeMapper;
     private final EmployeeService employeeService;
+    @Value("${percentage_of_tasks_completed_on_time:80}")
+    private int percentageOfTasksCompletedOnTime;
+    @Value("${percentage_of_tasks_delayed:60}")
+    private int percentageOfTasksCompletedDelayed;
 
     /**
      * Получение командной статистики для админа
      */
     @Override
     @Transactional(readOnly = true)
-    public TeamAnalyticsFullResponseDto findTeamStatisticsByAdmin(LocalDate rangeStart, LocalDate rangeEnd,
-                                                                  String email) {
-        double teamCompletedOnTime = 0;
-        double teamDelayed = 0;
+    public TeamAnalytics getTeamStatisticsByAdmin(LocalDate rangeStart, LocalDate rangeEnd,
+                                                  String email) {
+        int teamCompletedOnTime = 0;
+        int teamDelayed = 0;
         int completedOnTime = 0;
         int delayed = 0;
         List<EmployeeShortResponseDto> leaders = new ArrayList<>();
         List<EmployeeShortResponseDto> deadlineViolators = new ArrayList<>();
         Employee admin = employeeService.findByEmail(email);
-        List<Employee> employees = employeeService.findAllByCreatorId(admin.getId());
+        List<Employee> employees = employeeService.findAllByCreatorIdShort(admin.getId());
         for (Employee employee : employees) {
-            for (Task task : employee.getTasks()) {
+            for (Task task : taskRepository.
+                    findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd)) {
                 if (isFinishedWithinSearchPeriod(task, rangeStart, rangeEnd)) {
                     if (task.getFinishDate().isAfter(task.getDeadLine())) {
                         delayed++;
@@ -81,17 +81,17 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             }
         }
 
-        double totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
+        int totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
         if (totalNumbersOfTaskOfTeamCompleted != 0) {
-            return TeamAnalyticsFullResponseDto.builder()
+            return TeamAnalytics.builder()
                     .completedOnTimePercent(
-                            getPercentageOfOneNumberFromAnother(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
-                    .delayedPercent(getPercentageOfOneNumberFromAnother(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
+                            calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
+                    .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
                     .leaders(leaders)
                     .deadlineViolators(deadlineViolators)
                     .build();
         }
-        return new TeamAnalyticsFullResponseDto();
+        return new TeamAnalytics();
     }
 
     /**
@@ -99,16 +99,16 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<IndividualAnalyticsResponseDto> findIndividualStatisticsByAdmin(LocalDate rangeStart, LocalDate rangeEnd,
-                                                                                String email) {
-        List<IndividualAnalyticsResponseDto> employeesShortDto = new ArrayList<>();
+    public List<IndividualAnalytics> getIndividualStatisticsByAdmin(LocalDate rangeStart, LocalDate rangeEnd,
+                                                                    String email) {
+        List<IndividualAnalytics> employeesShortDto = new ArrayList<>();
         Employee admin = employeeService.findByEmail(email);
-        List<Employee> employees = employeeService.findAllByCreatorId(admin.getId());
+        List<Employee> employees = employeeService.findAllByCreatorIdShort(admin.getId());
         for (Employee employee : employees) {
-            IndividualAnalyticsResponseDto individualAnalyticsResponseDto =
+            IndividualAnalytics individualAnalytics =
                     getIndividualDtoOfCompletedTasksWithinSearchPeriod(employee, rangeStart, rangeEnd);
-            if (individualAnalyticsResponseDto.getId() != null) {
-                employeesShortDto.add(individualAnalyticsResponseDto);
+            if (individualAnalytics != null) {
+                employeesShortDto.add(individualAnalytics);
             }
         }
         return employeesShortDto;
@@ -119,9 +119,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TeamAnalyticsShortResponseDto findTeamStatistics(LocalDate rangeStart, LocalDate rangeEnd, String email) {
-        double teamCompletedOnTime = 0;
-        double teamDelayed = 0;
+    public TeamAnalytics getTeamStatistics(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+        int teamCompletedOnTime = 0;
+        int teamDelayed = 0;
         Employee employee = employeeService.findByEmail(email);
         List<Task> tasks = taskRepository.findAllByOwnerIdAndFinishDateBetween(employee.getCreator().getId(),
                 rangeStart, rangeEnd);
@@ -133,15 +133,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             }
         }
 
-        double totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
+        int totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
         if (totalNumbersOfTaskOfTeamCompleted != 0) {
-            return TeamAnalyticsShortResponseDto.builder()
+            return TeamAnalytics.builder()
                     .completedOnTimePercent(
-                            getPercentageOfOneNumberFromAnother(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
-                    .delayedPercent(getPercentageOfOneNumberFromAnother(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
+                            calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
+                    .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
                     .build();
         }
-        return new TeamAnalyticsShortResponseDto();
+        return new TeamAnalytics();
     }
 
     /**
@@ -149,10 +149,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public IndividualAnalyticsResponseDto findIndividualStatistics(LocalDate rangeStart, LocalDate rangeEnd,
-                                                                   String email) {
+    public IndividualAnalytics getIndividualStatistics(LocalDate rangeStart, LocalDate rangeEnd,
+                                                       String email) {
         Employee employee = employeeService.findByEmail(email);
-        return getIndividualDtoOfCompletedTasksWithinSearchPeriod(employee, rangeStart, rangeEnd);
+        IndividualAnalytics individualAnalytics =
+                getIndividualDtoOfCompletedTasksWithinSearchPeriod(employee, rangeStart, rangeEnd);
+        return Objects.requireNonNullElseGet(individualAnalytics, IndividualAnalytics::new);
     }
 
     private boolean isFinishedWithinSearchPeriod(Task task, LocalDate rangeStart, LocalDate rangeEnd) {
@@ -161,9 +163,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 task.getFinishDate().isBefore(rangeEnd);
     }
 
-    private IndividualAnalyticsResponseDto getIndividualDtoOfCompletedTasksWithinSearchPeriod(Employee employee,
-                                                                                              LocalDate rangeStart,
-                                                                                              LocalDate rangeEnd) {
+    private IndividualAnalytics getIndividualDtoOfCompletedTasksWithinSearchPeriod(Employee employee,
+                                                                                   LocalDate rangeStart,
+                                                                                   LocalDate rangeEnd) {
         int completedOnTime = 0;
         int delayed = 0;
         for (Task task : employee.getTasks()) {
@@ -178,19 +180,19 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         int totalNumberOfTaskOfEmployeeCompleted = completedOnTime + delayed;
         if (totalNumberOfTaskOfEmployeeCompleted != 0) {
-            return IndividualAnalyticsResponseDto.builder()
-                    .id(employee.getId())
-                    .fullName(employee.getFullName())
-                    .position(employee.getPosition())
+            return IndividualAnalytics.builder()
+                    .employeeId(employee.getId())
+                    .employeeFullName(employee.getFullName())
+                    .employeePosition(employee.getPosition())
                     .completedOnTimePercent(
-                            getPercentageOfOneNumberFromAnother(completedOnTime, totalNumberOfTaskOfEmployeeCompleted))
-                    .delayedPercent(getPercentageOfOneNumberFromAnother(delayed, totalNumberOfTaskOfEmployeeCompleted))
+                            calcPercent(completedOnTime, totalNumberOfTaskOfEmployeeCompleted))
+                    .delayedPercent(calcPercent(delayed, totalNumberOfTaskOfEmployeeCompleted))
                     .build();
         }
-        return new IndividualAnalyticsResponseDto();
+        return null;
     }
 
-    private int getPercentageOfOneNumberFromAnother(double number1, double number2) {
-        return (int) (number1 / number2 * 100);
+    private int calcPercent(int number1, int number2) {
+        return number1 * 100 / number2;
     }
 }

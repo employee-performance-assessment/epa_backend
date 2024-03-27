@@ -18,6 +18,8 @@ import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
+import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
+import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.TaskService;
@@ -45,6 +47,8 @@ public class TaskControllerAdmin {
     private final TaskService taskService;
     private final AnalyticsService analyticService;
     private final TaskMapper taskMapper;
+    private final AnalyticsIndividualMapper analyticsIndividualMapper;
+    private final AnalyticsTeamMapper analyticsTeamMapper;
 
     /**
      * Эндпойнт поиска всех задач администратором.
@@ -173,8 +177,9 @@ public class TaskControllerAdmin {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String rangeEnd,
             Principal principal) {
-        return analyticService.findTeamStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
-                principal.getName());
+        return analyticsTeamMapper.mapToFullDto(analyticService.
+                getTeamStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
+                        principal.getName()));
     }
 
     /**
@@ -196,7 +201,8 @@ public class TaskControllerAdmin {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String rangeEnd,
             Principal principal) {
-        return analyticService.findIndividualStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
-                principal.getName());
+        return analyticsIndividualMapper.mapList(analyticService.
+                getIndividualStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
+                        principal.getName()));
     }
 }
