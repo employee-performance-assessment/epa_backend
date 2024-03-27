@@ -16,4 +16,5 @@ public class EmployeeShortResponseDto {
     private Long id;
     private String fullName;
     private String position;
+    private String email;
 }

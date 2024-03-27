@@ -223,7 +223,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -490,7 +490,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -828,7 +828,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Оклахом Борис Джовански\",\r\n  \"nickName\": \"@appalachi\",\r\n  \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\",\r\n  \"position\": \"Backend\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Оклахом Борис Джовански\",\r\n  \"nickName\": \"@appalachi\",\r\n  \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -908,7 +908,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Богдан Хмельницкий\",\r\n  \"nickName\": \"@kazak\",\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\",\r\n  \"position\": \"Backend\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Богдан Хмельницкий\",\r\n  \"nickName\": \"@kazak\",\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -988,7 +988,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Рексар\",\r\n  \"nickName\": \"@klyk\",\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Рексар\",\r\n  \"nickName\": \"@klyk\",\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
