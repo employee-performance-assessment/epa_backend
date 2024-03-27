@@ -1,7 +1,6 @@
 package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,37 +12,39 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.criteria.CriteriaResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
+import ru.epa.epabackend.dto.recommendation.RecommendationRequestDto;
+import ru.epa.epabackend.dto.recommendation.RecommendationResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
-import ru.epa.epabackend.mapper.CriteriaMapper;
-import ru.epa.epabackend.service.CriteriaService;
+import ru.epa.epabackend.mapper.RecommendationMapper;
+import ru.epa.epabackend.model.Recommendation;
+import ru.epa.epabackend.service.RecommendationService;
 
 import java.util.List;
 
 /**
- * Класс AdminCriteriaController содержит эндпойнты для администратора, относящиеся к критериям оценок.
+ * Класс AdminRecommendationController содержит эндпойнты для администратора,
+ * относящиеся к созданию рекомендаций для сотрудников.
  *
  * @author Михаил Безуглов
  */
-@Tag(name = "Admin: Критерии оценок", description = "API администратора для работы с критериями оценок")
+@Tag(name = "Admin: Рекомендации", description = "API администратора для работы рекомендациями")
 @SecurityRequirement(name = "JWT")
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/criteria")
-public class AdminCriteriaController {
+@RequestMapping("/admin/recommendation")
+public class AdminRecommendationController {
 
-    private final CriteriaService criteriaService;
-    private final CriteriaMapper criteriaMapper;
+    private final RecommendationService recommendationService;
+    private final RecommendationMapper recommendationMapper;
 
     /**
-     * Эндпойнт добавления нового критерия оценки
+     * Эндпойнт добавления новой рекомендации.
      */
     @Operation(
-            summary = "Добавление нового критерия оценки",
+            summary = "Добавление новой рекомендации",
             description = "При успешном добавлении возвращается код 201 Created."
     )
     @ApiResponses(value = {
@@ -57,19 +58,23 @@ public class AdminCriteriaController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @PostMapping
+    @PostMapping("/{senderId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<CriteriaResponseDto> save(@RequestBody List<CriteriaRequestDto> criteriaRequestDtoList) {
-        return criteriaMapper.mapList(criteriaService.create(criteriaRequestDtoList));
+    public RecommendationResponseDto save(@PathVariable("senderId") Long senderId,
+                                          @RequestParam(required = true) Long recipientId,
+            @RequestBody RecommendationRequestDto recommendationRequestDto) {
+        Recommendation recommendation = recommendationService.create(recommendationRequestDto,
+                recipientId, senderId);
+        return recommendationMapper.mapToDto(recommendation);
     }
 
     /**
-     * Эндпойнт поиска всех оценок.
+     * Эндпойнт получение рекомендаций конкретного сотрудника.
      */
     @Operation(
-            summary = "Получение всех критериев оценок",
-            description = "Возвращает список всех критериев оценок." +
-                    "В случае, если не найдено ни одного критерия оценки, возвращает пустой список."
+            summary = "Получение рекомендаций руководителя для определенного сотрудника",
+            description = "Возвращает список рекомендаций" +
+                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
@@ -82,17 +87,18 @@ public class AdminCriteriaController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<CriteriaResponseDto> findAll() {
-        return criteriaMapper.mapList(criteriaService.findAll());
+    public List<RecommendationResponseDto> findAllRecommendationByRecipientId(
+            @RequestParam(required = true) Long recipientId) {
+        return recommendationMapper.mapList(recommendationService.findAllByRecipientId(recipientId));
     }
 
     /**
-     * Эндпойнт поиска названия оценки по её ID.
+     * Эндпойнт получение всех рекомендаций.
      */
     @Operation(
-            summary = "Получение информации о названии критерия оценки",
-            description = "Возвращает название критерия оценки и её ID, если она существует в базе данных. " +
-                    "В случае, если критерия оценки не найдено, возвращает ошибку 404"
+            summary = "Получение всех рекомендаций",
+            description = "Возвращает список рекомендаций" +
+                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
@@ -104,8 +110,8 @@ public class AdminCriteriaController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/{criteriaId}")
-    public CriteriaResponseDto findById(@Parameter(required = true) @PathVariable Long criteriaId) {
-        return criteriaMapper.mapToDto(criteriaService.findById(criteriaId));
+    @GetMapping("/all")
+    public List<RecommendationResponseDto> findAllRecommendations() {
+        return recommendationMapper.mapList(recommendationService.findAll());
     }
 }

@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
 import ru.epa.epabackend.model.Criteria;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface CriteriaService {
     /**
      * Создание критерия оценки.
      */
-    Criteria create(CriteriaRequestDto criteriaRequestDto);
+    List<Criteria> create(List<CriteriaRequestDto> criteriaRequestDtoList);
 
     /**
      * Найти критерий оценки по его ID.
@@ -26,9 +26,4 @@ public interface CriteriaService {
      * Получение списка всех критериев оценок.
      */
     List<Criteria> findAll();
-
-    /**
-     * Удаление критерия оценки.
-     */
-    void delete(Long evaluationId);
 }

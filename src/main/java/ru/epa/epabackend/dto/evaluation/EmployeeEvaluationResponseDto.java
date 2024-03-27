@@ -1,11 +1,12 @@
 package ru.epa.epabackend.dto.evaluation;
 
+import jakarta.persistence.ColumnResult;
+import jakarta.persistence.ConstructorResult;
+import jakarta.persistence.SqlResultSetMapping;
 import lombok.*;
 
-import java.util.HashMap;
-
 /**
- * Класс EvaluationCreateResponseDto для передачи для передачи информации об оценках сотрудника.
+ * Класс EvaluationCreateResponseDto для передачи информации об оценках сотрудника.
  *
  * @author Михаил Безуглов
  */
@@ -15,15 +16,24 @@ import java.util.HashMap;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SqlResultSetMapping(name = "EmployeeEvaluationResponseDto",
+        classes = @ConstructorResult(targetClass = EmployeeEvaluationResponseDto.class,
+                columns = {@ColumnResult(name = "name"),
+                        @ColumnResult(name = "score"),}))
 public class EmployeeEvaluationResponseDto {
 
     /**
-     * Сотрудник, которого оценили.
+     * Название критерия.
      */
-    private Long criteriaId;
+    private String name;
 
     /**
-     * Список оценок.
+     * Количество звезд с округлением до одного знака после запятой.
      */
-    private HashMap<CriteriaResponseDto, Double> evaluations;
+    private Double score;
+
+    public EmployeeEvaluationResponseDto(Object name, Double score) {
+        this.name = name.toString();
+        this.score = score;
+    }
 }

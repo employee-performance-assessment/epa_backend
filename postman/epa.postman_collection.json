@@ -2875,6 +2875,509 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Evaluations",
+			"item": [
+				{
+					"name": "add evaluation 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"name\":\"Танцы\"\r\n    },\r\n    {\r\n        \"name\":\"Пенее\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[    \r\n    {\r\n        \"name\":\"Пустая болтовня\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/7?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"7"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n    \"criteriaId\": 2,\r\n    \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 2\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/6?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"6"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/2?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"2"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n{\r\n  \"criteriaId\": 1,\r\n  \"score\": 1\r\n}\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/6?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"6"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllEvaluationsByEvaluatedId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluations/users?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluations",
+								"users"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request Copy 2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/5/admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"5",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EvaluationsAdminByEvaluatedId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FullRating",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/rating/5/full?startDay=2024-03-20&endDay=2024-03-30",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"rating",
+								"5",
+								"full"
+							],
+							"query": [
+								{
+									"key": "startDay",
+									"value": "2024-03-20"
+								},
+								{
+									"key": "endDay",
+									"value": "2024-03-30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rating",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/rating/5?startDay=2024-03-20&endDay=2024-03-30",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"rating",
+								"5"
+							],
+							"query": [
+								{
+									"key": "startDay",
+									"value": "2024-03-20"
+								},
+								{
+									"key": "endDay",
+									"value": "2024-03-30"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recommendation",
+			"item": [
+				{
+					"name": "add recommendation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"Для успешного выполнения задач важно правильно организовать рабочее пространство и время. Попробуйте метод помидора - ставьте таймер на 25 минут, в течение которых работайте интенсивно, полностью погружаясь в задачу, а затем делайте 5-минутный перерыв. Такой подход поможет вам оставаться продуктивным, не переутомляясь.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation/2?recipientId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation",
+								"2"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add recommendation 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"Твоя работа действительно впечатляет. Ты очень ответственный и талантливый сотрудник.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation/2?recipientId=4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation",
+								"2"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add recommendation 3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"Я заметил, что в последнее время ты допускаешь ошибки из-за своей невнимательности. Мне бы хотелось помочь тебе стать внимательнее и аккуратнее. Возможно, тебе стоит попробовать использовать техники для улучшения концентрации, такие как медитация или глубокое дыхание. Также не забывай делать перерывы во время работы, чтобы избежать переутомления.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation/1?recipientId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation",
+								"1"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RecommendationByRecipientId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"Я заметил, что в последнее время ты допускаешь ошибки из-за своей невнимательности. Мне бы хотелось помочь тебе стать внимательнее и аккуратнее. Возможно, тебе стоит попробовать использовать техники для улучшения концентрации, такие как медитация или глубокое дыхание. Также не забывай делать перерывы во время работы, чтобы избежать переутомления.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation?recipientId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

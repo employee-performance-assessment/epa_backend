@@ -1,8 +1,11 @@
 package ru.epa.epabackend.service;
 
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
+import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
+import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -16,7 +19,8 @@ public interface EmployeeEvaluationService {
     /**
      * Сохранение оценки сотрудника от его руководителя или коллег.
      */
-    EmployeeEvaluation create(Long employeeId, Long appraiserId, EmployeeEvaluationRequestDto employeeEvaluationDto);
+    List<EmployeeEvaluation> create(Long evaluatorId, Long evaluatedId,
+                                    List<EmployeeEvaluationRequestDto> evaluationListDto);
 
     /**
      * Найти оценку сотрудника по идентификатору.
@@ -24,12 +28,22 @@ public interface EmployeeEvaluationService {
     EmployeeEvaluation findById(Long employeeEvaluationId);
 
     /**
-     * Получение списка всех оценок.
+     * Получение списка всех оценок коллег.
      */
-    List<EmployeeEvaluation> findAllByAppraiserId(Long appraiserId);
+    List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(Long evaluatedId);
 
     /**
-     * Удаление оценки.
+     * Получение списка оценок руководителя.
      */
-    void delete(Long employeeEvaluationId);
+    List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(Long evaluatedId);
+
+    /**
+     * Получение рейтинга за определенный период сотрудника от всего коллектива.
+     */
+    RatingResponseDto findFullRating(Long evaluatedId, LocalDate startDay, LocalDate endDay);
+
+    /**
+     * Получение рейтинга за определенный период сотрудника только от руководителя.
+     */
+    RatingResponseDto findRatingByAdmin(Long evaluatedId, LocalDate startDay, LocalDate endDay);
 }
