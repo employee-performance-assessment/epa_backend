@@ -2299,8 +2299,8 @@
 							],
 							"path": [
 								"admin",
-								"task",
 								"stat",
+								"task",
 								"team"
 							],
 							"query": [
@@ -2332,12 +2332,12 @@
 									"    var jsonData = pm.response.json();\r",
 									"\r",
 									"    pm.expect(jsonData[0].employeeId).to.eql(5);\r",
-									"    pm.expect(jsonData[0].completedOnTimePercent).to.eql(100.0);\r",
-									"    pm.expect(jsonData[0].delayedPercent).to.eql(0.0);\r",
+									"    pm.expect(jsonData[0].completedOnTimePercent).to.eql(100);\r",
+									"    pm.expect(jsonData[0].delayedPercent).to.eql(0);\r",
 									"\r",
 									"    pm.expect(jsonData[1].employeeId).to.eql(6);\r",
-									"    pm.expect(jsonData[1].completedOnTimePercent).to.eql(0.0);\r",
-									"    pm.expect(jsonData[1].delayedPercent).to.eql(100.0);\r",
+									"    pm.expect(jsonData[1].completedOnTimePercent).to.eql(0);\r",
+									"    pm.expect(jsonData[1].delayedPercent).to.eql(100);\r",
 									"});\r",
 									""
 								],
@@ -2371,8 +2371,8 @@
 							],
 							"path": [
 								"admin",
-								"task",
 								"stat",
+								"task",
 								"individual"
 							],
 							"query": [
@@ -2478,8 +2478,8 @@
 							],
 							"path": [
 								"user",
-								"task",
 								"stat",
+								"task",
 								"team"
 							],
 							"query": [
@@ -2547,8 +2547,8 @@
 							],
 							"path": [
 								"user",
-								"task",
 								"stat",
+								"task",
 								"individual"
 							],
 							"query": [
