@@ -1,7 +1,7 @@
 package ru.epa.epabackend.dto.analytics;
 
 import lombok.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeAnalyticsResponseDto;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ import java.util.List;
 public class TeamAnalyticsFullResponseDto {
     private Integer completedOnTimePercent;
     private Integer delayedPercent;
-    private List<EmployeeShortResponseDto> leaders;
-    private List<EmployeeShortResponseDto> deadlineViolators;
+    private List<EmployeeAnalyticsResponseDto> leaders;
+    private List<EmployeeAnalyticsResponseDto> deadlineViolators;
 }
