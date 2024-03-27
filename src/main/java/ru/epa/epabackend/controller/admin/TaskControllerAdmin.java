@@ -177,8 +177,8 @@ public class TaskControllerAdmin {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String rangeEnd,
             Principal principal) {
-        return analyticsTeamMapper.mapToFullDto(analyticService.
-                getTeamStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
+        return analyticsTeamMapper.mapToFullDto(analyticService
+                .getTeamStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
                         principal.getName()));
     }
 
@@ -201,8 +201,8 @@ public class TaskControllerAdmin {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String rangeEnd,
             Principal principal) {
-        return analyticsIndividualMapper.mapList(analyticService.
-                getIndividualStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
+        return analyticsIndividualMapper.mapList(analyticService
+                .getIndividualStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
                         principal.getName()));
     }
 }

@@ -55,8 +55,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         Employee admin = employeeService.findByEmail(email);
         List<Employee> employees = employeeService.findAllByCreatorIdShort(admin.getId());
         for (Employee employee : employees) {
-            for (Task task : taskRepository.
-                    findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd)) {
+            for (Task task : taskRepository
+                    .findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd)) {
                 if (isFinishedWithinSearchPeriod(task, rangeStart, rangeEnd)) {
                     if (task.getFinishDate().isAfter(task.getDeadLine())) {
                         delayed++;

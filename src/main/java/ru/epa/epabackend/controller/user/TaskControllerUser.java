@@ -163,8 +163,8 @@ public class TaskControllerUser {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String endDate,
             Principal principal) {
-        return analyticsTeamMapper.mapToShortDto(analyticService.
-                getTeamStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
+        return analyticsTeamMapper.mapToShortDto(analyticService
+                .getTeamStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
                         principal.getName()));
     }
 
@@ -187,8 +187,8 @@ public class TaskControllerUser {
             @RequestParam(name = "range-start") String rangeStart,
             @RequestParam(name = "range-end") String endDate,
             Principal principal) {
-        return analyticsIndividualMapper.mapToEntityIndividual(analyticService.
-                getIndividualStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
+        return analyticsIndividualMapper.mapToEntityIndividual(analyticService
+                .getIndividualStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
                         principal.getName()));
     }
 }
