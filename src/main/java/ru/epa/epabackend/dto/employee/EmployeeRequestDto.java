@@ -23,7 +23,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @AllArgsConstructor
 public class EmployeeRequestDto {
 
-    @NotBlank
+    @NotBlank(groups = {Create.class})
     @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH)
     @Size(min = 1, max = 255, groups = {Create.class, Update.class})
     private String fullName;
@@ -34,7 +34,7 @@ public class EmployeeRequestDto {
 
     private String city;
 
-    @NotBlank(groups = {Create.class})
+    @NotBlank(groups = Create.class)
     @Email(groups = {Create.class, Update.class})
     @Size(min = 3, max = 255, groups = {Create.class, Update.class})
     private String email;
