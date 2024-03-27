@@ -2264,8 +2264,8 @@
 									"\r",
 									"pm.test(\"Test team statistic\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.teamCompletedOnTimePercent).to.eql(50.0);\r",
-									"    pm.expect(jsonData.teamNotCompletedOnTimePercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.delayedPercent).to.eql(50.0);\r",
 									"});\r",
 									""
 								],
@@ -2293,7 +2293,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/task/stat/team?rangeStart=2024-01-01&rangeEnd=2025-01-01",
+							"raw": "{{baseUrl}}/admin/task/stat/team?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2305,11 +2305,11 @@
 							],
 							"query": [
 								{
-									"key": "rangeStart",
+									"key": "range-start",
 									"value": "2024-01-01"
 								},
 								{
-									"key": "rangeEnd",
+									"key": "range-end",
 									"value": "2025-01-01"
 								}
 							]
@@ -2333,11 +2333,11 @@
 									"\r",
 									"    pm.expect(jsonData[0].id).to.eql(5);\r",
 									"    pm.expect(jsonData[0].completedOnTimePercent).to.eql(100.0);\r",
-									"    pm.expect(jsonData[0].notCompletedOnTimePercent).to.eql(0.0);\r",
+									"    pm.expect(jsonData[0].delayedPercent).to.eql(0.0);\r",
 									"\r",
 									"    pm.expect(jsonData[1].id).to.eql(6);\r",
 									"    pm.expect(jsonData[1].completedOnTimePercent).to.eql(0.0);\r",
-									"    pm.expect(jsonData[1].notCompletedOnTimePercent).to.eql(100.0);\r",
+									"    pm.expect(jsonData[1].delayedPercent).to.eql(100.0);\r",
 									"});\r",
 									""
 								],
@@ -2365,7 +2365,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/task/stat/individual?rangeStart=2024-01-01&rangeEnd=2025-01-01",
+							"raw": "{{baseUrl}}/admin/task/stat/individual?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2377,11 +2377,11 @@
 							],
 							"query": [
 								{
-									"key": "rangeStart",
+									"key": "range-start",
 									"value": "2024-01-01"
 								},
 								{
-									"key": "rangeEnd",
+									"key": "range-end",
 									"value": "2025-01-01"
 								}
 							]
@@ -2444,8 +2444,8 @@
 									"\r",
 									"pm.test(\"Test team statistic\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.teamCompletedOnTimePercent).to.eql(50.0);\r",
-									"    pm.expect(jsonData.teamNotCompletedOnTimePercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.delayedPercent).to.eql(50.0);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -2472,7 +2472,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/task/stat/team?rangeStart=2024-01-01&rangeEnd=2025-01-01",
+							"raw": "{{baseUrl}}/user/task/stat/team?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2484,11 +2484,11 @@
 							],
 							"query": [
 								{
-									"key": "rangeStart",
+									"key": "range-start",
 									"value": "2024-01-01"
 								},
 								{
-									"key": "rangeEnd",
+									"key": "range-end",
 									"value": "2025-01-01"
 								}
 							]
@@ -2514,7 +2514,7 @@
 									"    pm.expect(jsonData.fullName).to.eql(\"Богдан Хмельницкий\");\r",
 									"    pm.expect(jsonData.position).to.eql(\"dev\");\r",
 									"    pm.expect(jsonData.completedOnTimePercent).to.eql(0.0);\r",
-									"    pm.expect(jsonData.notCompletedOnTimePercent).to.eql(100.0);\r",
+									"    pm.expect(jsonData.delayedPercent).to.eql(100.0);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -2541,7 +2541,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/task/stat/individual?rangeStart=2024-01-01&rangeEnd=2025-01-01",
+							"raw": "{{baseUrl}}/user/task/stat/individual?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2553,11 +2553,11 @@
 							],
 							"query": [
 								{
-									"key": "rangeStart",
+									"key": "range-start",
 									"value": "2024-01-01"
 								},
 								{
-									"key": "rangeEnd",
+									"key": "range-end",
 									"value": "2025-01-01"
 								}
 							]
