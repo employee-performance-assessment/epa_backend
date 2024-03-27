@@ -48,21 +48,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                                                   String email) {
         int teamCompletedOnTime = 0;
         int teamDelayed = 0;
-        int completedOnTime = 0;
-        int delayed = 0;
         List<EmployeeShortResponseDto> leaders = new ArrayList<>();
         List<EmployeeShortResponseDto> deadlineViolators = new ArrayList<>();
         Employee admin = employeeService.findByEmail(email);
         List<Employee> employees = employeeService.findAllByCreatorId(admin.getId());
         for (Employee employee : employees) {
-            for (Task task : taskRepository
-                    .findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd)) {
-                if (task.getFinishDate().isAfter(task.getDeadLine())) {
-                    delayed++;
-                } else {
-                    completedOnTime++;
-                }
-            }
+            List<Task> tasks = taskRepository
+                    .findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
+           int delayed =  calcDelayedTasks(tasks);
+           int completedOnTime = tasks.size() - delayed;
             if (!employee.getTasks().isEmpty()) {
                 if ((completedOnTime / employee.getTasks().size()) * 100 >
                         percentageOfTasksCompletedOnTime) {
@@ -73,9 +67,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                     deadlineViolators.add(employeeMapper.mapToShortDto(employee));
                 }
                 teamCompletedOnTime += completedOnTime;
-                completedOnTime = 0;
                 teamDelayed += delayed;
-                delayed = 0;
             }
         }
 
@@ -118,19 +110,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Override
     @Transactional(readOnly = true)
     public TeamAnalytics getTeamStatistics(LocalDate rangeStart, LocalDate rangeEnd, String email) {
-        int teamCompletedOnTime = 0;
-        int teamDelayed = 0;
         Employee employee = employeeService.findByEmail(email);
         List<Task> tasks = taskRepository.findAllByOwnerIdAndFinishDateBetween(employee.getCreator().getId(),
                 rangeStart, rangeEnd);
-        for (Task task : tasks) {
-            if (task.getFinishDate().isAfter(task.getDeadLine())) {
-                teamDelayed++;
-            } else {
-                teamCompletedOnTime++;
-            }
-        }
-
+        int teamDelayed = calcDelayedTasks(tasks);
+        int teamCompletedOnTime = tasks.size() - teamDelayed;
         int totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
         if (totalNumbersOfTaskOfTeamCompleted != 0) {
             return TeamAnalytics.builder()
@@ -186,5 +170,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     private int calcPercent(int number1, int number2) {
         return number1 * 100 / number2;
+    }
+
+    private int calcDelayedTasks(List<Task> tasks) {
+        int delayed = 0;
+        for (Task task : tasks) {
+            if (task.getFinishDate().isAfter(task.getDeadLine())) {
+                delayed++;
+            }
+        }
+        return delayed;
     }
 }
