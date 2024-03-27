@@ -13,17 +13,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortAnalyticsResponseDto;
-import ru.epa.epabackend.dto.task.TaskAnalyticsShortResponseDto;
+import ru.epa.epabackend.dto.analytics.IndividualAnalyticsResponseDto;
+import ru.epa.epabackend.dto.analytics.TeamAnalyticsShortResponseDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Task;
+import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -40,6 +42,7 @@ import java.util.List;
 public class TaskControllerUser {
 
     private final TaskService taskService;
+    private final AnalyticsService analyticService;
     private final TaskMapper taskMapper;
 
     /**
@@ -51,7 +54,7 @@ public class TaskControllerUser {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = TaskShortResponseDto.class)))),
+                    schema = @Schema(implementation = TaskShortResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -152,11 +155,12 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/team")
-    public TaskAnalyticsShortResponseDto findTeamStatistics(
-            @RequestParam(name = "rangeStart") String rangeStart,
-            @RequestParam(name = "rangeEnd") String rangeEnd,
+    public TeamAnalyticsShortResponseDto findTeamStatistics(
+            @RequestParam(name = "range-start") String rangeStart,
+            @RequestParam(name = "range-end") String endDate,
             Principal principal) {
-        return taskService.findTeamStatistics(rangeStart, rangeEnd, principal.getName());
+        return analyticService.findTeamStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
+                principal.getName());
     }
 
     /**
@@ -174,10 +178,11 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/individual")
-    public EmployeeShortAnalyticsResponseDto findIndividualStatistics(
-            @RequestParam(name = "rangeStart") String rangeStart,
-            @RequestParam(name = "rangeEnd") String rangeEnd,
+    public IndividualAnalyticsResponseDto findIndividualStatistics(
+            @RequestParam(name = "range-start") String rangeStart,
+            @RequestParam(name = "range-end") String endDate,
             Principal principal) {
-        return taskService.findIndividualStatistics(rangeStart, rangeEnd, principal.getName());
+        return analyticService.findIndividualStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
+                principal.getName());
     }
 }

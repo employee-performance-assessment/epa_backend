@@ -1,4 +1,4 @@
-package ru.epa.epabackend.dto.employee;
+package ru.epa.epabackend.dto.analytics;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeShortAnalyticsResponseDto {
+public class IndividualAnalyticsResponseDto {
     private Long id;
     private String fullName;
     private String position;
-    private Double completedOnTimePercent;
-    private Double notCompletedOnTimePercent;
+    private Integer completedOnTimePercent;
+    private Integer delayedPercent;
 }

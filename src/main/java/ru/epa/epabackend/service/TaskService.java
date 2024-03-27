@@ -1,8 +1,5 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.employee.EmployeeShortAnalyticsResponseDto;
-import ru.epa.epabackend.dto.task.TaskAnalyticsFullResponseDto;
-import ru.epa.epabackend.dto.task.TaskAnalyticsShortResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
@@ -61,25 +58,4 @@ public interface TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status);
-
-    /**
-     * Получение командной статистики для админа
-     */
-    TaskAnalyticsFullResponseDto findTeamStatisticsByAdmin(String rangeStart, String rangeEnd, String email);
-
-    /**
-     * Получение индивидуальной статистики для админа
-     */
-    List<EmployeeShortAnalyticsResponseDto> findIndividualStatisticsByAdmin(String rangeStart, String rangeEnd,
-                                                                            String email);
-
-    /**
-     * Получение командной статистики для сотрудника
-     */
-    TaskAnalyticsShortResponseDto findTeamStatistics(String rangeStart, String rangeEnd, String email);
-
-    /**
-     * Получение индивидуальной статистики для сотрудника
-     */
-    EmployeeShortAnalyticsResponseDto findIndividualStatistics(String rangeStart, String rangeEnd, String email);
 }

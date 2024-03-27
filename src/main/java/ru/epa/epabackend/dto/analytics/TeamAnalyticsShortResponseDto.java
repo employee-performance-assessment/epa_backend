@@ -1,4 +1,4 @@
-package ru.epa.epabackend.dto.task;
+package ru.epa.epabackend.dto.analytics;
 
 import lombok.*;
 
@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskAnalyticsShortResponseDto {
-    private Double teamCompletedOnTimePercent;
-    private Double teamNotCompletedOnTimePercent;
+public class TeamAnalyticsShortResponseDto {
+    private Integer completedOnTimePercent;
+    private Integer delayedPercent;
 }

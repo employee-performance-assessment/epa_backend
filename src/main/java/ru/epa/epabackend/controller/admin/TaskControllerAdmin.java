@@ -12,16 +12,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortAnalyticsResponseDto;
-import ru.epa.epabackend.dto.task.TaskAnalyticsFullResponseDto;
+import ru.epa.epabackend.dto.analytics.IndividualAnalyticsResponseDto;
+import ru.epa.epabackend.dto.analytics.TeamAnalyticsFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.TaskMapper;
+import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.TaskService;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
@@ -41,6 +43,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class TaskControllerAdmin {
 
     private final TaskService taskService;
+    private final AnalyticsService analyticService;
     private final TaskMapper taskMapper;
 
     /**
@@ -52,7 +55,7 @@ public class TaskControllerAdmin {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = TaskShortResponseDto.class)))),
+                    schema = @Schema(implementation = TaskShortResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -103,7 +106,7 @@ public class TaskControllerAdmin {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
     public TaskFullResponseDto create(@Validated(Create.class) @Parameter(required = true)
-                                             @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
+                                      @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
         return taskMapper.mapToFullDto(taskService.create(taskRequestDto, principal.getName()));
     }
 
@@ -127,7 +130,7 @@ public class TaskControllerAdmin {
     @PatchMapping("/{taskId}")
     public TaskFullResponseDto update(@Parameter(required = true) @PathVariable Long taskId,
                                       @Validated(Update.class) @Parameter(required = true)
-                                             @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
+                                      @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
         return taskMapper.mapToFullDto(taskService.update(taskId, taskRequestDto, principal.getName()));
     }
 
@@ -166,11 +169,12 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/team")
-    public TaskAnalyticsFullResponseDto findTeamStatisticsByAdmin(
-            @RequestParam(name = "rangeStart") String rangeStart,
-            @RequestParam(name = "rangeEnd") String rangeEnd,
+    public TeamAnalyticsFullResponseDto findTeamStatisticsByAdmin(
+            @RequestParam(name = "range-start") String rangeStart,
+            @RequestParam(name = "range-end") String rangeEnd,
             Principal principal) {
-        return taskService.findTeamStatisticsByAdmin(rangeStart, rangeEnd, principal.getName());
+        return analyticService.findTeamStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
+                principal.getName());
     }
 
     /**
@@ -188,10 +192,11 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/individual")
-    public List<EmployeeShortAnalyticsResponseDto> findIndividualStatisticsByAdmin(
-            @RequestParam(name = "rangeStart") String rangeStart,
-            @RequestParam(name = "rangeEnd") String rangeEnd,
+    public List<IndividualAnalyticsResponseDto> findIndividualStatisticsByAdmin(
+            @RequestParam(name = "range-start") String rangeStart,
+            @RequestParam(name = "range-end") String rangeEnd,
             Principal principal) {
-        return taskService.findIndividualStatisticsByAdmin(rangeStart, rangeEnd, principal.getName());
+        return analyticService.findIndividualStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
+                principal.getName());
     }
 }

@@ -1,4 +1,4 @@
-package ru.epa.epabackend.dto.task;
+package ru.epa.epabackend.dto.analytics;
 
 import lombok.*;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
@@ -15,9 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TaskAnalyticsFullResponseDto {
-    private Double teamCompletedOnTimePercent;
-    private Double teamNotCompletedOnTimePercent;
+public class TeamAnalyticsFullResponseDto {
+    private Integer completedOnTimePercent;
+    private Integer delayedPercent;
     private List<EmployeeShortResponseDto> leaders;
     private List<EmployeeShortResponseDto> deadlineViolators;
 }

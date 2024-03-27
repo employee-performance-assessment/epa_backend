@@ -1,7 +1,10 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
-import ru.epa.epabackend.dto.employee.*;
+import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
+import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 
 import java.util.List;
@@ -25,9 +28,6 @@ public interface EmployeeMapper {
     Employee mapToEntity(EmployeeShortRequestDto employeeShortRequestDto);
 
     EmployeeShortResponseDto mapToShortDto(Employee employee);
-
-    EmployeeShortAnalyticsResponseDto mapToShortAnalyticsDto(Employee employee, Double completedOnTimePercent,
-                                                             Double notCompletedOnTimePercent);
 
     default List<EmployeeShortResponseDto> mapList(List<Employee> employees) {
         return employees.stream().map(this::mapToShortDto).collect(Collectors.toList());

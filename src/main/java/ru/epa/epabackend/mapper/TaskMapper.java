@@ -1,8 +1,9 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.task.*;
+import ru.epa.epabackend.dto.task.TaskFullResponseDto;
+import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.model.Task;
@@ -32,15 +33,6 @@ public interface TaskMapper {
      * Преобразование из сущности в DTO, при создании.
      */
     TaskFullResponseDto mapToFullDto(Task task);
-
-    TaskAnalyticsFullResponseDto mapToAnalyticsDto(Double teamCompletedOnTimePercent,
-                                                   Double teamNotCompletedOnTimePercent,
-                                                   List<EmployeeShortResponseDto> leaders,
-                                                   List<EmployeeShortResponseDto> deadlineViolators
-                                          );
-
-    TaskAnalyticsShortResponseDto mapToAnalyticsDto(Double teamCompletedOnTimePercent,
-                                                    Double teamNotCompletedOnTimePercent);
 
     /**
      * Преобразование из списка задач в список с краткой информацией о задаче.
