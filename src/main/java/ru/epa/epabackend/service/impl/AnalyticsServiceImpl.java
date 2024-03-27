@@ -85,8 +85,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         List<IndividualAnalytics> employeesShortDto = new ArrayList<>();
         List<Employee> employees = employeeService.findAllByCreatorEmail(email);
         for (Employee employee : employees) {
-            IndividualAnalytics individualAnalytics =
-                    getIndividualStats(employee, rangeStart, rangeEnd);
+            IndividualAnalytics individualAnalytics = getIndividualStats(employee, rangeStart, rangeEnd);
             if (individualAnalytics != null) {
                 employeesShortDto.add(individualAnalytics);
             }
