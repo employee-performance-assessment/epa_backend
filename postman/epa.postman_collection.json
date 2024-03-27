@@ -2293,7 +2293,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/task/stat/team?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/admin/stat/task/team?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2365,7 +2365,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/task/stat/individual?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/admin/stat/task/individual?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2472,7 +2472,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/task/stat/team?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/user/stat/task/team?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2541,7 +2541,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/task/stat/individual?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/user/stat/task/individual?range-start=2024-01-01&range-end=2025-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
