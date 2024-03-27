@@ -19,7 +19,9 @@ import ru.epa.epabackend.model.EmployeeEvaluation;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.service.CriteriaService;
 import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.service.impl.CriteriaServiceImpl;
 import ru.epa.epabackend.service.impl.EmployeeEvaluationServiceImpl;
+import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.util.Role;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,9 +35,9 @@ public class EmployeeEvaluationUnitTests {
     @Mock
     private EmployeeEvaluationRepository employeeEvaluationRepository;
     @Mock
-    private EmployeeService employeeService;
+    private EmployeeServiceImpl employeeService;
     @Mock
-    private CriteriaService criteriaService;
+    private CriteriaServiceImpl criteriaService;
     @Mock
     private EmployeeMapper employeeMapper;
     @Mock
@@ -92,8 +94,8 @@ public class EmployeeEvaluationUnitTests {
     @Test
     @DisplayName("Создание оценки с вызовом репозитория")
     void shouldCreateEmployeeEvaluationWhenCallRepository() {
-        when(employeeService.findById(evaluated.getId())).thenReturn(evaluated);
-        when(employeeService.findById(evaluator.getId())).thenReturn(evaluator);
+        when(employeeService.findById(ID_2)).thenReturn(evaluated);
+        when(employeeService.findById(ID_1)).thenReturn(evaluator);
         when(criteriaService.findById(employeeEvaluationRequestDto.getCriteriaId())).thenReturn(criteria);
 
         EmployeeEvaluation employeeEvaluation = employeeEvaluationService.create(evaluator.getId(), evaluated.getId(),
@@ -105,4 +107,5 @@ public class EmployeeEvaluationUnitTests {
     }
 
  */
+
 }
