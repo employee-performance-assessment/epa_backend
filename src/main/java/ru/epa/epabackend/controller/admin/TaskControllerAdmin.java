@@ -21,6 +21,8 @@ import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
 import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
+import ru.epa.epabackend.model.IndividualAnalytics;
+import ru.epa.epabackend.model.TeamAnalytics;
 import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.TaskService;
 
@@ -173,13 +175,12 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/team")
-    public TeamAnalyticsFullResponseDto findTeamStatisticsByAdmin(
-            @RequestParam(name = "range-start") String rangeStart,
-            @RequestParam(name = "range-end") String rangeEnd,
+    public TeamAnalyticsFullResponseDto findTeamStatByAdmin(
+            @RequestParam(name = "range-start") LocalDate rangeStart,
+            @RequestParam(name = "range-end") LocalDate rangeEnd,
             Principal principal) {
-        return analyticsTeamMapper.mapToFullDto(analyticService
-                .getTeamStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
-                        principal.getName()));
+        TeamAnalytics stats = analyticService.getTeamStatsByAdmin(rangeStart, rangeEnd, principal.getName());
+        return analyticsTeamMapper.mapToFullDto(stats);
     }
 
     /**
@@ -197,12 +198,12 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/individual")
-    public List<IndividualAnalyticsResponseDto> findIndividualStatisticsByAdmin(
-            @RequestParam(name = "range-start") String rangeStart,
-            @RequestParam(name = "range-end") String rangeEnd,
+    public List<IndividualAnalyticsResponseDto> findIndividualStatByAdmin(
+            @RequestParam(name = "range-start") LocalDate rangeStart,
+            @RequestParam(name = "range-end") LocalDate rangeEnd,
             Principal principal) {
-        return analyticsIndividualMapper.mapList(analyticService
-                .getIndividualStatisticsByAdmin(LocalDate.parse(rangeStart), LocalDate.parse(rangeEnd),
-                        principal.getName()));
+        List<IndividualAnalytics> stats = analyticService
+                .getIndividualStatsByAdmin(rangeStart, rangeEnd, principal.getName());
+        return analyticsIndividualMapper.mapList(stats);
     }
 }

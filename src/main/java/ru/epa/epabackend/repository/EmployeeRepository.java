@@ -14,5 +14,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     List<Employee> findByProjectsAndRole(Project project, Role role);
 
-    List<Employee> findAllByCreatorId(Long creatorId);
+    List<Employee> findAllByCreatorEmail(String email);
 }

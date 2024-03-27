@@ -16,21 +16,21 @@ public interface AnalyticsService {
     /**
      * Получение командной статистики для админа
      */
-    TeamAnalytics getTeamStatisticsByAdmin(LocalDate startDate, LocalDate endDate, String email);
+    TeamAnalytics getTeamStatsByAdmin(LocalDate startDate, LocalDate endDate, String email);
 
     /**
      * Получение индивидуальной статистики для админа
      */
-    List<IndividualAnalytics> getIndividualStatisticsByAdmin(LocalDate startDate, LocalDate endDate,
-                                                             String email);
+    List<IndividualAnalytics> getIndividualStatsByAdmin(LocalDate startDate, LocalDate endDate,
+                                                        String email);
 
     /**
      * Получение командной статистики для сотрудника
      */
-    TeamAnalytics getTeamStatistics(LocalDate startDate, LocalDate endDate, String email);
+    TeamAnalytics getTeamStats(LocalDate startDate, LocalDate endDate, String email);
 
     /**
      * Получение индивидуальной статистики для сотрудника
      */
-    IndividualAnalytics getIndividualStatistics(LocalDate startDate, LocalDate endDate, String email);
+    IndividualAnalytics getIndividualStats(LocalDate startDate, LocalDate endDate, String email);
 }

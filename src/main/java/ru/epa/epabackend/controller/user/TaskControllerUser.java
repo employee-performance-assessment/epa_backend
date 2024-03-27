@@ -21,7 +21,9 @@ import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
 import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
+import ru.epa.epabackend.model.IndividualAnalytics;
 import ru.epa.epabackend.model.Task;
+import ru.epa.epabackend.model.TeamAnalytics;
 import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.TaskStatus;
@@ -159,13 +161,12 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/team")
-    public TeamAnalyticsShortResponseDto findTeamStatistics(
-            @RequestParam(name = "range-start") String rangeStart,
-            @RequestParam(name = "range-end") String endDate,
+    public TeamAnalyticsShortResponseDto findTeamStat(
+            @RequestParam(name = "range-start") LocalDate rangeStart,
+            @RequestParam(name = "range-end") LocalDate endDate,
             Principal principal) {
-        return analyticsTeamMapper.mapToShortDto(analyticService
-                .getTeamStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
-                        principal.getName()));
+        TeamAnalytics stats = analyticService.getTeamStats(rangeStart, endDate, principal.getName());
+        return analyticsTeamMapper.mapToShortDto(stats);
     }
 
     /**
@@ -183,12 +184,11 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/stat/individual")
-    public IndividualAnalyticsResponseDto findIndividualStatistics(
-            @RequestParam(name = "range-start") String rangeStart,
-            @RequestParam(name = "range-end") String endDate,
+    public IndividualAnalyticsResponseDto findIndividualStat(
+            @RequestParam(name = "range-start") LocalDate rangeStart,
+            @RequestParam(name = "range-end") LocalDate endDate,
             Principal principal) {
-        return analyticsIndividualMapper.mapToEntityIndividual(analyticService
-                .getIndividualStatistics(LocalDate.parse(rangeStart), LocalDate.parse(endDate),
-                        principal.getName()));
+        IndividualAnalytics stat = analyticService.getIndividualStats(rangeStart, endDate, principal.getName());
+        return analyticsIndividualMapper.mapToEntityIndividual(stat);
     }
 }

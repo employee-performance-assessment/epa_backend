@@ -138,7 +138,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> findAllByCreatorId(Long creatorId) {
-        return employeeRepository.findAllByCreatorId(creatorId);
+    public List<Employee> findAllByCreatorEmail(String email) {
+        return employeeRepository.findAllByCreatorEmail(email);
     }
 }

@@ -10,7 +10,7 @@ import ru.epa.epabackend.model.TeamAnalytics;
  *
  * @author Владислав Осипов
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
 public interface AnalyticsTeamMapper {
 
     /**

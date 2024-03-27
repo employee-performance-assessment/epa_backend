@@ -1,12 +1,10 @@
 package ru.epa.epabackend.model;
 
 import lombok.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 
 import java.util.List;
 
 /**
- *
  * @author Владислав Осипов
  */
 @Getter
@@ -17,6 +15,6 @@ import java.util.List;
 public class TeamAnalytics {
     private Integer completedOnTimePercent;
     private Integer delayedPercent;
-    private List<EmployeeShortResponseDto> leaders;
-    private List<EmployeeShortResponseDto> deadlineViolators;
+    private List<Employee> leaders;
+    private List<Employee> deadlineViolators;
 }
