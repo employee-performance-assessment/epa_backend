@@ -53,16 +53,14 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         List<EmployeeShortResponseDto> leaders = new ArrayList<>();
         List<EmployeeShortResponseDto> deadlineViolators = new ArrayList<>();
         Employee admin = employeeService.findByEmail(email);
-        List<Employee> employees = employeeService.findAllByCreatorIdShort(admin.getId());
+        List<Employee> employees = employeeService.findAllByCreatorId(admin.getId());
         for (Employee employee : employees) {
             for (Task task : taskRepository
                     .findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd)) {
-                if (isFinishedWithinSearchPeriod(task, rangeStart, rangeEnd)) {
-                    if (task.getFinishDate().isAfter(task.getDeadLine())) {
-                        delayed++;
-                    } else {
-                        completedOnTime++;
-                    }
+                if (task.getFinishDate().isAfter(task.getDeadLine())) {
+                    delayed++;
+                } else {
+                    completedOnTime++;
                 }
             }
             if (!employee.getTasks().isEmpty()) {
@@ -103,7 +101,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                                                                     String email) {
         List<IndividualAnalytics> employeesShortDto = new ArrayList<>();
         Employee admin = employeeService.findByEmail(email);
-        List<Employee> employees = employeeService.findAllByCreatorIdShort(admin.getId());
+        List<Employee> employees = employeeService.findAllByCreatorId(admin.getId());
         for (Employee employee : employees) {
             IndividualAnalytics individualAnalytics =
                     getIndividualDtoOfCompletedTasksWithinSearchPeriod(employee, rangeStart, rangeEnd);
@@ -157,25 +155,19 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return Objects.requireNonNullElseGet(individualAnalytics, IndividualAnalytics::new);
     }
 
-    private boolean isFinishedWithinSearchPeriod(Task task, LocalDate rangeStart, LocalDate rangeEnd) {
-        return task.getFinishDate() != null &&
-                task.getFinishDate().isAfter(rangeStart) &&
-                task.getFinishDate().isBefore(rangeEnd);
-    }
-
     private IndividualAnalytics getIndividualDtoOfCompletedTasksWithinSearchPeriod(Employee employee,
                                                                                    LocalDate rangeStart,
                                                                                    LocalDate rangeEnd) {
         int completedOnTime = 0;
         int delayed = 0;
-        for (Task task : employee.getTasks()) {
-            if (isFinishedWithinSearchPeriod(task, rangeStart, rangeEnd)) {
-                if (task.getFinishDate().isAfter(task.getDeadLine())) {
-                    delayed++;
-                } else {
-                    completedOnTime++;
-                }
+        List<Task> tasks = taskRepository.findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
+        for (Task task : tasks) {
+            if (task.getFinishDate().isAfter(task.getDeadLine())) {
+                delayed++;
+            } else {
+                completedOnTime++;
             }
+
         }
 
         int totalNumberOfTaskOfEmployeeCompleted = completedOnTime + delayed;
