@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.analytics.IndividualAnalyticsResponseDto;
 import ru.epa.epabackend.dto.analytics.TeamAnalyticsShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
-import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
-import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
+import ru.epa.epabackend.mapper.AnalyticsMapper;
 import ru.epa.epabackend.model.IndividualAnalytics;
 import ru.epa.epabackend.model.TeamAnalytics;
 import ru.epa.epabackend.service.AnalyticsService;
@@ -39,22 +38,19 @@ import java.time.LocalDate;
 public class AnalyticControllerUser {
 
     private final AnalyticsService analyticService;
-    private final AnalyticsIndividualMapper analyticsIndividualMapper;
-    private final AnalyticsTeamMapper analyticsTeamMapper;
+    private final AnalyticsMapper analyticsMapper;
 
     /**
      * Эндпойнт получения статистики команды сотрудником за определенный период.
      */
     @Operation(summary = "Получения командной статистики сотрудником")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/team")
     public TeamAnalyticsShortResponseDto findTeamStat(
@@ -62,7 +58,7 @@ public class AnalyticControllerUser {
             @RequestParam(name = "range-end") LocalDate endDate,
             Principal principal) {
         TeamAnalytics stats = analyticService.getTeamStats(rangeStart, endDate, principal.getName());
-        return analyticsTeamMapper.mapToShortDto(stats);
+        return analyticsMapper.mapToShortDto(stats);
     }
 
     /**
@@ -70,14 +66,12 @@ public class AnalyticControllerUser {
      */
     @Operation(summary = "Получения индивидуальной статистики сотрудником")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/individual")
     public IndividualAnalyticsResponseDto findIndividualStat(
@@ -85,6 +79,6 @@ public class AnalyticControllerUser {
             @RequestParam(name = "range-end") LocalDate endDate,
             Principal principal) {
         IndividualAnalytics stat = analyticService.getIndividualStats(rangeStart, endDate, principal.getName());
-        return analyticsIndividualMapper.mapToEntityIndividual(stat);
+        return analyticsMapper.mapToEntityIndividual(stat);
     }
 }

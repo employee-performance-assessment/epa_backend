@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.analytics.IndividualAnalyticsResponseDto;
 import ru.epa.epabackend.dto.analytics.TeamAnalyticsFullResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
-import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
-import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
+import ru.epa.epabackend.mapper.AnalyticsMapper;
 import ru.epa.epabackend.model.IndividualAnalytics;
 import ru.epa.epabackend.model.TeamAnalytics;
 import ru.epa.epabackend.service.AnalyticsService;
@@ -40,22 +39,19 @@ import java.util.List;
 public class AnalyticControllerAdmin {
 
     private final AnalyticsService analyticService;
-    private final AnalyticsIndividualMapper analyticsIndividualMapper;
-    private final AnalyticsTeamMapper analyticsTeamMapper;
+    private final AnalyticsMapper analyticsMapper;
 
     /**
      * Эндпойнт получения статистики команды администратором за определенный период.
      */
     @Operation(summary = "Получения командной статистики администратором")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/team")
     public TeamAnalyticsFullResponseDto findTeamStatByAdmin(
@@ -63,7 +59,7 @@ public class AnalyticControllerAdmin {
             @RequestParam(name = "range-end") LocalDate rangeEnd,
             Principal principal) {
         TeamAnalytics stats = analyticService.getTeamStatsByAdmin(rangeStart, rangeEnd, principal.getName());
-        return analyticsTeamMapper.mapToFullDto(stats);
+        return analyticsMapper.mapToFullDto(stats);
     }
 
     /**
@@ -71,14 +67,12 @@ public class AnalyticControllerAdmin {
      */
     @Operation(summary = "Получения индивидуальной статистики администратором")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/individual")
     public List<IndividualAnalyticsResponseDto> findIndividualStatByAdmin(
@@ -87,6 +81,6 @@ public class AnalyticControllerAdmin {
             Principal principal) {
         List<IndividualAnalytics> stats = analyticService
                 .getIndividualStatsByAdmin(rangeStart, rangeEnd, principal.getName());
-        return analyticsIndividualMapper.mapList(stats);
+        return analyticsMapper.mapList(stats);
     }
 }

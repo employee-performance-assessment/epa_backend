@@ -15,7 +15,6 @@ import ru.epa.epabackend.service.EmployeeService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Класс AnalyticServiceImpl содержит методы для аналитики задач и оценок.
@@ -39,8 +38,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TeamAnalytics getTeamStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd,
-                                             String email) {
+    public TeamAnalytics getTeamStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd, String email) {
         int teamCompletedOnTime = 0;
         int teamDelayed = 0;
         List<Employee> leaders = new ArrayList<>();
@@ -80,15 +78,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<IndividualAnalytics> getIndividualStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd,
-                                                               String email) {
+    public List<IndividualAnalytics> getIndividualStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd, String email) {
         List<IndividualAnalytics> employeesShortDto = new ArrayList<>();
         List<Employee> employees = employeeService.findAllByCreatorEmail(email);
         for (Employee employee : employees) {
             IndividualAnalytics individualAnalytics = getIndividualStats(employee, rangeStart, rangeEnd);
-            if (individualAnalytics != null) {
-                employeesShortDto.add(individualAnalytics);
-            }
+            employeesShortDto.add(individualAnalytics);
         }
         return employeesShortDto;
     }
@@ -121,13 +116,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Transactional(readOnly = true)
     public IndividualAnalytics getIndividualStats(LocalDate rangeStart, LocalDate rangeEnd, String email) {
         Employee employee = employeeService.findByEmail(email);
-        IndividualAnalytics individualAnalytics = getIndividualStats(employee, rangeStart, rangeEnd);
-        return Objects.requireNonNullElseGet(individualAnalytics, IndividualAnalytics::new);
+        return getIndividualStats(employee, rangeStart, rangeEnd);
     }
 
-    private IndividualAnalytics getIndividualStats(Employee employee,
-                                                   LocalDate rangeStart,
-                                                   LocalDate rangeEnd) {
+    private IndividualAnalytics getIndividualStats(Employee employee, LocalDate rangeStart, LocalDate rangeEnd) {
         int completedOnTime = 0;
         int delayed = 0;
         List<Task> tasks = taskRepository.findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
@@ -141,20 +133,17 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
 
         int totalNumberOfTaskOfEmployeeCompleted = completedOnTime + delayed;
-        if (totalNumberOfTaskOfEmployeeCompleted != 0) {
-            return IndividualAnalytics.builder()
-                    .employeeId(employee.getId())
-                    .employeeFullName(employee.getFullName())
-                    .employeePosition(employee.getPosition())
-                    .completedOnTimePercent(calcPercent(completedOnTime, totalNumberOfTaskOfEmployeeCompleted))
-                    .delayedPercent(calcPercent(delayed, totalNumberOfTaskOfEmployeeCompleted))
-                    .build();
-        }
-        return null;
+        return IndividualAnalytics.builder()
+                .employeeId(employee.getId())
+                .employeeFullName(employee.getFullName())
+                .employeePosition(employee.getPosition())
+                .completedOnTimePercent(calcPercent(completedOnTime, totalNumberOfTaskOfEmployeeCompleted))
+                .delayedPercent(calcPercent(delayed, totalNumberOfTaskOfEmployeeCompleted))
+                .build();
     }
 
     private int calcPercent(int number1, int number2) {
-        return number1 * 100 / number2;
+        return number2 == 0 ? 0 : number1 * 100 / number2;
     }
 
     private int calcDelayedTasks(List<Task> tasks) {
