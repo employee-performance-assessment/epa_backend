@@ -12,22 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.analytics.IndividualAnalyticsResponseDto;
-import ru.epa.epabackend.dto.analytics.TeamAnalyticsFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
-import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
-import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
-import ru.epa.epabackend.model.IndividualAnalytics;
-import ru.epa.epabackend.model.TeamAnalytics;
-import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.TaskService;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
@@ -47,10 +39,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class TaskControllerAdmin {
 
     private final TaskService taskService;
-    private final AnalyticsService analyticService;
     private final TaskMapper taskMapper;
-    private final AnalyticsIndividualMapper analyticsIndividualMapper;
-    private final AnalyticsTeamMapper analyticsTeamMapper;
 
     /**
      * Эндпойнт поиска всех задач администратором.
@@ -157,53 +146,5 @@ public class TaskControllerAdmin {
     @DeleteMapping("/{taskId}")
     public void delete(@Parameter(required = true) @PathVariable Long taskId, Principal principal) {
         taskService.delete(taskId, principal.getName());
-    }
-
-
-    /**
-     * Эндпойнт получения статистики команды администратором за определенный период.
-     */
-    @Operation(summary = "Получения командной статистики администратором")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/stat/team")
-    public TeamAnalyticsFullResponseDto findTeamStatByAdmin(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate rangeEnd,
-            Principal principal) {
-        TeamAnalytics stats = analyticService.getTeamStatsByAdmin(rangeStart, rangeEnd, principal.getName());
-        return analyticsTeamMapper.mapToFullDto(stats);
-    }
-
-    /**
-     * Эндпойнт получения индивидуальной статистики администратором за определенный период.
-     */
-    @Operation(summary = "Получения индивидуальной статистики администратором")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/stat/individual")
-    public List<IndividualAnalyticsResponseDto> findIndividualStatByAdmin(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate rangeEnd,
-            Principal principal) {
-        List<IndividualAnalytics> stats = analyticService
-                .getIndividualStatsByAdmin(rangeStart, rangeEnd, principal.getName());
-        return analyticsIndividualMapper.mapList(stats);
     }
 }

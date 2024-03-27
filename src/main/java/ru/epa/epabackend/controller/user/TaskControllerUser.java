@@ -13,23 +13,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.analytics.IndividualAnalyticsResponseDto;
-import ru.epa.epabackend.dto.analytics.TeamAnalyticsShortResponseDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
-import ru.epa.epabackend.mapper.AnalyticsIndividualMapper;
-import ru.epa.epabackend.mapper.AnalyticsTeamMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
-import ru.epa.epabackend.model.IndividualAnalytics;
 import ru.epa.epabackend.model.Task;
-import ru.epa.epabackend.model.TeamAnalytics;
-import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -46,10 +38,7 @@ import java.util.List;
 public class TaskControllerUser {
 
     private final TaskService taskService;
-    private final AnalyticsService analyticService;
     private final TaskMapper taskMapper;
-    private final AnalyticsIndividualMapper analyticsIndividualMapper;
-    private final AnalyticsTeamMapper analyticsTeamMapper;
 
     /**
      * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
@@ -144,51 +133,5 @@ public class TaskControllerUser {
                                                                @RequestParam TaskStatus status) {
         List<Task> byProjectIdAndStatus = taskService.findByProjectIdAndStatus(projectId, status);
         return taskMapper.mapList(byProjectIdAndStatus);
-    }
-
-    /**
-     * Эндпойнт получения статистики команды сотрудником за определенный период.
-     */
-    @Operation(summary = "Получения командной статистики сотрудником")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/stat/team")
-    public TeamAnalyticsShortResponseDto findTeamStat(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate endDate,
-            Principal principal) {
-        TeamAnalytics stats = analyticService.getTeamStats(rangeStart, endDate, principal.getName());
-        return analyticsTeamMapper.mapToShortDto(stats);
-    }
-
-    /**
-     * Эндпойнт получения индивидуальной статистики сотрудником за определенный период.
-     */
-    @Operation(summary = "Получения индивидуальной статистики сотрудником")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/stat/individual")
-    public IndividualAnalyticsResponseDto findIndividualStat(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate endDate,
-            Principal principal) {
-        IndividualAnalytics stat = analyticService.getIndividualStats(rangeStart, endDate, principal.getName());
-        return analyticsIndividualMapper.mapToEntityIndividual(stat);
     }
 }
