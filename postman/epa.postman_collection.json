@@ -223,7 +223,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -490,7 +490,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -988,7 +988,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Рексар\",\r\n  \"nickName\": \"@klyk\",\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Рексар\",\r\n  \"nickName\": \"@klyk\",\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
