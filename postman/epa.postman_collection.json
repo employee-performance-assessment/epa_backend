@@ -828,7 +828,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Оклахом Борис Джовански\",\r\n  \"nickName\": \"@appalachi\",\r\n  \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\",\r\n  \"position\": \"Backend\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Оклахом Борис Джовански\",\r\n  \"nickName\": \"@appalachi\",\r\n  \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -908,7 +908,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Богдан Хмельницкий\",\r\n  \"nickName\": \"@kazak\",\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\",\r\n  \"position\": \"Backend\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Богдан Хмельницкий\",\r\n  \"nickName\": \"@kazak\",\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -2512,7 +2512,7 @@
 									"    pm.expect(jsonData).to.have.property('id');\r",
 									"    pm.expect(jsonData.id, '\"id\" must be 6').to.eql(6);\r",
 									"    pm.expect(jsonData.fullName).to.eql(\"Богдан Хмельницкий\");\r",
-									"    pm.expect(jsonData.position).to.eql(\"Backend\");\r",
+									"    pm.expect(jsonData.position).to.eql(\"dev\");\r",
 									"    pm.expect(jsonData.completedOnTimePercent).to.eql(0.0);\r",
 									"    pm.expect(jsonData.notCompletedOnTimePercent).to.eql(100.0);\r",
 									"});"

@@ -123,7 +123,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         double teamCompletedOnTime = 0;
         double teamDelayed = 0;
         Employee employee = employeeService.findByEmail(email);
-        List<Task> tasks = taskRepository.findAllByCreatorIdAndFinishDateBetween(employee.getCreator().getId(),
+        List<Task> tasks = taskRepository.findAllByOwnerIdAndFinishDateBetween(employee.getCreator().getId(),
                 rangeStart, rangeEnd);
         for (Task task : tasks) {
             if (task.getFinishDate().isAfter(task.getDeadLine())) {
