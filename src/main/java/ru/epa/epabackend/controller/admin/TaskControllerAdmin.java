@@ -58,7 +58,7 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<TaskShortResponseDto> findAllByAdmin(Principal principal) {
+    public List<TaskShortResponseDto> findAll(Principal principal) {
         return taskMapper.mapList(taskService.findAll(principal.getName()));
     }
 
@@ -79,8 +79,8 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{taskId}")
-    public TaskFullResponseDto findByIdByAdmin(@Parameter(required = true) @PathVariable Long taskId,
-                                               Principal principal) {
+    public TaskFullResponseDto findById(@Parameter(required = true) @PathVariable Long taskId,
+                                        Principal principal) {
         return taskMapper.mapToFullDto(taskService.findDtoById(taskId, principal.getName()));
     }
 
@@ -100,8 +100,8 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
-    public TaskFullResponseDto createByAdmin(@Validated(Create.class) @Parameter(required = true)
-                                             @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
+    public TaskFullResponseDto create(@Validated(Create.class) @Parameter(required = true)
+                                      @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
         return taskMapper.mapToFullDto(taskService.create(taskRequestDto, principal.getName()));
     }
 
@@ -123,9 +123,9 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{taskId}")
-    public TaskFullResponseDto updateByAdmin(@Parameter(required = true) @PathVariable Long taskId,
-                                             @Validated(Update.class) @Parameter(required = true)
-                                             @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
+    public TaskFullResponseDto update(@Parameter(required = true) @PathVariable Long taskId,
+                                      @Validated(Update.class) @Parameter(required = true)
+                                      @RequestBody TaskRequestDto taskRequestDto, Principal principal) {
         return taskMapper.mapToFullDto(taskService.update(taskId, taskRequestDto, principal.getName()));
     }
 
@@ -144,7 +144,7 @@ public class TaskControllerAdmin {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping("/{taskId}")
-    public void deleteByAdmin(@Parameter(required = true) @PathVariable Long taskId, Principal principal) {
+    public void delete(@Parameter(required = true) @PathVariable Long taskId, Principal principal) {
         taskService.delete(taskId, principal.getName());
     }
 }

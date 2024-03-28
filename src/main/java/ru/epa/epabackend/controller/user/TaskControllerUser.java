@@ -37,7 +37,7 @@ import java.util.List;
 @Validated
 public class TaskControllerUser {
 
-    private final TaskService taskEmployeeService;
+    private final TaskService taskService;
     private final TaskMapper taskMapper;
 
     /**
@@ -57,9 +57,9 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<TaskShortResponseDto> findAllTasksByEmployeeIdFilters(Principal principal,
-                                                                      @RequestParam(required = false) String status) {
-        List<Task> allByExecutorIdFilters = taskEmployeeService.findAllByExecutorIdFilters(status, principal);
+    public List<TaskShortResponseDto> findAllByEmployeeIdFilters(Principal principal,
+                                                                 @RequestParam(required = false) String status) {
+        List<Task> allByExecutorIdFilters = taskService.findAllByExecutorIdFilters(status, principal);
         return taskMapper.mapList(allByExecutorIdFilters);
     }
 
@@ -80,10 +80,10 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{taskId}")
-    public TaskFullResponseDto findTaskById(
+    public TaskFullResponseDto findById(
             @Parameter(required = true) @PathVariable Long taskId,
             Principal principal) {
-        return taskMapper.mapToFullDto(taskEmployeeService.findByIdAndExecutorId(principal, taskId));
+        return taskMapper.mapToFullDto(taskService.findByIdAndExecutorId(principal, taskId));
     }
 
     /**
@@ -107,7 +107,7 @@ public class TaskControllerUser {
     public TaskFullResponseDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
                                             @Parameter(required = true) @RequestParam String status,
                                             Principal principal) {
-        return taskMapper.mapToFullDto(taskEmployeeService.updateStatus(taskId, status, principal));
+        return taskMapper.mapToFullDto(taskService.updateStatus(taskId, status, principal));
 
     }
 
@@ -131,7 +131,7 @@ public class TaskControllerUser {
     @ResponseStatus(HttpStatus.OK)
     public List<TaskShortResponseDto> findByProjectIdAndStatus(@PathVariable Long projectId,
                                                                @RequestParam TaskStatus status) {
-        List<Task> byProjectIdAndStatus = taskEmployeeService.findByProjectIdAndStatus(projectId, status);
+        List<Task> byProjectIdAndStatus = taskService.findByProjectIdAndStatus(projectId, status);
         return taskMapper.mapList(byProjectIdAndStatus);
     }
 }
