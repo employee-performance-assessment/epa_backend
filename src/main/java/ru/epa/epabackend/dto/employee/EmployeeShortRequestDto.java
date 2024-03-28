@@ -4,7 +4,11 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.epa.epabackend.util.ValidationGroups;
+
+import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_WHITESPACE_AND_DASH;
+import static ru.epa.epabackend.util.StringPatterns.LATIN_NUMBERS_SPECIAL_CHARACTERS_AND_ONE_UPPERCASE_LETTER;
+import static ru.epa.epabackend.util.ValidationGroups.Create;
+import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
  * Класс EmployeeShortRequestDto для передачи тела запроса на сервер с сокращенными данными для саморегистрации админа
@@ -15,20 +19,20 @@ import ru.epa.epabackend.util.ValidationGroups;
 @Data
 @AllArgsConstructor
 public class EmployeeShortRequestDto {
-    @NotBlank
-    @Size(min = 1, max = 255, groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
-    @Pattern(regexp = "^[а-яА-ЯЁё\\s\\-]+$")
+
+    @NotBlank(groups = Create.class)
+    @Size(min = 1, max = 255, groups = {Create.class, Update.class})
+    @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH, groups = {Create.class, Update.class})
     protected String fullName;
 
-    @NotBlank(groups = {ValidationGroups.Create.class})
-    @Email(groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
-    @Size(min = 5, max = 50, groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
+    @NotBlank(groups = Create.class)
+    @Email(groups = {Create.class, Update.class})
+    @Size(min = 3, max = 255, groups = {Create.class, Update.class})
     protected String email;
 
-    @NotEmpty(groups = {ValidationGroups.Create.class})
-    @Pattern(regexp = "^[a-zA-Z0-9\\.\\,\\:\\;\\?\\!\\*\\+\\%\\-\\<\\>\\@\\[\\]\\{\\}\\/\\\\\\_\\$\\#]+$",
-            groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
-    @Size(min = 8, max = 14, groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
+    @NotEmpty(groups = Create.class)
+    @Pattern(regexp = LATIN_NUMBERS_SPECIAL_CHARACTERS_AND_ONE_UPPERCASE_LETTER, groups = {Create.class, Update.class})
+    @Size(min = 8, max = 14, groups = {Create.class, Update.class})
     private String password;
 
     @Override
