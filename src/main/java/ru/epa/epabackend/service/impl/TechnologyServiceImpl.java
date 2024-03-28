@@ -63,6 +63,10 @@ public class TechnologyServiceImpl implements TechnologyService {
      */
     @Transactional
     public void delete(Long technologyId) {
-        technologyRepository.deleteById(technologyId);
+        if (technologyRepository.existsById(technologyId)) {
+            technologyRepository.deleteById(technologyId);
+        } else {
+            throw new EntityNotFoundException(String.format("Технология с id %s не найдена", technologyId));
+        }
     }
 }
