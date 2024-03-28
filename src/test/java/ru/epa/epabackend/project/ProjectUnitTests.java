@@ -29,9 +29,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProjectUnitTests {
-    private static final long ID_1 = 1L;
-    private static final long ID_2 = 2L;
-    private static final String email = "qwerty@gmail.com";
+    private final long ID_1 = 1L;
+    private final long ID_2 = 2L;
+    private final String email = "qwerty@gmail.com";
     @Mock
     private ProjectRepository projectRepository;
     @Mock
