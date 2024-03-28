@@ -11,6 +11,9 @@ import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.util.Set;
 
+/**
+ * Интерфейс QuestionnaireMapper для преобразования анкет из сущности в Dto и обратно
+ */
 @Mapper(componentModel = "spring")
 public interface QuestionnaireMapper {
     Questionnaire mapToEntity(QuestionnaireShortResponseDto questionnaireShortResponseDto);

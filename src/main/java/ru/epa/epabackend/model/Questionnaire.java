@@ -8,6 +8,10 @@ import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * Сущность Questionnaire представляет собой анкету, которую админ создаёт, редактирует и отправляет на проставление
+ * оценок всем своим сотрудникам включая себя
+ */
 @Entity
 @Table(name = "questionnaires")
 @Getter

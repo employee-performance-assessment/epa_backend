@@ -66,22 +66,34 @@ public class CriteriaServiceImpl implements CriteriaService {
         }
     }
 
+    /**
+     * Получение дефолтных критериев (по умолчанию)
+     */
     @Override
     public List<Criteria> findDefault() {
         return criteriaRepository.findAllByIdBetweenOrderByIdAsc(1L, 11L);
     }
 
+    /**
+     * Проверка, существует ли в БД критерий с указанным именем
+     */
     @Override
     public boolean isNameExists(String name) {
         return criteriaRepository.existsByName(name);
     }
 
+    /**
+     * Получение критерия по его имени
+     */
     @Override
     public Criteria findByName(String name) {
         return criteriaRepository.findByName(name).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Критерий с именем %s не найден", name)));
     }
 
+    /**
+     * Сохранение множества критериев, при котором критерии с существующими именами не перезаписываются
+     */
     @Override
     public Set<Criteria> findExistentAndSaveNonExistentCriterias(Set<CriteriaRequestDto> criterias) {
         return criterias.stream().map(c -> {

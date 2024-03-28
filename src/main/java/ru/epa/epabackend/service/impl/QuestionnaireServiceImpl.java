@@ -17,11 +17,11 @@ import ru.epa.epabackend.service.QuestionnaireService;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+/**
+ * Класс QuestionnaireServieImpl содержит логику работы с анкетами
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -31,21 +31,30 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final QuestionnaireMapper questionnaireMapper;
     private final CriteriaService criteriaService;
 
+    /**
+     * Получение самой последней анкеты админа с указанным статусом
+     */
     @Override
     public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
         Employee author = employeeService.findByEmail(email).getCreator();
         String authorEmail = author == null ? email : author.getEmail();
         return questionnaireRepository.findFirstByAuthorEmailAndStatusOrderByIdDesc(authorEmail, status).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Анкета для администратора с email %s и статусом %s не найдена",
+                new EntityNotFoundException(String.format("Анкеты для администратора с email %s и статусом %s не найдена",
                         email, status)));
     }
 
+    /**
+     * Получение самой последней анкеты админа по email
+     */
     @Override
     public Questionnaire findLastByAuthorEmail(String email) {
         return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Анкета администратора с email %s не найдено", email)));
+                new EntityNotFoundException(String.format("Анкеты администратора с email %s не найдено", email)));
     }
 
+    /**
+     * Сохранение анкеты, имея список критериев и email админа
+     */
     @Override
     public Questionnaire save(QuestionnaireRequestDto questionnaireRequestDto, String email) {
         Employee author = employeeService.findByEmail(email);
@@ -59,6 +68,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireRepository.save(questionnaire);
     }
 
+    /**
+     * Редактирование (обновление) анкеты, имея список критериев и email админа
+     */
     @Override
     public Questionnaire updateLast(QuestionnaireRequestDto questionnaireRequestDto, String email) {
         Questionnaire questionnaire = findLastByAuthorEmail(email);
@@ -72,12 +84,18 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                 questionnaire.getId()));
     }
 
+    /**
+     * Получение анкеты по её id
+     */
     @Override
     public Questionnaire findById(long id) {
         return questionnaireRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Анкета с id %d не найдена", id)));
     }
 
+    /**
+     * Обновление статуса анкеты с CREATE на SHARED и выставление сегодняшней даты
+     */
     @Override
     public Questionnaire updateLastQuestionnaireStatusAndDate(QuestionnaireStatus status, String email) {
         Questionnaire questionnaire = findLastByAuthorEmail(email);
@@ -90,6 +108,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireRepository.save(questionnaire);
     }
 
+    /**
+     * Сохранение дубликата опубликованной (SHARED) анкеты для повторного анкетирования среди сотрудников
+     * в другую дату по тем же критериям
+     */
     @Override
     public Questionnaire duplicateLastShared(String email) {
         Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
@@ -105,6 +127,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireRepository.save(newQuestionnaire);
     }
 
+    /**
+     * Сохранение анктеты с дефолтными критериями (по умолчанию) со статусом SHARED. Это возможно, когда админ не
+     * создавал анкет, но хочет провести анкетирование
+     */
     @Override
     public Questionnaire saveDefaultWithSharedStatus(String email) {
         Optional<Questionnaire> questionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
@@ -123,6 +149,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireRepository.save(newQuestionnaire);
     }
 
+    /**
+     * Получение анкеты админа по id анкеты и по email сотрудника или администратора
+     */
     @Override
     public Questionnaire findByEmailAndId(String email, long questionnaireId) {
         Employee employee = employeeService.findByEmail(email);
@@ -133,6 +162,21 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             throw new BadRequestException("Чтобы иметь доступ к анкете, необходимо, чтобы " +
                     "ваш администратор был её автором");
         }
+        if (questionnaire.getStatus().equals(QuestionnaireStatus.CREATED)) {
+            throw new BadRequestException(String.format("Администратор еще не опубликовал анкету. " +
+                    "Запрашиваемая анкета c id %d имеет статус %s", questionnaireId, questionnaire.getStatus()));
+        }
         return questionnaire;
+    }
+
+    /**
+     * Получение всех анкет админа c определенным статусом любым сотрудником
+     */
+    @Override
+    public List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status) {
+        Employee employee = employeeService.findByEmail(email);
+        Employee author = employee.getCreator();
+        Long authorId = author == null ? employee.getId() : author.getId();
+        return questionnaireRepository.findAllByAuthorIdAndStatus(authorId, status);
     }
 }

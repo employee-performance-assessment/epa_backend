@@ -4,6 +4,8 @@ import ru.epa.epabackend.dto.questionnaire.QuestionnaireRequestDto;
 import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
+import java.util.List;
+
 public interface QuestionnaireService {
     Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status);
 
@@ -22,4 +24,6 @@ public interface QuestionnaireService {
     Questionnaire saveDefaultWithSharedStatus(String email);
 
     Questionnaire findByEmailAndId(String email, long questionnaireId);
+
+    List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status);
 }
