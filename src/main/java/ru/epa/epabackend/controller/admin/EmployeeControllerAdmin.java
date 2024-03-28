@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,8 +19,11 @@ import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import ru.epa.epabackend.model.Employee;
 
 import java.security.Principal;
+import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
@@ -107,5 +111,27 @@ public class EmployeeControllerAdmin {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteEmployee(@PathVariable @Parameter(required = true) Long employeeId) {
         employeeService.delete(employeeId);
+    }
+
+    /**
+     * Эндпойнт получения всех сотрудников для одного админа
+     */
+    @Operation(summary = "Получение всех сотрудников для текущего админа",
+            description = "Возвращает список сотрудников в сокращенном виде одной команды для одного админа\n\n" +
+                    "В случае, если не найдено ни одного сотрудника, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping
+    public List<EmployeeShortResponseDto> findAllByAdmin(Principal principal) {
+        List<Employee> employees = employeeService.findAllByAdmin(principal.getName());
+        return employeeMapper.mapList(employees);
     }
 }
