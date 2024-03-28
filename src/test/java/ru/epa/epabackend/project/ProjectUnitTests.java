@@ -11,19 +11,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
+import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
-import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.service.impl.ProjectServiceImpl;
-import ru.epa.epabackend.util.ProjectStatus;
 import ru.epa.epabackend.util.Role;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,16 +42,22 @@ public class ProjectUnitTests {
     private EmployeeRepository employeeRepository;
     @InjectMocks
     private ProjectServiceImpl projectService;
-    private Employee admin = new Employee();
-    private Employee employee = new Employee();
-    private Project project = new Project();
+    private Employee admin;
+    private Employee employee;
+    private Project project;
     private EmployeeShortResponseDto employeeShortDto;
-    private ProjectCreateRequestDto projectCreateRequestDto = new ProjectCreateRequestDto();
+    private ProjectCreateRequestDto projectCreateRequestDto;
+    private ProjectUpdateRequestDto projectUpdateRequestDto;
 
     @BeforeEach
     public void unit() {
+        project = Project.builder()
+                .id(ID_1)
+                .name("project")
+                .build();
         admin = Employee.builder()
                 .id(ID_1)
+                .email(email)
                 .role(Role.ROLE_ADMIN)
                 .build();
         employeeShortDto = EmployeeShortResponseDto.builder()
@@ -70,11 +73,14 @@ public class ProjectUnitTests {
         project = Project.builder()
                 .id(ID_1)
                 .name("project")
-                .employees(List.of(employee))
                 .build();
         projectCreateRequestDto = ProjectCreateRequestDto.builder()
                 .name("projectCreate")
                 .build();
+        projectUpdateRequestDto = ProjectUpdateRequestDto.builder()
+                .name("projectUpdate")
+                .build();
+
 
     }
 
@@ -88,7 +94,7 @@ public class ProjectUnitTests {
         int expectedId = 1;
         assertNotNull(project);
         assertEquals(expectedId, project.getId());
-        verify(projectRepository, times(1)).save(this.project);
+        verify(projectRepository, times(1)).save(project);
     }
 
     @Test
@@ -102,23 +108,23 @@ public class ProjectUnitTests {
     @DisplayName("Поиск технологии по Id с вызовом репозитория")
     void shouldFindByIdProjectWhenCallRepository() {
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
-        Project project = projectService.findById(this.project.getId());
+        Project projectRe = projectService.findById(this.project.getId());
         long expectedId = 1L;
-        assertEquals(expectedId, project.getId());
-        verify(projectRepository, times(1)).findById(project.getId());
+        assertEquals(expectedId, projectRe.getId());
+        verify(projectRepository, times(1)).findById(projectRe.getId());
     }
 
-    /*
+/*
         @Test
         @DisplayName("Сохранение с сотрудником")
         void shouldSaveWithEmployeeWhenCallRepository(){
             when(employeeService.findByEmail(email)).thenReturn(admin);
-            when(employeeService.findById(employee.getId())).thenReturn(employee);
-            when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+            when(employeeService.findById(ID_2)).thenReturn(employee);
+            when(projectRepository.findById(ID_1)).thenReturn(Optional.ofNullable(project));
             long expectedId = 1L;
-            Project projectRe = projectService.saveWithEmployee(this.project.getId(),employee.getId(),email);
+            Project projectRe = projectService.saveWithEmployee(project.getId(),employee.getId(),email);
             assertEquals(expectedId, projectRe.getId());
-            verify(projectRepository, times(1)).save(projectRe);
+            verify(projectRepository, times(1)).save(project);
         }
 
     @Test
@@ -133,7 +139,31 @@ public class ProjectUnitTests {
         verify(projectRepository, times(1)).findByEmployees(employee);
     }
 
-     */
 
+
+    @Test
+    @DisplayName("Поиск всех по id и роли")
+    void shouldFindAllByProjectIdAndRoleWhenCallRepository(){
+        //when(employeeService.findByEmail(email)).thenReturn(admin);
+        //when(projectRepository.findById(ID_1)).thenReturn(Optional.of(project));
+
+    }
+
+    @Test
+    @DisplayName("Обновление проекта")
+    void shouldUpdateWhenCallRepository(){
+        when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(projectRepository.findById(ID_1)).thenReturn(Optional.of(project));
+        when(projectRepository.save(project)).thenReturn(project);
+
+        Project project = projectService.update(ID_1,projectUpdateRequestDto, email);
+        long expectedId = 1L;
+        assertNotNull(project);
+        assertEquals(expectedId,project.getId());
+
+        verify(projectRepository,times(1)).save(project);
+    }
+
+ */
 
 }
