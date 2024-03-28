@@ -62,3 +62,4 @@ build/
 ### For Mac ###
 *.db
 db/*
+/.jpb/

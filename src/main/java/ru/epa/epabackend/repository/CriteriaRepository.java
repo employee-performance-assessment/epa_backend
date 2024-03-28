@@ -5,4 +5,3 @@ import ru.epa.epabackend.model.Criteria;
 
 public interface CriteriaRepository extends JpaRepository<Criteria, Long> {
 }
-

@@ -1,6 +1,7 @@
 package ru.epa.epabackend.dto.evaluation;
 
 import lombok.*;
+import ru.epa.epabackend.dto.criteria.CriteriaShortResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeEvaluationDto {
+public class EmployeeEvaluationResponseFullDto {
 
     /**
      * Идентификатор оценки сотрудника.
@@ -41,7 +42,7 @@ public class EmployeeEvaluationDto {
     /**
      * Название оценки.
      */
-    private CriteriaResponseDto criteria;
+    private CriteriaShortResponseDto criteria;
 
     /**
      * Количество звезд.

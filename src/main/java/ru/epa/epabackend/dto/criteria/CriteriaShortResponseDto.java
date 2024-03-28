@@ -1,4 +1,4 @@
-package ru.epa.epabackend.dto.evaluation;
+package ru.epa.epabackend.dto.criteria;
 
 import lombok.*;
 
@@ -13,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CriteriaResponseDto {
+public class CriteriaShortResponseDto {
 
     /**
      * Название критерия оценки.
