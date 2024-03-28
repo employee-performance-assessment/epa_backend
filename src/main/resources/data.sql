@@ -1,0 +1,11 @@
+INSERT INTO CRITERIA (NAME) VALUES ( ' Погружается в проект');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Выполняет задачи');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Работает в команде');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Соблюдает дедлайны');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Расставляет приоритеты');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Умеет решать сложные задачи');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Ясно объясняет свои идеи команде');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Эффективно работает над несколькими задачами одновременно');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Воспринимает конструктивную критику');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Помогает коллегам с их задачами');
+INSERT INTO CRITERIA (NAME) VALUES ( ' Запрашивает необходимую информацию и мнение коллег для решения совместных задач');

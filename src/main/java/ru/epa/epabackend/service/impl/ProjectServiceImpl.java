@@ -33,6 +33,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final EmployeeService employeeService;
     private final EmployeeRepository employeeRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public Project findById(Long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() ->
@@ -46,6 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .save(projectMapper.mapToEntity(projectCreateRequestDto, List.of(admin)));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Project findDtoById(Long projectId, String email) {
         return findById(projectId);
@@ -64,6 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(project);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Project> findAllByCreator(String email) {
         Employee employee = employeeService.findByEmail(email);
@@ -73,6 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findByEmployees(employee.getCreator());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
         Employee admin = employeeService.findByEmail(email);

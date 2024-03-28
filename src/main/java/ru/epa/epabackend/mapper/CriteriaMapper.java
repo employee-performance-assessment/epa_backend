@@ -1,6 +1,6 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
 import ru.epa.epabackend.dto.evaluation.CriteriaDto;
 import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
 import ru.epa.epabackend.model.Criteria;
@@ -8,7 +8,7 @@ import ru.epa.epabackend.model.Criteria;
 import java.util.List;
 
 /**
- * Класс EvaluationMapper содержит преобразование сущности.
+ * Класс EvaluationMapper содержит преобразование критериев из сущности в Dto и наоборот.
  *
  * @author Михаил Безуглов
  */
