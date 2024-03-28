@@ -137,17 +137,11 @@ public class EmployeeServiceImpl implements EmployeeService {
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
     }
 
-    @Override
-    public List<Employee> findAllByCreatorEmail(String email) {
-        return employeeRepository.findAllByCreatorEmail(email);
-    }
-
     /**
      * Получение всех сотрудников для одного админа
      */
     @Override
-    public List<Employee> findAllByAdmin(String email) {
-        log.info("Получение всех сотрудников для одного админа");
+    public List<Employee> findAllByCreatorEmail(String email) {
         return employeeRepository.findAllByCreatorEmail(email);
     }
 }

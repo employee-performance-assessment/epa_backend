@@ -131,7 +131,7 @@ public class EmployeeControllerAdmin {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     public List<EmployeeShortResponseDto> findAllByAdmin(Principal principal) {
-        List<Employee> employees = employeeService.findAllByAdmin(principal.getName());
+        List<Employee> employees = employeeService.findAllByCreatorEmail(principal.getName());
         return employeeMapper.mapList(employees);
     }
 }

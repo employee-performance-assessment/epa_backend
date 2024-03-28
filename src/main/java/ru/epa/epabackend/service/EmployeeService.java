@@ -26,7 +26,5 @@ public interface EmployeeService {
 
     Employee findById(Long employeeId);
 
-    List<Employee> findAllByAdmin(String email);
-
     List<Employee> findAllByCreatorEmail(String email);
 }
