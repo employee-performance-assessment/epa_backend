@@ -4,6 +4,7 @@ import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
 import ru.epa.epabackend.model.Criteria;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Интерфейс EvaluationService содержит методы действий с критериями оценок для администратора.
@@ -31,4 +32,15 @@ public interface CriteriaService {
      * Удаление критерия оценки.
      */
     void delete(Long evaluationId);
+
+    /**
+     * Получение списка стандартных критериев
+     */
+    List<Criteria> findDefault();
+
+    boolean isNameExists(String name);
+
+    Criteria findByName(String name);
+
+    Set<Criteria> findExistentAndSaveNonExistentCriterias(Set<CriteriaRequestDto> criterias);
 }

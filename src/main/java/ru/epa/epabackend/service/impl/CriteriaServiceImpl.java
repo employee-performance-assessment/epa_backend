@@ -11,6 +11,8 @@ import ru.epa.epabackend.repository.CriteriaRepository;
 import ru.epa.epabackend.service.CriteriaService;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Класс EvaluationServiceImpl содержит бизнес-логику работы с критериями оценок.
@@ -40,7 +42,7 @@ public class CriteriaServiceImpl implements CriteriaService {
     @Override
     public Criteria findById(Long criteriaId) {
         Criteria criteria = criteriaRepository.findById(criteriaId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Оценка с id %s не найдена", criteriaId)));
+                new EntityNotFoundException(String.format("Критерий оценивания с id %s не найдена", criteriaId)));
         return criteria;
     }
 
@@ -60,7 +62,31 @@ public class CriteriaServiceImpl implements CriteriaService {
         if (criteriaRepository.existsById(criteriaId)) {
             criteriaRepository.deleteById(criteriaId);
         } else {
-            throw new EntityNotFoundException(String.format("Оценка с id %s не найден", criteriaId));
+            throw new EntityNotFoundException(String.format("Критерий оценивания с id %s не найден", criteriaId));
         }
+    }
+
+    @Override
+    public List<Criteria> findDefault() {
+        return criteriaRepository.findAllByIdBetweenOrderByIdAsc(1L, 11L);
+    }
+
+    @Override
+    public boolean isNameExists(String name) {
+        return criteriaRepository.existsByName(name);
+    }
+
+    @Override
+    public Criteria findByName(String name) {
+        return criteriaRepository.findByName(name).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Критерий с именем %s не найден", name)));
+    }
+
+    @Override
+    public Set<Criteria> findExistentAndSaveNonExistentCriterias(Set<CriteriaRequestDto> criterias) {
+        return criterias.stream().map(c -> {
+            if (isNameExists(c.getName())) return findByName(c.getName());
+            else return create(c);
+        }).collect(Collectors.toSet());
     }
 }

@@ -14,6 +14,7 @@ import ru.epa.epabackend.mapper.CriteriaMapper;
 import ru.epa.epabackend.service.CriteriaService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс EvaluationControllerAdmin содержит эндпойнты для администратора, относящиеся к критериям оценок.
@@ -68,5 +69,13 @@ public class AdminCriteriaController {
     @GetMapping("/{criteriaId}")
     public CriteriaDto findById(@Parameter(required = true) @PathVariable Long criteriaId) {
         return criteriaMapper.mapToDto(criteriaService.findById(criteriaId));
+    }
+
+    /**
+     * Эндпоинт получения дефолтных критериев (по умолчанию).
+     */
+    @GetMapping("/default")
+    public List<CriteriaDto> findDefault() {
+        return criteriaService.findDefault().stream().map(criteriaMapper::mapToDto).collect(Collectors.toList());
     }
 }

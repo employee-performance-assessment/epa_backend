@@ -82,6 +82,9 @@ public class Employee implements UserDetails {
      */
     private String department;
 
+    /**
+     * Администратор, создавший сотрудника
+     */
     @OneToOne
     @JoinColumn(name = "creator_id")
     @Nullable
