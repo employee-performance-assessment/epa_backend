@@ -30,8 +30,8 @@ public class CriteriaUnitTests {
     private CriteriaMapper criteriaMapper;
     @InjectMocks
     CriteriaServiceImpl criteriaService;
-    private Criteria criteria = new Criteria();
-    private CriteriaRequestDto criteriaRequestDto = new CriteriaRequestDto();
+    private Criteria criteria;
+    private CriteriaRequestDto criteriaRequestDto;
 
     @BeforeEach
     public void unit() {
@@ -49,11 +49,11 @@ public class CriteriaUnitTests {
     void shouldCreateCriteriaWhenCallRepository() {
         when(criteriaRepository.save(criteria)).thenReturn(criteria);
         when(criteriaMapper.mapToEntity(criteriaRequestDto)).thenReturn(criteria);
-        Criteria criteria = criteriaService.create(criteriaRequestDto);
+        Criteria criteriaResult = criteriaService.create(criteriaRequestDto);
         int expectedId = 1;
-        assertNotNull(criteria);
+        assertNotNull(criteriaResult);
         assertEquals(expectedId, criteria.getId());
-        verify(criteriaRepository, times(1)).save(this.criteria);
+        verify(criteriaRepository, times(1)).save(criteriaResult);
     }
 
     @Test
@@ -67,19 +67,19 @@ public class CriteriaUnitTests {
     @DisplayName("Поиск критерия по Id с вызовом репозитория")
     void shouldFindByIdCriteriaWhenCallRepository() {
         when(criteriaRepository.findById(criteria.getId())).thenReturn(Optional.ofNullable(criteria));
-        Criteria criteria = criteriaService.findById(this.criteria.getId());
+        Criteria criteriaResult = criteriaService.findById(this.criteria.getId());
         long expectedId = 1L;
-        assertEquals(expectedId, criteria.getId());
-        verify(criteriaRepository, times(1)).findById(criteria.getId());
+        assertEquals(expectedId, criteriaResult.getId());
+        verify(criteriaRepository, times(1)).findById(criteriaResult.getId());
     }
 
     @Test
     @DisplayName("Список всех критерий с вызовом репозитория")
     void shouldFindAllCriteriaWhenCallRepository() {
         when(criteriaRepository.findAll()).thenReturn(List.of(criteria));
-        List<Criteria> targetCriteria = criteriaService.findAll();
-        assertNotNull(targetCriteria);
-        assertEquals(1, targetCriteria.size());
+        List<Criteria> criteriaResult = criteriaService.findAll();
+        assertNotNull(criteriaResult);
+        assertEquals(1, criteriaResult.size());
         verify(criteriaRepository, times(1)).findAll();
     }
 

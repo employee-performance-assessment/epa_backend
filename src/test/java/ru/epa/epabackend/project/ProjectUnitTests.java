@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.mapper.ProjectMapper;
@@ -44,35 +43,28 @@ public class ProjectUnitTests {
     private ProjectServiceImpl projectService;
     private Employee admin;
     private Employee employee;
+    private Employee employee1;
     private Project project;
-    private EmployeeShortResponseDto employeeShortDto;
     private ProjectCreateRequestDto projectCreateRequestDto;
     private ProjectUpdateRequestDto projectUpdateRequestDto;
 
     @BeforeEach
     public void unit() {
-        project = Project.builder()
-                .id(ID_1)
-                .name("project")
-                .build();
         admin = Employee.builder()
                 .id(ID_1)
                 .email(email)
                 .role(Role.ROLE_ADMIN)
                 .build();
-        employeeShortDto = EmployeeShortResponseDto.builder()
+        project = Project.builder()
                 .id(ID_1)
-                .fullName("name")
-                .position("USER")
+                .name("project")
+                .employees(List.of(admin))
                 .build();
         employee = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
+                .projects(List.of())
                 .email(email)
-                .build();
-        project = Project.builder()
-                .id(ID_1)
-                .name("project")
                 .build();
         projectCreateRequestDto = ProjectCreateRequestDto.builder()
                 .name("projectCreate")
@@ -80,8 +72,6 @@ public class ProjectUnitTests {
         projectUpdateRequestDto = ProjectUpdateRequestDto.builder()
                 .name("projectUpdate")
                 .build();
-
-
     }
 
     @Test
@@ -98,72 +88,141 @@ public class ProjectUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск технологии по Id с исключением Not Found Exception")
+    @DisplayName("Поиск проекта по Id с исключением Not Found Exception")
     void shouldFindByIdProjectWhenThrowNotFoundException() throws ValidationException {
         when(projectRepository.findById(ID_1)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> projectService.findById(ID_1));
     }
 
     @Test
-    @DisplayName("Поиск технологии по Id с вызовом репозитория")
+    @DisplayName("Поиск проекта по Id с вызовом репозитория")
     void shouldFindByIdProjectWhenCallRepository() {
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
-        Project projectRe = projectService.findById(this.project.getId());
+        Project projectResult = projectService.findById(this.project.getId());
         long expectedId = 1L;
-        assertEquals(expectedId, projectRe.getId());
-        verify(projectRepository, times(1)).findById(projectRe.getId());
+        assertEquals(expectedId, projectResult.getId());
+        verify(projectRepository, times(1)).findById(projectResult.getId());
     }
-
 /*
-        @Test
-        @DisplayName("Сохранение с сотрудником")
-        void shouldSaveWithEmployeeWhenCallRepository(){
-            when(employeeService.findByEmail(email)).thenReturn(admin);
-            when(employeeService.findById(ID_2)).thenReturn(employee);
-            when(projectRepository.findById(ID_1)).thenReturn(Optional.ofNullable(project));
-            long expectedId = 1L;
-            Project projectRe = projectService.saveWithEmployee(project.getId(),employee.getId(),email);
-            assertEquals(expectedId, projectRe.getId());
-            verify(projectRepository, times(1)).save(project);
-        }
-
     @Test
-    @DisplayName("Поиск всех создателей")
-    void shouldFindAllByCreatorWhenCallRepository() {
-        //when(projectRepository.findByEmployees(employee)).thenReturn(List.of(project));
-        when(employeeService.findByEmail(email)).thenReturn(employee);
-        List<Project> projectResults = projectService.findAllByCreator(email);
-        long expectedSize = 1L;
-        assertNotNull(projectResults);
-        assertEquals(expectedSize, projectResults.size());
-        verify(projectRepository, times(1)).findByEmployees(employee);
-    }
-
-
-
-    @Test
-    @DisplayName("Поиск всех по id и роли")
-    void shouldFindAllByProjectIdAndRoleWhenCallRepository(){
-        //when(employeeService.findByEmail(email)).thenReturn(admin);
-        //when(projectRepository.findById(ID_1)).thenReturn(Optional.of(project));
-
-    }
-
-    @Test
-    @DisplayName("Обновление проекта")
-    void shouldUpdateWhenCallRepository(){
+    @DisplayName("Сохранение сотрудника в проект")
+    void shouldSaveWithEmployeeWhenCallRepository() {
+        admin = Employee.builder()
+                .id(ID_1)
+                .email(email)
+                .role(Role.ROLE_ADMIN)
+                .projects(List.of(project))
+                .build();
         when(employeeService.findByEmail(email)).thenReturn(admin);
-        when(projectRepository.findById(ID_1)).thenReturn(Optional.of(project));
+        when(employeeService.findById(ID_2)).thenReturn(employee);
+        when(projectRepository.findById(ID_1)).thenReturn(Optional.ofNullable(project));
+        when(projectService.saveWithEmployee(ID_1,ID_2,email)).thenReturn(project);
         when(projectRepository.save(project)).thenReturn(project);
-
-        Project project = projectService.update(ID_1,projectUpdateRequestDto, email);
-        long expectedId = 1L;
+        Project projectResult = projectService.saveWithEmployee(project.getId(),employee.getId(),email);
+        int expectedId = 1;
         assertNotNull(project);
-        assertEquals(expectedId,project.getId());
-
+        assertEquals(expectedId, projectResult.getId());
         verify(projectRepository,times(1)).save(project);
     }
 
  */
 
+    @Test
+    @DisplayName("Поиск всех создателей пользователю")
+    void shouldFindAllByCreatorWhenCallRepositoryAndEmployee() {
+        admin = Employee.builder()
+                .id(ID_1)
+                .email(email)
+                .role(Role.ROLE_ADMIN)
+                .projects(List.of(project))
+                .build();
+        when(employeeService.findByEmail(email)).thenReturn(employee);
+        when(projectService.findAllByCreator(email)).thenReturn(List.of(project));
+        List<Project> projectsResults = projectService.findAllByCreator(email);
+        int expectedSize = 1;
+        assertNotNull(projectsResults);
+        assertEquals(expectedSize, projectsResults.size());
+        verify(projectRepository, times(1)).findByEmployees(employee.getCreator());
+    }
+
+    @Test
+    @DisplayName("Поиск всех создателей по админу")
+    void shouldFindAllByCreatorWhenCallRepositoryAndAdmin() {
+        when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(projectService.findAllByCreator(email)).thenReturn(List.of(project));
+        List<Project> projectsResults = projectService.findAllByCreator(email);
+        int expectedSize = 1;
+        assertNotNull(projectsResults);
+        assertEquals(expectedSize, projectsResults.size());
+        verify(projectRepository, times(1)).findByEmployees(admin);
+    }
+
+
+    @Test
+    @DisplayName("Поиск всех по id и роли")
+    void shouldFindAllByProjectIdAndRoleWhenCallRepository() {
+        admin = Employee.builder()
+                .id(ID_1)
+                .email(email)
+                .role(Role.ROLE_ADMIN)
+                .projects(List.of(project))
+                .build();
+        when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        when(projectService.findAllByProjectIdAndRole(project.getId(), Role.ROLE_ADMIN, email)).thenReturn(List.of(employee));
+        List<Employee> employeeResults = projectService.findAllByProjectIdAndRole(project.getId(), Role.ROLE_ADMIN, email);
+        int expectedSize = 1;
+        assertNotNull(employeeResults);
+        assertEquals(expectedSize, employeeResults.size());
+        verify(employeeRepository, times(1)).
+                findByProjectsAndRole(projectService.findById(project.getId()), Role.ROLE_ADMIN);
+    }
+
+
+    @Test
+    @DisplayName("Обновление проекта")
+    void shouldUpdateWhenCallRepository() {
+        admin = Employee.builder()
+                .id(ID_1)
+                .email(email)
+                .role(Role.ROLE_ADMIN)
+                .projects(List.of(project))
+                .build();
+        when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        when(projectRepository.save(project)).thenReturn(project);
+        Project projectResult = projectService.update(project.getId(), projectUpdateRequestDto, email);
+        int expectedId = 1;
+        assertNotNull(project);
+        assertEquals(expectedId, projectResult.getId());
+        verify(projectRepository, times(1)).save(project);
+    }
+
+    @Test
+    @DisplayName("Удаление проекта")
+    void shouldDeleteWhenCallRepository() {
+        admin = Employee.builder()
+                .id(ID_1)
+                .email(email)
+                .role(Role.ROLE_ADMIN)
+                .projects(List.of(project))
+                .build();
+        when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        projectService.delete(ID_1, email);
+        verify(projectRepository, times(1)).delete(project);
+    }
+
+/*
+    @Test
+    @DisplayName("Удаление сотрудника из проекта")
+    void shouldDeleteEmployeeFromProjectWhenCallRepository() {
+        when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        when(employeeService.findById(ID_2)).thenReturn(employee);
+        project.getEmployees().remove(employee);
+        when(projectRepository.save(project)).thenReturn(project);
+        verify(projectRepository, times(1)).save(project);
+    }
+ */
 }

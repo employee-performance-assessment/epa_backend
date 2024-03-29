@@ -30,8 +30,8 @@ public class TechnologyUnitTests {
     private TechnologyMapper technologyMapper;
     @InjectMocks
     private TechnologyServiceImpl technologyService;
-    private Technology technology = new Technology();
-    private TechnologyRequestDto technologyRequestDto = new TechnologyRequestDto();
+    private Technology technology;
+    private TechnologyRequestDto technologyRequestDto;
 
     @BeforeEach
     public void unit() {
@@ -49,11 +49,11 @@ public class TechnologyUnitTests {
     void shouldCreateTechnologyWhenCallRepository() {
         when(technologyRepository.save(technology)).thenReturn(technology);
         when(technologyMapper.mapToEntity(technologyRequestDto)).thenReturn(technology);
-        Technology technology = technologyService.create(technologyRequestDto);
+        Technology technologyResult = technologyService.create(technologyRequestDto);
         int expectedId = 1;
-        assertNotNull(technology);
-        assertEquals(expectedId, technology.getId());
-        verify(technologyRepository, times(1)).save(this.technology);
+        assertNotNull(technologyResult);
+        assertEquals(expectedId, technologyResult.getId());
+        verify(technologyRepository, times(1)).save(technologyResult);
     }
 
     @Test
@@ -61,11 +61,11 @@ public class TechnologyUnitTests {
     void shouldUpdateTechnologyWhenCallRepository() {
         when(technologyRepository.findById(ID_1)).thenReturn(Optional.ofNullable(technology));
         when(technologyRepository.save(technology)).thenReturn(technology);
-        Technology technology = technologyService.update(technologyRequestDto, ID_1);
+        Technology technologyResult = technologyService.update(technologyRequestDto, ID_1);
         int expectedId = 1;
-        assertNotNull(technology);
-        assertEquals(expectedId, technology.getId());
-        verify(technologyRepository, times(1)).save(this.technology);
+        assertNotNull(technologyResult);
+        assertEquals(expectedId, technologyResult.getId());
+        verify(technologyRepository, times(1)).save(technologyResult);
     }
 
     @Test
@@ -79,19 +79,19 @@ public class TechnologyUnitTests {
     @DisplayName("Поиск технологии по Id с вызовом репозитория")
     void shouldFindByIdTechnologyWhenCallRepository() {
         when(technologyRepository.findById(technology.getId())).thenReturn(Optional.ofNullable(technology));
-        Technology technology = technologyService.findById(this.technology.getId());
+        Technology technologyResult = technologyService.findById(this.technology.getId());
         long expectedId = 1L;
-        assertEquals(expectedId, technology.getId());
-        verify(technologyRepository, times(1)).findById(technology.getId());
+        assertEquals(expectedId, technologyResult.getId());
+        verify(technologyRepository, times(1)).findById(technologyResult.getId());
     }
 
     @Test
     @DisplayName("Список всех технологий с вызовом репозитория")
     void shouldFindAllTechnologyWhenCallRepository() {
         when(technologyRepository.findAll()).thenReturn(List.of(technology));
-        List<Technology> targetTechnology = technologyService.findAll();
-        assertNotNull(targetTechnology);
-        assertEquals(1, targetTechnology.size());
+        List<Technology> technologyResult = technologyService.findAll();
+        assertNotNull(technologyResult);
+        assertEquals(1, technologyResult.size());
         verify(technologyRepository, times(1)).findAll();
     }
 

@@ -1,5 +1,7 @@
 package ru.epa.epabackend.employeeEvaluation;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,22 +9,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationDto;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
-import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
-import ru.epa.epabackend.service.CriteriaService;
-import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.impl.CriteriaServiceImpl;
 import ru.epa.epabackend.service.impl.EmployeeEvaluationServiceImpl;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.util.Role;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,27 +38,17 @@ public class EmployeeEvaluationUnitTests {
     @Mock
     private CriteriaServiceImpl criteriaService;
     @Mock
-    private EmployeeMapper employeeMapper;
-    @Mock
     private EmployeeEvaluationMapper employeeEvaluationMapper;
     @InjectMocks
     private EmployeeEvaluationServiceImpl employeeEvaluationService;
-    private Employee evaluator = new Employee();
-    private Employee evaluated = new Employee();
-    private EmployeeEvaluation employeeEvaluation = new EmployeeEvaluation();
-    private EmployeeEvaluationDto employeeEvaluationDto = new EmployeeEvaluationDto();
-    private EmployeeEvaluationRequestDto employeeEvaluationRequestDto = new EmployeeEvaluationRequestDto();
-    private EmployeeEvaluationResponseDto employeeEvaluationResponseDto = new EmployeeEvaluationResponseDto();
-    private EmployeeShortResponseDto employeeShortDto;
+    private Employee evaluator;
+    private Employee evaluated;
+    private EmployeeEvaluation employeeEvaluation;
+    private EmployeeEvaluationRequestDto employeeEvaluationRequestDto;
     private Criteria criteria = new Criteria();
 
     @BeforeEach
     public void init() {
-        employeeShortDto = EmployeeShortResponseDto.builder()
-                .id(ID_1)
-                .fullName("name")
-                .position("USER")
-                .build();
         evaluator = Employee.builder()
                 .id(ID_1)
                 .role(Role.ROLE_USER)
@@ -80,32 +69,68 @@ public class EmployeeEvaluationUnitTests {
                 .evaluated(evaluated)
                 .criteria(criteria)
                 .build();
-        employeeEvaluationDto = EmployeeEvaluationDto.builder()
-                .id(ID_1)
-                .evaluated(employeeShortDto)
-                .score(5)
-                .build();
         employeeEvaluationRequestDto = EmployeeEvaluationRequestDto.builder()
                 .criteriaId(criteria.getId())
                 .score(5)
                 .build();
     }
-/*
+
     @Test
     @DisplayName("Создание оценки с вызовом репозитория")
     void shouldCreateEmployeeEvaluationWhenCallRepository() {
         when(employeeService.findById(ID_2)).thenReturn(evaluated);
         when(employeeService.findById(ID_1)).thenReturn(evaluator);
-        when(criteriaService.findById(employeeEvaluationRequestDto.getCriteriaId())).thenReturn(criteria);
-
-        EmployeeEvaluation employeeEvaluation = employeeEvaluationService.create(evaluator.getId(), evaluated.getId(),
-                employeeEvaluationRequestDto);
-
-        long expectedId = 1;
-        assertEquals(expectedId, employeeEvaluation.getId());
-        verify(employeeEvaluationRepository, times(1)).save(this.employeeEvaluation);
+        when(criteriaService.findById(ID_1)).thenReturn(criteria);
+        when(employeeEvaluationMapper.mapToEntity(employeeEvaluationRequestDto,evaluated,evaluator,criteria))
+                .thenReturn(employeeEvaluation);
+        when(employeeEvaluationRepository.save(employeeEvaluation)).thenReturn(employeeEvaluation);
+        EmployeeEvaluation employeeEvaluationResult = employeeEvaluationService
+                .create(evaluator.getId(),evaluated.getId(),employeeEvaluationRequestDto);
+        int expectedId = 1;
+        assertNotNull(employeeEvaluationResult);
+        assertEquals(expectedId, employeeEvaluationResult.getId());
+        verify(employeeEvaluationRepository,times(1)).save(employeeEvaluationResult);
     }
 
- */
+    @Test
+    @DisplayName("Поиск оценки по Id с исключением Not Found Exception")
+    void shouldFindByIdWhenThrowNotFoundException() throws ValidationException {
+        when(employeeEvaluationRepository.findById(ID_1)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> employeeEvaluationService.findById(ID_1));
+    }
+
+    @Test
+    @DisplayName("Поиск оценки по Id с вызовом репозитория")
+    void shouldFindByIdProjectWhenCallRepository() {
+        when(employeeEvaluationRepository.findById(employeeEvaluation.getId()))
+                .thenReturn(Optional.ofNullable(employeeEvaluation));
+        EmployeeEvaluation employeeEvaluationResult = employeeEvaluationService
+                .findById(this.employeeEvaluation.getId());
+        long expectedId = 1L;
+        assertEquals(expectedId, employeeEvaluationResult.getId());
+        verify(employeeEvaluationRepository, times(1))
+                .findById(employeeEvaluationResult.getId());
+    }
+
+    @Test
+    @DisplayName("Удаление оценки по Id оценщика с вызовом репозитория")
+    void shouldFindAllByAppraiserId(){
+        when(employeeEvaluationRepository.findAllByEvaluatedId(ID_2)).thenReturn(List.of(employeeEvaluation));
+        List<EmployeeEvaluation> employeeEvaluationsResult = employeeEvaluationService
+                .findAllByAppraiserId(evaluated.getId());
+        int expectedSize = 1;
+        assertNotNull(employeeEvaluationsResult);
+        assertEquals(expectedSize, employeeEvaluationsResult.size());
+        verify(employeeEvaluationRepository,times(1)).findAllByEvaluatedId(evaluated.getId());
+    }
+
+    @Test
+    @DisplayName("Удаление оценки с вызовом репозитория")
+    void shouldDeleteTechnologyWhen() {
+        when(employeeEvaluationRepository.existsById(any())).thenReturn(true);
+        employeeEvaluationService.delete(ID_1);
+        verify(employeeEvaluationRepository, times(1)).existsById(ID_1);
+    }
+
 
 }
