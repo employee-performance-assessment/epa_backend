@@ -19,6 +19,7 @@ import ru.epa.epabackend.dto.task.TaskRequestDto;
 import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.TaskMapper;
+import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.service.TaskService;
 
 import java.security.Principal;
@@ -104,8 +105,9 @@ public class TaskControllerAdmin {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/find")
     public List<TaskShortResponseDto> findAllByEmployeeId(@Valid @RequestParam @Positive Long employeeId,
-                                                                   Principal principal) {
-        return taskMapper.mapList(taskService.findAllByEmployeeId(employeeId, principal.getName()));
+                                                          Principal principal) {
+        List<Task> tasks = taskService.findAllByEmployeeId(employeeId, principal.getName());
+        return taskMapper.mapList(tasks);
     }
 
     /**
