@@ -128,6 +128,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * Получение списка всех задач пользователя администратором с указанным статусом задач
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllByEmployeeId(Long employeeId, String email) {
+        return taskRepository.findAllByOwnerEmailAndExecutorId(email, employeeId);
+    }
+
+    /**
      * Найти задачу по ID
      */
     @Override
