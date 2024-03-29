@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +84,28 @@ public class TaskControllerAdmin {
     public TaskFullResponseDto findById(@Parameter(required = true) @PathVariable Long taskId,
                                         Principal principal) {
         return taskMapper.mapToFullDto(taskService.findDtoById(taskId, principal.getName()));
+    }
+
+    /**
+     * Эндпойнт поиска задачи по ID администратором.
+     */
+    @Operation(summary = "Получение информации о задаче администратором",
+            description = "Возвращает полную информацию о задаче, если она существует в базе данных.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = TaskFullResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/find")
+    public List<TaskShortResponseDto> findAllByEmployeeId(@Valid @RequestParam @Positive Long employeeId,
+                                                                   Principal principal) {
+        return taskMapper.mapList(taskService.findAllByEmployeeId(employeeId, principal.getName()));
     }
 
     /**

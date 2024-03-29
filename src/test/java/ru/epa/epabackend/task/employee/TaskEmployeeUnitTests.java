@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.dto.task.TaskFullResponseDto;
-import ru.epa.epabackend.dto.task.TaskShortResponseDto;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Task;
@@ -78,7 +77,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findAllByExecutorIdFilters(ID_2, null)).thenReturn(List.of(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        List<Task> tasksResult = taskService.findAllByExecutorIdFilters(null, null, principal);
+        List<Task> tasksResult = taskService.findAllByExecutorIdFilters(null, principal);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
