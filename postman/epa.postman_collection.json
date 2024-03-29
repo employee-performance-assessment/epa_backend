@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "7543752b-89de-4d6c-b1d9-99e071d00472",
-		"name": "epa",
+		"_postman_id": "13c1ad8f-7bf9-42c0-bc5f-50f71438901d",
+		"name": "epa Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26701489"
+		"_exporter_id": "21857559"
 	},
 	"item": [
 		{
@@ -1401,7 +1401,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('task2');\r",
 									"    pm.expect(jsonData.description).to.eql('task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
@@ -1425,7 +1425,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"executorId\": 6,\n  \"deadLine\": \"2000-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"executorId\": 6,\n  \"deadLine\": \"2025-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1465,7 +1465,7 @@
 									"\r",
 									"    pm.expect(jsonData[1].id).to.eql(2);\r",
 									"    pm.expect(jsonData[1].name).to.eql('task2');\r",
-									"    pm.expect(jsonData[1].deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData[1].deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData[1].basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.length).to.eql(2);\r",
 									"});\r",
@@ -1576,7 +1576,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
@@ -1684,7 +1684,7 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData[0].id).to.eql(2);\r",
 									"    pm.expect(jsonData[0].name).to.eql('u task2 name');\r",
-									"    pm.expect(jsonData[0].deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData[0].deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData[0].basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.length).to.eql(1);\r",
 									"});\r",
@@ -1759,7 +1759,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
@@ -1953,7 +1953,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");   \r",
@@ -2106,7 +2106,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"    pm.expect(jsonData.status).to.eql(\"DONE\");   \r",
@@ -2196,110 +2196,6 @@
 					]
 				},
 				{
-					"name": "Update status task1 to DONE employee",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Test create task\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.id).to.eql(1);\r",
-									"    pm.expect(jsonData.name).to.eql('task1');\r",
-									"    pm.expect(jsonData.description).to.eql('task1 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2246-08-20\");\r",
-									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
-									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
-									"    pm.expect(jsonData.status).to.eql(\"DONE\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"status\": \"DONE\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "text"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/task/:id",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"task",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "OK",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "*/*"
-								}
-							],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
 					"name": "Get team statistic admin",
 					"event": [
 						{
@@ -2312,8 +2208,7 @@
 									"\r",
 									"pm.test(\"Test team statistic\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.completedOnTimePercent).to.eql(50.0);\r",
-									"    pm.expect(jsonData.delayedPercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(100);\r",
 									"});\r",
 									""
 								],
@@ -2341,7 +2236,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/stat/task/team?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/admin/stat/task/team?range-start=2024-01-01&range-end=2026-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2358,7 +2253,7 @@
 								},
 								{
 									"key": "range-end",
-									"value": "2025-01-01"
+									"value": "2026-01-01"
 								}
 							]
 						}
@@ -2384,12 +2279,12 @@
 									"    pm.expect(jsonData[0].delayedPercent).to.eql(0);\r",
 									"\r",
 									"    pm.expect(jsonData[1].employeeId).to.eql(5);\r",
-									"    pm.expect(jsonData[1].completedOnTimePercent).to.eql(100);\r",
+									"    pm.expect(jsonData[1].completedOnTimePercent).to.eql(0);\r",
 									"    pm.expect(jsonData[1].delayedPercent).to.eql(0);\r",
 									"\r",
 									"    pm.expect(jsonData[2].employeeId).to.eql(6);\r",
-									"    pm.expect(jsonData[2].completedOnTimePercent).to.eql(0);\r",
-									"    pm.expect(jsonData[2].delayedPercent).to.eql(100);\r",
+									"    pm.expect(jsonData[2].completedOnTimePercent).to.eql(100);\r",
+									"    pm.expect(jsonData[2].delayedPercent).to.eql(0);\r",
 									"\r",
 									"    pm.expect(jsonData[3].employeeId).to.eql(7);\r",
 									"    pm.expect(jsonData[3].completedOnTimePercent).to.eql(0);\r",
@@ -2421,7 +2316,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/stat/task/individual?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/admin/stat/task/individual?range-start=2024-01-01&range-end=2026-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2438,7 +2333,7 @@
 								},
 								{
 									"key": "range-end",
-									"value": "2025-01-01"
+									"value": "2026-01-01"
 								}
 							]
 						}
@@ -2500,8 +2395,7 @@
 									"\r",
 									"pm.test(\"Test team statistic\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.completedOnTimePercent).to.eql(50.0);\r",
-									"    pm.expect(jsonData.delayedPercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(100);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -2528,7 +2422,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/stat/task/team?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/user/stat/task/team?range-start=2024-01-01&range-end=2026-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2545,7 +2439,7 @@
 								},
 								{
 									"key": "range-end",
-									"value": "2025-01-01"
+									"value": "2026-01-01"
 								}
 							]
 						}
@@ -2569,8 +2463,8 @@
 									"    pm.expect(jsonData.employeeId, '\"id\" must be 6').to.eql(6);\r",
 									"    pm.expect(jsonData.employeeFullName).to.eql(\"Богдан Хмельницкий\");\r",
 									"    pm.expect(jsonData.employeePosition).to.eql(\"dev\");\r",
-									"    pm.expect(jsonData.completedOnTimePercent).to.eql(0.0);\r",
-									"    pm.expect(jsonData.delayedPercent).to.eql(100.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(100);\r",
+									"    pm.expect(jsonData.delayedPercent).to.eql(0);\r",
 									"});"
 								],
 								"type": "text/javascript",
