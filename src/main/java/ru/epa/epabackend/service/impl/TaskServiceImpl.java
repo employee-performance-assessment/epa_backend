@@ -24,7 +24,7 @@ import java.time.Period;
 import java.util.List;
 
 /**
- * Класс TaskServiceImpl содержит методы действий с задачами для администратора.
+ * Класс TaskServiceImpl содержит методы действий с задачами.
  *
  * @author Владислав Осипов
  */
@@ -32,6 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class TaskServiceImpl implements TaskService {
+
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
@@ -85,7 +86,7 @@ public class TaskServiceImpl implements TaskService {
         Employee executor = checkExecutor(taskRequestDto, oldTask);
         taskMapper.updateFields(taskRequestDto, project, executor, oldTask);
         if (oldTask.getStatus() == TaskStatus.DONE) {
-            setPointsToEmployeeAfterTaskDone(taskRequestDto, oldTask);
+            setPointsToEmployeeAfterTaskDone(oldTask);
             oldTask.setFinishDate(LocalDate.now());
         }
         return taskRepository.save(oldTask);
@@ -167,8 +168,8 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Проставление очков после того как задача выполнена
      */
-    private void setPointsToEmployeeAfterTaskDone(TaskRequestDto dto, Task task) {
-        Period period = Period.between(LocalDate.now(), dto.getDeadLine());
+    private void setPointsToEmployeeAfterTaskDone(Task task) {
+        Period period = Period.between(LocalDate.now(), task.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
