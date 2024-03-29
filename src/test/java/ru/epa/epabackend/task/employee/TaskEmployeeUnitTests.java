@@ -78,7 +78,7 @@ class TaskEmployeeUnitTests {
         when(taskRepository.findAllByExecutorIdFilters(ID_2, null)).thenReturn(List.of(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        List<Task> tasksResult = taskService.findAllByExecutorIdFilters(null, principal);
+        List<Task> tasksResult = taskService.findAllByExecutorIdFilters(null, null, principal);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);

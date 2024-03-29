@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +58,7 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<TaskShortResponseDto> findAllByEmployeeIdFilters(@RequestParam(required = false) Long employeeId,
+    public List<TaskShortResponseDto> findAllByEmployeeIdFilters(@RequestParam(required = false) @Positive Long employeeId,
                                                                  Principal principal,
                                                                  @RequestParam(required = false) String status) {
         List<Task> allByExecutorIdFilters = taskService.findAllByExecutorIdFilters(employeeId, status, principal);
