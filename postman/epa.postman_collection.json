@@ -1542,13 +1542,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/task?employeeId=5",
+							"raw": "{{baseUrl}}/admin/task/find?employeeId=5",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"user",
-								"task"
+								"admin",
+								"task",
+								"find"
 							],
 							"query": [
 								{
