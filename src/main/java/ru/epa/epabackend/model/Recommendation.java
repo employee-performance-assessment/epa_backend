@@ -51,6 +51,6 @@ public class Recommendation {
     /**
      * Описание рекомендации.
      */
-    @JoinColumn(name = "description")
-    private String description;
+    @JoinColumn(name = "recommendation")
+    private String recommendation;
 }

@@ -21,6 +21,7 @@ import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Recommendation;
 import ru.epa.epabackend.service.RecommendationService;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -58,13 +59,12 @@ public class AdminRecommendationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @PostMapping("/{senderId}")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public RecommendationResponseDto save(@PathVariable("senderId") Long senderId,
-                                          @RequestParam(required = true) Long recipientId,
-            @RequestBody RecommendationRequestDto recommendationRequestDto) {
+    public RecommendationResponseDto save(Principal principal, @RequestParam(required = true) String email,
+                                          @RequestBody RecommendationRequestDto recommendationRequestDto) {
         Recommendation recommendation = recommendationService.create(recommendationRequestDto,
-                recipientId, senderId);
+                email, principal.getName());
         return recommendationMapper.mapToDto(recommendation);
     }
 
@@ -87,9 +87,9 @@ public class AdminRecommendationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<RecommendationResponseDto> findAllRecommendationByRecipientId(
-            @RequestParam(required = true) Long recipientId) {
-        return recommendationMapper.mapList(recommendationService.findAllByRecipientId(recipientId));
+    public List<RecommendationResponseDto> findAllRecommendationByRecipientEmail(
+            @RequestParam(required = true) String email) {
+        return recommendationMapper.mapList(recommendationService.findAllByRecipientEmail(email));
     }
 
     /**

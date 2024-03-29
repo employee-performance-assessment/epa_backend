@@ -41,5 +41,5 @@ public class RecommendationResponseDto {
     /**
      * Описание рекомендации.
      */
-    private String description;
+    private String recommendation;
 }

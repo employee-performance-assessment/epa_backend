@@ -23,6 +23,7 @@ import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -59,14 +60,15 @@ public class UserEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @PostMapping("/{evaluatorId}")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public List<EmployeeEvaluationResponseFullDto> save(
-            @PathVariable("evaluatorId") Long evaluatorId,
+            Principal principal,
             @RequestParam(required = true) Long evaluatedId,
             @Valid @RequestBody List<EmployeeEvaluationRequestDto> evaluationListRequestDto) {
         List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationService
-                .create(evaluatorId, evaluatedId, evaluationListRequestDto);
+                .create(principal.getName(),
+                        evaluatedId, evaluationListRequestDto);
         return employeeEvaluationMapper.mapList(employeeEvaluations);
     }
 
@@ -88,10 +90,9 @@ public class UserEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/{evaluatedId}")
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(
-            @PathVariable @Parameter(required = true) Long evaluatedId) {
-        return employeeEvaluationService.findAllEvaluationsUsers(evaluatedId);
+    @GetMapping()
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(Principal principal) {
+        return employeeEvaluationService.findAllEvaluationsUsers(principal.getName());
     }
 
     /**
@@ -112,10 +113,8 @@ public class UserEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/{evaluatedId}/admin")
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(
-            @PathVariable @Parameter(required = true) Long evaluatedId) {
-        return employeeEvaluationService
-                .findAllEvaluationsAdmin(evaluatedId);
+    @GetMapping("/admin")
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(Principal principal) {
+        return employeeEvaluationService.findAllEvaluationsAdmin(principal.getName());
     }
 }

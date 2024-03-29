@@ -1,7 +1,6 @@
 package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -56,12 +55,12 @@ public class AdminEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/rating/{evaluatedId}/full")
+    @GetMapping("/rating/full")
     public RatingResponseDto findFullRating(
-            @PathVariable @Parameter(required = true) Long evaluatedId,
+            @RequestParam(required = true) String email,
             @RequestParam(required = true) LocalDate startDay,
             @RequestParam(required = true) LocalDate endDay) {
-        return employeeEvaluationService.findFullRating(evaluatedId, startDay, endDay);
+        return employeeEvaluationService.findFullRating(email, startDay, endDay);
     }
 
     /**
@@ -82,12 +81,12 @@ public class AdminEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/rating/{evaluatedId}")
+    @GetMapping("/rating")
     public RatingResponseDto findRatingByAdmin(
-            @PathVariable @Parameter(required = true) Long evaluatedId,
+            @RequestParam(required = true) String email,
             @RequestParam(required = true) LocalDate startDay,
             @RequestParam(required = true) LocalDate endDay) {
-        return employeeEvaluationService.findRatingByAdmin(evaluatedId, startDay, endDay);
+        return employeeEvaluationService.findRatingByAdmin(email, startDay, endDay);
     }
 
     /**
@@ -109,9 +108,9 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/evaluations/users")
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsByEvaluatedId(
-            @RequestParam(required = true) Long evaluatedId) {
-        return employeeEvaluationService.findAllEvaluationsUsers(evaluatedId);
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsByEvaluatedEmail(
+            @RequestParam(required = true) String email) {
+        return employeeEvaluationService.findAllEvaluationsUsers(email);
     }
 
     /**
@@ -133,8 +132,8 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/evaluations")
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdminByEvaluatedId(
-            @RequestParam(required = true) Long evaluatedId) {
-        return employeeEvaluationService.findAllEvaluationsAdmin(evaluatedId);
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdminByEvaluatedEmail(
+            @RequestParam(required = true) String email) {
+        return employeeEvaluationService.findAllEvaluationsAdmin(email);
     }
 }

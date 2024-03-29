@@ -55,8 +55,8 @@ public class UserRecommendationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{recipientId}")
-    public List<RecommendationResponseDto> findAllRecommendation(@PathVariable("recipientId") Long recipientId) {
-        return recommendationMapper.mapList(recommendationService.findAllByRecipientId(recipientId));
+    public List<RecommendationResponseDto> findAllRecommendation(@PathVariable("recipientEmail") String recipientEmail) {
+        return recommendationMapper.mapList(recommendationService.findAllByRecipientEmail(recipientEmail));
     }
 
     /**

@@ -31,9 +31,4 @@ public class EmployeeEvaluationResponseDto {
      * Количество звезд с округлением до одного знака после запятой.
      */
     private Double score;
-
-    public EmployeeEvaluationResponseDto(Object name, Double score) {
-        this.name = name.toString();
-        this.score = score;
-    }
 }

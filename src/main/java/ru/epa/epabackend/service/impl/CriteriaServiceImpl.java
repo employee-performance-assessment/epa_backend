@@ -37,6 +37,7 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Получение критерия оценки по её ID.
      */
     @Override
+    @Transactional(readOnly = true)
     public Criteria findById(Long criteriaId) {
         Criteria criteria = criteriaRepository.findById(criteriaId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Оценка с id %s не найдена", criteriaId)));
@@ -47,6 +48,7 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Получение списка критериев оценок.
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Criteria> findAll() {
         return criteriaRepository.findAll();
     }

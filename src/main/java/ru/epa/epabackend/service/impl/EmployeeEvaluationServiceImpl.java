@@ -39,12 +39,13 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Сохранение оценки.
      */
     @Override
-    public List<EmployeeEvaluation> create(Long evaluatorId, Long evaluatedId,
+    public List<EmployeeEvaluation> create(String email,
+                                           Long evaluatedId,
                                            List<EmployeeEvaluationRequestDto> evaluationRequestDtoList) {
         Employee evaluated = employeeService.findById(evaluatedId);
-        Employee evaluator = employeeService.findById(evaluatorId);
+        Employee evaluator = employeeService.findByEmail(email);
 
-        List<EmployeeEvaluation> employeeEvaluations = new ArrayList<>();
+        List<EmployeeEvaluation> employeeEvaluations = new ArrayList<>(evaluationRequestDtoList.size());
 
         for (EmployeeEvaluationRequestDto evaluationRequestDto : evaluationRequestDtoList) {
             Criteria criteria = criteriaService.findById(evaluationRequestDto.getCriteriaId());
@@ -60,6 +61,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Получение оценки по id.
      */
     @Override
+    @Transactional(readOnly = true)
     public EmployeeEvaluation findById(Long evaluationEvaluationId) {
         return employeeEvaluationRepository
                 .findById(evaluationEvaluationId).orElseThrow(() ->
@@ -68,34 +70,38 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение списка своих оценок от коллег по своему id.
+     * Получение списка своих оценок от коллег по своему email.
      */
     @Override
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(Long evaluatedId) {
-        return employeeEvaluationRepository.findAllEvaluationsUsers(evaluatedId);
+    @Transactional(readOnly = true)
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(String email) {
+        return employeeEvaluationRepository.findAllEvaluationsUsers(email);
     }
 
     /**
-     * Получение списка своих оценок от руководителя по своему id.
+     * Получение списка своих оценок от руководителя по своему email.
      */
     @Override
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(Long evaluatedId) {
-        return employeeEvaluationRepository.findAllEvaluationsAdmin(evaluatedId);
+    @Transactional(readOnly = true)
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(String email) {
+        return employeeEvaluationRepository.findAllEvaluationsAdmin(email);
     }
 
     /**
      * Получение рейтинга сотрудника от всего коллектива.
      */
     @Override
-    public RatingResponseDto findFullRating(Long evaluatedId, LocalDate startDay, LocalDate endDay) {
-        return employeeEvaluationRepository.findFullRating(evaluatedId, startDay, endDay);
+    @Transactional(readOnly = true)
+    public RatingResponseDto findFullRating(String email, LocalDate startDay, LocalDate endDay) {
+        return employeeEvaluationRepository.findFullRating(email, startDay, endDay);
     }
 
     /**
      * Получение рейтинга сотрудника только от руководителя.
      */
     @Override
-    public RatingResponseDto findRatingByAdmin(Long evaluatedId, LocalDate startDay, LocalDate endDay) {
-        return employeeEvaluationRepository.findRatingByAdmin(evaluatedId, startDay, endDay);
+    @Transactional(readOnly = true)
+    public RatingResponseDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {
+        return employeeEvaluationRepository.findRatingByAdmin(email, startDay, endDay);
     }
 }

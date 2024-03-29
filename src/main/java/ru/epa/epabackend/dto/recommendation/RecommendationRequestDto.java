@@ -22,5 +22,5 @@ public class RecommendationRequestDto {
      */
     @NotBlank
     @Size(min = 10, max = 600)
-    private String description;
+    private String recommendation;
 }

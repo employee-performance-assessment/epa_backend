@@ -16,7 +16,7 @@ public interface RecommendationService {
      * Создание рекомендации.
      */
     Recommendation create(RecommendationRequestDto recommendationRequestDto,
-                          Long recipientId, Long senderId);
+                          String recipientEmail, String senderEmail);
 
     /**
      * Получение рекомендации по её ID.
@@ -26,7 +26,7 @@ public interface RecommendationService {
     /**
      * Получение списка рекомендаций по ID сотрудника.
      */
-    List<Recommendation> findAllByRecipientId(Long recipientId);
+    List<Recommendation> findAllByRecipientEmail(String recipientEmail);
 
     /**
      * Получение списка всех рекомендаций.

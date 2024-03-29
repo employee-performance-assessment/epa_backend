@@ -12,41 +12,40 @@ import java.util.List;
 
 public interface EmployeeEvaluationRepository extends JpaRepositoryImplementation<EmployeeEvaluation, Long> {
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".EmployeeEvaluationResponseDto(distinct (criteria.name), " +
-            "round(avg(score) OVER (PARTITION BY criteria.name), 1)) " +
+            ".EmployeeEvaluationResponseDto(criteria.name, " +
+            "round(avg(score), 1)) " +
             "from EmployeeEvaluation e " +
-            "where e.evaluated.id = :evaluatedId " +
+            "where e.evaluated.email = :email " +
             "and e.evaluator.role = 'ROLE_USER' " +
-            "GROUP BY e.criteria.name," +
-            " e.score")
-    List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(@Param("evaluatedId") Long evaluatedId);
+            "GROUP BY e.criteria.name")
+    List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(@Param("email") String email);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".EmployeeEvaluationResponseDto(distinct (criteria.name), " +
-            "round(avg(score) OVER (PARTITION BY criteria.name), 1)) " +
+            ".EmployeeEvaluationResponseDto(criteria.name, " +
+            "round(avg(score), 1)) " +
             "from EmployeeEvaluation e " +
-            "where e.evaluated.id = :evaluatedId " +
+            "where e.evaluated.email = :email " +
             "and e.evaluator.role = 'ROLE_ADMIN' " +
             "GROUP BY e.criteria.name," +
             " e.score")
-    List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(@Param("evaluatedId") Long evaluatedId);
+    List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(@Param("email") String email);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".RatingResponseDto(round(avg(score), 1) rating) " +
             "from EmployeeEvaluation e " +
-            "where e.evaluated.id = :evaluatedId " +
+            "where e.evaluated.email = :email " +
             "and e.createDay BETWEEN :startDay AND :endDay ")
-    RatingResponseDto findFullRating(@Param("evaluatedId") Long evaluatedId,
+    RatingResponseDto findFullRating(@Param("email") String email,
                                      @Param("startDay") LocalDate startDay,
                                      @Param("endDay") LocalDate endDay);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".RatingResponseDto(round(avg(score), 1) rating) " +
             "from EmployeeEvaluation e " +
-            "where e.evaluated.id = :evaluatedId " +
+            "where e.evaluated.email = :email " +
             "and e.evaluator.role = 'ROLE_ADMIN' " +
             "and e.createDay BETWEEN :startDay AND :endDay ")
-    RatingResponseDto findRatingByAdmin(@Param("evaluatedId") Long evaluatedId,
+    RatingResponseDto findRatingByAdmin(@Param("email") String email,
                                         @Param("startDay") LocalDate startDay,
                                         @Param("endDay") LocalDate endDay);
 }

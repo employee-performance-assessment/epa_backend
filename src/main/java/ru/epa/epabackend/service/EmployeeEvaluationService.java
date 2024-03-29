@@ -19,7 +19,8 @@ public interface EmployeeEvaluationService {
     /**
      * Сохранение оценки сотрудника от его руководителя или коллег.
      */
-    List<EmployeeEvaluation> create(Long evaluatorId, Long evaluatedId,
+    List<EmployeeEvaluation> create(String email,
+                                    Long evaluatedId,
                                     List<EmployeeEvaluationRequestDto> evaluationListDto);
 
     /**
@@ -30,20 +31,20 @@ public interface EmployeeEvaluationService {
     /**
      * Получение списка всех оценок коллег.
      */
-    List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(Long evaluatedId);
+    List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(String email);
 
     /**
      * Получение списка оценок руководителя.
      */
-    List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(Long evaluatedId);
+    List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(String email);
 
     /**
      * Получение рейтинга за определенный период сотрудника от всего коллектива.
      */
-    RatingResponseDto findFullRating(Long evaluatedId, LocalDate startDay, LocalDate endDay);
+    RatingResponseDto findFullRating(String email, LocalDate startDay, LocalDate endDay);
 
     /**
      * Получение рейтинга за определенный период сотрудника только от руководителя.
      */
-    RatingResponseDto findRatingByAdmin(Long evaluatedId, LocalDate startDay, LocalDate endDay);
+    RatingResponseDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay);
 }
