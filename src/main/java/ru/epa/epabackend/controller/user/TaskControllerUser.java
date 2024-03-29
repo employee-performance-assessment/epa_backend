@@ -58,7 +58,7 @@ public class TaskControllerUser {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<TaskShortResponseDto> findAllByEmployeeIdFilters(@RequestParam(required = false) @Positive Long employeeId,
+    public List<TaskShortResponseDto> findAllByEmployeeIdFilters(@RequestParam(required = false) Long employeeId,
                                                                  Principal principal,
                                                                  @RequestParam(required = false) String status) {
         List<Task> allByExecutorIdFilters = taskService.findAllByExecutorIdFilters(employeeId, status, principal);
