@@ -17,7 +17,7 @@ public interface TaskService {
     /**
      * Получение списка задач по ID исполнителя и статусу задачи
      */
-    List<Task> findAllByExecutorIdFilters(String status, Principal principal);
+    List<Task> findAllByExecutorIdFilters(Long employeeId, String status, Principal principal);
 
     /**
      * Найти задачу по ID задачи и ID исполнителя

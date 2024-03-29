@@ -16,6 +16,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.service.TaskService;
 import ru.epa.epabackend.util.EnumUtils;
+import ru.epa.epabackend.util.Role;
 import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
@@ -118,9 +119,12 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAllByExecutorIdFilters(String status, Principal principal) {
+    public List<Task> findAllByExecutorIdFilters(Long employeeId, String status, Principal principal) {
         Employee employee = employeeService.findByEmail(principal.getName());
         try {
+            if (employee.getRole() == Role.ROLE_ADMIN) {
+                return taskRepository.findAllByExecutorIdFilters(employeeId, getTaskStatus(status));
+            }
             return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
             throw new BadRequestException("Неверный статус: " + status);
