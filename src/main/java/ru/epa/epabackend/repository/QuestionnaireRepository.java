@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QuestionnaireRepository extends JpaRepository<Questionnaire, Long> {
-    Optional<Questionnaire> findFirstByAuthorEmailAndStatusOrderByIdDesc(String authorEmail, QuestionnaireStatus status);
+    Optional<Questionnaire> findLastByAuthorEmailAndStatusOrderByIdAsc(String authorEmail, QuestionnaireStatus status);
 
-    Optional<Questionnaire> findFirstByAuthorEmailOrderByIdDesc(String email);
+    Optional<Questionnaire> findLastByAuthorEmailOrderByIdAsc(String email);
 
     List<Questionnaire> findAllByAuthorIdAndStatus(Long authorId, QuestionnaireStatus shared);
 }

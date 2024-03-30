@@ -1,6 +1,7 @@
 package ru.epa.epabackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,16 +16,20 @@ import ru.epa.epabackend.dto.questionnaire.QuestionnaireFullResponseDto;
 import ru.epa.epabackend.dto.questionnaire.QuestionnaireShortResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.QuestionnaireMapper;
+import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.service.QuestionnaireService;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Класс QuestionnaireControllerUser для работы с энпоинтами анкеты, доступ к которым имеют зарегистрированные
- * пользователи
+ * пользователи.
+ * Пользователи могут запрашивать анкеты:
+ * -последнюю опубликованную администратором (со статусом SHARED),
+ * -по id анкеты. Анкета должна относится к администратору сотрудника
+ * -все опубликованные (SHARED) анкеты администратора
  */
 @Tag(name = "Private: Анкеты", description = "API пользователя для работы с анкетами")
 @SecurityRequirement(name = "JWT")
@@ -51,8 +56,9 @@ public class QuestionnaireControllerUser {
     @GetMapping("/last-shared")
     @ResponseStatus(HttpStatus.OK)
     public QuestionnaireShortResponseDto findShortLastByAuthorAndStatus(Principal principal) {
-        return questionnaireMapper.mapToShortResponseDto(questionnaireService.findLastByAuthorAndStatus(principal.getName(),
-                QuestionnaireStatus.SHARED));
+        Questionnaire questionnaire = questionnaireService.findLastByAuthorAndStatus(principal.getName(),
+                QuestionnaireStatus.SHARED);
+        return questionnaireMapper.mapToShortResponseDto(questionnaire);
     }
 
     /**
@@ -73,8 +79,8 @@ public class QuestionnaireControllerUser {
     @GetMapping("/{questionnaireId}")
     @ResponseStatus(HttpStatus.OK)
     public QuestionnaireFullResponseDto findFullByEmailAndId(Principal principal, @PathVariable long questionnaireId) {
-        return questionnaireMapper.mapToFullResponseDto(
-                questionnaireService.findByEmailAndId(principal.getName(), questionnaireId));
+        Questionnaire questionnaire = questionnaireService.findByEmailAndId(principal.getName(), questionnaireId);
+        return questionnaireMapper.mapToFullResponseDto(questionnaire);
     }
 
     /**
@@ -85,12 +91,13 @@ public class QuestionnaireControllerUser {
             description = "В случае отсутствия опубликованных анкет возвращается пустой список")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = QuestionnaireShortResponseDto.class)))})
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = QuestionnaireShortResponseDto.class))))})
     @GetMapping("/all-shared")
     @ResponseStatus(HttpStatus.OK)
     public List<QuestionnaireShortResponseDto> findAllShared(Principal principal) {
-        return questionnaireService.findAllByAuthorIdAndStatus(principal.getName(),
-                        QuestionnaireStatus.SHARED).stream().map(questionnaireMapper::mapToShortResponseDto)
-                .collect(Collectors.toList());
+        List<Questionnaire> questionnairies = questionnaireService.findAllByAuthorIdAndStatus(principal.getName(),
+                QuestionnaireStatus.SHARED);
+        return questionnaireMapper.mapToList(questionnairies);
     }
 }

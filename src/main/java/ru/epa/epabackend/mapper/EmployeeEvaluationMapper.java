@@ -7,6 +7,7 @@ import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
+import ru.epa.epabackend.model.Criteria;
 
 import java.util.List;
 

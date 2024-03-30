@@ -38,9 +38,5 @@ public interface CriteriaService {
      */
     List<Criteria> findDefault();
 
-    boolean isNameExists(String name);
-
-    Criteria findByName(String name);
-
-    Set<Criteria> findExistentAndSaveNonExistentCriterias(Set<CriteriaRequestDto> criterias);
+    List<Criteria> findExistentAndSaveNonExistentCriterias(List<CriteriaRequestDto> criterias);
 }

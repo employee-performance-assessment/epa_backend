@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
 
-import java.util.Set;
+import java.util.List;
 
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
@@ -22,5 +22,5 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class QuestionnaireRequestDto {
 
     @NotEmpty(message = "Должен быть заполнен хотя бы 1 критерий", groups = {Create.class, Update.class})
-    private Set<CriteriaRequestDto> criterias;
+    private List<CriteriaRequestDto> criterias;
 }

@@ -9,7 +9,7 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Интерфейс QuestionnaireMapper для преобразования анкет из сущности в Dto и обратно
@@ -18,12 +18,8 @@ import java.util.Set;
 public interface QuestionnaireMapper {
     Questionnaire mapToEntity(QuestionnaireShortResponseDto questionnaireShortResponseDto);
 
-    @Mapping(target = "status", source = "status")
-    @Mapping(target = "created", expression = "java(java.time.LocalDate.now())")
-    @Mapping(target = "author", source = "author")
-    @Mapping(target = "criterias", source = "criterias")
     @Mapping(target = "id", ignore = true)
-    Questionnaire mapToEntity(Set<Criteria> criterias, Employee author, QuestionnaireStatus status);
+    Questionnaire mapToEntity(List<Criteria> criterias, Employee author, QuestionnaireStatus status);
 
     Questionnaire mapToEntity(QuestionnaireFullResponseDto questionnaireFullResponseDto);
 
@@ -31,11 +27,8 @@ public interface QuestionnaireMapper {
 
     QuestionnaireFullResponseDto mapToFullResponseDto(Questionnaire questionnaire);
 
-    @Mapping(target = "status", source = "status")
-    @Mapping(target = "created", expression = "java(java.time.LocalDate.now())")
-    @Mapping(target = "author", source = "author")
-    @Mapping(target = "criterias", source = "criterias")
-    @Mapping(target = "id", source = "id")
-    Questionnaire mapToEntity(Set<Criteria> criterias, Employee author, QuestionnaireStatus status,
+    Questionnaire mapToEntity(List<Criteria> criterias, Employee author, QuestionnaireStatus status,
                               long id);
+
+    List<QuestionnaireShortResponseDto> mapToList(List<Questionnaire> questionnairies);
 }

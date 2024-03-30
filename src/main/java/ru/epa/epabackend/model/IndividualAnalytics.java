@@ -3,6 +3,7 @@ package ru.epa.epabackend.model;
 import lombok.*;
 
 /**
+ *
  * @author Владислав Осипов
  */
 @Getter

@@ -5,8 +5,8 @@ import lombok.*;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Сущность Questionnaire представляет собой анкету, которую админ создаёт, редактирует и отправляет на проставление
@@ -32,6 +32,7 @@ public class Questionnaire {
     /**
      * Администратор, создавший анкету
      */
+    @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "author_id")
     private Employee author;
@@ -39,17 +40,18 @@ public class Questionnaire {
     /**
      * Дата создания анкеты
      */
-    private LocalDate created;
+    private LocalDate created = LocalDate.now();
 
     /**
      * Список критериев в анкете
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @ManyToMany
     @JoinTable(name = "questionnaires_criterias",
             joinColumns = @JoinColumn(name = "questionnaire_id"),
             inverseJoinColumns = @JoinColumn(name = "criteria_id"))
     @Builder.Default
-    private Set<Criteria> criterias = new LinkedHashSet<>();
+    private List<Criteria> criterias = new ArrayList<>();
 
     /**
      * Статус анкеты (CREATED, SHARED)

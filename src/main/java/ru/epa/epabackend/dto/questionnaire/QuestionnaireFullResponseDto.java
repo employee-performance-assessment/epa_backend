@@ -10,7 +10,7 @@ import ru.epa.epabackend.dto.evaluation.CriteriaResponseDto;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
 
@@ -29,7 +29,7 @@ public class QuestionnaireFullResponseDto {
     @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate created;
 
-    private Set<CriteriaResponseDto> criterias;
+    private List<CriteriaResponseDto> criterias;
 
     private QuestionnaireStatus status;
 }

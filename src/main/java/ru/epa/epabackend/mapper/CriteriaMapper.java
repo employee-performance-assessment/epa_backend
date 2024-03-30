@@ -8,7 +8,7 @@ import ru.epa.epabackend.model.Criteria;
 import java.util.List;
 
 /**
- * Класс EvaluationMapper содержит преобразование критериев из сущности в Dto и наоборот.
+ * Класс EvaluationMapper содержит преобразование сущности.
  *
  * @author Михаил Безуглов
  */
