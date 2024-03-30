@@ -1,8 +1,5 @@
 package ru.epa.epabackend.dto.evaluation;
 
-import jakarta.persistence.ColumnResult;
-import jakarta.persistence.ConstructorResult;
-import jakarta.persistence.SqlResultSetMapping;
 import lombok.*;
 
 /**
