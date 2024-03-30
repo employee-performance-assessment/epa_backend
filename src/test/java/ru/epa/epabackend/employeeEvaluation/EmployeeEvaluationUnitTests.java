@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
+import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
+import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
@@ -20,6 +22,8 @@ import ru.epa.epabackend.service.impl.EmployeeEvaluationServiceImpl;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.util.Role;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +34,8 @@ import static org.mockito.Mockito.*;
 public class EmployeeEvaluationUnitTests {
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
+    private final LocalDate startDay = LocalDate.now().minusDays(2);
+    private final LocalDate endDay = LocalDate.now().plusDays(2);
     private static final String email = "qwerty@gmail.com";
     @Mock
     private EmployeeEvaluationRepository employeeEvaluationRepository;
@@ -45,7 +51,11 @@ public class EmployeeEvaluationUnitTests {
     private Employee evaluated;
     private EmployeeEvaluation employeeEvaluation;
     private EmployeeEvaluationRequestDto employeeEvaluationRequestDto;
+    private EmployeeEvaluationResponseDto employeeEvaluationResponseDto;
+    private RatingResponseDto ratingResponseDto;
     private Criteria criteria = new Criteria();
+    List<EmployeeEvaluation> evaluationList;
+    List<EmployeeEvaluationRequestDto> evaluationRequestDtoList;
 
     @BeforeEach
     public void init() {
@@ -73,23 +83,33 @@ public class EmployeeEvaluationUnitTests {
                 .criteriaId(criteria.getId())
                 .score(5)
                 .build();
+        employeeEvaluationResponseDto = EmployeeEvaluationResponseDto.builder()
+                .name("Оценка")
+                .build();
+        evaluationList = new ArrayList<>();
+        evaluationList.add(employeeEvaluation);
+        evaluationRequestDtoList = new ArrayList<>();
+        evaluationRequestDtoList.add(employeeEvaluationRequestDto);
+        ratingResponseDto = RatingResponseDto.builder()
+                .rating(10.0)
+                .build();
     }
 
     @Test
-    @DisplayName("Создание оценки с вызовом репозитория")
+    @DisplayName("Сохранение оценки с вызовом репозитория")
     void shouldCreateEmployeeEvaluationWhenCallRepository() {
         when(employeeService.findById(ID_2)).thenReturn(evaluated);
-        when(employeeService.findById(ID_1)).thenReturn(evaluator);
+        when(employeeService.findByEmail(email)).thenReturn(evaluator);
         when(criteriaService.findById(ID_1)).thenReturn(criteria);
         when(employeeEvaluationMapper.mapToEntity(employeeEvaluationRequestDto,evaluated,evaluator,criteria))
                 .thenReturn(employeeEvaluation);
-        when(employeeEvaluationRepository.save(employeeEvaluation)).thenReturn(employeeEvaluation);
-        EmployeeEvaluation employeeEvaluationResult = employeeEvaluationService
-                .create(evaluator.getId(),evaluated.getId(),employeeEvaluationRequestDto);
-        int expectedId = 1;
-        assertNotNull(employeeEvaluationResult);
-        assertEquals(expectedId, employeeEvaluationResult.getId());
-        verify(employeeEvaluationRepository,times(1)).save(employeeEvaluationResult);
+        when(employeeEvaluationRepository.saveAll(evaluationList)).thenReturn(evaluationList);
+        List<EmployeeEvaluation> employeeEvaluationListResult = employeeEvaluationService.
+                create(email,evaluated.getId(),evaluationRequestDtoList);
+        int expectedSize = 1;
+        assertNotNull(employeeEvaluationListResult);
+        assertEquals(expectedSize, employeeEvaluationListResult.size());
+        verify(employeeEvaluationRepository,times(1)).saveAll(employeeEvaluationListResult);
     }
 
     @Test
@@ -113,24 +133,52 @@ public class EmployeeEvaluationUnitTests {
     }
 
     @Test
-    @DisplayName("Удаление оценки по Id оценщика с вызовом репозитория")
-    void shouldFindAllByAppraiserId(){
-        when(employeeEvaluationRepository.findAllByEvaluatedId(ID_2)).thenReturn(List.of(employeeEvaluation));
-        List<EmployeeEvaluation> employeeEvaluationsResult = employeeEvaluationService
-                .findAllByAppraiserId(evaluated.getId());
+    @DisplayName("Получение списка своих оценок от коллег по своему email с вызовом репозитория")
+    void shouldFindAllEvaluationsUsersWhenCallRepository() {
+        when(employeeEvaluationRepository.findAllEvaluationsUsers(email))
+                .thenReturn(List.of(employeeEvaluationResponseDto));
+        List<EmployeeEvaluationResponseDto> employeeEvaluationResponseDtoListResult = employeeEvaluationService
+                .findAllEvaluationsUsers(email);
         int expectedSize = 1;
-        assertNotNull(employeeEvaluationsResult);
-        assertEquals(expectedSize, employeeEvaluationsResult.size());
-        verify(employeeEvaluationRepository,times(1)).findAllByEvaluatedId(evaluated.getId());
+        assertNotNull(employeeEvaluationResponseDtoListResult);
+        assertEquals(expectedSize, employeeEvaluationResponseDtoListResult.size());
+        verify(employeeEvaluationRepository,times(1)).findAllEvaluationsUsers(email);
     }
 
     @Test
-    @DisplayName("Удаление оценки с вызовом репозитория")
-    void shouldDeleteTechnologyWhen() {
-        when(employeeEvaluationRepository.existsById(any())).thenReturn(true);
-        employeeEvaluationService.delete(ID_1);
-        verify(employeeEvaluationRepository, times(1)).existsById(ID_1);
+    @DisplayName("Получение списка своих оценок от руководителя по своему email с вызовом репозитория")
+    void shouldFindAllEvaluationsAdminWhenCallRepository() {
+        when(employeeEvaluationRepository.findAllEvaluationsAdmin(email))
+                .thenReturn(List.of(employeeEvaluationResponseDto));
+        List<EmployeeEvaluationResponseDto> employeeEvaluationResponseDtoListResult = employeeEvaluationService
+                .findAllEvaluationsAdmin(email);
+        int expectedSize = 1;
+        assertNotNull(employeeEvaluationResponseDtoListResult);
+        assertEquals(expectedSize, employeeEvaluationResponseDtoListResult.size());
+        verify(employeeEvaluationRepository,times(1)).findAllEvaluationsAdmin(email);
     }
 
+    @Test
+    @DisplayName("Получение рейтинга сотрудника от всего коллектива с вызовом репозитория")
+    void shouldFindFullRatingWhenCallRepository() {
+        when(employeeEvaluationRepository.findFullRating(email,startDay,endDay)).thenReturn(ratingResponseDto);
+        RatingResponseDto ratingResponseDtoResult = employeeEvaluationService
+                .findFullRating(email,startDay,endDay);
+        double expectedId = 10.0;
+        assertNotNull(ratingResponseDtoResult);
+        assertEquals(expectedId, ratingResponseDtoResult.getRating());
+        verify(employeeEvaluationRepository,times(1)).findFullRating(email,startDay,endDay);
+    }
 
+    @Test
+    @DisplayName("Получение рейтинга сотрудника только от руководителя с вызовом репозитория")
+    void shouldFindRatingByAdminWhenCallRepository() {
+        when(employeeEvaluationRepository.findRatingByAdmin(email,startDay,endDay)).thenReturn(ratingResponseDto);
+        RatingResponseDto ratingResponseDtoResult = employeeEvaluationService
+                .findRatingByAdmin(email,startDay,endDay);
+        double expectedId = 10.0;
+        assertNotNull(ratingResponseDtoResult);
+        assertEquals(expectedId, ratingResponseDtoResult.getRating());
+        verify(employeeEvaluationRepository,times(1)).findRatingByAdmin(email,startDay,endDay);
+    }
 }

@@ -9,12 +9,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
 import ru.epa.epabackend.mapper.CriteriaMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.repository.CriteriaRepository;
 import ru.epa.epabackend.service.impl.CriteriaServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,8 @@ public class CriteriaUnitTests {
     @InjectMocks
     CriteriaServiceImpl criteriaService;
     private Criteria criteria;
-    private CriteriaRequestDto criteriaRequestDto;
+    private List<Criteria> criteriaList;
+    private List<CriteriaRequestDto> criteriaRequestDtoList;
 
     @BeforeEach
     public void unit() {
@@ -39,21 +41,21 @@ public class CriteriaUnitTests {
                 .id(ID_1)
                 .name("criteria")
                 .build();
-        criteriaRequestDto = CriteriaRequestDto.builder()
-                .name("criteriaRequestDto")
-                .build();
+        criteriaList = new ArrayList<>();
+        criteriaRequestDtoList = new ArrayList<>();
+        criteriaList.add(criteria);
     }
 
     @Test
-    @DisplayName("Создание критерия с вызовом репозитория")
+    @DisplayName("Сохранение списка критериев оценок с вызовом репозитория")
     void shouldCreateCriteriaWhenCallRepository() {
-        when(criteriaRepository.save(criteria)).thenReturn(criteria);
-        when(criteriaMapper.mapToEntity(criteriaRequestDto)).thenReturn(criteria);
-        Criteria criteriaResult = criteriaService.create(criteriaRequestDto);
-        int expectedId = 1;
-        assertNotNull(criteriaResult);
-        assertEquals(expectedId, criteria.getId());
-        verify(criteriaRepository, times(1)).save(criteriaResult);
+        when(criteriaMapper.mapListToEntity(criteriaRequestDtoList)).thenReturn(criteriaList);
+        when(criteriaRepository.saveAll(criteriaMapper.mapListToEntity(criteriaRequestDtoList))).thenReturn(criteriaList);
+        List<Criteria> criteriaListResult = criteriaService.create(criteriaRequestDtoList);
+        int expectedSize = 1;
+        assertNotNull(criteriaListResult);
+        assertEquals(expectedSize, criteriaListResult.size());
+        verify(criteriaRepository,times(1)).saveAll(criteriaList);
     }
 
     @Test
