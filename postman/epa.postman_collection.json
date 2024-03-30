@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "7543752b-89de-4d6c-b1d9-99e071d00472",
-		"name": "epa",
+		"_postman_id": "af56c54d-5e9a-4292-9037-005861825e73",
+		"name": "epa Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26701489"
+		"_exporter_id": "21857559"
 	},
 	"item": [
 		{
@@ -1506,6 +1506,88 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get all tasks employee By Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test list user\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].id).to.eql(1);\r",
+									"    pm.expect(jsonData[0].name).to.eql('task1');\r",
+									"    pm.expect(jsonData[0].deadLine).to.eql(\"2246-08-20\");\r",
+									"    pm.expect(jsonData[0].basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.length).to.eql(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/find?employeeId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								"find"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
 				},
 				{
 					"name": "Get Task By Id admin",
