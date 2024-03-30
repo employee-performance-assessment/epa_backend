@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.dto.recommendation.RecommendationResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.RecommendationMapper;
@@ -40,15 +39,13 @@ public class UserRecommendationController {
     /**
      * Эндпойнт получение рекомендаций от руководителя.
      */
-    @Operation(
-            summary = "Получение всех рекомендаций руководителя для определенного сотрудника",
+    @Operation(summary = "Получение всех рекомендаций руководителя для определенного сотрудника",
             description = "Возвращает список рекомендаций" +
-                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список."
-    )
+                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    schema = @Schema(implementation = RecommendationResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -64,20 +61,19 @@ public class UserRecommendationController {
     /**
      * Эндпойнт получение рекомендаций от руководителя по её ID.
      */
-    @Operation(
-            summary = "Получение рекомендации руководителя по ё ID",
+    @Operation(summary = "Получение рекомендации руководителя по ё ID",
             description = "Возвращает список рекомендаций" +
-                    "\n\nВ случае, если рекомендация не найдена, возвращает null."
-    )
+                    "\n\nВ случае, если рекомендация не найдена, возвращает null.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    mediaType = "application/json", schema = @Schema(implementation = RecommendationResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     public RecommendationResponseDto findRecommendationById(

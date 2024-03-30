@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
 import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
@@ -40,15 +42,12 @@ public class AdminEmployeeEvaluationController {
     /**
      * Эндпойнт получения рейтинга сотрудника с учетом оценок коллег.
      */
-    @Operation(
-            summary = "Получение рейтинга сотрудника с учетом оценок коллег",
+    @Operation(summary = "Получение рейтинга сотрудника с учетом оценок коллег",
             description = "Возвращает рейтинг сотрудника с учетом оценок коллег" +
-                    "\n\nВ случае, если не найдено ни одной оценки, возвращает 0."
-    )
+                    "\n\nВ случае, если не найдено ни одной оценки, возвращает 0.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    mediaType = "application/json", schema = @Schema(implementation = RatingResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -66,21 +65,20 @@ public class AdminEmployeeEvaluationController {
     /**
      * Эндпойнт получения рейтинга сотрудника без учета оценок коллег.
      */
-    @Operation(
-            summary = "Получение рейтинга сотрудника без учета оценок коллег",
+    @Operation(summary = "Получение рейтинга сотрудника без учета оценок коллег",
             description = "Возвращает рейтинг сотрудника без учета оценок коллег" +
-                    "\n\nВ случае, если не найдено ни одной оценке, возвращает 0."
-    )
+                    "\n\nВ случае, если не найдено ни одной оценке, возвращает 0.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    mediaType = "application/json", schema = @Schema(implementation = RatingResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+            mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating")
     public RatingResponseDto findRatingByAdmin(
             @RequestParam(required = true) String email,
@@ -92,15 +90,13 @@ public class AdminEmployeeEvaluationController {
     /**
      * Эндпойнт получения оценок коллег о сотруднике.
      */
-    @Operation(
-            summary = "Получение оценок коллег о сотруднике",
+    @Operation(summary = "Получение оценок коллег о сотруднике",
             description = "Возвращает список оценок коллег (усредненный по оценкам)" +
-                    "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список."
-    )
+                    "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -116,15 +112,13 @@ public class AdminEmployeeEvaluationController {
     /**
      * Эндпойнт получения сотрудником всех оценок руководителя о себе.
      */
-    @Operation(
-            summary = "Получение оценок руководителя для сотрудника",
+    @Operation(summary = "Получение оценок руководителя для сотрудника",
             description = "Возвращает список оценок руководителя о сотруднике" +
-                    "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список."
-    )
+                    "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
