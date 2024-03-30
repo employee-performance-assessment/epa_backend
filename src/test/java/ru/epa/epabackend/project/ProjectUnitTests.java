@@ -137,12 +137,12 @@ public class ProjectUnitTests {
         when(employeeService.findByEmail(email)).thenReturn(admin);
         when(employeeService.findById(ID_2)).thenReturn(employee);
         when(projectRepository.findById(ID_1)).thenReturn(Optional.of(project));
-        when(projectRepository.save(projectWithEmployee)).thenReturn(projectWithEmployee);
+        when(projectRepository.save(projectWithEmployee)).thenReturn(project);
         Project projectResult = projectService.saveWithEmployee(project.getId(),employee.getId(),email);
         int expectedId = 1;
-        assertNotNull(projectWithEmployee);
+        assertNotNull(projectResult);
         assertEquals(expectedId, projectResult.getId());
-        verify(projectRepository,times(1)).save(project);
+        verify(projectRepository,times(1)).save(projectResult);
     }
 
 
@@ -236,7 +236,7 @@ public class ProjectUnitTests {
     @DisplayName("Удаление сотрудника из проекта")
     void shouldDeleteEmployeeFromProjectWhenCallRepository() {
         when(employeeService.findByEmail(email)).thenReturn(admin);
-        when(projectRepository.findById(projectWithEmployee.getId())).thenReturn(Optional.of(projectWithEmployee));
+        when(projectRepository.findById(projectWithEmployee.getId())).thenReturn(Optional.of(project));
         when(employeeService.findById(ID_2)).thenReturn(employee);
         when(projectRepository.save(project)).thenReturn(project);
         projectService.deleteEmployeeFromProject(ID_1, ID_2, employee.getEmail());
