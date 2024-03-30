@@ -1,11 +1,12 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.*;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
+import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseFullDto;
+import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
-import ru.epa.epabackend.model.Criteria;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface EmployeeEvaluationMapper {
     /**
      * Преобразование из сущности в DTO.
      */
-    EmployeeEvaluationDto mapToDto(EmployeeEvaluation employeeEvaluation);
+    EmployeeEvaluationResponseFullDto mapToDto(EmployeeEvaluation employeeEvaluation);
 
     /**
      * Преобразование из DTO в сущность.
@@ -32,5 +33,5 @@ public interface EmployeeEvaluationMapper {
     /**
      * Преобразование списка сущностей в список DTO.
      */
-    List<EmployeeEvaluationDto> mapList(List<EmployeeEvaluation> employeeEvaluations);
+    List<EmployeeEvaluationResponseFullDto> mapList(List<EmployeeEvaluation> employeeEvaluations);
 }

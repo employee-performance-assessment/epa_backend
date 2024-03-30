@@ -2,10 +2,8 @@ package ru.epa.epabackend.dto.evaluation;
 
 import lombok.*;
 
-import java.util.HashMap;
-
 /**
- * Класс EvaluationCreateResponseDto для передачи для передачи информации об оценках сотрудника.
+ * Класс EvaluationCreateResponseDto для передачи информации об оценках сотрудника.
  *
  * @author Михаил Безуглов
  */
@@ -18,12 +16,12 @@ import java.util.HashMap;
 public class EmployeeEvaluationResponseDto {
 
     /**
-     * Сотрудник, которого оценили.
+     * Название критерия.
      */
-    private Long criteriaId;
+    private String name;
 
     /**
-     * Список оценок.
+     * Количество звезд с округлением до одного знака после запятой.
      */
-    private HashMap<CriteriaResponseDto, Double> evaluations;
+    private Double score;
 }
