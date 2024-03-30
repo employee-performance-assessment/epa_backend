@@ -2,6 +2,7 @@ package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
@@ -21,6 +22,7 @@ import java.util.List;
  *
  * @author Михаил Безуглов
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -37,6 +39,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public EmployeeEvaluation create(Long evaluatorId, Long evaluatedId,
                                      EmployeeEvaluationRequestDto employeeEvaluationRequestDto) {
+        log.info("Сохранение оценки");
         Employee evaluated = employeeService.findById(evaluatedId);
         Employee evaluator = employeeService.findById(evaluatorId);
         Criteria criteria = criteriaService.findById(employeeEvaluationRequestDto.getCriteriaId());
@@ -50,6 +53,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     public EmployeeEvaluation findById(Long evaluationEvaluationId) {
+        log.info("Получение оценки по идентификатору {}", evaluationEvaluationId);
         return employeeEvaluationRepository
                 .findById(evaluationEvaluationId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
@@ -61,6 +65,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     public List<EmployeeEvaluation> findAllByAppraiserId(Long evaluatedId) {
+        log.info("Получение списка оценок по идентификатору сотрудника {}", evaluatedId);
         return employeeEvaluationRepository.findAllByEvaluatedId(evaluatedId);
     }
 
@@ -69,6 +74,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     public void delete(Long evaluationEvaluationId) {
+        log.info("Удаление оценки по идентификатору {}", evaluationEvaluationId);
         if (employeeEvaluationRepository.existsById(evaluationEvaluationId)) {
             employeeEvaluationRepository.deleteById(evaluationEvaluationId);
         } else {

@@ -2,6 +2,7 @@ package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
@@ -23,6 +24,7 @@ import java.util.List;
  *
  * @author Константин Осипов
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -33,26 +35,42 @@ public class ProjectServiceImpl implements ProjectService {
     private final EmployeeService employeeService;
     private final EmployeeRepository employeeRepository;
 
+    /**
+     * Получение проекта по id
+     */
     @Override
     public Project findById(Long projectId) {
+        log.info("Получение проекта по id {}", projectId);
         return projectRepository.findById(projectId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Проект с id %s не найден", projectId)));
     }
 
+    /**
+     * Создание нового проекта
+     */
     @Override
     public Project create(ProjectCreateRequestDto projectCreateRequestDto, String email) {
+        log.info("Создание нового проекта {}", projectCreateRequestDto.getName());
         Employee admin = employeeService.findByEmail(email);
         return projectRepository
                 .save(projectMapper.mapToEntity(projectCreateRequestDto, List.of(admin)));
     }
 
+    /**
+     * Получение dto проекта по id
+     */
     @Override
     public Project findDtoById(Long projectId, String email) {
+        log.info("Получение dto проекта по идентификатору {}", projectId);
         return findById(projectId);
     }
 
+    /**
+     * Сохранение сотрудника в проект
+     */
     @Override
     public Project saveWithEmployee(Long projectId, Long employeeId, String email) {
+        log.info("Сохранение сотрудника с идентификатором {} в проект с идентификатором {}", employeeId, projectId);
         Employee admin = employeeService.findByEmail(email);
         Employee employee = employeeService.findById(employeeId);
         Project project = findById(projectId);
@@ -64,8 +82,12 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(project);
     }
 
+    /**
+     * Поиск всех создателей
+     */
     @Override
     public List<Project> findAllByCreator(String email) {
+        log.info("Поиск всех создателей");
         Employee employee = employeeService.findByEmail(email);
         if (employee.getRole() == Role.ROLE_ADMIN) {
             return projectRepository.findByEmployees(employee);
@@ -73,16 +95,24 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findByEmployees(employee.getCreator());
     }
 
+    /**
+     * Поиск всех по проекту и роли
+     */
     @Override
     public List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
+        log.info("Поиск всех по проекту с идентификатором {} и роли {}", projectId, role);
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         return employeeRepository.findByProjectsAndRole(findById(projectId), role);
     }
 
+    /**
+     * Обновление проекта
+     */
     @Override
     public Project update(Long projectId, ProjectUpdateRequestDto projectUpdateRequestDto, String email) {
+        log.info("Обновление проекта с идентификатором {}", projectId);
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
@@ -90,16 +120,24 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(project);
     }
 
+    /**
+     * Удаление проекта
+     */
     @Override
     public void delete(Long projectId, String email) {
+        log.info("Удаление проекта с идентификатором {}", projectId);
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         projectRepository.delete(project);
     }
 
+    /**
+     * Удаление сотрудника из проекта
+     */
     @Override
     public void deleteEmployeeFromProject(Long projectId, Long employeeId, String email) {
+        log.info("Удаление сотрудника с идентификатором {} из проекта с идентификатором {}", employeeId, projectId);
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
@@ -109,8 +147,12 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.save(project);
     }
 
+    /**
+     * Проверка сотрудника и проекта
+     */
     @Override
     public void checkUserAndProject(Employee user, Project project) {
+        log.info("Проверка сотрудника {} и проекта {}", user, project);
         if (!user.getProjects().contains(project))
             throw new ConflictException(String.format("%s с email %s не относится к проекту с id %d",
                     user.getRole(), user.getEmail(), project.getId()));

@@ -111,10 +111,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     /**
-     * Получение данных сотрудникаи для аутентификации
+     * Получение данных сотрудника для аутентификации
      */
     @Override
     public UserDetailsService userDetailsService() {
+        log.info("Получение данных сотрудника для аутентификации");
         return this::findByEmail;
     }
 
@@ -124,6 +125,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional(readOnly = true)
     public Employee findByEmail(String email) {
+        log.info("Получение сотрудника по email {}", email);
         return employeeRepository.findByEmail(email).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Сотрудник с email %s не найден", email)));
     }
@@ -133,6 +135,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Employee findById(Long employeeId) {
+        log.info("Получение сотрудника по идентификатору {}", employeeId);
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
     }
@@ -142,6 +145,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public List<Employee> findAllByCreatorEmail(String email) {
+        log.info("Получение всех сотрудников для одного админа {}", email);
         return employeeRepository.findAllByCreatorEmail(email);
     }
 }
