@@ -15,6 +15,7 @@ import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.dto.recommendation.RecommendationResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.RecommendationMapper;
+import ru.epa.epabackend.model.Recommendation;
 import ru.epa.epabackend.service.RecommendationService;
 
 import java.util.List;
@@ -56,7 +57,8 @@ public class UserRecommendationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{recipientId}")
     public List<RecommendationResponseDto> findAllRecommendation(@PathVariable("recipientEmail") String recipientEmail) {
-        return recommendationMapper.mapList(recommendationService.findAllByRecipientEmail(recipientEmail));
+        List<Recommendation> recommendationList = recommendationService.findAllByRecipientEmail(recipientEmail);
+        return recommendationMapper.mapList(recommendationList);
     }
 
     /**

@@ -16,10 +16,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SqlResultSetMapping(name = "EmployeeEvaluationResponseDto",
-        classes = @ConstructorResult(targetClass = EmployeeEvaluationResponseDto.class,
-                columns = {@ColumnResult(name = "name"),
-                        @ColumnResult(name = "score"),}))
 public class EmployeeEvaluationResponseDto {
 
     /**

@@ -65,8 +65,7 @@ public class UserEmployeeEvaluationController {
             Principal principal,
             @RequestParam(required = true) Long evaluatedId,
             @Valid @RequestBody List<EmployeeEvaluationRequestDto> evaluationListRequestDto) {
-        List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationService
-                .create(principal.getName(),
+        List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationService.create(principal.getName(),
                         evaluatedId, evaluationListRequestDto);
         return employeeEvaluationMapper.mapList(employeeEvaluations);
     }
