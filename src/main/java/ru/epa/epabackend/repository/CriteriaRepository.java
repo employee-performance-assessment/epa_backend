@@ -13,4 +13,3 @@ public interface CriteriaRepository extends JpaRepository<Criteria, Long> {
 
     Optional<Criteria> findByName(String name);
 }
-

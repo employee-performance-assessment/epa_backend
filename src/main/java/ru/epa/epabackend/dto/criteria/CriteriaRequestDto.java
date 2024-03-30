@@ -1,4 +1,4 @@
-package ru.epa.epabackend.dto.evaluation;
+package ru.epa.epabackend.dto.criteria;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

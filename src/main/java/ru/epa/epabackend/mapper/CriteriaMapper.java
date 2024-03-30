@@ -1,8 +1,8 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
-import ru.epa.epabackend.dto.evaluation.CriteriaDto;
-import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.CriteriaResponseDto;
 import ru.epa.epabackend.model.Criteria;
 
 import java.util.List;
@@ -18,12 +18,20 @@ public interface CriteriaMapper {
     /**
      * Преобразование из сущности в DTO.
      */
-    CriteriaDto mapToDto(Criteria criteria);
+    CriteriaResponseDto mapToDto(Criteria criteria);
 
     /**
      * Преобразование из DTO в сущность.
      */
     Criteria mapToEntity(CriteriaRequestDto criteriaRequestDto);
 
-    List<CriteriaDto> mapList(List<Criteria> criteria);
+    /**
+     * Преобразование списка сущностей в список DTO.
+     */
+    List<CriteriaResponseDto> mapList(List<Criteria> criteria);
+
+    /**
+     * Преобразование списка DTO в список сущностей.
+     */
+    List<Criteria> mapListToEntity(List<CriteriaRequestDto> criteriaRequestDtoList);
 }

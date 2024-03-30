@@ -5,16 +5,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
+import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
+import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
-import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.service.CriteriaService;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
 import ru.epa.epabackend.service.EmployeeService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,44 +39,69 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Сохранение оценки.
      */
     @Override
-    public EmployeeEvaluation create(Long evaluatorId, Long evaluatedId,
-                                     EmployeeEvaluationRequestDto employeeEvaluationRequestDto) {
+    public List<EmployeeEvaluation> create(String email,
+                                           Long evaluatedId,
+                                           List<EmployeeEvaluationRequestDto> evaluationRequestDtoList) {
         Employee evaluated = employeeService.findById(evaluatedId);
-        Employee evaluator = employeeService.findById(evaluatorId);
-        Criteria criteria = criteriaService.findById(employeeEvaluationRequestDto.getCriteriaId());
-        EmployeeEvaluation employeeEvaluation = employeeEvaluationMapper
-                .mapToEntity(employeeEvaluationRequestDto, evaluated, evaluator, criteria);
-        return employeeEvaluationRepository.save(employeeEvaluation);
+        Employee evaluator = employeeService.findByEmail(email);
+
+        List<EmployeeEvaluation> employeeEvaluations = new ArrayList<>(evaluationRequestDtoList.size());
+
+        for (EmployeeEvaluationRequestDto evaluationRequestDto : evaluationRequestDtoList) {
+            Criteria criteria = criteriaService.findById(evaluationRequestDto.getCriteriaId());
+            EmployeeEvaluation employeeEvaluation = employeeEvaluationMapper
+                    .mapToEntity(evaluationRequestDto, evaluated, evaluator, criteria);
+            employeeEvaluation.setCreateDay(LocalDate.now());
+            employeeEvaluations.add(employeeEvaluation);
+        }
+        return employeeEvaluationRepository.saveAll(employeeEvaluations);
     }
 
     /**
      * Получение оценки по id.
      */
     @Override
+    @Transactional(readOnly = true)
     public EmployeeEvaluation findById(Long evaluationEvaluationId) {
         return employeeEvaluationRepository
                 .findById(evaluationEvaluationId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
-                        evaluationEvaluationId)));
+                        new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
+                                evaluationEvaluationId)));
     }
 
     /**
-     * Получение списка оценок по id сотрудника.
+     * Получение списка своих оценок от коллег по своему email.
      */
     @Override
-    public List<EmployeeEvaluation> findAllByAppraiserId(Long evaluatedId) {
-        return employeeEvaluationRepository.findAllByEvaluatedId(evaluatedId);
+    @Transactional(readOnly = true)
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(String email) {
+        return employeeEvaluationRepository.findAllEvaluationsUsers(email);
     }
 
     /**
-     * Удаление оценки.
+     * Получение списка своих оценок от руководителя по своему email.
      */
     @Override
-    public void delete(Long evaluationEvaluationId) {
-        if (employeeEvaluationRepository.existsById(evaluationEvaluationId)) {
-            employeeEvaluationRepository.deleteById(evaluationEvaluationId);
-        } else {
-            throw new EntityNotFoundException(String.format("Оценка с id %s не найден", evaluationEvaluationId));
-        }
+    @Transactional(readOnly = true)
+    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(String email) {
+        return employeeEvaluationRepository.findAllEvaluationsAdmin(email);
+    }
+
+    /**
+     * Получение рейтинга сотрудника от всего коллектива.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public RatingResponseDto findFullRating(String email, LocalDate startDay, LocalDate endDay) {
+        return employeeEvaluationRepository.findFullRating(email, startDay, endDay);
+    }
+
+    /**
+     * Получение рейтинга сотрудника только от руководителя.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public RatingResponseDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {
+        return employeeEvaluationRepository.findRatingByAdmin(email, startDay, endDay);
     }
 }

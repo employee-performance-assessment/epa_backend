@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
 import ru.epa.epabackend.mapper.CriteriaMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.repository.CriteriaRepository;
@@ -27,18 +27,18 @@ public class CriteriaServiceImpl implements CriteriaService {
     private final CriteriaMapper criteriaMapper;
 
     /**
-     * Сохранение нового критерия оценки.
+     * Сохранение списка критериев оценок.
      */
     @Override
-    public Criteria create(CriteriaRequestDto criteriaRequestDto) {
-        Criteria criteria = criteriaRepository.save(criteriaMapper.mapToEntity(criteriaRequestDto));
-        return criteria;
+    public List<Criteria> create(List<CriteriaRequestDto> criteriaRequestDtoList) {
+        return criteriaRepository.saveAll(criteriaMapper.mapListToEntity(criteriaRequestDtoList));
     }
 
     /**
      * Получение критерия оценки по её ID.
      */
     @Override
+    @Transactional(readOnly = true)
     public Criteria findById(Long criteriaId) {
         Criteria criteria = criteriaRepository.findById(criteriaId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Критерий оценки с id %s не найден", criteriaId)));
@@ -49,6 +49,7 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Получение списка критериев оценок.
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Criteria> findAll() {
         return criteriaRepository.findAll();
     }

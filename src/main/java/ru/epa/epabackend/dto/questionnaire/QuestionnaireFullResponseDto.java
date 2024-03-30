@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.epa.epabackend.dto.criteria.CriteriaResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
-import ru.epa.epabackend.dto.evaluation.CriteriaResponseDto;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
