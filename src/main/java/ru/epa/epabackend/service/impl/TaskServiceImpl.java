@@ -144,8 +144,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAllByEmployeeId(Long employeeId, String email) {
-        log.info("Получение списка всех задач пользователя с идентификатором {} администратором указанным статусом задач"
-                , employeeId);
+        log.info("Получение списка всех задач пользователя с идентификатором {} администратором" +
+                " указанным статусом задач", employeeId);
         return taskRepository.findAllByOwnerEmailAndExecutorId(email, employeeId);
     }
 
@@ -184,8 +184,8 @@ public class TaskServiceImpl implements TaskService {
      * Получение задачи из репозитория по ID задачи и ID исполнителя
      */
     private Task findByIdAndExecutorId(Long taskId, Long employeeId) {
-        log.info("Получение задачи из репозитория по идентификатору задачи и {} по идентификатору исполнителя {}"
-        , taskId, employeeId);
+        log.info("Получение задачи из репозитория по идентификатору задачи {} " +
+                "и по идентификатору исполнителя {}", taskId, employeeId);
         return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s и исполнителем с id %s не найдена",
                         taskId, employeeId)));
