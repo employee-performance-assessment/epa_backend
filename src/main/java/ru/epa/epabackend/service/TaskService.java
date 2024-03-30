@@ -20,6 +20,11 @@ public interface TaskService {
     List<Task> findAllByExecutorIdFilters(String status, Principal principal);
 
     /**
+     * Получение списка задач администратором по ID исполнителя и статусу задачи
+     */
+    List<Task> findAllByEmployeeId(Long employeeId, String email);
+
+    /**
      * Найти задачу по ID задачи и ID исполнителя
      */
     Task findByIdAndExecutorId(Principal principal, Long taskId);

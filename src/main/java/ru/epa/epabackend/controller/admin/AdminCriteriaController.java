@@ -13,12 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
 import ru.epa.epabackend.dto.criteria.CriteriaResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
 import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.CriteriaMapper;
+import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.service.CriteriaService;
 
 import java.util.List;
@@ -107,5 +108,19 @@ public class AdminCriteriaController {
     @GetMapping("/{criteriaId}")
     public CriteriaResponseDto findById(@Parameter(required = true) @PathVariable Long criteriaId) {
         return criteriaMapper.mapToDto(criteriaService.findById(criteriaId));
+    }
+
+    /**
+     * Эндпоинт получения дефолтных критериев (по умолчанию).
+     */
+    @Operation(summary = "Эндпоинт получения дефолтных критериев (по умолчанию).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = CriteriaResponseDto.class))))})
+    @GetMapping("/default")
+    public List<CriteriaResponseDto> findDefault() {
+        List<Criteria> criterias = criteriaService.findDefault();
+        return criteriaMapper.mapList(criterias);
     }
 }

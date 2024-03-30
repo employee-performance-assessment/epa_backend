@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,11 +14,17 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByProjectIdAndStatus(Long projectId, TaskStatus status);
 
-    @Query("select t " +
-            "from Task t " +
-            "where (nullif((:status), null) is null or t.status = :status)" +
-            "and t.executor.id = :employeeId ")
+    @Query("SELECT t " +
+            "FROM Task t " +
+            "WHERE (NULLIF((:status), NULL) IS NULL OR t.status = :status)" +
+            "AND t.executor.id = :employeeId ")
     List<Task> findAllByExecutorIdFilters(Long employeeId, TaskStatus status);
 
     List<Task> findAllByOwnerEmail(String email);
+
+    List<Task> findAllByOwnerEmailAndExecutorId(String email, Long executorId);
+
+    List<Task> findAllByOwnerIdAndFinishDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
+
+    List<Task> findAllByExecutorIdAndFinishDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
 }

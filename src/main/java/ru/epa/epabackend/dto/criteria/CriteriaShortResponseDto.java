@@ -16,6 +16,11 @@ import lombok.*;
 public class CriteriaShortResponseDto {
 
     /**
+     * Идентификатор критерия оценки.
+     */
+    private long id;
+
+    /**
      * Название критерия оценки.
      */
     private String name;

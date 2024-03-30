@@ -1,8 +1,8 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.*;
-import ru.epa.epabackend.dto.criteria.CriteriaResponseDto;
+import org.mapstruct.Mapper;
 import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.CriteriaResponseDto;
 import ru.epa.epabackend.model.Criteria;
 
 import java.util.List;
