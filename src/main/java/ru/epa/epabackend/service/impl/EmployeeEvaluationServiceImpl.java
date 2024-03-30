@@ -6,13 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
+import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
+import ru.epa.epabackend.service.CriteriaService;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
 import ru.epa.epabackend.service.EmployeeService;
-import ru.epa.epabackend.service.CriteriaService;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package ru.epa.epabackend.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
 import ru.epa.epabackend.dto.evaluation.CriteriaDto;
 import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
 import ru.epa.epabackend.model.Criteria;

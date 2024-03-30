@@ -2,6 +2,11 @@ package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.evaluation.CriteriaDto;
 import ru.epa.epabackend.dto.evaluation.CriteriaRequestDto;
 import ru.epa.epabackend.mapper.CriteriaMapper;
+import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.service.CriteriaService;
 
 import java.util.List;
@@ -68,5 +74,19 @@ public class AdminCriteriaController {
     @GetMapping("/{criteriaId}")
     public CriteriaDto findById(@Parameter(required = true) @PathVariable Long criteriaId) {
         return criteriaMapper.mapToDto(criteriaService.findById(criteriaId));
+    }
+
+    /**
+     * Эндпоинт получения дефолтных критериев (по умолчанию).
+     */
+    @Operation(summary = "Эндпоинт получения дефолтных критериев (по умолчанию).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = CriteriaDto.class))))})
+    @GetMapping("/default")
+    public List<CriteriaDto> findDefault() {
+        List<Criteria> criterias = criteriaService.findDefault();
+        return criteriaMapper.mapList(criterias);
     }
 }
