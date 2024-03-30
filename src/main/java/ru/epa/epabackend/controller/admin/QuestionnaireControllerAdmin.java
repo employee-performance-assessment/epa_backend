@@ -52,7 +52,7 @@ public class QuestionnaireControllerAdmin {
      */
     @Operation(summary = "Получение последней заполняемой анкеты администратора")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = QuestionnaireFullResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
