@@ -39,7 +39,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
         Employee author = employeeService.findByEmail(email).getCreator();
         String authorEmail = author == null ? email : author.getEmail();
-        return questionnaireRepository.findLastByAuthorEmailAndStatusOrderByIdAsc(authorEmail, status)
+        return questionnaireRepository.findFirstByAuthorEmailAndStatusOrderByIdDesc(authorEmail, status)
                 .orElseThrow(() -> new EntityNotFoundException(String
                         .format("Анкеты для администратора с email %s и статусом %s не найдена", email, status)));
     }
@@ -50,7 +50,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Transactional(readOnly = true)
     @Override
     public Questionnaire findLastByAuthorEmail(String email) {
-        return questionnaireRepository.findLastByAuthorEmailOrderByIdAsc(email).orElseThrow(() ->
+        return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Анкеты администратора с email %s не найдено", email)));
     }
 
@@ -60,7 +60,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public Questionnaire save(QuestionnaireRequestDto questionnaireRequestDto, String email) {
         Employee author = employeeService.findByEmail(email);
-        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findLastByAuthorEmailOrderByIdAsc(email);
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if (lastQuestionnaire.isPresent() && QuestionnaireStatus.CREATED.equals(lastQuestionnaire.get().getStatus())) {
             throw new BadRequestException("Возможно создать анкету только если ваша последняя анкета " +
                     "имела статус SHARE. Воспользуйтесь обновлением анкеты.");
@@ -146,7 +146,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      */
     @Override
     public Questionnaire saveDefaultWithSharedStatus(String email) {
-        Optional<Questionnaire> questionnaire = questionnaireRepository.findLastByAuthorEmailOrderByIdAsc(email);
+        Optional<Questionnaire> questionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if (questionnaire.isPresent()) {
             throw new BadRequestException("Для сохранения дефолтного списка критерией со статусом анкеты SHARED " +
                     "необходимо, чтобы у админа не было анкет");
@@ -172,7 +172,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Employee author = employee.getCreator();
         Long authorId = author == null ? employee.getId() : author.getId();
         Questionnaire questionnaire = findById(questionnaireId);
-        if (authorId.equals(questionnaire.getAuthor().getId())) {
+        if (!authorId.equals(questionnaire.getAuthor().getId())) {
             throw new BadRequestException("Чтобы иметь доступ к анкете, необходимо, чтобы " +
                     "ваш администратор был её автором");
         }

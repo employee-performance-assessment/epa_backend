@@ -74,13 +74,30 @@ public class CriteriaServiceImpl implements CriteriaService {
     }
 
     /**
+     * Проверка, существует ли в БД критерий с указанным именем
+     */
+    @Override
+    public boolean isNameExists(String name) {
+        return criteriaRepository.existsByName(name);
+    }
+
+    /**
+     * Получение критерия по его имени
+     */
+    @Override
+    public Criteria findByName(String name) {
+        return criteriaRepository.findByName(name).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Критерий с именем %s не найден", name)));
+    }
+
+    /**
      * Сохранение множества критериев, при котором критерии с существующими именами не перезаписываются
      */
     @Override
     public List<Criteria> findExistentAndSaveNonExistentCriterias(List<CriteriaRequestDto> criterias) {
-        return criterias.stream()
-                .map(c -> criteriaRepository.findByName(c.getName())
-                        .orElse(create(c)))
-                .collect(Collectors.toList());
+        return criterias.stream().map(c -> {
+            if (isNameExists(c.getName())) return findByName(c.getName());
+            else return create(c);
+        }).collect(Collectors.toList());
     }
 }
