@@ -95,9 +95,8 @@ public class CriteriaServiceImpl implements CriteriaService {
      */
     @Override
     public List<Criteria> findExistentAndSaveNonExistentCriterias(List<CriteriaRequestDto> criterias) {
-        return criterias.stream().map(c -> {
-            if (isNameExists(c.getName())) return findByName(c.getName());
-            else return create(c);
-        }).collect(Collectors.toList());
+        return criterias.stream()
+                .map(c -> criteriaRepository.findByName(c.getName())
+                        .orElseGet(()-> criteriaRepository.save(criteriaMapper.mapToEntity(c)))).collect(Collectors.toList());
     }
 }
