@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.yaml.snakeyaml.events.Event;
 import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
 import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
 import ru.epa.epabackend.mapper.ProjectMapper;
@@ -20,6 +21,7 @@ import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.service.impl.ProjectServiceImpl;
 import ru.epa.epabackend.util.Role;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,10 @@ public class ProjectUnitTests {
     private Project project;
     private ProjectCreateRequestDto projectCreateRequestDto;
     private ProjectUpdateRequestDto projectUpdateRequestDto;
+    private List<Employee> employees;
+    private List<Employee> employeesWithEmployee;
+    private Project projectWithEmployee;
+    private List<Project> projects;
 
     @BeforeEach
     public void unit() {
@@ -54,17 +60,29 @@ public class ProjectUnitTests {
                 .id(ID_1)
                 .email(email)
                 .role(Role.ROLE_ADMIN)
+                .projects(projects)
                 .build();
+        employees = new ArrayList<>();
+        employees.add(admin);
+        employeesWithEmployee = new ArrayList<>();
+        employeesWithEmployee.add(admin);
+        employeesWithEmployee.add(employee);
         project = Project.builder()
                 .id(ID_1)
                 .name("project")
-                .employees(List.of(admin))
+                .employees(employees)
+                .build();
+        projectWithEmployee = Project.builder()
+                .id(ID_1)
+                .name("project")
+                .employees(employeesWithEmployee)
                 .build();
         employee = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
                 .projects(List.of())
                 .email(email)
+                .projects(projects)
                 .build();
         projectCreateRequestDto = ProjectCreateRequestDto.builder()
                 .name("projectCreate")
@@ -72,6 +90,10 @@ public class ProjectUnitTests {
         projectUpdateRequestDto = ProjectUpdateRequestDto.builder()
                 .name("projectUpdate")
                 .build();
+        projects = new ArrayList<>();
+        projects.add(project);
+        admin.setProjects(projects);
+        employee.setProjects(projects);
     }
 
     @Test
@@ -103,7 +125,6 @@ public class ProjectUnitTests {
         assertEquals(expectedId, projectResult.getId());
         verify(projectRepository, times(1)).findById(projectResult.getId());
     }
-/*
     @Test
     @DisplayName("Сохранение сотрудника в проект")
     void shouldSaveWithEmployeeWhenCallRepository() {
@@ -115,17 +136,15 @@ public class ProjectUnitTests {
                 .build();
         when(employeeService.findByEmail(email)).thenReturn(admin);
         when(employeeService.findById(ID_2)).thenReturn(employee);
-        when(projectRepository.findById(ID_1)).thenReturn(Optional.ofNullable(project));
-        when(projectService.saveWithEmployee(ID_1,ID_2,email)).thenReturn(project);
-        when(projectRepository.save(project)).thenReturn(project);
+        when(projectRepository.findById(ID_1)).thenReturn(Optional.of(project));
+        when(projectRepository.save(projectWithEmployee)).thenReturn(projectWithEmployee);
         Project projectResult = projectService.saveWithEmployee(project.getId(),employee.getId(),email);
         int expectedId = 1;
-        assertNotNull(project);
+        assertNotNull(projectWithEmployee);
         assertEquals(expectedId, projectResult.getId());
         verify(projectRepository,times(1)).save(project);
     }
 
- */
 
     @Test
     @DisplayName("Поиск всех создателей пользователю")
@@ -213,16 +232,14 @@ public class ProjectUnitTests {
         verify(projectRepository, times(1)).delete(project);
     }
 
-/*
     @Test
     @DisplayName("Удаление сотрудника из проекта")
     void shouldDeleteEmployeeFromProjectWhenCallRepository() {
         when(employeeService.findByEmail(email)).thenReturn(admin);
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
+        when(projectRepository.findById(projectWithEmployee.getId())).thenReturn(Optional.of(projectWithEmployee));
         when(employeeService.findById(ID_2)).thenReturn(employee);
-        project.getEmployees().remove(employee);
         when(projectRepository.save(project)).thenReturn(project);
+        projectService.deleteEmployeeFromProject(ID_1, ID_2, employee.getEmail());
         verify(projectRepository, times(1)).save(project);
     }
- */
 }
