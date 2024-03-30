@@ -12,11 +12,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseFullDto;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
 import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
+import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseFullDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.EmployeeEvaluation;
@@ -44,18 +42,19 @@ public class UserEmployeeEvaluationController {
     /**
      * Эндпойнт добавления оценок сотрудника
      */
-    @Operation(
-            summary = "Сохранения оценок сотрудника своего коллеги",
-            description = "При успешном добавлении возвращается код 201 Created."
-    )
+    @Operation(summary = "Сохранения оценок сотрудника своего коллеги",
+            description = "При успешном добавлении возвращается код 201 Created.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = EmployeeFullResponseDto.class))),
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = EmployeeEvaluationResponseFullDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
@@ -81,7 +80,7 @@ public class UserEmployeeEvaluationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -104,7 +103,7 @@ public class UserEmployeeEvaluationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(

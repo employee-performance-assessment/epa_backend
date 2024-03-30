@@ -50,9 +50,14 @@ public class QuestionnaireControllerUser {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = QuestionnaireShortResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
+                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class)))})
     @GetMapping("/last-shared")
     @ResponseStatus(HttpStatus.OK)
     public QuestionnaireShortResponseDto findShortLastByAuthorAndStatus(Principal principal) {
@@ -66,15 +71,19 @@ public class QuestionnaireControllerUser {
      * Если анкету получает кто-то, чей админ не является автором анкеты, то возвращается ошибка
      * Если анкета имеет статус CREATED, то возвращается ошибка
      */
-    @Operation(summary = "олучение полной информации об отправленной (SHARED) анкете по id",
+    @Operation(summary = "Получение полной информации об отправленной (SHARED) анкете по id",
             description = "Если анкету получает кто-то, чей админ не является автором анкеты, то возвращается ошибка. " +
                     "Если анкета имеет статус CREATED, то возвращается ошибка")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = QuestionnaireFullResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{questionnaireId}")
     @ResponseStatus(HttpStatus.OK)
@@ -91,8 +100,14 @@ public class QuestionnaireControllerUser {
             description = "В случае отсутствия опубликованных анкет возвращается пустой список")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = QuestionnaireShortResponseDto.class))))})
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = QuestionnaireShortResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/all-shared")
     @ResponseStatus(HttpStatus.OK)
     public List<QuestionnaireShortResponseDto> findAllShared(Principal principal) {

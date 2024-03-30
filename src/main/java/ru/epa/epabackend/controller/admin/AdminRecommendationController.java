@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
 import ru.epa.epabackend.dto.recommendation.RecommendationRequestDto;
 import ru.epa.epabackend.dto.recommendation.RecommendationResponseDto;
 import ru.epa.epabackend.exception.ErrorResponse;
@@ -30,7 +28,7 @@ import java.util.List;
  *
  * @author Михаил Безуглов
  */
-@Tag(name = "Admin: Рекомендации", description = "API администратора для работы рекомендациями")
+@Tag(name = "Admin: Рекомендации", description = "API администратора для работы с рекомендациями")
 @SecurityRequirement(name = "JWT")
 @Validated
 @RestController
@@ -44,13 +42,11 @@ public class AdminRecommendationController {
     /**
      * Эндпойнт добавления новой рекомендации.
      */
-    @Operation(
-            summary = "Добавление новой рекомендации",
-            description = "При успешном добавлении возвращается код 201 Created."
-    )
+    @Operation(summary = "Добавление новой рекомендации",
+            description = "При успешном добавлении возвращается код 201 Created.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = EmployeeFullResponseDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = RecommendationResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -71,15 +67,13 @@ public class AdminRecommendationController {
     /**
      * Эндпойнт получение рекомендаций конкретного сотрудника.
      */
-    @Operation(
-            summary = "Получение рекомендаций руководителя для определенного сотрудника",
+    @Operation(summary = "Получение рекомендаций руководителя для определенного сотрудника",
             description = "Возвращает список рекомендаций" +
-                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список."
-    )
+                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    schema = @Schema(implementation = RecommendationResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -95,15 +89,13 @@ public class AdminRecommendationController {
     /**
      * Эндпойнт получение всех рекомендаций.
      */
-    @Operation(
-            summary = "Получение всех рекомендаций",
+    @Operation(summary = "Получение всех рекомендаций",
             description = "Возвращает список рекомендаций" +
-                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список."
-    )
+                    "\n\nВ случае, если не найдено ни одной рекомендации, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeShortResponseDto.class)))),
+                    schema = @Schema(implementation = RecommendationResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
