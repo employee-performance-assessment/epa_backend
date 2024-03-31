@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.JwtRequest;
 import ru.epa.epabackend.dto.employee.JwtResponse;
 import ru.epa.epabackend.service.AuthenticationService;
@@ -28,6 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public JwtResponse getToken(JwtRequest jwtRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword()));
         UserDetails userDetails = employeeService.findByEmail(jwtRequest.getEmail());

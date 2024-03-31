@@ -34,6 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final EmployeeRepository employeeRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Project findById(Long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Проект с id %s не найден", projectId)));
@@ -65,6 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Project> findAllByCreator(String email) {
         Employee employee = employeeService.findByEmail(email);
         if (employee.getRole() == Role.ROLE_ADMIN) {
@@ -74,6 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);

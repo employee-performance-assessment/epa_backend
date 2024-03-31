@@ -108,6 +108,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         projectService.findById(projectId);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status);
@@ -168,7 +169,9 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Получение задачи из репозитория по ID задачи и ID исполнителя
      */
-    private Task findByIdAndExecutorId(Long taskId, Long employeeId) {
+    @Override
+    @Transactional(readOnly = true)
+    public Task findByIdAndExecutorId(Long taskId, Long employeeId) {
         return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s и исполнителем с id %s не найдена",
                         taskId, employeeId)));
@@ -197,7 +200,9 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Получение задачи из репозитория по ID
      */
-    private Task findById(Long taskId) {
+    @Override
+    @Transactional(readOnly = true)
+    public Task findById(Long taskId) {
         return taskRepository.findById(taskId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
     }
