@@ -2,6 +2,7 @@ package ru.epa.epabackend.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.util.DateConstant;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -27,6 +28,11 @@ public class TaskShortResponseDto {
      * Название задачи.
      */
     private String name;
+
+    /**
+     * Описание проекта.
+     */
+    private ProjectShortResponseDto project;
 
     /**
      * Дата до которой должна выполниться задача..
