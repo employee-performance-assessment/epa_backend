@@ -28,16 +28,16 @@ public class TaskRequestDto {
      * Название задачи.
      */
     @NotBlank(groups = {Create.class})
-    @Size(min = 2, max = 250, groups = {Create.class, Update.class})
-    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS)
+    @Size(min = 1, max = 255, groups = {Create.class, Update.class})
+    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS, groups = {Create.class, Update.class})
     private String name;
 
     /**
      * Описание задачи.
      */
     @NotBlank(groups = {Create.class})
-    @Size(min = 2, max = 250, groups = {Create.class, Update.class})
-    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS)
+    @Size(min = 1, max = 255, groups = {Create.class, Update.class})
+    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS, groups = {Create.class, Update.class})
     private String description;
 
     /**
@@ -57,6 +57,7 @@ public class TaskRequestDto {
      * Дата до которой должна выполниться задача..
      */
     @NotNull(groups = {Create.class})
+    @Future(groups = {Create.class})
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)
     private LocalDate deadLine;
 
@@ -69,14 +70,16 @@ public class TaskRequestDto {
     /**
      * Сложность задачи измеряемая в баллах, задается руководителем.
      */
+    @NotNull(groups = {Create.class})
     @Positive(groups = {Create.class, Update.class})
-    @Range(min = 0, max = 99999, groups = {Create.class, Update.class})
+    @Range(min = 0, max = 99999, groups = {Create.class})
     private Integer basicPoints;
 
     /**
      * Дополнительные баллы, которые вычитаются или прибавляются, в зависимости от того
      * выполнил ли в срок задачу исполнитель. Задаются руководителем.
      */
+    @NotNull(groups = {Create.class})
     @Positive(groups = {Create.class, Update.class})
     @Range(min = 0, max = 99999, groups = {Create.class, Update.class})
     private Integer penaltyPoints;
