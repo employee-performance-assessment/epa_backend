@@ -57,7 +57,7 @@ public class RequestTaskDto {
      * Дата до которой должна выполниться задача..
      */
     @NotNull(groups = {Create.class})
-    @Future(groups = {Create.class})
+    @FutureOrPresent(groups = {Create.class})
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)
     private LocalDate deadLine;
 
