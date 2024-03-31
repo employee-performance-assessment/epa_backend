@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "cbd069fe-68a7-463c-9705-6d5599ba6646",
-		"name": "epa",
+		"_postman_id": "c0369f18-1113-42a9-b99f-bf5fb944bdd4",
+		"name": "epa Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21857559"
 	},
@@ -2678,6 +2678,51 @@
 								"admin",
 								"task",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task By Id admin after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
 							]
 						}
 					},
