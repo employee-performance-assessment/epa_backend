@@ -50,8 +50,7 @@ public class Questionnaire {
     @JoinTable(name = "questionnaires_criterias",
             joinColumns = @JoinColumn(name = "questionnaire_id"),
             inverseJoinColumns = @JoinColumn(name = "criteria_id"))
-    @Builder.Default
-    private List<Criteria> criterias = new ArrayList<>();
+    private List<Criteria> criterias;
 
     /**
      * Статус анкеты (CREATED, SHARED)
