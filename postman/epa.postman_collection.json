@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "af56c54d-5e9a-4292-9037-005861825e73",
-		"name": "epa Copy",
+		"_postman_id": "a94586cf-71ab-42aa-8c33-e5f024fe99ac",
+		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21857559"
+		"_exporter_id": "21428156"
 	},
 	"item": [
 		{
@@ -1401,7 +1401,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('task2');\r",
 									"    pm.expect(jsonData.description).to.eql('task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
@@ -1425,7 +1425,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"executorId\": 6,\n  \"deadLine\": \"2000-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"executorId\": 6,\n  \"deadLine\": \"2025-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1465,7 +1465,7 @@
 									"\r",
 									"    pm.expect(jsonData[1].id).to.eql(2);\r",
 									"    pm.expect(jsonData[1].name).to.eql('task2');\r",
-									"    pm.expect(jsonData[1].deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData[1].deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData[1].basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.length).to.eql(2);\r",
 									"});\r",
@@ -1658,7 +1658,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
@@ -1766,7 +1766,7 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData[0].id).to.eql(2);\r",
 									"    pm.expect(jsonData[0].name).to.eql('u task2 name');\r",
-									"    pm.expect(jsonData[0].deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData[0].deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData[0].basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.length).to.eql(1);\r",
 									"});\r",
@@ -1841,7 +1841,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
@@ -2035,7 +2035,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");   \r",
@@ -2188,7 +2188,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2000-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"    pm.expect(jsonData.status).to.eql(\"DONE\");   \r",
@@ -2278,110 +2278,6 @@
 					]
 				},
 				{
-					"name": "Update status task1 to DONE employee",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Test create task\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.id).to.eql(1);\r",
-									"    pm.expect(jsonData.name).to.eql('task1');\r",
-									"    pm.expect(jsonData.description).to.eql('task1 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2246-08-20\");\r",
-									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
-									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
-									"    pm.expect(jsonData.status).to.eql(\"DONE\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"status\": \"DONE\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "text"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/task/:id",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"task",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "OK",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "*/*"
-								}
-							],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
 					"name": "Get team statistic admin",
 					"event": [
 						{
@@ -2394,8 +2290,7 @@
 									"\r",
 									"pm.test(\"Test team statistic\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.completedOnTimePercent).to.eql(50.0);\r",
-									"    pm.expect(jsonData.delayedPercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(100);\r",
 									"});\r",
 									""
 								],
@@ -2423,7 +2318,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/stat/task/team?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/admin/stat/task/team?range-start=2024-01-01&range-end=2026-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2440,7 +2335,7 @@
 								},
 								{
 									"key": "range-end",
-									"value": "2025-01-01"
+									"value": "2026-01-01"
 								}
 							]
 						}
@@ -2466,12 +2361,12 @@
 									"    pm.expect(jsonData[0].delayedPercent).to.eql(0);\r",
 									"\r",
 									"    pm.expect(jsonData[1].employeeId).to.eql(5);\r",
-									"    pm.expect(jsonData[1].completedOnTimePercent).to.eql(100);\r",
+									"    pm.expect(jsonData[1].completedOnTimePercent).to.eql(0);\r",
 									"    pm.expect(jsonData[1].delayedPercent).to.eql(0);\r",
 									"\r",
 									"    pm.expect(jsonData[2].employeeId).to.eql(6);\r",
-									"    pm.expect(jsonData[2].completedOnTimePercent).to.eql(0);\r",
-									"    pm.expect(jsonData[2].delayedPercent).to.eql(100);\r",
+									"    pm.expect(jsonData[2].completedOnTimePercent).to.eql(100);\r",
+									"    pm.expect(jsonData[2].delayedPercent).to.eql(0);\r",
 									"\r",
 									"    pm.expect(jsonData[3].employeeId).to.eql(7);\r",
 									"    pm.expect(jsonData[3].completedOnTimePercent).to.eql(0);\r",
@@ -2503,7 +2398,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/stat/task/individual?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/admin/stat/task/individual?range-start=2024-01-01&range-end=2026-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2520,7 +2415,7 @@
 								},
 								{
 									"key": "range-end",
-									"value": "2025-01-01"
+									"value": "2026-01-01"
 								}
 							]
 						}
@@ -2582,8 +2477,7 @@
 									"\r",
 									"pm.test(\"Test team statistic\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.completedOnTimePercent).to.eql(50.0);\r",
-									"    pm.expect(jsonData.delayedPercent).to.eql(50.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(100);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -2610,7 +2504,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/user/stat/task/team?range-start=2024-01-01&range-end=2025-01-01",
+							"raw": "{{baseUrl}}/user/stat/task/team?range-start=2024-01-01&range-end=2026-01-01",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -2627,7 +2521,7 @@
 								},
 								{
 									"key": "range-end",
-									"value": "2025-01-01"
+									"value": "2026-01-01"
 								}
 							]
 						}
@@ -2651,8 +2545,8 @@
 									"    pm.expect(jsonData.employeeId, '\"id\" must be 6').to.eql(6);\r",
 									"    pm.expect(jsonData.employeeFullName).to.eql(\"Богдан Хмельницкий\");\r",
 									"    pm.expect(jsonData.employeePosition).to.eql(\"dev\");\r",
-									"    pm.expect(jsonData.completedOnTimePercent).to.eql(0.0);\r",
-									"    pm.expect(jsonData.delayedPercent).to.eql(100.0);\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(100);\r",
+									"    pm.expect(jsonData.delayedPercent).to.eql(0);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -3535,80 +3429,15 @@
 			]
 		},
 		{
-<<<<<<< HEAD
-			"name": "Evaluations",
-			"item": [
-				{
-					"name": "add evaluation 1",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"name\":\"Танцы\"\r\n    },\r\n    {\r\n        \"name\":\"Пенее\"\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/criteria",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"criteria"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add evaluation 2",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[    \r\n    {\r\n        \"name\":\"Пустая болтовня\"\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/criteria",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"criteria"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save token E7",
-=======
 			"name": "Questionnaire",
 			"item": [
 				{
 					"name": "get last questionnaire",
->>>>>>> dev
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-<<<<<<< HEAD
-									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
-=======
 									"pm.test(\"Status code is 404\", function () {\r",
 									"    pm.response.to.have.status(404);\r",
 									"});\r",
@@ -3621,7 +3450,6 @@
 									"    pm.expect(jsonData).to.have.property('status');\r",
 									"    pm.expect(jsonData.status, '\"status\" must be NOT_FOUND').to.eql(\"NOT_FOUND\");\r",
 									"});"
->>>>>>> dev
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3629,64 +3457,23 @@
 						}
 					],
 					"request": {
-<<<<<<< HEAD
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/public/auth",
-=======
 						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/admin/questionnaire/last",
->>>>>>> dev
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-<<<<<<< HEAD
-								"public",
-								"auth"
-=======
 								"admin",
 								"questionnaire",
 								"last"
->>>>>>> dev
 							]
 						}
 					},
 					"response": []
 				},
 				{
-<<<<<<< HEAD
-					"name": "add evaluationStar 1",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-=======
 					"name": "get all SHARED questionnaire by user",
 					"event": [
 						{
@@ -3715,33 +3502,19 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/user/questionnaire/all-shared",
->>>>>>> dev
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
-<<<<<<< HEAD
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-=======
 								"questionnaire",
 								"all-shared"
->>>>>>> dev
 							]
 						}
 					},
 					"response": []
 				},
 				{
-<<<<<<< HEAD
-					"name": "Save token E6",
-=======
 					"name": "add default questionnaire with status SHARED id=1",
 					"event": [
 						{
@@ -4415,7 +4188,6 @@
 				},
 				{
 					"name": "Save token Employee",
->>>>>>> dev
 					"event": [
 						{
 							"listen": "test",
@@ -4424,12 +4196,7 @@
 									"var jsonData = JSON.parse(responseBody);\r",
 									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
 								],
-<<<<<<< HEAD
-								"type": "text/javascript",
-								"packages": {}
-=======
 								"type": "text/javascript"
->>>>>>> dev
 							}
 						}
 					],
@@ -4462,10 +4229,6 @@
 					"response": []
 				},
 				{
-<<<<<<< HEAD
-					"name": "add evaluationStar 2",
-					"request": {
-=======
 					"name": "get last SHARED questionnaire by user",
 					"event": [
 						{
@@ -4579,16 +4342,11 @@
 						"auth": {
 							"type": "noauth"
 						},
->>>>>>> dev
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-<<<<<<< HEAD
-							"raw": "[\r\n    {\r\n    \"criteriaId\": 2,\r\n    \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 2\r\n    }\r\n]",
-=======
 							"raw": "{\r\n  \"fullName\": \"Гарри Поттер\",\r\n  \"nickName\": \"@Potter\",\r\n  \"city\": \"Little Whinging\",\r\n  \"email\": \"grand-magician@muggle.net\",\r\n  \"password\": \"magic_wand\",\r\n  \"birthday\": \"1980-07-31\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"fighter against evil\",\r\n  \"department\": \"Gryffindor\"\r\n}",
->>>>>>> dev
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4596,72 +4354,20 @@
 							}
 						},
 						"url": {
-<<<<<<< HEAD
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-=======
 							"raw": "{{baseUrl}}/public/register",
->>>>>>> dev
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-<<<<<<< HEAD
-								"user",
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-=======
 								"public",
 								"register"
->>>>>>> dev
 							]
 						}
 					},
 					"response": []
 				},
 				{
-<<<<<<< HEAD
-					"name": "add evaluationStar 3",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n{\r\n  \"criteriaId\": 1,\r\n  \"score\": 1\r\n}\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save token A2",
-=======
 					"name": "Save token new Admin",
->>>>>>> dev
 					"event": [
 						{
 							"listen": "test",
@@ -4683,11 +4389,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-<<<<<<< HEAD
-							"raw": "{\r\n \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
-=======
 							"raw": "{\r\n  \"email\": \"grand-magician@muggle.net\",\r\n  \"password\": \"magic_wand\"\r\n}",
->>>>>>> dev
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4708,23 +4410,6 @@
 					"response": []
 				},
 				{
-<<<<<<< HEAD
-					"name": "add evaluationStar Admin",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-=======
 					"name": "get last SHARED questionnaire by user error",
 					"event": [
 						{
@@ -4754,33 +4439,19 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/user/questionnaire/last-shared",
->>>>>>> dev
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
-<<<<<<< HEAD
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-=======
 								"questionnaire",
 								"last-shared"
->>>>>>> dev
 							]
 						}
 					},
 					"response": []
 				},
 				{
-<<<<<<< HEAD
-					"name": "Save token E5",
-=======
 					"name": "get SHARED questionnaire by id=2 by user error",
 					"event": [
 						{
@@ -4824,7 +4495,6 @@
 				},
 				{
 					"name": "Save token Admin",
->>>>>>> dev
 					"event": [
 						{
 							"listen": "test",
@@ -4846,11 +4516,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-<<<<<<< HEAD
-							"raw": "{\r\n   \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\"\r\n}",
-=======
 							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
->>>>>>> dev
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4869,7 +4535,369 @@
 						}
 					},
 					"response": []
-<<<<<<< HEAD
+				}
+			]
+		},
+		{
+			"name": "Evaluations",
+			"item": [
+				{
+					"name": "add evaluation 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"name\":\"Танцы\"\r\n    },\r\n    {\r\n        \"name\":\"Пенее\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[    \r\n    {\r\n        \"name\":\"Пустая болтовня\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token E7",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token E6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n    \"criteriaId\": 2,\r\n    \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 2\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n{\r\n  \"criteriaId\": 1,\r\n  \"score\": 1\r\n}\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token A2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token E5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "UserEvaluationStarForUsers",
@@ -5220,8 +5248,6 @@
 						}
 					},
 					"response": []
-=======
->>>>>>> dev
 				}
 			]
 		}

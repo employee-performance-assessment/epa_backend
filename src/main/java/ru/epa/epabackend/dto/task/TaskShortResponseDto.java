@@ -2,6 +2,7 @@ package ru.epa.epabackend.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import ru.epa.epabackend.dto.project.ProjectShortResponseDto;
 import ru.epa.epabackend.util.DateConstant;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -29,6 +30,11 @@ public class TaskShortResponseDto {
     private String name;
 
     /**
+     * Описание проекта.
+     */
+    private ProjectShortResponseDto project;
+
+    /**
      * Дата до которой должна выполниться задача..
      */
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)
@@ -44,4 +50,10 @@ public class TaskShortResponseDto {
      * Сложность задачи измеряемая в баллах, задается руководителем.
      */
     private Integer basicPoints;
+
+    /**
+     * Дополнительные баллы, которые вычитаются или прибавляются, в зависимости от того
+     * выполнил ли в срок задачу исполнитель. Задаются руководителем.
+     */
+    private Integer penaltyPoints;
 }
