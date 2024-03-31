@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.recommendation.RecommendationRequestDto;
+import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Recommendation;
@@ -33,11 +33,11 @@ public class RecommendationServiceImpl implements RecommendationService {
      * Сохранение рекомендации.
      */
     @Override
-    public Recommendation create(RecommendationRequestDto recommendationRequestDto,
+    public Recommendation create(RequestRecommendationDto requestRecommendationDto,
                                  String recipientEmail, String senderEmail) {
         Employee recipient = employeeService.findByEmail(recipientEmail);
         Employee sender = employeeService.findByEmail(senderEmail);
-        Recommendation recommendation = recommendationMapper.mapToEntity(recommendationRequestDto,
+        Recommendation recommendation = recommendationMapper.mapToEntity(requestRecommendationDto,
                 recipient, sender);
         recommendation.setCreateDay(LocalDate.now());
         return recommendationRepository.save(recommendation);

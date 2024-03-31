@@ -2,8 +2,8 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.epa.epabackend.dto.questionnaire.QuestionnaireFullResponseDto;
-import ru.epa.epabackend.dto.questionnaire.QuestionnaireShortResponseDto;
+import ru.epa.epabackend.dto.questionnaire.ResponseQuestionnaireFullDto;
+import ru.epa.epabackend.dto.questionnaire.ResponseQuestionnaireShortDto;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
@@ -16,19 +16,19 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface QuestionnaireMapper {
-    Questionnaire mapToEntity(QuestionnaireShortResponseDto questionnaireShortResponseDto);
+    Questionnaire mapToEntity(ResponseQuestionnaireShortDto responseQuestionnaireShortDto);
 
     @Mapping(target = "id", ignore = true)
     Questionnaire mapToEntity(List<Criteria> criterias, Employee author, QuestionnaireStatus status);
 
-    Questionnaire mapToEntity(QuestionnaireFullResponseDto questionnaireFullResponseDto);
+    Questionnaire mapToEntity(ResponseQuestionnaireFullDto responseQuestionnaireFullDto);
 
-    QuestionnaireShortResponseDto mapToShortResponseDto(Questionnaire questionnaire);
+    ResponseQuestionnaireShortDto mapToShortResponseDto(Questionnaire questionnaire);
 
-    QuestionnaireFullResponseDto mapToFullResponseDto(Questionnaire questionnaire);
+    ResponseQuestionnaireFullDto mapToFullResponseDto(Questionnaire questionnaire);
 
     Questionnaire mapToEntity(List<Criteria> criterias, Employee author, QuestionnaireStatus status,
                               long id);
 
-    List<QuestionnaireShortResponseDto> mapToList(List<Questionnaire> questionnairies);
+    List<ResponseQuestionnaireShortDto> mapToList(List<Questionnaire> questionnairies);
 }

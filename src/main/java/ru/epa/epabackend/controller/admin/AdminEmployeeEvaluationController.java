@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
-import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseRatingDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
 
@@ -47,7 +47,7 @@ public class AdminEmployeeEvaluationController {
                     "\n\nВ случае, если не найдено ни одной оценки, возвращает 0.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = RatingResponseDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -55,7 +55,7 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating/full")
-    public RatingResponseDto findFullRating(
+    public ResponseRatingDto findFullRating(
             @RequestParam(required = true) String email,
             @RequestParam(required = true) LocalDate startDay,
             @RequestParam(required = true) LocalDate endDay) {
@@ -70,7 +70,7 @@ public class AdminEmployeeEvaluationController {
                     "\n\nВ случае, если не найдено ни одной оценке, возвращает 0.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = RatingResponseDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -80,7 +80,7 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
             mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating")
-    public RatingResponseDto findRatingByAdmin(
+    public ResponseRatingDto findRatingByAdmin(
             @RequestParam(required = true) String email,
             @RequestParam(required = true) LocalDate startDay,
             @RequestParam(required = true) LocalDate endDay) {
@@ -96,7 +96,7 @@ public class AdminEmployeeEvaluationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseEmployeeEvaluationDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -104,7 +104,7 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/evaluations/users")
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsByEvaluatedEmail(
+    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsByEvaluatedEmail(
             @RequestParam(required = true) String email) {
         return employeeEvaluationService.findAllEvaluationsUsers(email);
     }
@@ -118,7 +118,7 @@ public class AdminEmployeeEvaluationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseEmployeeEvaluationDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -126,7 +126,7 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/evaluations")
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdminByEvaluatedEmail(
+    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdminByEvaluatedEmail(
             @RequestParam(required = true) String email) {
         return employeeEvaluationService.findAllEvaluationsAdmin(email);
     }

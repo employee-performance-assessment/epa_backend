@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
+import ru.epa.epabackend.dto.technology.RequestTechnologyDto;
 import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.repository.TechnologyRepository;
@@ -27,7 +27,7 @@ public class TechnologyServiceImpl implements TechnologyService {
      * Добавление технологии.
      */
     @Transactional
-    public Technology create(TechnologyRequestDto technologyDto) {
+    public Technology create(RequestTechnologyDto technologyDto) {
         return technologyRepository.save(technologyMapper.mapToEntity(technologyDto));
     }
 
@@ -44,7 +44,7 @@ public class TechnologyServiceImpl implements TechnologyService {
      * Обновление технологии.
      */
     @Transactional
-    public Technology update(TechnologyRequestDto technologyDto, Long technologyId) {
+    public Technology update(RequestTechnologyDto technologyDto, Long technologyId) {
         Technology oldTechnology = findById(technologyId);
         technologyMapper.updateFields(technologyDto, oldTechnology);
         return technologyRepository.save(oldTechnology);
