@@ -47,11 +47,15 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение самой последней анкеты админа по email
      */
-    @Transactional(readOnly = true)
     @Override
     public Questionnaire findLastByAuthorEmail(String email) {
-        return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Анкеты администратора с email %s не найдено", email)));
+        return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email)
+                .orElseGet(() -> questionnaireRepository.save(Questionnaire.builder()
+                        .status(QuestionnaireStatus.CREATED)
+                        .created(LocalDate.now())
+                        .author(employeeService.findByEmail(email))
+                        .criterias(criteriaService.findDefault())
+                        .build()));
     }
 
     /**
@@ -69,6 +73,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                 .findExistentAndSaveNonExistentCriterias(questionnaireRequestDto.getCriterias());
         Questionnaire questionnaire = Questionnaire.builder()
                 .author(author)
+                .created(LocalDate.now())
                 .criterias(criterias)
                 .status(QuestionnaireStatus.CREATED)
                 .build();
@@ -89,6 +94,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(questionnaireRequestDto.getCriterias());
         Questionnaire questionnaire = Questionnaire.builder()
                 .id(lastQuestionnaire.getId())
+                .created(LocalDate.now())
                 .author(author)
                 .criterias(criterias)
                 .status(QuestionnaireStatus.CREATED)
