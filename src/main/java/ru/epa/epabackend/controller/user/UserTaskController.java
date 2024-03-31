@@ -104,6 +104,7 @@ public class UserTaskController {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{taskId}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseTaskFullDto updateStatus(@Parameter(required = true) @PathVariable Long taskId,
                                             @Parameter(required = true) @RequestParam String status,
                                             Principal principal) {
@@ -128,7 +129,6 @@ public class UserTaskController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/project/{projectId}")
-    @ResponseStatus(HttpStatus.OK)
     public List<ResponseTaskShortDto> findByProjectIdAndStatus(@PathVariable Long projectId,
                                                                @RequestParam TaskStatus status) {
         List<Task> byProjectIdAndStatus = taskService.findByProjectIdAndStatus(projectId, status);

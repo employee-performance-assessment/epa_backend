@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.task.ResponseTaskFullDto;
@@ -129,6 +130,10 @@ public class AdminTaskController {
     public ResponseTaskFullDto create(@Validated(Create.class) @Parameter(required = true)
                                       @RequestBody RequestTaskDto requestTaskDto, Principal principal) {
         return taskMapper.mapToFullDto(taskService.create(requestTaskDto, principal.getName()));
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseTaskFullDto create(@Validated(Create.class) @Parameter(required = true)
+                                      @RequestBody RequestTaskDto taskRequestDto, Principal principal) {
+        return taskMapper.mapToFullDto(taskService.create(taskRequestDto, principal.getName()));
     }
 
     /**
@@ -149,6 +154,8 @@ public class AdminTaskController {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{taskId}")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskFullResponseDto update(@Parameter(required = true) @PathVariable Long taskId,
     public ResponseTaskFullDto update(@Parameter(required = true) @PathVariable Long taskId,
                                       @Validated(Update.class) @Parameter(required = true)
                                       @RequestBody RequestTaskDto requestTaskDto, Principal principal) {
@@ -170,6 +177,7 @@ public class AdminTaskController {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping("/{taskId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@Parameter(required = true) @PathVariable Long taskId, Principal principal) {
         taskService.delete(taskId, principal.getName());
     }
