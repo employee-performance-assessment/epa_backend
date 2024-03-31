@@ -4,8 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
-import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
+import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
+import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
@@ -40,10 +40,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project create(ProjectCreateRequestDto projectCreateRequestDto, String email) {
+    public Project create(RequestProjectCreateDto requestProjectCreateDto, String email) {
         Employee admin = employeeService.findByEmail(email);
         return projectRepository
-                .save(projectMapper.mapToEntity(projectCreateRequestDto, List.of(admin)));
+                .save(projectMapper.mapToEntity(requestProjectCreateDto, List.of(admin)));
     }
 
     @Override
@@ -82,11 +82,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project update(Long projectId, ProjectUpdateRequestDto projectUpdateRequestDto, String email) {
+    public Project update(Long projectId, RequestProjectUpdateDto requestProjectUpdateDto, String email) {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        projectMapper.updateFields(projectUpdateRequestDto, project);
+        projectMapper.updateFields(requestProjectUpdateDto, project);
         return projectRepository.save(project);
     }
 

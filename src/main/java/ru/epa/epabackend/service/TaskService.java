@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.RequestTaskDto;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -42,7 +42,7 @@ public interface TaskService {
     /**
      * Создание задачи
      */
-    Task create(TaskRequestDto taskDto, String email);
+    Task create(RequestTaskDto taskDto, String email);
 
     /**
      * Найти задачу по ID
@@ -52,7 +52,7 @@ public interface TaskService {
     /**
      * Обновление задачи
      */
-    Task update(Long taskId, TaskRequestDto taskDto, String email);
+    Task update(Long taskId, RequestTaskDto taskDto, String email);
 
     /**
      * Удаление задачи

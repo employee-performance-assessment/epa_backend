@@ -10,25 +10,25 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
 
-    EmployeeFullResponseDto mapToFullDto(Employee employee);
+    ResponseEmployeeFullDto mapToFullDto(Employee employee);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
-    Employee mapToEntity(EmployeeRequestDto employeeRtoRequest);
+    Employee mapToEntity(RequestEmployeeDto requestEmployeeDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
-    Employee mapToEntity(EmployeeShortRequestDto employeeShortRequestDto);
+    Employee mapToEntity(RequestEmployeeShortDto requestEmployeeShortDto);
 
-    EmployeeShortResponseDto mapToShortDto(Employee employee);
+    ResponseEmployeeShortDto mapToShortDto(Employee employee);
 
-    EmployeeAnalyticsResponseDto mapToAnalyticsDto(Employee employee);
+    ResponseEmployeeAnalyticsDto mapToAnalyticsDto(Employee employee);
 
-    default List<EmployeeShortResponseDto> mapList(List<Employee> employees) {
+    default List<ResponseEmployeeShortDto> mapList(List<Employee> employees) {
         return employees.stream().map(this::mapToShortDto).collect(Collectors.toList());
     }
 
@@ -38,5 +38,5 @@ public interface EmployeeMapper {
     @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
     @Mapping(target = "password", ignore = true)
-    Employee updateFields(EmployeeRequestDto employeeDtoRequest, @MappingTarget Employee oldEmployee);
+    Employee updateFields(RequestEmployeeDto requestEmployeeDto, @MappingTarget Employee oldEmployee);
 }

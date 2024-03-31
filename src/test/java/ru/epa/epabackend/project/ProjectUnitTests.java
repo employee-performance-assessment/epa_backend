@@ -9,8 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
-import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
+import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
+import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -46,8 +46,8 @@ public class ProjectUnitTests {
     private Employee employee;
     private Employee employee1;
     private Project project;
-    private ProjectCreateRequestDto projectCreateRequestDto;
-    private ProjectUpdateRequestDto projectUpdateRequestDto;
+    private RequestProjectCreateDto requestProjectCreateDto;
+    private RequestProjectUpdateDto requestProjectUpdateDto;
     private List<Employee> employees;
     private List<Employee> employeesWithEmployee;
     private Project projectWithEmployee;
@@ -83,10 +83,10 @@ public class ProjectUnitTests {
                 .email(email)
                 .projects(projects)
                 .build();
-        projectCreateRequestDto = ProjectCreateRequestDto.builder()
+        requestProjectCreateDto = RequestProjectCreateDto.builder()
                 .name("projectCreate")
                 .build();
-        projectUpdateRequestDto = ProjectUpdateRequestDto.builder()
+        requestProjectUpdateDto = RequestProjectUpdateDto.builder()
                 .name("projectUpdate")
                 .build();
         projects = new ArrayList<>();
@@ -100,8 +100,8 @@ public class ProjectUnitTests {
     void shouldCreateProjectWhenCallRepository() {
         when(projectRepository.save(project)).thenReturn(project);
         when(employeeService.findByEmail(email)).thenReturn(admin);
-        when(projectMapper.mapToEntity(projectCreateRequestDto, List.of(admin))).thenReturn(project);
-        Project project = projectService.create(projectCreateRequestDto, email);
+        when(projectMapper.mapToEntity(requestProjectCreateDto, List.of(admin))).thenReturn(project);
+        Project project = projectService.create(requestProjectCreateDto, email);
         int expectedId = 1;
         assertNotNull(project);
         assertEquals(expectedId, project.getId());
@@ -209,7 +209,7 @@ public class ProjectUnitTests {
         when(employeeService.findByEmail(email)).thenReturn(admin);
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         when(projectRepository.save(project)).thenReturn(project);
-        Project projectResult = projectService.update(project.getId(), projectUpdateRequestDto, email);
+        Project projectResult = projectService.update(project.getId(), requestProjectUpdateDto, email);
         int expectedId = 1;
         assertNotNull(project);
         assertEquals(expectedId, projectResult.getId());

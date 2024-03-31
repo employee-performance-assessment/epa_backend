@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.recommendation.RecommendationRequestDto;
-import ru.epa.epabackend.dto.recommendation.RecommendationResponseDto;
+import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
+import ru.epa.epabackend.dto.recommendation.ResponseRecommendationDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Recommendation;
@@ -46,7 +46,7 @@ public class AdminRecommendationController {
             description = "При успешном добавлении возвращается код 201 Created.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = RecommendationResponseDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseRecommendationDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -57,9 +57,9 @@ public class AdminRecommendationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public RecommendationResponseDto save(Principal principal, @RequestParam(required = true) String email,
-                                          @RequestBody RecommendationRequestDto recommendationRequestDto) {
-        Recommendation recommendation = recommendationService.create(recommendationRequestDto,
+    public ResponseRecommendationDto save(Principal principal, @RequestParam(required = true) String email,
+                                          @RequestBody RequestRecommendationDto requestRecommendationDto) {
+        Recommendation recommendation = recommendationService.create(requestRecommendationDto,
                 email, principal.getName());
         return recommendationMapper.mapToDto(recommendation);
     }
@@ -73,7 +73,7 @@ public class AdminRecommendationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = RecommendationResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseRecommendationDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -81,7 +81,7 @@ public class AdminRecommendationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<RecommendationResponseDto> findAllRecommendationByRecipientEmail(
+    public List<ResponseRecommendationDto> findAllRecommendationByRecipientEmail(
             @RequestParam(required = true) String email) {
         return recommendationMapper.mapList(recommendationService.findAllByRecipientEmail(email));
     }
@@ -95,7 +95,7 @@ public class AdminRecommendationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = RecommendationResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseRecommendationDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -103,7 +103,7 @@ public class AdminRecommendationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/all")
-    public List<RecommendationResponseDto> findAllRecommendations() {
+    public List<ResponseRecommendationDto> findAllRecommendations() {
         return recommendationMapper.mapList(recommendationService.findAll());
     }
 }

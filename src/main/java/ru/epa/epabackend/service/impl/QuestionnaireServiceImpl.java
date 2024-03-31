@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.questionnaire.QuestionnaireRequestDto;
+import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
@@ -58,7 +58,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      * Сохранение анкеты, имея список критериев и email админа
      */
     @Override
-    public Questionnaire save(QuestionnaireRequestDto questionnaireRequestDto, String email) {
+    public Questionnaire save(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         Employee author = employeeService.findByEmail(email);
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if (lastQuestionnaire.isPresent() && QuestionnaireStatus.CREATED.equals(lastQuestionnaire.get().getStatus())) {
@@ -66,7 +66,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                     "имела статус SHARE. Воспользуйтесь обновлением анкеты.");
         }
         List<Criteria> criterias = criteriaService
-                .findExistentAndSaveNonExistentCriterias(questionnaireRequestDto.getCriterias());
+                .findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto.getCriterias());
         Questionnaire questionnaire = Questionnaire.builder()
                 .author(author)
                 .criterias(criterias)
@@ -79,14 +79,14 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      * Редактирование (обновление) анкеты, имея список критериев и email админа
      */
     @Override
-    public Questionnaire updateLast(QuestionnaireRequestDto questionnaireRequestDto, String email) {
+    public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
         Employee author = employeeService.findByEmail(email);
         if (!QuestionnaireStatus.CREATED.equals(lastQuestionnaire.getStatus())) {
             throw new BadRequestException(String.format("Анкета с id %d и статусом %s не может быть обновлена. " +
                     "Необходимо создать новую анкету", lastQuestionnaire.getId(), lastQuestionnaire.getStatus()));
         }
-        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(questionnaireRequestDto.getCriterias());
+        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto.getCriterias());
         Questionnaire questionnaire = Questionnaire.builder()
                 .id(lastQuestionnaire.getId())
                 .author(author)
