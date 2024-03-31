@@ -9,9 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
-import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
+import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseRatingDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
@@ -50,12 +50,12 @@ public class EmployeeEvaluationUnitTests {
     private Employee evaluator;
     private Employee evaluated;
     private EmployeeEvaluation employeeEvaluation;
-    private EmployeeEvaluationRequestDto employeeEvaluationRequestDto;
-    private EmployeeEvaluationResponseDto employeeEvaluationResponseDto;
-    private RatingResponseDto ratingResponseDto;
+    private RequestEmployeeEvaluationDto requestEmployeeEvaluationDto;
+    private ResponseEmployeeEvaluationDto responseEmployeeEvaluationDto;
+    private ResponseRatingDto responseRatingDto;
     private Criteria criteria = new Criteria();
     List<EmployeeEvaluation> evaluationList;
-    List<EmployeeEvaluationRequestDto> evaluationRequestDtoList;
+    List<RequestEmployeeEvaluationDto> evaluationRequestDtoList;
 
     @BeforeEach
     public void init() {
@@ -79,18 +79,18 @@ public class EmployeeEvaluationUnitTests {
                 .evaluated(evaluated)
                 .criteria(criteria)
                 .build();
-        employeeEvaluationRequestDto = EmployeeEvaluationRequestDto.builder()
+        requestEmployeeEvaluationDto = RequestEmployeeEvaluationDto.builder()
                 .criteriaId(criteria.getId())
                 .score(5)
                 .build();
-        employeeEvaluationResponseDto = EmployeeEvaluationResponseDto.builder()
+        responseEmployeeEvaluationDto = ResponseEmployeeEvaluationDto.builder()
                 .name("Оценка")
                 .build();
         evaluationList = new ArrayList<>();
         evaluationList.add(employeeEvaluation);
         evaluationRequestDtoList = new ArrayList<>();
-        evaluationRequestDtoList.add(employeeEvaluationRequestDto);
-        ratingResponseDto = RatingResponseDto.builder()
+        evaluationRequestDtoList.add(requestEmployeeEvaluationDto);
+        responseRatingDto = ResponseRatingDto.builder()
                 .rating(10.0)
                 .build();
     }
@@ -101,7 +101,7 @@ public class EmployeeEvaluationUnitTests {
         when(employeeService.findById(ID_2)).thenReturn(evaluated);
         when(employeeService.findByEmail(email)).thenReturn(evaluator);
         when(criteriaService.findById(ID_1)).thenReturn(criteria);
-        when(employeeEvaluationMapper.mapToEntity(employeeEvaluationRequestDto,evaluated,evaluator,criteria))
+        when(employeeEvaluationMapper.mapToEntity(requestEmployeeEvaluationDto,evaluated,evaluator,criteria))
                 .thenReturn(employeeEvaluation);
         when(employeeEvaluationRepository.saveAll(evaluationList)).thenReturn(evaluationList);
         List<EmployeeEvaluation> employeeEvaluationListResult = employeeEvaluationService.
@@ -136,12 +136,12 @@ public class EmployeeEvaluationUnitTests {
     @DisplayName("Получение списка своих оценок от коллег по своему email с вызовом репозитория")
     void shouldFindAllEvaluationsUsersWhenCallRepository() {
         when(employeeEvaluationRepository.findAllEvaluationsUsers(email))
-                .thenReturn(List.of(employeeEvaluationResponseDto));
-        List<EmployeeEvaluationResponseDto> employeeEvaluationResponseDtoListResult = employeeEvaluationService
+                .thenReturn(List.of(responseEmployeeEvaluationDto));
+        List<ResponseEmployeeEvaluationDto> responseEmployeeEvaluationDtoListResult = employeeEvaluationService
                 .findAllEvaluationsUsers(email);
         int expectedSize = 1;
-        assertNotNull(employeeEvaluationResponseDtoListResult);
-        assertEquals(expectedSize, employeeEvaluationResponseDtoListResult.size());
+        assertNotNull(responseEmployeeEvaluationDtoListResult);
+        assertEquals(expectedSize, responseEmployeeEvaluationDtoListResult.size());
         verify(employeeEvaluationRepository,times(1)).findAllEvaluationsUsers(email);
     }
 
@@ -149,36 +149,36 @@ public class EmployeeEvaluationUnitTests {
     @DisplayName("Получение списка своих оценок от руководителя по своему email с вызовом репозитория")
     void shouldFindAllEvaluationsAdminWhenCallRepository() {
         when(employeeEvaluationRepository.findAllEvaluationsAdmin(email))
-                .thenReturn(List.of(employeeEvaluationResponseDto));
-        List<EmployeeEvaluationResponseDto> employeeEvaluationResponseDtoListResult = employeeEvaluationService
+                .thenReturn(List.of(responseEmployeeEvaluationDto));
+        List<ResponseEmployeeEvaluationDto> responseEmployeeEvaluationDtoListResult = employeeEvaluationService
                 .findAllEvaluationsAdmin(email);
         int expectedSize = 1;
-        assertNotNull(employeeEvaluationResponseDtoListResult);
-        assertEquals(expectedSize, employeeEvaluationResponseDtoListResult.size());
+        assertNotNull(responseEmployeeEvaluationDtoListResult);
+        assertEquals(expectedSize, responseEmployeeEvaluationDtoListResult.size());
         verify(employeeEvaluationRepository,times(1)).findAllEvaluationsAdmin(email);
     }
 
     @Test
     @DisplayName("Получение рейтинга сотрудника от всего коллектива с вызовом репозитория")
     void shouldFindFullRatingWhenCallRepository() {
-        when(employeeEvaluationRepository.findFullRating(email,startDay,endDay)).thenReturn(ratingResponseDto);
-        RatingResponseDto ratingResponseDtoResult = employeeEvaluationService
+        when(employeeEvaluationRepository.findFullRating(email,startDay,endDay)).thenReturn(responseRatingDto);
+        ResponseRatingDto responseRatingDtoResult = employeeEvaluationService
                 .findFullRating(email,startDay,endDay);
         double expectedId = 10.0;
-        assertNotNull(ratingResponseDtoResult);
-        assertEquals(expectedId, ratingResponseDtoResult.getRating());
+        assertNotNull(responseRatingDtoResult);
+        assertEquals(expectedId, responseRatingDtoResult.getRating());
         verify(employeeEvaluationRepository,times(1)).findFullRating(email,startDay,endDay);
     }
 
     @Test
     @DisplayName("Получение рейтинга сотрудника только от руководителя с вызовом репозитория")
     void shouldFindRatingByAdminWhenCallRepository() {
-        when(employeeEvaluationRepository.findRatingByAdmin(email,startDay,endDay)).thenReturn(ratingResponseDto);
-        RatingResponseDto ratingResponseDtoResult = employeeEvaluationService
+        when(employeeEvaluationRepository.findRatingByAdmin(email,startDay,endDay)).thenReturn(responseRatingDto);
+        ResponseRatingDto responseRatingDtoResult = employeeEvaluationService
                 .findRatingByAdmin(email,startDay,endDay);
         double expectedId = 10.0;
-        assertNotNull(ratingResponseDtoResult);
-        assertEquals(expectedId, ratingResponseDtoResult.getRating());
+        assertNotNull(responseRatingDtoResult);
+        assertEquals(expectedId, responseRatingDtoResult.getRating());
         verify(employeeEvaluationRepository,times(1)).findRatingByAdmin(email,startDay,endDay);
     }
 }

@@ -1,18 +1,18 @@
 package ru.epa.epabackend.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
-import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
+import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
+import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
 import ru.epa.epabackend.model.Employee;
 
 import java.util.List;
 
 public interface EmployeeService {
-    Employee create(EmployeeRequestDto employeeRequestDto, String email);
+    Employee create(RequestEmployeeDto requestEmployeeDto, String email);
 
-    Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto);
+    Employee createSelfRegister(RequestEmployeeShortDto requestEmployeeShortDto);
 
-    Employee update(Long employeeId, EmployeeRequestDto employeeRequestDto);
+    Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto);
 
     void delete(Long employeeId);
 

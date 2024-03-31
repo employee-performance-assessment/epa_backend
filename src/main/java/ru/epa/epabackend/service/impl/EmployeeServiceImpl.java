@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
-import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
+import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
+import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
@@ -38,10 +38,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Создание нового сотрудника
      */
     @Override
-    public Employee create(EmployeeRequestDto employeeRequestDto, String email) {
-        log.info("Создание нового сотрудника {}", employeeRequestDto.getFullName());
-        Employee employeeToSave = employeeMapper.mapToEntity(employeeRequestDto);
-        employeeToSave.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
+    public Employee create(RequestEmployeeDto requestEmployeeDto, String email) {
+        log.info("Создание нового сотрудника {}", requestEmployeeDto.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeDto);
+        employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
         Employee admin = findByEmail(email);
         employeeToSave.setCreator(admin);
@@ -52,10 +52,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Саморегистрация администратора
      */
     @Override
-    public Employee createSelfRegister(EmployeeShortRequestDto employeeShortRequestDto) {
-        log.info("Создание нового сотрудника {}", employeeShortRequestDto.getFullName());
-        Employee employeeToSave = employeeMapper.mapToEntity(employeeShortRequestDto);
-        employeeToSave.setPassword(passwordEncoder.encode(employeeShortRequestDto.getPassword()));
+    public Employee createSelfRegister(RequestEmployeeShortDto requestEmployeeShortDto) {
+        log.info("Создание нового сотрудника {}", requestEmployeeShortDto.getFullName());
+        Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeShortDto);
+        employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeShortDto.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
         return employeeRepository.save(employeeToSave);
     }
@@ -64,16 +64,16 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Обновление сотрудника
      */
     @Override
-    public Employee update(Long employeeId, EmployeeRequestDto employeeRequestDto) {
-        log.info("Обновление существующего сотрудника {}", employeeRequestDto.getFullName());
+    public Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto) {
+        log.info("Обновление существующего сотрудника {}", requestEmployeeDto.getFullName());
         Employee oldEmployee = findById(employeeId);
-        String password = employeeRequestDto.getPassword();
+        String password = requestEmployeeDto.getPassword();
 
         if (password != null && !password.isBlank()) {
             oldEmployee.setPassword(passwordEncoder.encode(password));
         }
 
-        employeeMapper.updateFields(employeeRequestDto, oldEmployee);
+        employeeMapper.updateFields(requestEmployeeDto, oldEmployee);
         return employeeRepository.save(oldEmployee);
     }
 
