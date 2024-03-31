@@ -8,8 +8,7 @@ CREATE TABLE IF NOT EXISTS projects
     name    VARCHAR(255) NOT NULL,
     status  VARCHAR(100) NOT NULL,
     created DATE,
-    CONSTRAINT pk_project PRIMARY KEY (id),
-    CONSTRAINT uq_projects_for_name UNIQUE (name)
+    CONSTRAINT pk_project PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS employees
@@ -47,8 +46,7 @@ create table if not exists tasks
     CONSTRAINT pk_task PRIMARY KEY (id),
     CONSTRAINT fk_comeve_on_project foreign key (project_id) references projects (id),
     CONSTRAINT fk_comeve_on_executor foreign key (executor_id) references employees (id),
-    CONSTRAINT fk_comeve_on_owner foreign key (owner_id) references employees (id),
-        CONSTRAINT uq_tasks_for_name UNIQUE (name)
+    CONSTRAINT fk_comeve_on_owner foreign key (owner_id) references employees (id)
 );
 
 CREATE TABLE IF NOT EXISTS technologies
