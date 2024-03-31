@@ -4,8 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
-import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
+import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
+import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
@@ -34,16 +34,17 @@ public class ProjectServiceImpl implements ProjectService {
     private final EmployeeRepository employeeRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Project findById(Long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Проект с id %s не найден", projectId)));
     }
 
     @Override
-    public Project create(ProjectCreateRequestDto projectCreateRequestDto, String email) {
+    public Project create(RequestProjectCreateDto requestProjectCreateDto, String email) {
         Employee admin = employeeService.findByEmail(email);
         return projectRepository
-                .save(projectMapper.mapToEntity(projectCreateRequestDto, List.of(admin)));
+                .save(projectMapper.mapToEntity(requestProjectCreateDto, List.of(admin)));
     }
 
     @Override
@@ -65,6 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Project> findAllByCreator(String email) {
         Employee employee = employeeService.findByEmail(email);
         if (employee.getRole() == Role.ROLE_ADMIN) {
@@ -74,6 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
@@ -82,11 +85,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project update(Long projectId, ProjectUpdateRequestDto projectUpdateRequestDto, String email) {
+    public Project update(Long projectId, RequestProjectUpdateDto requestProjectUpdateDto, String email) {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        projectMapper.updateFields(projectUpdateRequestDto, project);
+        projectMapper.updateFields(requestProjectUpdateDto, project);
         return projectRepository.save(project);
     }
 

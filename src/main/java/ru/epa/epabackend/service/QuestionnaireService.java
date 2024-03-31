@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.questionnaire.QuestionnaireRequestDto;
+import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
@@ -15,7 +15,7 @@ public interface QuestionnaireService {
 
     Questionnaire saveWithParameters(QuestionnaireStatus status, Employee author, List<Criteria> criterias);
 
-    Questionnaire updateLast(QuestionnaireRequestDto questionnaireRequestDto, String email);
+    Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email);
 
     Questionnaire findById(long id);
 

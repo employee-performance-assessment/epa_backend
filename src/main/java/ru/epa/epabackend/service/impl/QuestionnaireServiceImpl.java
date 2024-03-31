@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.questionnaire.QuestionnaireRequestDto;
+import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.model.Criteria;
@@ -35,8 +35,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение самой последней анкеты админа с указанным статусом
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
         Employee author = employeeService.findByEmail(email).getCreator();
         String authorEmail = author == null ? email : author.getEmail();
@@ -83,7 +83,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      * Обновление анкеты, имея анкету и email админа
      */
     @Override
-    public Questionnaire updateLast(QuestionnaireRequestDto questionnaireRequestDto, String email) {
+    public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         long questionnaireId = questionnaireRequestDto.getId();
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if(lastQuestionnaire.isEmpty()){
@@ -96,7 +96,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                     "получением последней анкеты со статусом CREATED.");
         }
 
-        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(questionnaireRequestDto
+        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto
                 .getCriterias());
         Questionnaire questionnaire = lastQuestionnaire.get();
         questionnaire.setCriterias(criterias);
@@ -107,8 +107,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение анкеты по её id
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findById(long id) {
         return questionnaireRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Анкета с id %d не найдена", id)));
@@ -141,8 +141,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение анкеты админа по id анкеты и по email сотрудника или администратора
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findByEmailAndId(String email, long questionnaireId) {
         Employee employee = employeeService.findByEmail(email);
         Employee author = employee.getCreator();
@@ -162,8 +162,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение всех анкет админа c определенным статусом любым сотрудником
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status) {
         Employee employee = employeeService.findByEmail(email);
         Employee author = employee.getCreator();

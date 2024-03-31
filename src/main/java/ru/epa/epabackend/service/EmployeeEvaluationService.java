@@ -1,8 +1,8 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
-import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
+import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseRatingDto;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ public interface EmployeeEvaluationService {
      */
     List<EmployeeEvaluation> create(String email,
                                     Long evaluatedId,
-                                    List<EmployeeEvaluationRequestDto> evaluationListDto);
+                                    List<RequestEmployeeEvaluationDto> evaluationListDto);
 
     /**
      * Найти оценку сотрудника по идентификатору.
@@ -31,20 +31,20 @@ public interface EmployeeEvaluationService {
     /**
      * Получение списка всех оценок коллег.
      */
-    List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(String email);
+    List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(String email);
 
     /**
      * Получение списка оценок руководителя.
      */
-    List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(String email);
+    List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(String email);
 
     /**
      * Получение рейтинга за определенный период сотрудника от всего коллектива.
      */
-    RatingResponseDto findFullRating(String email, LocalDate startDay, LocalDate endDay);
+    ResponseRatingDto findFullRating(String email, LocalDate startDay, LocalDate endDay);
 
     /**
      * Получение рейтинга за определенный период сотрудника только от руководителя.
      */
-    RatingResponseDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay);
+    ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay);
 }
