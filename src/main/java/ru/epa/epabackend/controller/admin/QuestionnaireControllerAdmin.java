@@ -72,10 +72,10 @@ public class QuestionnaireControllerAdmin {
 
     /**
      * Создание анкеты со статусом CREATED.
-     * Создание анкеты возможно если у админа не было ранее анкет или предыдущая имела статус SHARED
+     * Создание анкеты возможно если текущая анкета имеет статус SHARED
      */
     @Operation(summary = "Создание анкеты со статусом CREATED",
-            description = "Создание анкеты возможно если у админа не было ранее анкет или предыдущая имела статус SHARED")
+            description = "Создание анкеты возможно если текущая анкета имеет статус SHARED")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = QuestionnaireFullResponseDto.class))),

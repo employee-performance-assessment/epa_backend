@@ -64,8 +64,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public Questionnaire save(QuestionnaireRequestDto questionnaireRequestDto, String email) {
         Employee author = employeeService.findByEmail(email);
-        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
-        if (lastQuestionnaire.isPresent() && QuestionnaireStatus.CREATED.equals(lastQuestionnaire.get().getStatus())) {
+        Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
+        if (QuestionnaireStatus.CREATED.equals(lastQuestionnaire.getStatus())) {
             throw new BadRequestException("Возможно создать анкету только если ваша последняя анкета " +
                     "имела статус SHARE. Воспользуйтесь обновлением анкеты.");
         }
