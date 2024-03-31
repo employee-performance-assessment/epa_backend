@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1478b582-f44f-4d3d-b5ea-5eb3d6f453aa",
+		"_postman_id": "3362d1b7-6525-413e-83cb-1d1e8d4570c8",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21857559"
+		"_exporter_id": "21428156"
 	},
 	"item": [
 		{
@@ -3520,13 +3520,13 @@
 			"name": "Questionnaire",
 			"item": [
 				{
-					"name": "get last questionnaire",
+					"name": "get last questionnaire id=1",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 404\", function () {\r",
+									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"pm.test(\"Has response body\", function () {\r",
@@ -3608,7 +3608,49 @@
 					"response": []
 				},
 				{
-					"name": "update questionnaire status to SHARED id=1",
+					"name": "get SHARED questionnaire by id=1 by user not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Status of response is BAD_REQUEST\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be BAD_REQUEST').to.eql(\"BAD_REQUEST\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update last questionnaire status to SHARED",
 					"event": [
 						{
 							"listen": "test",
@@ -3638,78 +3680,24 @@
 						}
 					],
 					"request": {
-						"method": "PATCH",
+						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire",
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"questionnaire"
+								"questionnaire",
+								"last"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "add questionnaire with status CREATED id=2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Id of questionnaire is 2\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
-									"});\r",
-									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add questionnaire with status CREATED error",
+					"name": "update questionnaire with id=1 error",
 					"event": [
 						{
 							"listen": "test",
@@ -3734,66 +3722,11 @@
 						}
 					],
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update CREATED questionnaire id=2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Id of questionnaire is 2\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
-									"});\r",
-									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"компетентен в своей области знаний\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"выходит на связь в течение дня\"\r\n\t\t}\r\n\t]\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3815,7 +3748,166 @@
 					"response": []
 				},
 				{
-					"name": "update questionnaire status to SHARED id=2",
+					"name": "get last questionnaire id=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"самостоятельный\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"вдумчивый\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update last questionnaire status to SHARED",
 					"event": [
 						{
 							"listen": "test",
@@ -3845,202 +3937,17 @@
 						}
 					],
 					"request": {
-						"method": "PATCH",
+						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update questionnaire status to SHARED error",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Status of response is BAD_REQUEST\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be BAD_REQUEST').to.eql(\"BAD_REQUEST\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "duplicate SHARED questionnaire id=3",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Id of questionnaire is 3\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 3').to.eql(3);\r",
-									"});\r",
-									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire/duplicate",
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
 								"questionnaire",
-								"duplicate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "duplicate SHARED questionnaire id=4",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Id of questionnaire is 4\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
-									"});\r",
-									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire/duplicate",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire",
-								"duplicate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add default questionnaire with status SHARED error",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Status of response is BAD_REQUEST\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be BAD_REQUEST').to.eql(\"BAD_REQUEST\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire/default-with-shared",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire",
-								"default-with-shared"
+								"last"
 							]
 						}
 					},
@@ -4060,10 +3967,10 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
-									"pm.test(\"Id of questionnaire is 4\", function () {\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
 									"});\r",
 									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -4107,10 +4014,10 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
-									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -4127,92 +4034,37 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/user/questionnaire/2",
+							"raw": "{{baseUrl}}/user/questionnaire/1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
 								"questionnaire",
-								"2"
+								"1"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "add questionnaire with status CREATED id=5",
+					"name": "get SHARED questionnaire by id=3 by user not found",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
 									"});\r",
 									"pm.test(\"Has response body\", function () {\r",
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
-									"pm.test(\"Id of questionnaire is 5\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 5').to.eql(5);\r",
-									"});\r",
-									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"pm.test(\"Status of response is NOT_FOUND\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get SHARED questionnaire by id=5 by user error",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 400\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Status of response is BAD_REQUEST\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be BAD_REQUEST').to.eql(\"BAD_REQUEST\");\r",
+									"    pm.expect(jsonData.status, '\"status\" must be NOT_FOUND').to.eql(\"NOT_FOUND\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -4224,14 +4076,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/user/questionnaire/5",
+							"raw": "{{baseUrl}}/user/questionnaire/3",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
 								"questionnaire",
-								"5"
+								"3"
 							]
 						}
 					},
@@ -4251,9 +4103,9 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
-									"pm.test(\"Response body contains a list of 4 objects\", function () {\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(4);\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -4334,10 +4186,10 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
-									"pm.test(\"Id of questionnaire is 4\", function () {\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
 									"});\r",
 									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
 									"    var jsonData = pm.response.json();\r",

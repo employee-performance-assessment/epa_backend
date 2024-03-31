@@ -21,7 +21,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class requestQuestionnaireDto {
+public class RequestQuestionnaireDto {
     @Positive
     private long id;
 

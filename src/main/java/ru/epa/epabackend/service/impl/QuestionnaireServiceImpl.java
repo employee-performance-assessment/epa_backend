@@ -84,7 +84,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      */
     @Override
     public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
-        long questionnaireId = questionnaireRequestDto.getId();
+        long questionnaireId = requestQuestionnaireDto.getId();
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if(lastQuestionnaire.isEmpty()){
             throw new BadRequestException("Необходимо создать заранее анкету для возможности редактирования");
