@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3362d1b7-6525-413e-83cb-1d1e8d4570c8",
+		"_postman_id": "4bfa978a-b570-4095-988b-66c1d5caa70f",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21428156"
@@ -3520,6 +3520,47 @@
 			"name": "Questionnaire",
 			"item": [
 				{
+					"name": "check is passed day after share questionnaire. True",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/is-day-passed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"is-day-passed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get last questionnaire id=1",
 					"event": [
 						{
@@ -4475,6 +4516,47 @@
 							"path": [
 								"public",
 								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check is passed day after share questionnaire. False",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/is-day-passed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"is-day-passed"
 							]
 						}
 					},

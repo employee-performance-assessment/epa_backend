@@ -170,4 +170,16 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Long authorId = author == null ? employee.getId() : author.getId();
         return questionnaireRepository.findAllByAuthorIdAndStatus(authorId, status);
     }
+
+    /**
+     * Получение флага true/false прошёл ли день с последней отправки анкеты
+     */
+    @Override
+    public boolean isDayPassedAfterShareQuestionnaire(String email) {
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository
+                .findFirstByAuthorEmailAndStatusOrderByIdDesc(email, QuestionnaireStatus.SHARED);
+        if (lastQuestionnaire.isEmpty()) return true;
+        Questionnaire questionnaire = lastQuestionnaire.get();
+        return questionnaire.getCreated().isBefore(LocalDate.now());
+    }
 }

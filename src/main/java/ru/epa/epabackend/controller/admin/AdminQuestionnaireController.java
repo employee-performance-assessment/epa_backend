@@ -130,4 +130,19 @@ public class AdminQuestionnaireController {
                 .sendQuestionnaireToEmployees(principal.getName());
         return questionnaireMapper.mapToFullResponseDto(questionnaire);
     }
+
+    /**
+     * Получение флага true/false, прошел ли день с последней отправки анкеты сотрудникам
+     * Если нет анкет со статусом SHARED, вернётся true
+     */
+    @Operation(summary = "Получение флага true/false, прошел ли день с последней отправки анкеты сотрудникам",
+            description = "Если нет анкет со статусом SHARED, вернётся true. Если есть, то вернётся true, если день " +
+                    "прошёл и false, если нет")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))})
+    @GetMapping("/is-day-passed")
+    public boolean isDayPassedAfterShareQuestionnaire(Principal principal) {
+        return questionnaireService.isDayPassedAfterShareQuestionnaire(principal.getName());
+    }
 }

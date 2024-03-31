@@ -24,4 +24,6 @@ public interface QuestionnaireService {
     Questionnaire findByEmailAndId(String email, long questionnaireId);
 
     List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status);
+
+    boolean isDayPassedAfterShareQuestionnaire(String email);
 }
