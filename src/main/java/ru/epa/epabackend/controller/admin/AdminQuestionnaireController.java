@@ -12,13 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.questionnaire.ResponseQuestionnaireFullDto;
 import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
+import ru.epa.epabackend.dto.questionnaire.ResponseQuestionnaireFullDto;
 import ru.epa.epabackend.mapper.QuestionnaireMapper;
 import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.service.QuestionnaireService;
-import ru.epa.epabackend.util.QuestionnaireStatus;
-import ru.epa.epabackend.util.ValidationGroups.Create;
 import ru.epa.epabackend.util.ValidationGroups.Update;
 
 import java.security.Principal;

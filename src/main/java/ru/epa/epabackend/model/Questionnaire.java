@@ -5,7 +5,6 @@ import lombok.*;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

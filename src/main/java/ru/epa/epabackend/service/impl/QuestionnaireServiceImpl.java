@@ -86,7 +86,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         long questionnaireId = requestQuestionnaireDto.getId();
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
-        if(lastQuestionnaire.isEmpty()){
+        if (lastQuestionnaire.isEmpty()) {
             throw new BadRequestException("Необходимо создать заранее анкету для возможности редактирования");
         } else if (questionnaireId != lastQuestionnaire.get().getId()) {
             throw new ConflictException(String.format("Передаваемая анкета с id %d не совпадает с id последней анкеты " +
@@ -129,7 +129,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             } else {
                 Employee author = employeeService.findByEmail(email);
                 List<Criteria> criterias = questionnaire.getCriterias();
-                return saveWithParameters(QuestionnaireStatus.SHARED, author,criterias);
+                return saveWithParameters(QuestionnaireStatus.SHARED, author, criterias);
             }
         } else {
             Employee author = employeeService.findByEmail(email);
