@@ -127,13 +127,10 @@ public class AdminTaskController {
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseTaskFullDto create(@Validated(Create.class) @Parameter(required = true)
                                       @RequestBody RequestTaskDto requestTaskDto, Principal principal) {
         return taskMapper.mapToFullDto(taskService.create(requestTaskDto, principal.getName()));
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseTaskFullDto create(@Validated(Create.class) @Parameter(required = true)
-                                      @RequestBody RequestTaskDto taskRequestDto, Principal principal) {
-        return taskMapper.mapToFullDto(taskService.create(taskRequestDto, principal.getName()));
     }
 
     /**
@@ -155,7 +152,6 @@ public class AdminTaskController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PatchMapping("/{taskId}")
     @ResponseStatus(HttpStatus.OK)
-    public TaskFullResponseDto update(@Parameter(required = true) @PathVariable Long taskId,
     public ResponseTaskFullDto update(@Parameter(required = true) @PathVariable Long taskId,
                                       @Validated(Update.class) @Parameter(required = true)
                                       @RequestBody RequestTaskDto requestTaskDto, Principal principal) {
