@@ -70,6 +70,7 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Получение дефолтных критериев (по умолчанию)
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Criteria> findDefault() {
         return criteriaRepository.findAllByIdBetweenOrderByIdAsc(1L, 11L);
     }
@@ -78,6 +79,7 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Проверка, существует ли в БД критерий с указанным именем
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean isNameExists(String name) {
         return criteriaRepository.existsByName(name);
     }
@@ -86,6 +88,7 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Получение критерия по его имени
      */
     @Override
+    @Transactional(readOnly = true)
     public Criteria findByName(String name) {
         return criteriaRepository.findByName(name).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Критерий с именем %s не найден", name)));

@@ -1,5 +1,6 @@
 package ru.epa.epabackend.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.task.RequestTaskDto;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
@@ -63,4 +64,10 @@ public interface TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status);
+
+    @Transactional(readOnly = true)
+    Task findByIdAndExecutorId(Long taskId, Long employeeId);
+
+    @Transactional(readOnly = true)
+    Task findById(Long taskId);
 }

@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TechnologyServiceImpl implements TechnologyService {
     private final TechnologyRepository technologyRepository;
     private final TechnologyMapper technologyMapper;
@@ -26,7 +27,7 @@ public class TechnologyServiceImpl implements TechnologyService {
     /**
      * Добавление технологии.
      */
-    @Transactional
+    @Override
     public Technology create(RequestTechnologyDto technologyDto) {
         return technologyRepository.save(technologyMapper.mapToEntity(technologyDto));
     }
@@ -34,7 +35,8 @@ public class TechnologyServiceImpl implements TechnologyService {
     /**
      * Получение технологии по идентификатору.
      */
-    @Transactional
+    @Override
+    @Transactional(readOnly = true)
     public Technology findById(Long technologyId) {
         return technologyRepository.findById(technologyId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Технология с id %s не найдена", technologyId)));
@@ -43,7 +45,7 @@ public class TechnologyServiceImpl implements TechnologyService {
     /**
      * Обновление технологии.
      */
-    @Transactional
+    @Override
     public Technology update(RequestTechnologyDto technologyDto, Long technologyId) {
         Technology oldTechnology = findById(technologyId);
         technologyMapper.updateFields(technologyDto, oldTechnology);
@@ -53,7 +55,8 @@ public class TechnologyServiceImpl implements TechnologyService {
     /**
      * Получение списка всех технологий.
      */
-    @Transactional
+    @Override
+    @Transactional(readOnly = true)
     public List<Technology> findAll() {
         return technologyRepository.findAll();
     }
@@ -61,7 +64,7 @@ public class TechnologyServiceImpl implements TechnologyService {
     /**
      * Удаление технологии по идентификатору.
      */
-    @Transactional
+    @Override
     public void delete(Long technologyId) {
         if (technologyRepository.existsById(technologyId)) {
             technologyRepository.deleteById(technologyId);

@@ -34,8 +34,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение самой последней анкеты админа с указанным статусом
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
         Employee author = employeeService.findByEmail(email).getCreator();
         String authorEmail = author == null ? email : author.getEmail();
@@ -47,8 +47,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение самой последней анкеты админа по email
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorEmail(String email) {
         return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Анкеты администратора с email %s не найдено", email)));
@@ -99,8 +99,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение анкеты по её id
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findById(long id) {
         return questionnaireRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Анкета с id %d не найдена", id)));
@@ -165,8 +165,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение анкеты админа по id анкеты и по email сотрудника или администратора
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findByEmailAndId(String email, long questionnaireId) {
         Employee employee = employeeService.findByEmail(email);
         Employee author = employee.getCreator();
@@ -186,8 +186,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение всех анкет админа c определенным статусом любым сотрудником
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status) {
         Employee employee = employeeService.findByEmail(email);
         Employee author = employee.getCreator();

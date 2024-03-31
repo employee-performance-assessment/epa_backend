@@ -132,6 +132,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Получение сотрудника по id и проверка его наличия в базе данных
      */
     @Override
+    @Transactional(readOnly = true)
     public Employee findById(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
@@ -141,6 +142,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Получение всех сотрудников для одного админа
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Employee> findAllByCreatorEmail(String email) {
         return employeeRepository.findAllByCreatorEmail(email);
     }
