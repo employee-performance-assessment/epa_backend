@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.RequestCriteriaDto;
 import ru.epa.epabackend.mapper.CriteriaMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.repository.CriteriaRepository;
@@ -33,7 +33,7 @@ public class CriteriaUnitTests {
     CriteriaServiceImpl criteriaService;
     private Criteria criteria;
     private List<Criteria> criteriaList;
-    private List<CriteriaRequestDto> criteriaRequestDtoList;
+    private List<RequestCriteriaDto> requestCriteriaDtoList;
 
     @BeforeEach
     public void unit() {
@@ -42,16 +42,16 @@ public class CriteriaUnitTests {
                 .name("criteria")
                 .build();
         criteriaList = new ArrayList<>();
-        criteriaRequestDtoList = new ArrayList<>();
+        requestCriteriaDtoList = new ArrayList<>();
         criteriaList.add(criteria);
     }
 
     @Test
     @DisplayName("Сохранение списка критериев оценок с вызовом репозитория")
     void shouldCreateCriteriaWhenCallRepository() {
-        when(criteriaMapper.mapListToEntity(criteriaRequestDtoList)).thenReturn(criteriaList);
-        when(criteriaRepository.saveAll(criteriaMapper.mapListToEntity(criteriaRequestDtoList))).thenReturn(criteriaList);
-        List<Criteria> criteriaListResult = criteriaService.create(criteriaRequestDtoList);
+        when(criteriaMapper.mapListToEntity(requestCriteriaDtoList)).thenReturn(criteriaList);
+        when(criteriaRepository.saveAll(criteriaMapper.mapListToEntity(requestCriteriaDtoList))).thenReturn(criteriaList);
+        List<Criteria> criteriaListResult = criteriaService.create(requestCriteriaDtoList);
         int expectedSize = 1;
         assertNotNull(criteriaListResult);
         assertEquals(expectedSize, criteriaListResult.size());

@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.EmployeeFullResponseDto;
-import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
-import ru.epa.epabackend.dto.employee.JwtRequest;
-import ru.epa.epabackend.dto.employee.JwtResponse;
+import ru.epa.epabackend.dto.employee.ResponseEmployeeFullDto;
+import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
+import ru.epa.epabackend.dto.employee.RequestJwt;
+import ru.epa.epabackend.dto.employee.ResponseJwt;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.AuthenticationService;
@@ -51,8 +51,8 @@ public class PublicController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping("/auth")
-    public JwtResponse getToken(@Valid @RequestBody @Parameter(required = true) JwtRequest jwtRequest) {
-        return authenticationService.getToken(jwtRequest);
+    public ResponseJwt getToken(@Valid @RequestBody @Parameter(required = true) RequestJwt requestJwt) {
+        return authenticationService.getToken(requestJwt);
     }
 
     /**
@@ -61,14 +61,14 @@ public class PublicController {
     @Operation(summary = "Саморегистрация администратора")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = EmployeeFullResponseDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseEmployeeFullDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping("/register")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public EmployeeFullResponseDto register(@Validated(Create.class) @RequestBody EmployeeShortRequestDto employeeShortRequestDto) {
-        return employeeMapper.mapToFullDto(employeeService.createSelfRegister(employeeShortRequestDto));
+    public ResponseEmployeeFullDto register(@Validated(Create.class) @RequestBody RequestEmployeeShortDto requestEmployeeShortDto) {
+        return employeeMapper.mapToFullDto(employeeService.createSelfRegister(requestEmployeeShortDto));
     }
 }

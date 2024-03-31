@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.questionnaire.QuestionnaireRequestDto;
+import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
@@ -11,9 +11,9 @@ public interface QuestionnaireService {
 
     Questionnaire findLastByAuthorEmail(String email);
 
-    Questionnaire save(QuestionnaireRequestDto questionnaireRequestDto, String email);
+    Questionnaire save(RequestQuestionnaireDto requestQuestionnaireDto, String email);
 
-    Questionnaire updateLast(QuestionnaireRequestDto questionnaireRequestDto, String email);
+    Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email);
 
     Questionnaire findById(long id);
 
