@@ -17,7 +17,7 @@ public class JwtRequest {
     private String email;
 
     @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z0-9\\.\\,\\:\\;\\?\\!\\*\\+\\%\\-\\<\\>\\@\\[\\]\\{\\}\\/\\\\\\_\\$\\#]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9.,:;?!*+%\\-<>@\\[\\]\\{\\}\\/\\\\\\_\\$\\#]+$")
     @Size(min = 8, max = 14)
     private String password;
 
