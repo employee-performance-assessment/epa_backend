@@ -24,4 +24,10 @@ public class ResponseCriteriaShortDto {
      * Название критерия оценки.
      */
     private String name;
+
+    /**
+     * Является ли дефолтным критерием
+     */
+    private Boolean isDefault;
+
 }

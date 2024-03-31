@@ -24,4 +24,9 @@ public class ResponseCriteriaDto {
      * Название критерия оценки.
      */
     private String name;
+
+    /**
+     * Является ли дефолтным критерием
+     */
+    private Boolean isDefault;
 }

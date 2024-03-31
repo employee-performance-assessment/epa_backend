@@ -72,7 +72,7 @@ public class CriteriaServiceImpl implements CriteriaService {
     @Override
     @Transactional(readOnly = true)
     public List<Criteria> findDefault() {
-        return criteriaRepository.findAllByIdBetweenOrderByIdAsc(1L, 11L);
+        return criteriaRepository.findAllByIsDefault(true);
     }
 
     /**
