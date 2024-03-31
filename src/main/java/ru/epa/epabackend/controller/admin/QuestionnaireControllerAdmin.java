@@ -51,7 +51,8 @@ public class QuestionnaireControllerAdmin {
      * Получение последней заполняемой анкеты администратора
      * Если анкеты не существует, то создаётся и возвращается анкета с дефолтными критериями
      */
-    @Operation(summary = "Получение последней заполняемой анкеты администратора")
+    @Operation(summary = "Получение последней заполняемой анкеты администратора",
+            description = "Если анкеты не существует, то создаётся и возвращается анкета с дефолтными критериями")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = QuestionnaireFullResponseDto.class))),
