@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
@@ -48,57 +49,66 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     /**
-     * Получение самой последней анкеты админа по email
+     * Получение последней анкеты админа по email
+     * Если есть анкета со статусом CREATED, то возвращаем её
+     * Если есть анкета со статусом SHARED, то создаём новую анкету со статусом CREATED и возвращаем её
+     * Если нет анкет, то создаём анкету с дефолтными критериями и статусом CREATED
      */
     @Override
-    @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorEmail(String email) {
         log.info("Получение самой последней анкеты админа по email");
-        return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Анкеты администратора с email %s не найдено", email)));
-    }
-
-    /**
-     * Сохранение анкеты, имея список критериев и email админа
-     */
-    @Override
-    public Questionnaire save(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
-        log.info("Сохранение анкеты, имея список критериев и email админа");
-        Employee author = employeeService.findByEmail(email);
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
-        if (lastQuestionnaire.isPresent() && QuestionnaireStatus.CREATED.equals(lastQuestionnaire.get().getStatus())) {
-            throw new BadRequestException("Возможно создать анкету только если ваша последняя анкета " +
-                    "имела статус SHARE. Воспользуйтесь обновлением анкеты.");
+        if (lastQuestionnaire.isPresent()) {
+            Questionnaire questionnaire = lastQuestionnaire.get();
+            if (QuestionnaireStatus.CREATED.equals(questionnaire.getStatus())) {
+                return questionnaire;
+            } else {
+                log.info("У прошлой анкеты был статус SHARED, поэтому создаётся новая анкета со статусом CREATED");
+                Employee author = employeeService.findByEmail(email);
+                List<Criteria> criterias = questionnaire.getCriterias();
+                return saveWithParameters(QuestionnaireStatus.CREATED, author, criterias);
+            }
+        } else {
+            log.info("У админа не было анкет, поэтому создаётся новая анкета со статусом CREATED и дефолтными критериями");
+            Employee author = employeeService.findByEmail(email);
+            return saveWithParameters(QuestionnaireStatus.CREATED, author, criteriaService.findDefault());
         }
-        List<Criteria> criterias = criteriaService
-                .findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto.getCriterias());
-        Questionnaire questionnaire = Questionnaire.builder()
+    }
+
+    @Override
+    public Questionnaire saveWithParameters(QuestionnaireStatus status, Employee author, List<Criteria> criterias) {
+        return questionnaireRepository.save(Questionnaire.builder()
+                .status(status)
+                .created(LocalDate.now())
                 .author(author)
-                .criterias(criterias)
-                .status(QuestionnaireStatus.CREATED)
-                .build();
-        return questionnaireRepository.save(questionnaire);
+                .criterias(new ArrayList<>(criterias))
+                .build());
     }
 
     /**
-     * Редактирование (обновление) анкеты, имея список критериев и email админа
+     * Обновление анкеты, имея анкету и email админа
      */
     @Override
     public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
-        log.info("Обновление анкеты, имея список критериев и email админа");
-        Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
-        Employee author = employeeService.findByEmail(email);
-        if (!QuestionnaireStatus.CREATED.equals(lastQuestionnaire.getStatus())) {
-            throw new BadRequestException(String.format("Анкета с id %d и статусом %s не может быть обновлена. " +
-                    "Необходимо создать новую анкету", lastQuestionnaire.getId(), lastQuestionnaire.getStatus()));
+        log.info("Обновление анкеты");
+
+        long questionnaireId = requestQuestionnaireDto.getId();
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
+        if (lastQuestionnaire.isEmpty()) {
+            throw new BadRequestException("Необходимо создать заранее анкету для возможности редактирования");
+        } else if (questionnaireId != lastQuestionnaire.get().getId()) {
+            throw new ConflictException(String.format("Передаваемая анкета с id %d не совпадает с id последней анкеты " +
+                    "%d", questionnaireId, lastQuestionnaire.get().getId()));
+        } else if (QuestionnaireStatus.SHARED.equals(lastQuestionnaire.get().getStatus())) {
+            throw new BadRequestException("Невозможно обновить анкету со статусом SHARED. Воспользуйтесь " +
+                    "получением последней анкеты со статусом CREATED.");
         }
-        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto.getCriterias());
-        Questionnaire questionnaire = Questionnaire.builder()
-                .id(lastQuestionnaire.getId())
-                .author(author)
-                .criterias(criterias)
-                .status(QuestionnaireStatus.CREATED)
-                .build();
+
+        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto
+                .getCriterias());
+        Questionnaire questionnaire = lastQuestionnaire.get();
+        questionnaire.setCriterias(criterias);
+        questionnaire.setCreated(LocalDate.now());
         return questionnaireRepository.save(questionnaire);
     }
 
@@ -114,62 +124,32 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     /**
-     * Обновление статуса анкеты с CREATE на SHARED и выставление сегодняшней даты
+     * Отправление анкеты сотрудникам - изменение статуса последней анкеты с CREATED на SHARED
      */
     @Override
-    public Questionnaire updateLastQuestionnaireStatusAndDate(QuestionnaireStatus status, String email) {
-        log.info("Обновление статуса анкеты и выставление сегодняшней даты");
-        Questionnaire questionnaire = findLastByAuthorEmail(email);
-        if (!QuestionnaireStatus.CREATED.equals(questionnaire.getStatus())) {
-            throw new BadRequestException("Для изменения статуса последней анкеты на SHARED, необходимо, чтобы " +
-                    "она имела статус CREATED.");
+    public Questionnaire sendQuestionnaireToEmployees(String email) {
+        log.info("Отправление анкеты сотрудникам");
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
+        if (lastQuestionnaire.isPresent()) {
+            Questionnaire questionnaire = lastQuestionnaire.get();
+            if (QuestionnaireStatus.CREATED.equals(questionnaire.getStatus())) {
+                log.info("Изменение статуса последней анкеты с CREATED на SHARED");
+                questionnaire.setStatus(QuestionnaireStatus.SHARED);
+                questionnaire.setCreated(LocalDate.now());
+                return questionnaireRepository.save(questionnaire);
+            } else {
+                log.info("Последняя анкета имела статус SHARED, поэтому создаётся дубликат анкеты с новым id и датой " +
+                        "и статусом SHARED");
+                Employee author = employeeService.findByEmail(email);
+                List<Criteria> criterias = questionnaire.getCriterias();
+                return saveWithParameters(QuestionnaireStatus.SHARED, author, criterias);
+            }
+        } else {
+            log.info("У админа нет анкет, поэтому создаётся анкета с дефолтными критериями и статусом SHARED");
+            Employee author = employeeService.findByEmail(email);
+            List<Criteria> criterias = criteriaService.findDefault();
+            return saveWithParameters(QuestionnaireStatus.SHARED, author, criterias);
         }
-        questionnaire.setStatus(QuestionnaireStatus.SHARED);
-        questionnaire.setCreated(LocalDate.now());
-        return questionnaireRepository.save(questionnaire);
-    }
-
-    /**
-     * Сохранение дубликата опубликованной (SHARED) анкеты для повторного анкетирования среди сотрудников
-     * в другую дату по тем же критериям
-     */
-    @Override
-    public Questionnaire duplicateLastShared(String email) {
-        log.info("Сохранение дубликата опубликованной анкеты для повторного анкетирования");
-        Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
-        if (!QuestionnaireStatus.SHARED.equals(lastQuestionnaire.getStatus()))
-            throw new BadRequestException("Анкета может быть продублирована только при статусе SHARE " +
-                    "последней анкеты.");
-        Questionnaire newQuestionnaire = Questionnaire.builder()
-                .author(lastQuestionnaire.getAuthor())
-                .created(LocalDate.now())
-                .status(lastQuestionnaire.getStatus())
-                .criterias(new ArrayList<>(lastQuestionnaire.getCriterias()))
-                .build();
-        return questionnaireRepository.save(newQuestionnaire);
-    }
-
-    /**
-     * Сохранение анкеты с дефолтными критериями (по умолчанию) со статусом SHARED. Это возможно, когда админ не
-     * создавал анкет, но хочет провести анкетирование
-     */
-    @Override
-    public Questionnaire saveDefaultWithSharedStatus(String email) {
-        log.info("Сохранение анкеты с дефолтными критериями");
-        Optional<Questionnaire> questionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
-        if (questionnaire.isPresent()) {
-            throw new BadRequestException("Для сохранения дефолтного списка критерией со статусом анкеты SHARED " +
-                    "необходимо, чтобы у админа не было анкет");
-        }
-        Employee author = employeeService.findByEmail(email);
-        List<Criteria> defaultCriterias = new ArrayList<>(criteriaService.findDefault());
-        Questionnaire newQuestionnaire = Questionnaire.builder()
-                .author(author)
-                .status(QuestionnaireStatus.SHARED)
-                .created(LocalDate.now())
-                .criterias(defaultCriterias)
-                .build();
-        return questionnaireRepository.save(newQuestionnaire);
     }
 
     /**
@@ -206,5 +186,18 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Employee author = employee.getCreator();
         Long authorId = author == null ? employee.getId() : author.getId();
         return questionnaireRepository.findAllByAuthorIdAndStatus(authorId, status);
+    }
+
+    /**
+     * Получение флага true/false прошёл ли день с последней отправки анкеты
+     */
+    @Override
+    public boolean isDayPassedAfterShareQuestionnaire(String email) {
+        log.info("Получение флага true/false прошёл ли день с последней отправки анкеты");
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository
+                .findFirstByAuthorEmailAndStatusOrderByIdDesc(email, QuestionnaireStatus.SHARED);
+        if (lastQuestionnaire.isEmpty()) return true;
+        Questionnaire questionnaire = lastQuestionnaire.get();
+        return questionnaire.getCreated().isBefore(LocalDate.now());
     }
 }

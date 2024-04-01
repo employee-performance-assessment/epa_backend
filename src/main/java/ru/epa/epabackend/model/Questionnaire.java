@@ -5,7 +5,6 @@ import lombok.*;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,8 +49,7 @@ public class Questionnaire {
     @JoinTable(name = "questionnaires_criterias",
             joinColumns = @JoinColumn(name = "questionnaire_id"),
             inverseJoinColumns = @JoinColumn(name = "criteria_id"))
-    @Builder.Default
-    private List<Criteria> criterias = new ArrayList<>();
+    private List<Criteria> criterias;
 
     /**
      * Статус анкеты (CREATED, SHARED)
