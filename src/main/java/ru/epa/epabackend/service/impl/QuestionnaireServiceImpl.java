@@ -2,6 +2,7 @@ package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
@@ -23,6 +24,7 @@ import java.util.Optional;
 /**
  * Класс QuestionnaireServiceImpl содержит логику работы с анкетами
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -37,6 +39,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
+        log.info("Получение самой последней анкеты админа с указанным статусом {}", status);
         Employee author = employeeService.findByEmail(email).getCreator();
         String authorEmail = author == null ? email : author.getEmail();
         return questionnaireRepository.findFirstByAuthorEmailAndStatusOrderByIdDesc(authorEmail, status)
@@ -50,6 +53,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorEmail(String email) {
+        log.info("Получение самой последней анкеты админа по email");
         return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Анкеты администратора с email %s не найдено", email)));
     }
@@ -59,6 +63,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      */
     @Override
     public Questionnaire save(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
+        log.info("Сохранение анкеты, имея список критериев и email админа");
         Employee author = employeeService.findByEmail(email);
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if (lastQuestionnaire.isPresent() && QuestionnaireStatus.CREATED.equals(lastQuestionnaire.get().getStatus())) {
@@ -80,6 +85,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      */
     @Override
     public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
+        log.info("Обновление анкеты, имея список критериев и email админа");
         Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
         Employee author = employeeService.findByEmail(email);
         if (!QuestionnaireStatus.CREATED.equals(lastQuestionnaire.getStatus())) {
@@ -102,6 +108,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     @Transactional(readOnly = true)
     public Questionnaire findById(long id) {
+        log.info("Получение анкеты по её идентификатору {}", id);
         return questionnaireRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Анкета с id %d не найдена", id)));
     }
@@ -111,6 +118,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      */
     @Override
     public Questionnaire updateLastQuestionnaireStatusAndDate(QuestionnaireStatus status, String email) {
+        log.info("Обновление статуса анкеты и выставление сегодняшней даты");
         Questionnaire questionnaire = findLastByAuthorEmail(email);
         if (!QuestionnaireStatus.CREATED.equals(questionnaire.getStatus())) {
             throw new BadRequestException("Для изменения статуса последней анкеты на SHARED, необходимо, чтобы " +
@@ -127,6 +135,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      */
     @Override
     public Questionnaire duplicateLastShared(String email) {
+        log.info("Сохранение дубликата опубликованной анкеты для повторного анкетирования");
         Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
         if (!QuestionnaireStatus.SHARED.equals(lastQuestionnaire.getStatus()))
             throw new BadRequestException("Анкета может быть продублирована только при статусе SHARE " +
@@ -141,11 +150,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     /**
-     * Сохранение анктеты с дефолтными критериями (по умолчанию) со статусом SHARED. Это возможно, когда админ не
+     * Сохранение анкеты с дефолтными критериями (по умолчанию) со статусом SHARED. Это возможно, когда админ не
      * создавал анкет, но хочет провести анкетирование
      */
     @Override
     public Questionnaire saveDefaultWithSharedStatus(String email) {
+        log.info("Сохранение анкеты с дефолтными критериями");
         Optional<Questionnaire> questionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if (questionnaire.isPresent()) {
             throw new BadRequestException("Для сохранения дефолтного списка критерией со статусом анкеты SHARED " +
@@ -168,6 +178,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     @Transactional(readOnly = true)
     public Questionnaire findByEmailAndId(String email, long questionnaireId) {
+        log.info("Получение анкеты админа по идентификатору анкеты {} и по email сотрудника или администратора",
+                questionnaireId);
         Employee employee = employeeService.findByEmail(email);
         Employee author = employee.getCreator();
         Long authorId = author == null ? employee.getId() : author.getId();
@@ -184,11 +196,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     /**
-     * Получение всех анкет админа c определенным статусом любым сотрудником
+     * Получение всех анкет админа с определенным статусом любым сотрудником
      */
     @Override
     @Transactional(readOnly = true)
     public List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status) {
+        log.info("Получение всех анкет админа с определенным статусом {} любым сотрудником", status);
         Employee employee = employeeService.findByEmail(email);
         Employee author = employee.getCreator();
         Long authorId = author == null ? employee.getId() : author.getId();
