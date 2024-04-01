@@ -24,12 +24,12 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class RequestEmployeeDto {
 
     @NotBlank(groups = {Create.class})
-    @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH)
+    @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH, groups = {Create.class, Update.class})
     @Size(min = 1, max = 255, groups = {Create.class, Update.class})
     private String fullName;
 
     @Size(min = 5, max = 32, groups = {Create.class, Update.class})
-    @Pattern(regexp = TELEGRAM)
+    @Pattern(regexp = TELEGRAM, groups = {Create.class, Update.class})
     private String nickName;
 
     private String city;
