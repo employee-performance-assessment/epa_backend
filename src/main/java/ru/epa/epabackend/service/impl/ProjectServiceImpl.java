@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.project.ProjectCreateRequestDto;
-import ru.epa.epabackend.dto.project.ProjectUpdateRequestDto;
+import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
+import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
@@ -39,6 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
      * Получение проекта по id
      */
     @Override
+    @Transactional(readOnly = true)
     public Project findById(Long projectId) {
         log.info("Получение проекта по id {}", projectId);
         return projectRepository.findById(projectId).orElseThrow(() ->
@@ -49,11 +50,11 @@ public class ProjectServiceImpl implements ProjectService {
      * Создание нового проекта
      */
     @Override
-    public Project create(ProjectCreateRequestDto projectCreateRequestDto, String email) {
-        log.info("Создание нового проекта {}", projectCreateRequestDto.getName());
+    public Project create(RequestProjectCreateDto requestProjectCreateDto, String email) {
+        log.info("Создание нового проекта {}", requestProjectCreateDto.getName());
         Employee admin = employeeService.findByEmail(email);
         return projectRepository
-                .save(projectMapper.mapToEntity(projectCreateRequestDto, List.of(admin)));
+                .save(projectMapper.mapToEntity(requestProjectCreateDto, List.of(admin)));
     }
 
     /**
@@ -86,6 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
      * Поиск всех создателей
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Project> findAllByCreator(String email) {
         log.info("Поиск всех создателей");
         Employee employee = employeeService.findByEmail(email);
@@ -99,6 +101,7 @@ public class ProjectServiceImpl implements ProjectService {
      * Поиск всех по проекту и роли
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
         log.info("Поиск всех по проекту с идентификатором {} и роли {}", projectId, role);
         Employee admin = employeeService.findByEmail(email);
@@ -111,12 +114,12 @@ public class ProjectServiceImpl implements ProjectService {
      * Обновление проекта
      */
     @Override
-    public Project update(Long projectId, ProjectUpdateRequestDto projectUpdateRequestDto, String email) {
+    public Project update(Long projectId, RequestProjectUpdateDto requestProjectUpdateDto, String email) {
         log.info("Обновление проекта с идентификатором {}", projectId);
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        projectMapper.updateFields(projectUpdateRequestDto, project);
+        projectMapper.updateFields(requestProjectUpdateDto, project);
         return projectRepository.save(project);
     }
 

@@ -6,8 +6,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.epa.epabackend.dto.employee.JwtRequest;
-import ru.epa.epabackend.dto.employee.JwtResponse;
+import org.springframework.transaction.annotation.Transactional;
+import ru.epa.epabackend.dto.employee.RequestJwt;
+import ru.epa.epabackend.dto.employee.ResponseJwt;
 import ru.epa.epabackend.service.AuthenticationService;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.JwtService;
@@ -26,14 +27,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     /**
      * Получение JWT токена по запросу.
      *
-     * @param jwtRequest
+     * @param requestJwt
      * @return
      */
     @Override
-    public JwtResponse getToken(JwtRequest jwtRequest) {
+    @Transactional(readOnly = true)
+    public ResponseJwt getToken(RequestJwt requestJwt) {
         log.info("Получение JWT токена по запросу");
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword()));
-        UserDetails userDetails = employeeService.findByEmail(jwtRequest.getEmail());
-        return new JwtResponse(jwtService.generateToken(userDetails));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestJwt.getEmail(), requestJwt.getPassword()));
+        UserDetails userDetails = employeeService.findByEmail(requestJwt.getEmail());
+        return new ResponseJwt(jwtService.generateToken(userDetails));
     }
 }

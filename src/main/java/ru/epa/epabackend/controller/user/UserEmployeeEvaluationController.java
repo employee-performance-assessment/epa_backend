@@ -12,9 +12,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseFullDto;
+import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationFullDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.EmployeeEvaluation;
@@ -47,7 +47,7 @@ public class UserEmployeeEvaluationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeEvaluationResponseFullDto.class)))),
+                    schema = @Schema(implementation = ResponseEmployeeEvaluationFullDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -60,10 +60,10 @@ public class UserEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public List<EmployeeEvaluationResponseFullDto> save(
+    public List<ResponseEmployeeEvaluationFullDto> save(
             Principal principal,
             @RequestParam(required = true) Long evaluatedId,
-            @Valid @RequestBody List<EmployeeEvaluationRequestDto> evaluationListRequestDto) {
+            @Valid @RequestBody List<RequestEmployeeEvaluationDto> evaluationListRequestDto) {
         List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationService.create(principal.getName(),
                         evaluatedId, evaluationListRequestDto);
         return employeeEvaluationMapper.mapList(employeeEvaluations);
@@ -80,7 +80,7 @@ public class UserEmployeeEvaluationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseEmployeeEvaluationDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -88,7 +88,7 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping()
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(Principal principal) {
+    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(Principal principal) {
         return employeeEvaluationService.findAllEvaluationsUsers(principal.getName());
     }
 
@@ -103,7 +103,7 @@ public class UserEmployeeEvaluationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = EmployeeEvaluationResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseEmployeeEvaluationDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -111,7 +111,7 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/admin")
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(Principal principal) {
+    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(Principal principal) {
         return employeeEvaluationService.findAllEvaluationsAdmin(principal.getName());
     }
 }

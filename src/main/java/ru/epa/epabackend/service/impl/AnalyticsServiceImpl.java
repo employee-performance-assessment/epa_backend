@@ -25,7 +25,6 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final TaskRepository taskRepository;

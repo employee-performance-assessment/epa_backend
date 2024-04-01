@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.questionnaire.QuestionnaireRequestDto;
+import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
@@ -36,8 +36,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение самой последней анкеты админа с указанным статусом
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
         log.info("Получение самой последней анкеты админа с указанным статусом {}", status);
         Employee author = employeeService.findByEmail(email).getCreator();
@@ -50,8 +50,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение самой последней анкеты админа по email
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findLastByAuthorEmail(String email) {
         log.info("Получение самой последней анкеты админа по email");
         return questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email).orElseThrow(() ->
@@ -62,7 +62,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      * Сохранение анкеты, имея список критериев и email админа
      */
     @Override
-    public Questionnaire save(QuestionnaireRequestDto questionnaireRequestDto, String email) {
+    public Questionnaire save(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         log.info("Сохранение анкеты, имея список критериев и email админа");
         Employee author = employeeService.findByEmail(email);
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
@@ -71,7 +71,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                     "имела статус SHARE. Воспользуйтесь обновлением анкеты.");
         }
         List<Criteria> criterias = criteriaService
-                .findExistentAndSaveNonExistentCriterias(questionnaireRequestDto.getCriterias());
+                .findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto.getCriterias());
         Questionnaire questionnaire = Questionnaire.builder()
                 .author(author)
                 .criterias(criterias)
@@ -84,7 +84,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      * Редактирование (обновление) анкеты, имея список критериев и email админа
      */
     @Override
-    public Questionnaire updateLast(QuestionnaireRequestDto questionnaireRequestDto, String email) {
+    public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         log.info("Обновление анкеты, имея список критериев и email админа");
         Questionnaire lastQuestionnaire = findLastByAuthorEmail(email);
         Employee author = employeeService.findByEmail(email);
@@ -92,7 +92,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             throw new BadRequestException(String.format("Анкета с id %d и статусом %s не может быть обновлена. " +
                     "Необходимо создать новую анкету", lastQuestionnaire.getId(), lastQuestionnaire.getStatus()));
         }
-        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(questionnaireRequestDto.getCriterias());
+        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto.getCriterias());
         Questionnaire questionnaire = Questionnaire.builder()
                 .id(lastQuestionnaire.getId())
                 .author(author)
@@ -105,8 +105,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение анкеты по её id
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findById(long id) {
         log.info("Получение анкеты по её идентификатору {}", id);
         return questionnaireRepository.findById(id).orElseThrow(() ->
@@ -175,8 +175,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение анкеты админа по id анкеты и по email сотрудника или администратора
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Questionnaire findByEmailAndId(String email, long questionnaireId) {
         log.info("Получение анкеты админа по идентификатору анкеты {} и по email сотрудника или администратора",
                 questionnaireId);
@@ -198,8 +198,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     /**
      * Получение всех анкет админа с определенным статусом любым сотрудником
      */
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status) {
         log.info("Получение всех анкет админа с определенным статусом {} любым сотрудником", status);
         Employee employee = employeeService.findByEmail(email);

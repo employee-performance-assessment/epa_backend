@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
+import ru.epa.epabackend.dto.criteria.RequestCriteriaDto;
 import ru.epa.epabackend.model.Criteria;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface CriteriaService {
     /**
      * Создание критерия оценки.
      */
-    List<Criteria> create(List<CriteriaRequestDto> criteriaRequestDtoList);
+    List<Criteria> create(List<RequestCriteriaDto> requestCriteriaDtoList);
 
     /**
      * Найти критерий оценки по его ID.
@@ -41,5 +41,5 @@ public interface CriteriaService {
 
     Criteria findByName(String name);
 
-    List<Criteria> findExistentAndSaveNonExistentCriterias(List<CriteriaRequestDto> criterias);
+    List<Criteria> findExistentAndSaveNonExistentCriterias(List<RequestCriteriaDto> criterias);
 }

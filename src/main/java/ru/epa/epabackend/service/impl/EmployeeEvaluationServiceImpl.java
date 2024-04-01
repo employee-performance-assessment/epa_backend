@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationRequestDto;
-import ru.epa.epabackend.dto.evaluation.EmployeeEvaluationResponseDto;
-import ru.epa.epabackend.dto.evaluation.RatingResponseDto;
+import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseRatingDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
@@ -43,14 +43,14 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public List<EmployeeEvaluation> create(String email,
                                            Long evaluatedId,
-                                           List<EmployeeEvaluationRequestDto> evaluationRequestDtoList) {
+                                           List<RequestEmployeeEvaluationDto> evaluationRequestDtoList) {
         log.info("Сохранение оценки");
         Employee evaluated = employeeService.findById(evaluatedId);
         Employee evaluator = employeeService.findByEmail(email);
 
         List<EmployeeEvaluation> employeeEvaluations = new ArrayList<>(evaluationRequestDtoList.size());
 
-        for (EmployeeEvaluationRequestDto evaluationRequestDto : evaluationRequestDtoList) {
+        for (RequestEmployeeEvaluationDto evaluationRequestDto : evaluationRequestDtoList) {
             Criteria criteria = criteriaService.findById(evaluationRequestDto.getCriteriaId());
             EmployeeEvaluation employeeEvaluation = employeeEvaluationMapper
                     .mapToEntity(evaluationRequestDto, evaluated, evaluator, criteria);
@@ -78,7 +78,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsUsers(String email) {
+    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(String email) {
         log.info("Получение списка оценок по идентификатору сотрудника");
         return employeeEvaluationRepository.findAllEvaluationsUsers(email);
     }
@@ -88,7 +88,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeEvaluationResponseDto> findAllEvaluationsAdmin(String email) {
+    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(String email) {
         log.info("Получение списка своих оценок от руководителя по своему email");
         return employeeEvaluationRepository.findAllEvaluationsAdmin(email);
     }
@@ -98,7 +98,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public RatingResponseDto findFullRating(String email, LocalDate startDay, LocalDate endDay) {
+    public ResponseRatingDto findFullRating(String email, LocalDate startDay, LocalDate endDay) {
         log.info("Получение рейтинга сотрудника от всего коллектива");
         return employeeEvaluationRepository.findFullRating(email, startDay, endDay);
     }
@@ -108,8 +108,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public RatingResponseDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {
-        log.info("Получение рейтинга сотрудника только от руководителя");
+    public ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {log.info("Получение рейтинга сотрудника только от руководителя");
         return employeeEvaluationRepository.findRatingByAdmin(email, startDay, endDay);
     }
 }

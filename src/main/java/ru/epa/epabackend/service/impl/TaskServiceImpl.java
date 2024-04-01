@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.task.TaskRequestDto;
+import ru.epa.epabackend.dto.task.RequestTaskDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.mapper.TaskMapper;
 import ru.epa.epabackend.model.Employee;
@@ -69,28 +69,28 @@ public class TaskServiceImpl implements TaskService {
      * Создание задачи админом
      */
     @Override
-    public Task create(TaskRequestDto taskRequestDto, String email) {
-        log.info("Создание задачи {} админом", taskRequestDto.getName());
-        Project project = projectService.findById(taskRequestDto.getProjectId());
-        Employee executor = employeeService.findById(taskRequestDto.getExecutorId());
+    public Task create(RequestTaskDto requestTaskDto, String email) {
+        log.info("Создание задачи {} админом", requestTaskDto.getName());
+        Project project = projectService.findById(requestTaskDto.getProjectId());
+        Employee executor = employeeService.findById(requestTaskDto.getExecutorId());
         Employee admin = employeeService.findByEmail(email);
         projectService.checkUserAndProject(admin, project);
-        taskRequestDto.setStatus("NEW");
-        return taskRepository.save(taskMapper.mapToEntity(taskRequestDto, project, executor, admin));
+        requestTaskDto.setStatus("NEW");
+        return taskRepository.save(taskMapper.mapToEntity(requestTaskDto, project, executor, admin));
     }
 
     /**
      * Обновление задачи админом
      */
     @Override
-    public Task update(Long taskId, TaskRequestDto taskRequestDto, String email) {
+    public Task update(Long taskId, RequestTaskDto requestTaskDto, String email) {
         log.info("Обновление задачи с идентификатором {} админом", taskId);
         Task oldTask = findById(taskId);
         Project project = oldTask.getProject();
         Employee admin = employeeService.findByEmail(email);
         projectService.checkUserAndProject(admin, project);
-        Employee executor = checkExecutor(taskRequestDto, oldTask);
-        taskMapper.updateFields(taskRequestDto, project, executor, oldTask);
+        Employee executor = checkExecutor(requestTaskDto, oldTask);
+        taskMapper.updateFields(requestTaskDto, project, executor, oldTask);
         if (oldTask.getStatus() == TaskStatus.DONE) {
             setPointsToEmployeeAfterTaskDone(oldTask);
             oldTask.setFinishDate(LocalDate.now());
@@ -115,6 +115,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
         log.info("Получение списка задач проекта с идентификатором {} с определенным статусом {} задач",
                 projectId, status);
@@ -183,7 +184,9 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Получение задачи из репозитория по ID задачи и ID исполнителя
      */
-    private Task findByIdAndExecutorId(Long taskId, Long employeeId) {
+    @Override
+    @Transactional(readOnly = true)
+    public Task findByIdAndExecutorId(Long taskId, Long employeeId) {
         log.info("Получение задачи из репозитория по идентификатору задачи {} " +
                 "и по идентификатору исполнителя {}", taskId, employeeId);
         return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
@@ -216,7 +219,9 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Получение задачи из репозитория по ID
      */
-    private Task findById(Long taskId) {
+    @Override
+    @Transactional(readOnly = true)
+    public Task findById(Long taskId) {
         log.info("Получение задачи из репозитория по идентификатору {}", taskId);
         return taskRepository.findById(taskId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
@@ -227,11 +232,11 @@ public class TaskServiceImpl implements TaskService {
      * ищем его айди в репозитории, если находим, то возвращаем его. Если не найден, то
      * берем из задачи старого исполнителя.
      */
-    private Employee checkExecutor(TaskRequestDto taskRequestDto, Task oldTask) {
+    private Employee checkExecutor(RequestTaskDto requestTaskDto, Task oldTask) {
         log.info("Проверка исполнителя задач при обновлении задачи");
         Employee executor;
-        if (taskRequestDto.getExecutorId() != null) {
-            executor = employeeService.findById(taskRequestDto.getExecutorId());
+        if (requestTaskDto.getExecutorId() != null) {
+            executor = employeeService.findById(requestTaskDto.getExecutorId());
         } else {
             executor = oldTask.getExecutor();
         }
