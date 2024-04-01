@@ -32,7 +32,8 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Сохранение списка критериев оценок.
      */
     @Override
-    public List<Criteria> create(List<RequestCriteriaDto> requestCriteriaDtoList) {log.info("Сохранение списка критериев оценок");
+    public List<Criteria> create(List<RequestCriteriaDto> requestCriteriaDtoList) {
+        log.info("Сохранение списка критериев оценок");
         return criteriaRepository.saveAll(criteriaMapper.mapListToEntity(requestCriteriaDtoList));
     }
 
