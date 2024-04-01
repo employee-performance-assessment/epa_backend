@@ -30,4 +30,11 @@ public class Criteria {
      * Название оценки.
      */
     private String name;
+
+    /**
+     * Является ли дефолтным критерием
+     */
+    @JoinColumn(name = "is_default")
+    @Builder.Default
+    private Boolean isDefault = false;
 }
