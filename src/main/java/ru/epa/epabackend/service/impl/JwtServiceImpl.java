@@ -48,6 +48,7 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String extractUserName(String token) {
+        log.info("Извлечение логина из токена");
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -59,6 +60,7 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String generateToken(UserDetails userDetails) {
+        log.info("Генерация токена на основании данных пользователя");
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + tokenDuration.toMillis());
 
@@ -79,6 +81,7 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
+        log.info("Проверка срока токена");
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }

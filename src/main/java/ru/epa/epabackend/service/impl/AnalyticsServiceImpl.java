@@ -1,6 +1,7 @@
 package ru.epa.epabackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.util.List;
  *
  * @author Владислав Осипов
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnalyticsServiceImpl implements AnalyticsService {
@@ -38,6 +40,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Override
     @Transactional(readOnly = true)
     public TeamAnalytics getTeamStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+        log.info("Получение командной статистики для админа");
         int teamCompletedOnTime = 0;
         int teamDelayed = 0;
         List<Employee> leaders = new ArrayList<>();
@@ -78,6 +81,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Override
     @Transactional(readOnly = true)
     public List<IndividualAnalytics> getIndividualStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+        log.info("Получение индивидуальной статистики для админа");
         List<IndividualAnalytics> employeesShortDto = new ArrayList<>();
         List<Employee> employees = employeeService.findAllByCreatorEmail(email);
         for (Employee employee : employees) {
@@ -93,6 +97,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Override
     @Transactional(readOnly = true)
     public TeamAnalytics getTeamStats(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+        log.info("Получение командной статистики для сотрудника");
         Employee employee = employeeService.findByEmail(email);
         List<Task> tasks = taskRepository.findAllByOwnerIdAndFinishDateBetween(employee.getCreator().getId(),
                 rangeStart, rangeEnd);
@@ -114,6 +119,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Override
     @Transactional(readOnly = true)
     public IndividualAnalytics getIndividualStats(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+        log.info("Получение индивидуальной статистики для сотрудника");
         Employee employee = employeeService.findByEmail(email);
         return getIndividualStats(employee, rangeStart, rangeEnd);
     }
