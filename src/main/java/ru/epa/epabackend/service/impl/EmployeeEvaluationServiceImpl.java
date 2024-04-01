@@ -108,7 +108,8 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {log.info("Получение рейтинга сотрудника только от руководителя");
+    public ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {
+        log.info("Получение рейтинга сотрудника только от руководителя");
         return employeeEvaluationRepository.findRatingByAdmin(email, startDay, endDay);
     }
 }

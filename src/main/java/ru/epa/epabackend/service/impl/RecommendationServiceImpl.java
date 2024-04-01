@@ -2,6 +2,7 @@ package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
@@ -20,6 +21,7 @@ import java.util.List;
  *
  * @author Михаил Безуглов
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -35,6 +37,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public Recommendation create(RequestRecommendationDto requestRecommendationDto,
                                  String recipientEmail, String senderEmail) {
+        log.info("Сохранение рекомендации {}", requestRecommendationDto.getRecommendation());
         Employee recipient = employeeService.findByEmail(recipientEmail);
         Employee sender = employeeService.findByEmail(senderEmail);
         Recommendation recommendation = recommendationMapper.mapToEntity(requestRecommendationDto,
@@ -49,6 +52,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     @Transactional(readOnly = true)
     public Recommendation findById(Long recommendationId) {
+        log.info("Получение рекомендации идентификатору {}", recommendationId);
         return recommendationRepository.findById(recommendationId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Рекомендация с id %s не найдена",
                         recommendationId)));
@@ -60,6 +64,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     @Transactional(readOnly = true)
     public List<Recommendation> findAllByRecipientEmail(String recipientEmail) {
+        log.info("Получение списка рекомендаций для сотрудника с идентификатором {}", recipientEmail);
         return recommendationRepository.findAllByRecipientEmail(recipientEmail);
     }
 
@@ -69,6 +74,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     @Transactional(readOnly = true)
     public List<Recommendation> findAll() {
+        log.info("Получение всех рекомендаций");
         return recommendationRepository.findAll();
     }
 }
