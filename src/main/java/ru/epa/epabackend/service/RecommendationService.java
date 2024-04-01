@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.recommendation.RecommendationRequestDto;
+import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 import ru.epa.epabackend.model.Recommendation;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface RecommendationService {
     /**
      * Создание рекомендации.
      */
-    Recommendation create(RecommendationRequestDto recommendationRequestDto,
+    Recommendation create(RequestRecommendationDto requestRecommendationDto,
                           String recipientEmail, String senderEmail);
 
     /**

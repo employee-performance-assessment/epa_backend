@@ -9,12 +9,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.criteria.CriteriaRequestDto;
-import ru.epa.epabackend.dto.criteria.CriteriaResponseDto;
+import ru.epa.epabackend.dto.criteria.RequestCriteriaDto;
+import ru.epa.epabackend.dto.criteria.ResponseCriteriaDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.CriteriaMapper;
 import ru.epa.epabackend.model.Criteria;
@@ -46,7 +47,7 @@ public class AdminCriteriaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = CriteriaResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseCriteriaDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -57,8 +58,8 @@ public class AdminCriteriaController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public List<CriteriaResponseDto> save(@RequestBody List<CriteriaRequestDto> criteriaRequestDtoList) {
-        return criteriaMapper.mapList(criteriaService.create(criteriaRequestDtoList));
+    public List<ResponseCriteriaDto> save(@RequestBody List<@Valid RequestCriteriaDto> requestCriteriaDtoList) {
+        return criteriaMapper.mapList(criteriaService.create(requestCriteriaDtoList));
     }
 
     /**
@@ -70,7 +71,7 @@ public class AdminCriteriaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = CriteriaResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseCriteriaDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -78,7 +79,7 @@ public class AdminCriteriaController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<CriteriaResponseDto> findAll() {
+    public List<ResponseCriteriaDto> findAll() {
         return criteriaMapper.mapList(criteriaService.findAll());
     }
 
@@ -90,7 +91,7 @@ public class AdminCriteriaController {
                     "В случае, если критерия оценки не найдено, возвращает ошибку 404")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = CriteriaResponseDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseCriteriaDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -100,7 +101,7 @@ public class AdminCriteriaController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{criteriaId}")
-    public CriteriaResponseDto findById(@Parameter(required = true) @PathVariable Long criteriaId) {
+    public ResponseCriteriaDto findById(@Parameter(required = true) @PathVariable Long criteriaId) {
         return criteriaMapper.mapToDto(criteriaService.findById(criteriaId));
     }
 
@@ -111,7 +112,7 @@ public class AdminCriteriaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = CriteriaResponseDto.class)))),
+                    schema = @Schema(implementation = ResponseCriteriaDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -119,7 +120,7 @@ public class AdminCriteriaController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/default")
-    public List<CriteriaResponseDto> findDefault() {
+    public List<ResponseCriteriaDto> findDefault() {
         List<Criteria> criterias = criteriaService.findDefault();
         return criteriaMapper.mapList(criterias);
     }

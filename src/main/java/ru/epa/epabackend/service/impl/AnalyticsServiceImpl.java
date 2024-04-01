@@ -23,7 +23,6 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final TaskRepository taskRepository;

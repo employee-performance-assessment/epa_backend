@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
+import ru.epa.epabackend.dto.technology.RequestTechnologyDto;
 import ru.epa.epabackend.mapper.TechnologyMapper;
 import ru.epa.epabackend.model.Technology;
 import ru.epa.epabackend.repository.TechnologyRepository;
@@ -31,7 +31,7 @@ public class TechnologyUnitTests {
     @InjectMocks
     private TechnologyServiceImpl technologyService;
     private Technology technology;
-    private TechnologyRequestDto technologyRequestDto;
+    private RequestTechnologyDto requestTechnologyDto;
 
     @BeforeEach
     public void unit() {
@@ -39,7 +39,7 @@ public class TechnologyUnitTests {
                 .id(ID_1)
                 .name("technology")
                 .build();
-        technologyRequestDto = TechnologyRequestDto.builder()
+        requestTechnologyDto = RequestTechnologyDto.builder()
                 .name("technologyRequestDto")
                 .build();
     }
@@ -48,8 +48,8 @@ public class TechnologyUnitTests {
     @DisplayName("Создание технологии с вызовом репозитория")
     void shouldCreateTechnologyWhenCallRepository() {
         when(technologyRepository.save(technology)).thenReturn(technology);
-        when(technologyMapper.mapToEntity(technologyRequestDto)).thenReturn(technology);
-        Technology technologyResult = technologyService.create(technologyRequestDto);
+        when(technologyMapper.mapToEntity(requestTechnologyDto)).thenReturn(technology);
+        Technology technologyResult = technologyService.create(requestTechnologyDto);
         int expectedId = 1;
         assertNotNull(technologyResult);
         assertEquals(expectedId, technologyResult.getId());
@@ -61,7 +61,7 @@ public class TechnologyUnitTests {
     void shouldUpdateTechnologyWhenCallRepository() {
         when(technologyRepository.findById(ID_1)).thenReturn(Optional.ofNullable(technology));
         when(technologyRepository.save(technology)).thenReturn(technology);
-        Technology technologyResult = technologyService.update(technologyRequestDto, ID_1);
+        Technology technologyResult = technologyService.update(requestTechnologyDto, ID_1);
         int expectedId = 1;
         assertNotNull(technologyResult);
         assertEquals(expectedId, technologyResult.getId());

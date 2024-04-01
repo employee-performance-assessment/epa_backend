@@ -1,8 +1,8 @@
 package ru.epa.epabackend.mapper;
 
 import org.mapstruct.*;
-import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
-import ru.epa.epabackend.dto.technology.TechnologyResponseDto;
+import ru.epa.epabackend.dto.technology.RequestTechnologyDto;
+import ru.epa.epabackend.dto.technology.ResponseTechnologyDto;
 import ru.epa.epabackend.model.Technology;
 
 import java.util.List;
@@ -18,19 +18,19 @@ public interface TechnologyMapper {
     /**
      * Преобразование из сущности в DTO.
      */
-    TechnologyResponseDto mapToDto(Technology technology);
+    ResponseTechnologyDto mapToDto(Technology technology);
 
     /**
      * Преобразование из DTO в сущность.
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "employees", ignore = true)
-    Technology mapToEntity(TechnologyRequestDto technologyDto);
+    Technology mapToEntity(RequestTechnologyDto requestTechnologyDto);
 
-    List<TechnologyResponseDto> mapList(List<Technology> technologies);
+    List<ResponseTechnologyDto> mapList(List<Technology> technologies);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "employees", ignore = true)
-    Technology updateFields(TechnologyRequestDto technologyDto, @MappingTarget Technology oldTechnology);
+    Technology updateFields(RequestTechnologyDto requestTechnologyDto, @MappingTarget Technology oldTechnology);
 }

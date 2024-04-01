@@ -1,6 +1,6 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.technology.TechnologyRequestDto;
+import ru.epa.epabackend.dto.technology.RequestTechnologyDto;
 import ru.epa.epabackend.model.Technology;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface TechnologyService {
     /**
      * Добавление технологии.
      */
-    Technology create(TechnologyRequestDto technologyDto);
+    Technology create(RequestTechnologyDto technologyDto);
 
     /**
      * Получение технологии по идентификатору.
@@ -25,7 +25,7 @@ public interface TechnologyService {
     /**
      * Обновление технологии.
      */
-    Technology update(TechnologyRequestDto technologyDto, Long technologyId);
+    Technology update(RequestTechnologyDto technologyDto, Long technologyId);
 
     /**
      * Получение списка всех технологий.
