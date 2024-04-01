@@ -1,6 +1,6 @@
 drop TABLE IF EXISTS projects, employees, tasks, technologies, tasks_technologies, employees_technologies, subtasks,
     employees_tasks, courses, courses_technologies, employees_courses, projects_tasks, projects_employees,
-    criteria, employee_evaluations, questionnaires, questionnaires_criterias, recommendations CASCADE;
+    criteria, employee_evaluation, questionnaires, questionnaires_criterias, recommendations CASCADE;
 
 CREATE TABLE IF NOT EXISTS projects
 (
