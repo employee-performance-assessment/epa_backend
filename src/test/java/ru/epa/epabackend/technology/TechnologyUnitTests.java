@@ -97,7 +97,7 @@ public class TechnologyUnitTests {
 
     @Test
     @DisplayName("Удаление технологии")
-    void shouldDeleteTechnologyWhen() {
+    void shouldDeleteTechnologyWhenCallRepository() {
         when(technologyRepository.existsById(any())).thenReturn(true);
         technologyService.delete(ID_1);
         verify(technologyRepository, times(1)).existsById(ID_1);
