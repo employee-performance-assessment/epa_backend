@@ -3517,6 +3517,813 @@
 			]
 		},
 		{
+			"name": "Evaluations",
+			"item": [
+				{
+					"name": "AllCriteria initially are default",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 11 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(11);\r",
+									"});\r",
+									"pm.test(\"Check if all criteria have isDefault set to true\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var allIsDefaultTrue = jsonData.every(function (item) {\r",
+									"        return item.isDefault === true;\r",
+									"    });\r",
+									"    pm.expect(allIsDefaultTrue).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"name\":\"Танцы\"\r\n    },\r\n    {\r\n        \"name\":\"Пенее\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllCriteria is not Default",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"The response body contains a list of more than 11 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.length.above(11);\r",
+									"});\r",
+									"pm.test(\"Check if all criteria have isDefault set to true\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var allIsDefaultTrue = jsonData.every(function (item) {\r",
+									"        return item.isDefault === true;\r",
+									"    });\r",
+									"    pm.expect(allIsDefaultTrue).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[    \r\n    {\r\n        \"name\":\"Пустая болтовня\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token E7",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token E6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n    \"criteriaId\": 2,\r\n    \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 2\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar 3",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n{\r\n  \"criteriaId\": 1,\r\n  \"score\": 1\r\n}\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token A2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluationStar Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token E5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserEvaluationStarForUsers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserEvaluationStarForAdmin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token A2 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllCriteria",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllEvaluations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluations/users?email=obj@yahoo.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluations",
+								"users"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "obj@yahoo.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EvaluationsAdmin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluations?email=obj@yahoo.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "obj@yahoo.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FullRating",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/rating/full?startDay=2024-03-20&endDay=2024-03-30&email=obj@yahoo.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"rating",
+								"full"
+							],
+							"query": [
+								{
+									"key": "startDay",
+									"value": "2024-03-20"
+								},
+								{
+									"key": "endDay",
+									"value": "2024-03-30"
+								},
+								{
+									"key": "email",
+									"value": "obj@yahoo.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rating",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/rating?email=obj@yahoo.com&startDay=2024-03-20&endDay=2024-03-30",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"rating"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "obj@yahoo.com"
+								},
+								{
+									"key": "startDay",
+									"value": "2024-03-20"
+								},
+								{
+									"key": "endDay",
+									"value": "2024-03-30"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recommendation",
+			"item": [
+				{
+					"name": "add recommendation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recommendation\" : \"Для успешного выполнения задач важно правильно организовать рабочее пространство и время. Попробуйте метод помидора - ставьте таймер на 25 минут, в течение которых работайте интенсивно, полностью погружаясь в задачу, а затем делайте 5-минутный перерыв. Такой подход поможет вам оставаться продуктивным, не переутомляясь.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation?email=obj@yahoo.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "obj@yahoo.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add recommendation 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recommendation\" : \"Твоя работа действительно впечатляет. Ты очень ответственный и талантливый сотрудник.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation?email=mail2@mail.ru",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "mail2@mail.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RecommendationByRecipientId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"Я заметил, что в последнее время ты допускаешь ошибки из-за своей невнимательности. Мне бы хотелось помочь тебе стать внимательнее и аккуратнее. Возможно, тебе стоит попробовать использовать техники для улучшения концентрации, такие как медитация или глубокое дыхание. Также не забывай делать перерывы во время работы, чтобы избежать переутомления.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation?email=obj@yahoo.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "obj@yahoo.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RecommendationAll",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"Я заметил, что в последнее время ты допускаешь ошибки из-за своей невнимательности. Мне бы хотелось помочь тебе стать внимательнее и аккуратнее. Возможно, тебе стоит попробовать использовать техники для улучшения концентрации, такие как медитация или глубокое дыхание. Также не забывай делать перерывы во время работы, чтобы избежать переутомления.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/recommendation/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"recommendation",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Questionnaire",
 			"item": [
 				{
@@ -4516,760 +5323,6 @@
 							"path": [
 								"public",
 								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "check is passed day after share questionnaire. False",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Id of questionnaire is 1\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.be.false;\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/questionnaire/is-day-passed",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"questionnaire",
-								"is-day-passed"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Evaluations",
-			"item": [
-				{
-					"name": "add evaluation 1",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"name\":\"Танцы\"\r\n    },\r\n    {\r\n        \"name\":\"Пенее\"\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/criteria",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"criteria"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add evaluation 2",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[    \r\n    {\r\n        \"name\":\"Пустая болтовня\"\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/criteria",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"criteria"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save token E7",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/public/auth",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"public",
-								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add evaluationStar 1",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 5\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save token E6",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/public/auth",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"public",
-								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add evaluationStar 2",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n    \"criteriaId\": 2,\r\n    \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 2\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add evaluationStar 3",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n{\r\n  \"criteriaId\": 1,\r\n  \"score\": 1\r\n}\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save token A2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/public/auth",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"public",
-								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add evaluationStar Admin",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"criteriaId\": 1,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 2,\r\n        \"score\": 4\r\n    },\r\n    {\r\n        \"criteriaId\": 3,\r\n        \"score\": 5\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations?evaluatedId=5",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "evaluatedId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save token E5",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n   \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/public/auth",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"public",
-								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UserEvaluationStarForUsers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"evaluations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UserEvaluationStarForAdmin",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/user/evaluations/admin",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"evaluations",
-								"admin"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save token A2 Copy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/public/auth",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"public",
-								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AllCriteria",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/criteria",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"criteria"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AllEvaluations",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/evaluations/users?email=obj@yahoo.com",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"evaluations",
-								"users"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "obj@yahoo.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "EvaluationsAdmin",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/evaluations?email=obj@yahoo.com",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"evaluations"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "obj@yahoo.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "FullRating",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/rating/full?startDay=2024-03-20&endDay=2024-03-30&email=obj@yahoo.com",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"rating",
-								"full"
-							],
-							"query": [
-								{
-									"key": "startDay",
-									"value": "2024-03-20"
-								},
-								{
-									"key": "endDay",
-									"value": "2024-03-30"
-								},
-								{
-									"key": "email",
-									"value": "obj@yahoo.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Rating",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/rating?email=obj@yahoo.com&startDay=2024-03-20&endDay=2024-03-30",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"rating"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "obj@yahoo.com"
-								},
-								{
-									"key": "startDay",
-									"value": "2024-03-20"
-								},
-								{
-									"key": "endDay",
-									"value": "2024-03-30"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Recommendation",
-			"item": [
-				{
-					"name": "add recommendation",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"recommendation\" : \"Для успешного выполнения задач важно правильно организовать рабочее пространство и время. Попробуйте метод помидора - ставьте таймер на 25 минут, в течение которых работайте интенсивно, полностью погружаясь в задачу, а затем делайте 5-минутный перерыв. Такой подход поможет вам оставаться продуктивным, не переутомляясь.\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/recommendation?email=obj@yahoo.com",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"recommendation"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "obj@yahoo.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add recommendation 2",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"recommendation\" : \"Твоя работа действительно впечатляет. Ты очень ответственный и талантливый сотрудник.\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/recommendation?email=mail2@mail.ru",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"recommendation"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "mail2@mail.ru"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RecommendationByRecipientId",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"description\" : \"Я заметил, что в последнее время ты допускаешь ошибки из-за своей невнимательности. Мне бы хотелось помочь тебе стать внимательнее и аккуратнее. Возможно, тебе стоит попробовать использовать техники для улучшения концентрации, такие как медитация или глубокое дыхание. Также не забывай делать перерывы во время работы, чтобы избежать переутомления.\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/recommendation?email=obj@yahoo.com",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"recommendation"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "obj@yahoo.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RecommendationAll",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"description\" : \"Я заметил, что в последнее время ты допускаешь ошибки из-за своей невнимательности. Мне бы хотелось помочь тебе стать внимательнее и аккуратнее. Возможно, тебе стоит попробовать использовать техники для улучшения концентрации, такие как медитация или глубокое дыхание. Также не забывай делать перерывы во время работы, чтобы избежать переутомления.\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/recommendation/all",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"recommendation",
-								"all"
 							]
 						}
 					},
