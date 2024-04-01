@@ -1,8 +1,11 @@
 package ru.epa.epabackend.dto.criteria;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_WHITESPACE_AND_DASH;
 
 /**
  * Класс EvaluationRequestDto для передачи тела запроса на сервер для создания критерия оценки.
@@ -20,7 +23,8 @@ public class RequestCriteriaDto {
     /**
      * Название критерия оценки.
      */
-    @NotBlank
-    @Size(min = 2, max = 250)
+    @NotBlank()
+    @Size(min = 1, max = 100)
+    @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH)
     private String name;
 }
