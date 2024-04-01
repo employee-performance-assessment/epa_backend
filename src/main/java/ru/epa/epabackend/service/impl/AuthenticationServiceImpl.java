@@ -1,6 +1,7 @@
 package ru.epa.epabackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import ru.epa.epabackend.service.JwtService;
 /**
  * Сервис для генерации JWT токена
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -31,6 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional(readOnly = true)
     public ResponseJwt getToken(RequestJwt requestJwt) {
+        log.info("Получение JWT токена по запросу");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestJwt.getEmail(), requestJwt.getPassword()));
         UserDetails userDetails = employeeService.findByEmail(requestJwt.getEmail());
         return new ResponseJwt(jwtService.generateToken(userDetails));

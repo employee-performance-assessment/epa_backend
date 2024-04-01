@@ -1,6 +1,7 @@
 package ru.epa.epabackend.dto.questionnaire;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,8 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @AllArgsConstructor
 @Builder
 public class RequestQuestionnaireDto {
+    @Positive
+    private long id;
 
     @NotEmpty(message = "Должен быть заполнен хотя бы 1 критерий", groups = {Create.class, Update.class})
     private List<RequestCriteriaDto> criterias;
