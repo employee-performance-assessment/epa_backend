@@ -7,9 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.model.Recommendation;
 import ru.epa.epabackend.repository.RecommendationRepository;
 import ru.epa.epabackend.service.EmployeeService;
+import ru.epa.epabackend.service.QuestionnaireService;
 import ru.epa.epabackend.service.RecommendationService;
 
 import java.time.LocalDate;
@@ -28,16 +30,18 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final RecommendationRepository recommendationRepository;
     private final RecommendationMapper recommendationMapper;
     private final EmployeeService employeeService;
+    private final QuestionnaireService questionnaireService;
 
     /**
      * Сохранение рекомендации.
      */
     @Override
-    public Recommendation create(RequestRecommendationDto requestRecommendationDto,
+    public Recommendation create(RequestRecommendationDto requestRecommendationDto, Long questionnaireId,
                                  String recipientEmail, String senderEmail) {
         Employee recipient = employeeService.findByEmail(recipientEmail);
         Employee sender = employeeService.findByEmail(senderEmail);
-        Recommendation recommendation = recommendationMapper.mapToEntity(requestRecommendationDto,
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
+        Recommendation recommendation = recommendationMapper.mapToEntity(requestRecommendationDto, questionnaire,
                 recipient, sender);
         recommendation.setCreateDay(LocalDate.now());
         return recommendationRepository.save(recommendation);

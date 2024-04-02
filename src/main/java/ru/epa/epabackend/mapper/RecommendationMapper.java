@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 import ru.epa.epabackend.dto.recommendation.ResponseRecommendationDto;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.model.Recommendation;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author Михаил Безуглов
  */
-@Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
+@Mapper(componentModel = "spring", uses = {EmployeeMapper.class, QuestionnaireMapper.class})
 public interface RecommendationMapper {
 
     /**
@@ -26,7 +27,7 @@ public interface RecommendationMapper {
      * Преобразование из DTO в сущность.
      */
     @Mapping(target = "id", ignore = true)
-    Recommendation mapToEntity(RequestRecommendationDto requestRecommendationDto,
+    Recommendation mapToEntity(RequestRecommendationDto requestRecommendationDto, Questionnaire questionnaire,
                                Employee recipient, Employee sender);
 
     /**

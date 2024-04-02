@@ -15,7 +15,7 @@ public interface RecommendationService {
     /**
      * Создание рекомендации.
      */
-    Recommendation create(RequestRecommendationDto requestRecommendationDto,
+    Recommendation create(RequestRecommendationDto requestRecommendationDto, Long questionnaireId,
                           String recipientEmail, String senderEmail);
 
     /**

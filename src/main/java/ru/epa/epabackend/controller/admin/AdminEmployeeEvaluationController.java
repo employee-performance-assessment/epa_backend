@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponsePersonalRatingDto;
 import ru.epa.epabackend.dto.evaluation.ResponseRatingDto;
+import ru.epa.epabackend.dto.evaluation.ResponseRatingFullDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -110,7 +113,7 @@ public class AdminEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения сотрудником всех оценок руководителя о себе.
+     * Эндпойнт получения всех оценок руководителя о сотруднике.
      */
     @Operation(summary = "Получение оценок руководителя для сотрудника",
             description = "Возвращает список оценок руководителя о сотруднике" +
@@ -129,5 +132,45 @@ public class AdminEmployeeEvaluationController {
     public List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdminByEvaluatedEmail(
             @RequestParam(required = true) String email) {
         return employeeEvaluationService.findAllEvaluationsAdmin(email);
+    }
+
+    /**
+     * Эндпойнт получения командного рейтинга.
+     */
+    @Operation(summary = "Получение командного рейтинга",
+            description = "Возвращает список рейтинга команды за каждый оцененный месяц" +
+                    "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/rating/command")
+    public List<ResponseRatingFullDto> findCommandRating(Principal principal) {
+        return employeeEvaluationService.findCommandRatingForAdmin(principal.getName());
+    }
+
+    /**
+     * Эндпойнт получения персонального рейтинга каждого сотрудника за каждый месяц.
+     */
+    @Operation(summary = "получения персонального рейтинга каждого сотрудника за каждый месяц",
+            description = "Возвращает список личных рейтингов каждого сотрудника" +
+                    "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/rating/personal")
+    public List<ResponsePersonalRatingDto> findPersonalRating(Principal principal) {
+        return employeeEvaluationService.findPersonalRatingAdmin(principal.getName());
     }
 }

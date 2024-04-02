@@ -57,9 +57,10 @@ public class AdminRecommendationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseRecommendationDto save(Principal principal, @RequestParam(required = true) String email,
+    public ResponseRecommendationDto save(Principal principal, @RequestParam Long questionnaireId,
+                                          @RequestParam(required = true) String email,
                                           @RequestBody RequestRecommendationDto requestRecommendationDto) {
-        Recommendation recommendation = recommendationService.create(requestRecommendationDto,
+        Recommendation recommendation = recommendationService.create(requestRecommendationDto, questionnaireId,
                 email, principal.getName());
         return recommendationMapper.mapToDto(recommendation);
     }
