@@ -129,9 +129,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAllByExecutorIdFilters(String status, Principal principal) {
-        log.info("Получение списка всех задач пользователя с идентификатором {} с указанным статусом {} задач",
-                principal, status);
         Employee employee = employeeService.findByEmail(principal.getName());
+        log.info("Получение списка всех задач пользователя с идентификатором {} с указанным статусом {} задач",
+                employee.getId(), status);
         try {
             return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
