@@ -23,5 +23,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByOwnerIdAndFinishDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
 
+    List<Task> findAllByOwnerEmailAndFinishDateBetween(String email, LocalDate startDate, LocalDate endDate);
+
     List<Task> findAllByExecutorIdAndFinishDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
 }

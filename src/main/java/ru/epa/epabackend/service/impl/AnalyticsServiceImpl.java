@@ -16,6 +16,8 @@ import ru.epa.epabackend.service.EmployeeService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Класс AnalyticServiceImpl содержит методы для аналитики задач и оценок.
@@ -45,18 +47,19 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         int teamDelayed = 0;
         List<Employee> leaders = new ArrayList<>();
         List<Employee> deadlineViolators = new ArrayList<>();
-        List<Employee> employees = employeeService.findAllByCreatorEmail(email);
-        for (Employee employee : employees) {
-            List<Task> tasks = taskRepository
-                    .findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
+        List<Task> allTasks = taskRepository.findAllByOwnerEmailAndFinishDateBetween(email, rangeStart, rangeEnd);
+        Map<Employee, List<Task>> employeeTasks = allTasks.stream().collect(Collectors.groupingBy(Task::getExecutor));
+
+        for (Map.Entry<Employee, List<Task>> entry : employeeTasks.entrySet()) {
+            List<Task> tasks = entry.getValue();
             int delayed = countDelayedTasks(tasks);
             int completedOnTime = tasks.size() - delayed;
             if (!tasks.isEmpty()) {
                 if (calcPercent(completedOnTime, tasks.size()) > leaderThresHold) {
-                    leaders.add(employee);
+                    leaders.add(entry.getKey());
                 }
                 if (calcPercent(delayed, tasks.size()) > violatorThresHold) {
-                    deadlineViolators.add(employee);
+                    deadlineViolators.add(entry.getKey());
                 }
                 teamCompletedOnTime += completedOnTime;
                 teamDelayed += delayed;
