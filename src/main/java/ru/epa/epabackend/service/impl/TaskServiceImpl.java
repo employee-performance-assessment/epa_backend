@@ -21,7 +21,7 @@ import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -199,8 +199,7 @@ public class TaskServiceImpl implements TaskService {
      */
     private void setPointsToEmployeeAfterTaskDone(Task task) {
         log.info("Проставление очков после того как задача {} выполнена", task);
-        Period period = Period.between(LocalDate.now(), task.getDeadLine());
-        Integer days = period.getDays();
+        Integer days = Math.toIntExact(ChronoUnit.DAYS.between(LocalDate.now(), task.getDeadLine()));
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
