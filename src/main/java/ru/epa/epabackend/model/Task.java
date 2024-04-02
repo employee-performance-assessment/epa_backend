@@ -123,7 +123,6 @@ public class Task {
         return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", executor=" + executor +
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +
                 ", status=" + status +
