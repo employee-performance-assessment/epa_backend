@@ -2,6 +2,7 @@ package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
@@ -25,6 +26,7 @@ import java.util.List;
  *
  * @author Михаил Безуглов
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -42,6 +44,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public List<EmployeeEvaluation> create(String email,
                                            Long evaluatedId,
                                            List<RequestEmployeeEvaluationDto> evaluationRequestDtoList) {
+        log.info("Сохранение оценки");
         Employee evaluated = employeeService.findById(evaluatedId);
         Employee evaluator = employeeService.findByEmail(email);
 
@@ -63,6 +66,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     @Transactional(readOnly = true)
     public EmployeeEvaluation findById(Long evaluationEvaluationId) {
+        log.info("Получение оценки по идентификатору {}", evaluationEvaluationId);
         return employeeEvaluationRepository
                 .findById(evaluationEvaluationId).orElseThrow(() ->
                         new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
@@ -75,6 +79,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     @Transactional(readOnly = true)
     public List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(String email) {
+        log.info("Получение списка оценок по идентификатору сотрудника");
         return employeeEvaluationRepository.findAllEvaluationsUsers(email);
     }
 
@@ -84,6 +89,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     @Transactional(readOnly = true)
     public List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(String email) {
+        log.info("Получение списка своих оценок от руководителя по своему email");
         return employeeEvaluationRepository.findAllEvaluationsAdmin(email);
     }
 
@@ -93,6 +99,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     @Transactional(readOnly = true)
     public ResponseRatingDto findFullRating(String email, LocalDate startDay, LocalDate endDay) {
+        log.info("Получение рейтинга сотрудника от всего коллектива");
         return employeeEvaluationRepository.findFullRating(email, startDay, endDay);
     }
 
@@ -102,6 +109,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     @Transactional(readOnly = true)
     public ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {
+        log.info("Получение рейтинга сотрудника только от руководителя");
         return employeeEvaluationRepository.findRatingByAdmin(email, startDay, endDay);
     }
 }
