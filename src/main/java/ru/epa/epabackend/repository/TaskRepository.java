@@ -1,7 +1,6 @@
 package ru.epa.epabackend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -14,11 +13,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByProjectIdAndStatus(Long projectId, TaskStatus status);
 
-    @Query("SELECT t " +
-            "FROM Task t " +
-            "WHERE (NULLIF((:status), NULL) IS NULL OR t.status = :status)" +
-            "AND t.executor.id = :employeeId ")
-    List<Task> findAllByExecutorIdFilters(Long employeeId, TaskStatus status);
+    List<Task> findAllByExecutorIdAndStatus(Long employeeId, TaskStatus status);
+
+    List<Task> findAllByExecutorId(Long employeeId);
 
     List<Task> findAllByOwnerEmail(String email);
 
