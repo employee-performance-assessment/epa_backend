@@ -57,9 +57,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             if (!tasks.isEmpty()) {
                 if (calcPercent(completedOnTime, tasks.size()) > leaderThresHold) {
                     leaders.add(entry.getKey());
-                }
-                if (calcPercent(delayed, tasks.size()) > violatorThresHold) {
-                    deadlineViolators.add(entry.getKey());
+                } else {
+                    if (calcPercent(delayed, tasks.size()) > violatorThresHold) {
+                        deadlineViolators.add(entry.getKey());
+                    }
                 }
                 teamCompletedOnTime += completedOnTime;
                 teamDelayed += delayed;
@@ -104,13 +105,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         int teamDelayed = countDelayedTasks(tasks);
         int teamCompletedOnTime = tasks.size() - teamDelayed;
         int totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
-        if (totalNumbersOfTaskOfTeamCompleted != 0) {
-            return TeamAnalytics.builder()
-                    .completedOnTimePercent(calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
-                    .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
-                    .build();
-        }
-        return new TeamAnalytics();
+        return TeamAnalytics.builder()
+                .completedOnTimePercent(calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
+                .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
+                .build();
     }
 
     /**
