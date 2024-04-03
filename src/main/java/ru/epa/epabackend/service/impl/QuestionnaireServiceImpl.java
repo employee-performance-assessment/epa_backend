@@ -199,7 +199,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public Questionnaire updateLastWithDefault(String email) {
         Questionnaire questionnaire = findLastByAuthorEmail(email);
-        questionnaire.setCriterias(new ArrayList<>(criteriaService.findDefault()));
+        questionnaire.setCriterias(criteriaService.findDefault());
         questionnaire.setCreated(LocalDate.now());
         return questionnaireRepository.save(questionnaire);
     }
