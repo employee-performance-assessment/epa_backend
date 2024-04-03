@@ -3,6 +3,7 @@ package ru.epa.epabackend.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -148,6 +149,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     public List<Employee> findAllByCreatorEmail(String email) {
         log.info("Получение всех сотрудников для одного админа {}", email);
-        return employeeRepository.findAllByCreatorEmail(email);
+        return employeeRepository.findAllByCreatorEmail(email, Sort.by(Sort.Direction.ASC, "id"));
     }
 }
