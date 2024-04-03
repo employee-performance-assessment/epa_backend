@@ -3,6 +3,7 @@ package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.task.RequestTaskDto;
@@ -28,6 +29,7 @@ import java.util.List;
  *
  * @author Владислав Осипов
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -45,6 +47,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAll(String email) {
+        log.info("Получение списка всех задач админом");
         return taskRepository.findAllByOwnerEmail(email);
     }
 
@@ -54,6 +57,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public Task findDtoById(Long taskId, String email) {
+        log.info("Найти задачу с идентификатором {} по ID админом", taskId);
         Task task = findById(taskId);
         Project project = task.getProject();
         Employee admin = employeeService.findByEmail(email);
@@ -66,6 +70,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public Task create(RequestTaskDto requestTaskDto, String email) {
+        log.info("Создание задачи {} админом", requestTaskDto.getName());
         Project project = projectService.findById(requestTaskDto.getProjectId());
         Employee executor = employeeService.findById(requestTaskDto.getExecutorId());
         Employee admin = employeeService.findByEmail(email);
@@ -79,6 +84,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public Task update(Long taskId, RequestTaskDto requestTaskDto, String email) {
+        log.info("Обновление задачи с идентификатором {} админом", taskId);
         Task oldTask = findById(taskId);
         Project project = oldTask.getProject();
         Employee admin = employeeService.findByEmail(email);
@@ -97,6 +103,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public void delete(Long taskId, String email) {
+        log.info("Удаление задачи с идентификатором {} админом", taskId);
         Task task = findById(taskId);
         Project project = task.getProject();
         Employee admin = employeeService.findByEmail(email);
@@ -110,6 +117,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+        log.info("Получение списка задач проекта с идентификатором {} с определенным статусом {} задач",
+                projectId, status);
         projectService.findById(projectId);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status);
     }
@@ -120,6 +129,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAllByExecutorIdFilters(String status, Principal principal) {
+        log.info("Получение списка всех задач пользователя с идентификатором {} с указанным статусом {} задач",
+                principal, status);
         Employee employee = employeeService.findByEmail(principal.getName());
         try {
             return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status));
@@ -134,6 +145,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAllByEmployeeId(Long employeeId, String email) {
+        log.info("Получение списка всех задач пользователя с идентификатором {} администратором" +
+                " указанным статусом задач", employeeId);
         return taskRepository.findAllByOwnerEmailAndExecutorId(email, employeeId);
     }
 
@@ -143,6 +156,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public Task findByIdAndExecutorId(Principal principal, Long taskId) {
+        log.info("Найти задачу с идентификатором {} ", taskId);
         Employee employee = employeeService.findByEmail(principal.getName());
         return findByIdAndExecutorId(taskId, employee.getId());
     }
@@ -152,6 +166,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public Task updateStatus(Long taskId, String status, Principal principal) {
+        log.info("Обновление статуса задачи с идентификатором {}", taskId);
         Employee employee = employeeService.findByEmail(principal.getName());
         try {
             TaskStatus taskStatus = getTaskStatus(status);
@@ -172,6 +187,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public Task findByIdAndExecutorId(Long taskId, Long employeeId) {
+        log.info("Получение задачи из репозитория по идентификатору задачи {} " +
+                "и по идентификатору исполнителя {}", taskId, employeeId);
         return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s и исполнителем с id %s не найдена",
                         taskId, employeeId)));
@@ -181,6 +198,7 @@ public class TaskServiceImpl implements TaskService {
      * Проставление очков после того как задача выполнена
      */
     private void setPointsToEmployeeAfterTaskDone(Task task) {
+        log.info("Проставление очков после того как задача {} выполнена", task);
         Period period = Period.between(LocalDate.now(), task.getDeadLine());
         Integer days = period.getDays();
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
@@ -190,6 +208,7 @@ public class TaskServiceImpl implements TaskService {
      * Получение корректного статуса задачи
      */
     private TaskStatus getTaskStatus(String status) {
+        log.info("Получение корректного статуса задачи");
         TaskStatus taskStatus = null;
         if (status != null) {
             taskStatus = EnumUtils.getEnum(TaskStatus.class, status);
@@ -203,6 +222,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     public Task findById(Long taskId) {
+        log.info("Получение задачи из репозитория по идентификатору {}", taskId);
         return taskRepository.findById(taskId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
     }
@@ -213,6 +233,7 @@ public class TaskServiceImpl implements TaskService {
      * берем из задачи старого исполнителя.
      */
     private Employee checkExecutor(RequestTaskDto requestTaskDto, Task oldTask) {
+        log.info("Проверка исполнителя задач при обновлении задачи");
         Employee executor;
         if (requestTaskDto.getExecutorId() != null) {
             executor = employeeService.findById(requestTaskDto.getExecutorId());
