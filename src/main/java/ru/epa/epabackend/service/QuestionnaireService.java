@@ -26,4 +26,6 @@ public interface QuestionnaireService {
     List<Questionnaire> findAllByAuthorIdAndStatus(String email, QuestionnaireStatus status);
 
     boolean isDayPassedAfterShareQuestionnaire(String email);
+
+    Questionnaire updateLastWithDefault(String email);
 }

@@ -195,4 +195,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Questionnaire questionnaire = lastQuestionnaire.get();
         return questionnaire.getCreated().isBefore(LocalDate.now());
     }
+
+    @Override
+    public Questionnaire updateLastWithDefault(String email) {
+        Questionnaire questionnaire = findLastByAuthorEmail(email);
+        questionnaire.setCriterias(new ArrayList<>(criteriaService.findDefault()));
+        questionnaire.setCreated(LocalDate.now());
+        return questionnaireRepository.save(questionnaire);
+    }
 }
