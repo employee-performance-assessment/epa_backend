@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
-import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
