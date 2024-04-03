@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
-import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
@@ -92,13 +91,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         log.info("Обновление анкеты");
 
-        long questionnaireId = requestQuestionnaireDto.getId();
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
         if (lastQuestionnaire.isEmpty()) {
             throw new BadRequestException("Необходимо создать заранее анкету для возможности редактирования");
-        } else if (questionnaireId != lastQuestionnaire.get().getId()) {
-            throw new ConflictException(String.format("Передаваемая анкета с id %d не совпадает с id последней анкеты " +
-                    "%d", questionnaireId, lastQuestionnaire.get().getId()));
         } else if (QuestionnaireStatus.SHARED.equals(lastQuestionnaire.get().getStatus())) {
             throw new BadRequestException("Невозможно обновить анкету со статусом SHARED. Воспользуйтесь " +
                     "получением последней анкеты со статусом CREATED.");
