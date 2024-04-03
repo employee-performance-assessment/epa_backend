@@ -41,9 +41,9 @@ public class UserTaskController {
     private final TaskMapper taskMapper;
 
     /**
-     * Эндпойнт поиска всех задач по ID сотрудника с возможной фильтрацией по статусу задачи.
+     * Эндпойнт поиска всех задач по email сотрудника с возможной фильтрацией по статусу задачи.
      */
-    @Operation(summary = "Получение всех задач по ID сотрудника с возможной фильрацией по статусу задачи",
+    @Operation(summary = "Получение всех задач по email сотрудника с возможной фильрацией по статусу задачи",
             description = "Возвращает список задач в сокращенном виде в случае, " +
                     "если не найдено ни одной задачи, возвращает пустой список.")
     @ApiResponses(value = {
@@ -57,14 +57,19 @@ public class UserTaskController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<ResponseTaskShortDto> findAllByEmployeeId(Principal principal,
-                                                          @RequestParam(required = false) String status) {
-        List<Task> allByExecutorIdFilters = taskService.findAllByExecutorId(status, principal);
-        return taskMapper.mapList(allByExecutorIdFilters);
+    public List<ResponseTaskShortDto> findAllByEmployeeEmailAndStatus(Principal principal,
+                                                                      @RequestParam(required = false) String status) {
+        List<Task> allByExecutor;
+        if (status == null) {
+            allByExecutor = taskService.findAllByExecutorEmail(principal);
+        } else {
+            allByExecutor = taskService.findAllByExecutorEmailAndStatus(status, principal);
+        }
+        return taskMapper.mapList(allByExecutor);
     }
 
     /**
-     * Эндпойнт поиска задачи по ID сотрудника и ID задачи.
+     * Эндпойнт поиска задачи по email сотрудника и ID задачи.
      */
     @Operation(summary = "Получение информации о задаче сотрудником",
             description = "Возвращает полную информацию о задаче, если она существует в базе данных.")
@@ -80,16 +85,19 @@ public class UserTaskController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{taskId}")
-    public ResponseTaskFullDto findById(
+    public ResponseTaskFullDto findByIdAndExecutorEmail(
             @Parameter(required = true) @PathVariable Long taskId,
             Principal principal) {
-        return taskMapper.mapToFullDto(taskService.findByIdAndExecutorId(principal, taskId));
+        return taskMapper.mapToFullDto(taskService.findByIdAndExecutorEmail(principal, taskId));
     }
 
     /**
      * Эндпойнт обновления статуса задачи.
      */
-    @Operation(summary = "Обновление статуса выполнения задачи сотрудником")
+    @Operation(summary = "Обновление статуса выполнения задачи сотрудником, возможные статусы задач :" +
+            " Новая задача NEW, Задача над которой ведется работа IN_PROGRESS," +
+            " Задача на проверке у руководителя REVIEW , Задача выполнена DONE," +
+            " Задача отменена или заморожена на неопределенный срок CANCELED")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTaskFullDto.class))),

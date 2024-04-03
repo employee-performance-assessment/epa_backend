@@ -124,18 +124,25 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * Получение списка всех задач пользователя
+     */
+    @Transactional(readOnly = true)
+    public List<Task> findAllByExecutorEmail(Principal principal) {
+        Employee employee = employeeService.findByEmail(principal.getName());
+        log.info("Получение списка всех задач пользователя с идентификатором {}", employee.getId());
+        return taskRepository.findAllByExecutorId(employee.getId());
+    }
+
+    /**
      * Получение списка всех задач пользователя с указанным статусом задач
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAllByExecutorId(String status, Principal principal) {
+    public List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal) {
         Employee employee = employeeService.findByEmail(principal.getName());
         log.info("Получение списка всех задач пользователя с идентификатором {} с указанным статусом {} задач",
                 employee.getId(), status);
         try {
-            if (status == null) {
-                return taskRepository.findAllByExecutorId(employee.getId());
-            }
             return taskRepository.findAllByExecutorIdAndStatus(employee.getId(), getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
             throw new BadRequestException("Неверный статус: " + status);
@@ -158,10 +165,10 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Task findByIdAndExecutorId(Principal principal, Long taskId) {
+    public Task findByIdAndExecutorEmail(Principal principal, Long taskId) {
         log.info("Найти задачу с идентификатором {} ", taskId);
         Employee employee = employeeService.findByEmail(principal.getName());
-        return findByIdAndExecutorId(taskId, employee.getId());
+        return findByIdAndExecutorEmail(taskId, employee.getId());
     }
 
     /**
@@ -173,7 +180,7 @@ public class TaskServiceImpl implements TaskService {
         Employee employee = employeeService.findByEmail(principal.getName());
         try {
             TaskStatus taskStatus = getTaskStatus(status);
-            Task task = findByIdAndExecutorId(taskId, employee.getId());
+            Task task = findByIdAndExecutorEmail(taskId, employee.getId());
             if (taskStatus == TaskStatus.IN_PROGRESS) {
                 task.setStartDate(LocalDate.now());
             }
@@ -189,7 +196,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Task findByIdAndExecutorId(Long taskId, Long employeeId) {
+    public Task findByIdAndExecutorEmail(Long taskId, Long employeeId) {
         log.info("Получение задачи из репозитория по идентификатору задачи {} " +
                 "и по идентификатору исполнителя {}", taskId, employeeId);
         return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
