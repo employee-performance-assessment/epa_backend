@@ -24,9 +24,6 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @Builder
 @Validated
 public class RequestQuestionnaireDto {
-    @Positive
-    private long id;
-
     @Valid
     @NotEmpty(message = "Должен быть заполнен хотя бы 1 критерий", groups = {Create.class, Update.class})
     private List<RequestCriteriaDto> criterias;
