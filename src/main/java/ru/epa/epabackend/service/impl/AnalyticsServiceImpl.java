@@ -16,6 +16,8 @@ import ru.epa.epabackend.service.EmployeeService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Класс AnalyticServiceImpl содержит методы для аналитики задач и оценок.
@@ -30,9 +32,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     private final TaskRepository taskRepository;
     private final EmployeeService employeeService;
     @Value("${percentage_of_tasks_completed_on_time:80}")
-    private int leaderTrashHold;
+    private int leaderThresHold;
     @Value("${percentage_of_tasks_delayed:60}")
-    private int violatorTrashHold;
+    private int violatorThresHold;
 
     /**
      * Получение командной статистики для админа
@@ -45,18 +47,20 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         int teamDelayed = 0;
         List<Employee> leaders = new ArrayList<>();
         List<Employee> deadlineViolators = new ArrayList<>();
-        List<Employee> employees = employeeService.findAllByCreatorEmail(email);
-        for (Employee employee : employees) {
-            List<Task> tasks = taskRepository
-                    .findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
-            int delayed = calcDelayedTasks(tasks);
+        List<Task> allTasks = taskRepository.findAllByOwnerEmailAndFinishDateBetween(email, rangeStart, rangeEnd);
+        Map<Employee, List<Task>> employeeTasks = allTasks.stream().collect(Collectors.groupingBy(Task::getExecutor));
+
+        for (Map.Entry<Employee, List<Task>> entry : employeeTasks.entrySet()) {
+            List<Task> tasks = entry.getValue();
+            int delayed = countDelayedTasks(tasks);
             int completedOnTime = tasks.size() - delayed;
             if (!tasks.isEmpty()) {
-                if (calcPercent(completedOnTime, tasks.size()) > leaderTrashHold) {
-                    leaders.add(employee);
-                }
-                if (delayed != 0 && calcPercent(delayed, tasks.size()) > violatorTrashHold) {
-                    deadlineViolators.add(employee);
+                if (calcPercent(completedOnTime, tasks.size()) > leaderThresHold) {
+                    leaders.add(entry.getKey());
+                } else {
+                    if (calcPercent(delayed, tasks.size()) > violatorThresHold) {
+                        deadlineViolators.add(entry.getKey());
+                    }
                 }
                 teamCompletedOnTime += completedOnTime;
                 teamDelayed += delayed;
@@ -64,15 +68,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
 
         int totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
-        if (totalNumbersOfTaskOfTeamCompleted != 0) {
-            return TeamAnalytics.builder()
-                    .completedOnTimePercent(calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
-                    .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
-                    .leaders(leaders)
-                    .deadlineViolators(deadlineViolators)
-                    .build();
-        }
-        return new TeamAnalytics();
+        return TeamAnalytics.builder()
+                .completedOnTimePercent(calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
+                .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
+                .leaders(leaders)
+                .deadlineViolators(deadlineViolators)
+                .build();
     }
 
     /**
@@ -101,16 +102,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         Employee employee = employeeService.findByEmail(email);
         List<Task> tasks = taskRepository.findAllByOwnerIdAndFinishDateBetween(employee.getCreator().getId(),
                 rangeStart, rangeEnd);
-        int teamDelayed = calcDelayedTasks(tasks);
+        int teamDelayed = countDelayedTasks(tasks);
         int teamCompletedOnTime = tasks.size() - teamDelayed;
         int totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
-        if (totalNumbersOfTaskOfTeamCompleted != 0) {
-            return TeamAnalytics.builder()
-                    .completedOnTimePercent(calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
-                    .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
-                    .build();
-        }
-        return new TeamAnalytics();
+        return TeamAnalytics.builder()
+                .completedOnTimePercent(calcPercent(teamCompletedOnTime, totalNumbersOfTaskOfTeamCompleted))
+                .delayedPercent(calcPercent(teamDelayed, totalNumbersOfTaskOfTeamCompleted))
+                .build();
     }
 
     /**
@@ -125,18 +123,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     }
 
     private IndividualAnalytics getIndividualStats(Employee employee, LocalDate rangeStart, LocalDate rangeEnd) {
-        int completedOnTime = 0;
-        int delayed = 0;
         List<Task> tasks = taskRepository.findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
-        for (Task task : tasks) {
-            if (task.getFinishDate().isAfter(task.getDeadLine())) {
-                delayed++;
-            } else {
-                completedOnTime++;
-            }
-
-        }
-
+        int delayed = countDelayedTasks(tasks);
+        int completedOnTime = tasks.size() - delayed;
         int totalNumberOfTaskOfEmployeeCompleted = completedOnTime + delayed;
         return IndividualAnalytics.builder()
                 .employeeId(employee.getId())
@@ -151,13 +140,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return number2 == 0 ? 0 : number1 * 100 / number2;
     }
 
-    private int calcDelayedTasks(List<Task> tasks) {
-        int delayed = 0;
-        for (Task task : tasks) {
-            if (task.getFinishDate().isAfter(task.getDeadLine())) {
-                delayed++;
-            }
-        }
-        return delayed;
+    private int countDelayedTasks(List<Task> tasks) {
+        return (int) tasks.stream()
+                .filter(task -> task.getFinishDate().isAfter(task.getDeadLine()))
+                .count();
     }
 }

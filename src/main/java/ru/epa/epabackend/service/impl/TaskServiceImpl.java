@@ -21,7 +21,7 @@ import ru.epa.epabackend.util.TaskStatus;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -128,12 +128,15 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAllByExecutorIdFilters(String status, Principal principal) {
-        log.info("Получение списка всех задач пользователя с идентификатором {} с указанным статусом {} задач",
-                principal, status);
+    public List<Task> findAllByExecutorId(String status, Principal principal) {
         Employee employee = employeeService.findByEmail(principal.getName());
+        log.info("Получение списка всех задач пользователя с идентификатором {} с указанным статусом {} задач",
+                employee.getId(), status);
         try {
-            return taskRepository.findAllByExecutorIdFilters(employee.getId(), getTaskStatus(status));
+            if (status == null) {
+                return taskRepository.findAllByExecutorId(employee.getId());
+            }
+            return taskRepository.findAllByExecutorIdAndStatus(employee.getId(), getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
             throw new BadRequestException("Неверный статус: " + status);
         }
@@ -199,8 +202,7 @@ public class TaskServiceImpl implements TaskService {
      */
     private void setPointsToEmployeeAfterTaskDone(Task task) {
         log.info("Проставление очков после того как задача {} выполнена", task);
-        Period period = Period.between(LocalDate.now(), task.getDeadLine());
-        Integer days = period.getDays();
+        Integer days = Math.toIntExact(ChronoUnit.DAYS.between(LocalDate.now(), task.getDeadLine()));
         task.setPoints(task.getBasicPoints() + days * task.getPenaltyPoints());
     }
 
