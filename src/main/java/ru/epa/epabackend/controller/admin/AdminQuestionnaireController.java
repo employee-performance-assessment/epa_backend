@@ -145,4 +145,28 @@ public class AdminQuestionnaireController {
     public boolean isDayPassedAfterShareQuestionnaire(Principal principal) {
         return questionnaireService.isDayPassedAfterShareQuestionnaire(principal.getName());
     }
+
+    /**
+     * Обновление анкеты, наполняя её дефолтными критериями
+     */
+    @Operation(summary = "Обновление анкеты, наполняя её дефолтными критериями")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseQuestionnaireFullDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @PatchMapping("/last-with-default")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseQuestionnaireFullDto updateLastWithDefault(Principal principal) {
+        Questionnaire questionnaire = questionnaireService.updateLastWithDefault(principal.getName());
+        return questionnaireMapper.mapToFullResponseDto(questionnaire);
+    }
 }
