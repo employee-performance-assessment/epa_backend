@@ -136,7 +136,10 @@ public class AdminTaskController {
     /**
      * Эндпойнт обновления задачи.
      */
-    @Operation(summary = "Обновление задачи администратором")
+    @Operation(summary = "Обновление задачи администратором, возможные статусы задач : " +
+            " Новая задача NEW, Задача над которой ведется работа IN_PROGRESS," +
+            " Задача на проверке у руководителя REVIEW , Задача выполнена DONE," +
+            " Задача отменена или заморожена на неопределенный срок CANCELED")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTaskFullDto.class))),

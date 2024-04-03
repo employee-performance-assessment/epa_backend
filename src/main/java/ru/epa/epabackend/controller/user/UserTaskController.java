@@ -94,7 +94,10 @@ public class UserTaskController {
     /**
      * Эндпойнт обновления статуса задачи.
      */
-    @Operation(summary = "Обновление статуса выполнения задачи сотрудником")
+    @Operation(summary = "Обновление статуса выполнения задачи сотрудником, возможные статусы задач :" +
+            " Новая задача NEW, Задача над которой ведется работа IN_PROGRESS," +
+            " Задача на проверке у руководителя REVIEW , Задача выполнена DONE," +
+            " Задача отменена или заморожена на неопределенный срок CANCELED")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTaskFullDto.class))),
