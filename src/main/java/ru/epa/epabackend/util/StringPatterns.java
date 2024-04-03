@@ -7,7 +7,8 @@ public class StringPatterns {
     public static final String LATIN_NUMBERS_SPECIAL_CHARACTERS_AND_ONE_UPPERCASE_LETTER =
             "^[a-zA-Z0-9\\.\\,\\:\\;\\?\\!\\*\\+\\%\\-\\<\\>\\@\\[\\]\\{\\}\\/\\\\\\_\\$\\#]+$";
     public static final String CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS =
-            "^[a-zA-Zа-яА-ЯЁё0-9\\.\\,\\:\\;\\?\\!\\*\\+\\%\\-\\<\\>\\@\\[\\]\\{\\}\\/\\\\\\_\\$\\#]+$";
+            "^[a-zA-Zа-яА-ЯЁё0-9.,:;?!*+%-<>@[\\]{}/\\_$#]+$";
+
     public static final String TELEGRAM = "^@{1}[a-zA-Z0-9\\_]+$";
 
     private StringPatterns() {
