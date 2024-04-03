@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
 import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
@@ -167,10 +168,12 @@ public class EmployeeTests {
     @Test
     @DisplayName("Получение всех сотрудников для одного админа с вызовом репозитория")
     void shouldFindAllByCreatorEmailWhenCallRepository() {
-        when(employeeRepository.findAllByCreatorEmail(email)).thenReturn(List.of(employee));
+        when(employeeRepository.findAllByCreatorEmail(email, Sort.by(Sort.Direction.ASC, "id")))
+                .thenReturn(List.of(employee));
         List<Employee> employeeResult = employeeService.findAllByCreatorEmail(email);
         assertNotNull(employeeResult);
         assertEquals(1, employeeResult.size());
-        verify(employeeRepository, times(1)).findAllByCreatorEmail(employee.getEmail());
+        verify(employeeRepository, times(1))
+                .findAllByCreatorEmail(employee.getEmail(), Sort.by(Sort.Direction.ASC, "id"));
     }
 }
