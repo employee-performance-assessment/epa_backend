@@ -89,10 +89,10 @@ public class AdminTaskController {
     }
 
     /**
-     * Эндпойнт поиска задачи по ID администратором.
+     * Эндпойнт поиска всех задач сотрудника по ID администратором.
      */
-    @Operation(summary = "Получение информации о задаче администратором",
-            description = "Возвращает полную информацию о задаче, если она существует в базе данных.")
+    @Operation(summary = "Получение информации о всех задачах сотрудника администратором",
+            description = "Возвращает полную информацию о всех задачах сотрудника, если она существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTaskFullDto.class))),
