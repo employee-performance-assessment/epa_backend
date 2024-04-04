@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_WHITESPACE_AND_DASH;
+import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS;
 
 /**
  * Класс EvaluationRequestDto для передачи тела запроса на сервер для создания критерия оценки.
@@ -25,6 +25,6 @@ public class RequestCriteriaDto {
      */
     @NotBlank()
     @Size(min = 1, max = 100)
-    @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH)
+    @Pattern(regexp = CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS)
     private String name;
 }

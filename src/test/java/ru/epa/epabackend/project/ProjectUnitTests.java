@@ -44,7 +44,6 @@ public class ProjectUnitTests {
     private ProjectServiceImpl projectService;
     private Employee admin;
     private Employee employee;
-    private Employee employee1;
     private Project project;
     private RequestProjectCreateDto requestProjectCreateDto;
     private RequestProjectUpdateDto requestProjectUpdateDto;
