@@ -37,8 +37,8 @@ public class RecommendationServiceImpl implements RecommendationService {
      */
     @Override
     public Recommendation create(RequestRecommendationDto requestRecommendationDto, Long questionnaireId,
-                                 String recipientEmail, String senderEmail) {
-        Employee recipient = employeeService.findByEmail(recipientEmail);
+                                 Long evaluatedId, String senderEmail) {
+        Employee recipient = employeeService.findById(evaluatedId);
         Employee sender = employeeService.findByEmail(senderEmail);
         Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
         Recommendation recommendation = recommendationMapper.mapToEntity(requestRecommendationDto, questionnaire,
@@ -56,15 +56,6 @@ public class RecommendationServiceImpl implements RecommendationService {
         return recommendationRepository.findById(recommendationId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Рекомендация с id %s не найдена",
                         recommendationId)));
-    }
-
-    /**
-     * Получение списка рекомендаций для сотрудника с ID.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Recommendation> findAllByRecipientEmail(String recipientEmail) {
-        return recommendationRepository.findAllByRecipientEmail(recipientEmail);
     }
 
     /**

@@ -7,5 +7,9 @@ import java.util.List;
 
 public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
 
-    List<Recommendation> findAllByRecipientEmail(String recipientEmail);
+    //List<Recommendation> findAllByRecipientEmail(String recipientEmail);
+
+    Recommendation findByRecipientEmailAndQuestionnaireId(String email, Long questionnaireId);
+
+    Recommendation findByRecipientIdAndQuestionnaireId(Long recipientId, Long questionnaireId);
 }

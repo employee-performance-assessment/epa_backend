@@ -1,9 +1,9 @@
 package ru.epa.epabackend.service;
 
 import ru.epa.epabackend.dto.evaluation.*;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -26,36 +26,6 @@ public interface EmployeeEvaluationService {
     EmployeeEvaluation findById(Long employeeEvaluationId);
 
     /**
-     * Получение списка всех оценок коллег.
-     */
-    List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(String email);
-
-    /**
-     * Получение списка оценок руководителя.
-     */
-    List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(String email);
-
-    /**
-     * Получение рейтинга за определенный период сотрудника от всего коллектива.
-     */
-    ResponseRatingDto findFullRating(String email, LocalDate startDay, LocalDate endDay);
-
-    /**
-     * Получение рейтинга за определенный период сотрудника только от руководителя.
-     */
-    ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay);
-
-    /**
-     * Получение списка оцененных коллег по ID анкеты.
-     */
-    List<ResponseMyEvaluationsDto> findAllMyEvaluationsById(String email, Long questionnaireId);
-
-    /**
-     * Получение списка оцененных коллег по всем анкетам.
-     */
-    List<ResponseMyEvaluationsDto> findAllMyEvaluations(String email);
-
-    /**
      * Получение командного рейтинга за каждый месяц.
      */
     List<ResponseRatingFullDto> findCommandRating(String email);
@@ -74,4 +44,19 @@ public interface EmployeeEvaluationService {
      * Получение командного рейтинга за каждый месяц для админа.
      */
     List<ResponseRatingFullDto> findCommandRatingForAdmin(String email);
+
+    /**
+     * Получение списка оцененных коллег.
+     */
+    List<Employee> findAllRatedByMe(String email);
+
+    /**
+     * Получение списка оцененных коллег для админа.
+     */
+    List<Employee> findAllRated(String email);
+
+    ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireId(String email, Long questionnaireId);
+
+    ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
+    Long questionnaireId, Long evaluatedId);
 }

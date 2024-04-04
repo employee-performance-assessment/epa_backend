@@ -6,14 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import ru.epa.epabackend.dto.evaluation.*;
+import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
-import ru.epa.epabackend.mapper.QuestionnaireMapper;
+import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
+import ru.epa.epabackend.repository.RecommendationRepository;
 import ru.epa.epabackend.service.CriteriaService;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
 import ru.epa.epabackend.service.EmployeeService;
@@ -22,6 +24,7 @@ import ru.epa.epabackend.service.QuestionnaireService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Класс EmployeeEvaluationServiceImpl содержит бизнес-логику работы с оценками сотрудников своих коллег.
@@ -34,9 +37,10 @@ import java.util.List;
 public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService {
 
     private final EmployeeEvaluationRepository employeeEvaluationRepository;
+    private final RecommendationRepository recommendationRepository;
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
     private final EmployeeMapper employeeMapper;
-    private final QuestionnaireMapper questionnaireMapper;
+    private final RecommendationMapper recommendationMapper;
     private final EmployeeService employeeService;
     private final CriteriaService criteriaService;
     private final QuestionnaireService questionnaireService;
@@ -75,70 +79,12 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение списка своих оценок от коллег по своему email.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(String email) {
-        return employeeEvaluationRepository.findAllEvaluationsUsers(email);
-    }
-
-    /**
-     * Получение списка своих оценок от руководителя по своему email.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(String email) {
-        return employeeEvaluationRepository.findAllEvaluationsAdmin(email);
-    }
-
-    /**
-     * Получение рейтинга сотрудника от всего коллектива.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public ResponseRatingDto findFullRating(String email, LocalDate startDay, LocalDate endDay) {
-        return employeeEvaluationRepository.findFullRating(email, startDay, endDay);
-    }
-
-    /**
-     * Получение рейтинга сотрудника только от руководителя.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay) {
-        return employeeEvaluationRepository.findRatingByAdmin(email, startDay, endDay);
-    }
-
-    /**
-     * Получение списка оцененных коллег по ID анкеты.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ResponseMyEvaluationsDto> findAllMyEvaluationsById(String email, Long questionnaireId) {
-        List<EmployeeEvaluation> evaluations = employeeEvaluationRepository
-                .findAllByEvaluatorEmailAndQuestionnaireId(email,questionnaireId);
-        return sortMyEvaluations(evaluations);
-    }
-
-    /**
-     * Получение списка оцененных коллег по всем анкетам.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ResponseMyEvaluationsDto> findAllMyEvaluations(String email) {
-        List<EmployeeEvaluation> evaluations = employeeEvaluationRepository.findAllByEvaluatorEmail(email);
-        return sortMyEvaluations(evaluations);
-    }
-
-    /**
      * Получение командного рейтинга за каждый месяц.
      */
     @Override
     @Transactional(readOnly = true)
     public List<ResponseRatingFullDto> findCommandRating(String email) {
         Employee employee = employeeService.findByEmail(email);
-        assert employee.getCreator() != null;
         Long adminId = employee.getCreator().getId();
         return employeeEvaluationRepository.findCommandRating(adminId);
     }
@@ -163,6 +109,50 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         return employeeEvaluationRepository.findCommandRating(adminId);
     }
 
+    @Override
+    public List<Employee> findAllRatedByMe(String email) {
+        return employeeEvaluationRepository.findAllRatedByMe(email);
+    }
+
+    @Override
+    public List<Employee> findAllRated(String email) {
+        return employeeEvaluationRepository.findAllRated(email);
+    }
+
+    @Override
+    public ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireId(String email, Long questionnaireId) {
+        List<ResponseEmployeeEvaluationShortDto> adminEvaluations = employeeEvaluationRepository
+                .findAllEvaluationsAdmin(email, questionnaireId);
+        List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
+                .findAllEvaluationsUsers(email, questionnaireId);
+        ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
+                .findByRecipientEmailAndQuestionnaireId(email, questionnaireId));
+        return ResponseEmployeeEvaluationQuestionnaireDto
+                .builder()
+                .adminEvaluation(adminEvaluations)
+                .usersEvaluation(usersEvaluations)
+                .recommendation(recommendation)
+                .build();
+    }
+
+    @Override
+    public ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
+                                                                                                  Long questionnaireId,
+                                                                                                  Long evaluatedId) {
+        List<ResponseEmployeeEvaluationShortDto> adminEvaluations = employeeEvaluationRepository
+                .findAllEvaluationsForAdmin(adminEmail, evaluatedId, questionnaireId);
+        List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
+                .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
+        ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
+                .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId));
+        return ResponseEmployeeEvaluationQuestionnaireDto
+                .builder()
+                .adminEvaluation(adminEvaluations)
+                .usersEvaluation(usersEvaluations)
+                .recommendation(recommendation)
+                .build();
+    }
+
     /**
      * Получение персонального рейтинга каждого сотрудника за каждый месяц.
      */
@@ -184,31 +174,5 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
             personalRatingList.add(personalRating);
         }
         return personalRatingList;
-    }
-
-    /**
-     * Сортировка оценок по оцененным коллегам и анкетам.
-     */
-    private List<ResponseMyEvaluationsDto> sortMyEvaluations(List<EmployeeEvaluation> evaluations) {
-        List<ResponseMyEvaluationsDto> myEmployeeEvaluations = new ArrayList<>(evaluations.size());
-        for (EmployeeEvaluation evaluation : evaluations) {
-            ResponseMyEvaluationsDto responseMyEmployeeEvaluationsDto = ResponseMyEvaluationsDto
-                    .builder()
-                    .evaluated(employeeMapper.mapToShortDto(evaluation.getEvaluated()))
-                    .questionnaire(questionnaireMapper.mapToShortResponseDto(evaluation.getQuestionnaire()))
-                    .responseEmployeeEvaluationList(employeeEvaluationMapper.mapDtoList(List.of(evaluation)))
-                    .build();
-
-            if (!myEmployeeEvaluations.contains(responseMyEmployeeEvaluationsDto)) {
-                myEmployeeEvaluations.add(responseMyEmployeeEvaluationsDto);
-            } else {
-                int index = myEmployeeEvaluations.indexOf(responseMyEmployeeEvaluationsDto);
-                List<ResponseEmployeeEvaluationDto> myEvaluationsAdd = myEmployeeEvaluations.get(index)
-                        .getResponseEmployeeEvaluationList();
-                myEvaluationsAdd.add(employeeEvaluationMapper.mapToShortDto(evaluation));
-                myEmployeeEvaluations.get(index).setResponseEmployeeEvaluationList(myEvaluationsAdd);
-            }
-        }
-        return myEmployeeEvaluations;
     }
 }
