@@ -47,6 +47,12 @@ public class ResponseTaskFullDto {
     private ResponseEmployeeShortDto executor;
 
     /**
+     * Дата создания задачи.
+     */
+    @JsonFormat(pattern = DateConstant.DATE_PATTERN)
+    private LocalDate createDate;
+
+    /**
      * Дата взятие задачи в работу.
      */
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)
