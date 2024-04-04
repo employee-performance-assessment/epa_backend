@@ -58,6 +58,12 @@ public class Task {
     private Employee executor;
 
     /**
+     * Дата создания задачи.
+     */
+    @Column(name = "create_date")
+    private LocalDate createDate;
+
+    /**
      * Дата взятие задачи в работу.
      */
     @Column(name = "start_date")

@@ -23,6 +23,7 @@ public interface TaskMapper {
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", source = "requestTaskDto.status")
+    @Mapping(target = "createDate", expression = "java(java.time.LocalDate.now())")
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
     @Mapping(target = "points", ignore = true)
@@ -47,6 +48,7 @@ public interface TaskMapper {
     @Mapping(target = "status", source = "requestTaskDto.status")
     @Mapping(target = "project", source = "project")
     @Mapping(target = "executor", source = "executor")
+    @Mapping(target = "createDate", ignore = true)
     @Mapping(target = "startDate", ignore = true)
     @Mapping(target = "finishDate", ignore = true)
     @Mapping(target = "points", ignore = true)
