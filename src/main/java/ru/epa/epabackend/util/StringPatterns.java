@@ -10,7 +10,7 @@ public class StringPatterns {
             "^[a-zA-Z0-9.,:;?!*+%\\-<>@\\[\\]{}/_$#]+$";
 
     public static final String CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS =
-            "^[a-zA-Zа-яА-ЯЁё0-9.,:;?!*+%\\-<>@\\[\\]{}/_$#]+$";
+            "^[a-zA-Zа-яА-ЯЁё0-9\\s.,:;?!*+%\\-<>@\\[\\]{}/_$#]+$";
 
     public static final String TELEGRAM = "^@{1}[a-zA-Z0-9\\_]+$";
 
