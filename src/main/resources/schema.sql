@@ -35,6 +35,7 @@ create table if not exists tasks
     description    VARCHAR(255)                            NOT NULL,
     project_id     BIGINT                                  NOT NULL,
     executor_id    BIGINT,
+    create_date    DATE,
     start_date     DATE,
     dead_line      DATE,
     finish_date    DATE,
