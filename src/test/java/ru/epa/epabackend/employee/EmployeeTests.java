@@ -9,8 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeRequestDto;
-import ru.epa.epabackend.dto.employee.EmployeeShortRequestDto;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
+import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
@@ -36,10 +38,12 @@ public class EmployeeTests {
     private EmployeeServiceImpl employeeService;
     @Mock
     private EmployeeMapper employeeMapper;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     private Employee admin;
     private Employee employee;
-    private EmployeeRequestDto employeeRequestDto;
-    private EmployeeShortRequestDto employeeShortRequestDto;
+    private RequestEmployeeDto requestEmployeeDto;
+    private RequestEmployeeShortDto requestEmployeeShortDto;
 
 
     @BeforeEach
@@ -53,11 +57,11 @@ public class EmployeeTests {
                 .id(ID_2)
                 .email(email)
                 .build();
-        employeeRequestDto = EmployeeRequestDto.builder()
+        requestEmployeeDto = RequestEmployeeDto.builder()
                 .email(email)
                 .password("12345")
                 .build();
-        employeeShortRequestDto = EmployeeShortRequestDto.builder()
+        requestEmployeeShortDto = RequestEmployeeShortDto.builder()
                 .email(email)
                 .password("12345")
                 .build();
@@ -66,13 +70,13 @@ public class EmployeeTests {
     @Test
     @DisplayName("Создание нового сотрудника с вызовом репозитория")
     void shouldCreateWhenCallRepository() {
-        when(employeeMapper.mapToEntity(employeeRequestDto)).thenReturn(employee);
+        when(employeeMapper.mapToEntity(requestEmployeeDto)).thenReturn(employee);
         employee.setPassword("12345");
         employee.setRole(Role.ROLE_USER);
         when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(admin));
         employee.setCreator(admin);
         when(employeeRepository.save(employee)).thenReturn(employee);
-        Employee employeeResult = employeeService.create(employeeRequestDto,email);
+        Employee employeeResult = employeeService.create(requestEmployeeDto,email);
         int expectedId = 2;
         assertNotNull(employeeResult);
         assertEquals(expectedId, employeeResult.getId());
@@ -82,11 +86,11 @@ public class EmployeeTests {
     @Test
     @DisplayName("Создание нового сотрудника с вызовом репозитория")
     void shouldCreateSelfRegisterWhenCallRepository() {
-        when(employeeMapper.mapToEntity(employeeShortRequestDto)).thenReturn(employee);
+        when(employeeMapper.mapToEntity(requestEmployeeShortDto)).thenReturn(employee);
         employee.setPassword("12345");
         employee.setRole(Role.ROLE_ADMIN);
         when(employeeRepository.save(employee)).thenReturn(employee);
-        Employee employeeResult = employeeService.createSelfRegister(employeeShortRequestDto);
+        Employee employeeResult = employeeService.createSelfRegister(requestEmployeeShortDto);
         int expectedId = 2;
         assertNotNull(employeeResult);
         assertEquals(expectedId, employeeResult.getId());
@@ -99,7 +103,7 @@ public class EmployeeTests {
         when(employeeRepository.findById(ID_2)).thenReturn(Optional.of(employee));
         employee.setPassword("12345");
         when(employeeRepository.save(employee)).thenReturn(employee);
-        Employee employeeResult = employeeService.update(employee.getId(),employeeRequestDto);
+        Employee employeeResult = employeeService.update(employee.getId(), requestEmployeeDto);
         int expectedId = 2;
         assertNotNull(employeeResult);
         assertEquals(expectedId, employeeResult.getId());
@@ -163,14 +167,12 @@ public class EmployeeTests {
     @Test
     @DisplayName("Получение всех сотрудников для одного админа с вызовом репозитория")
     void shouldFindAllByCreatorEmailWhenCallRepository() {
-        when(employeeRepository.findAllByCreatorEmail(email)).thenReturn(List.of(employee));
+        when(employeeRepository.findAllByCreatorEmail(email, Sort.by(Sort.Direction.ASC, "id")))
+                .thenReturn(List.of(employee));
         List<Employee> employeeResult = employeeService.findAllByCreatorEmail(email);
         assertNotNull(employeeResult);
         assertEquals(1, employeeResult.size());
-        verify(employeeRepository, times(1)).findAllByCreatorEmail(employee.getEmail());
+        verify(employeeRepository, times(1))
+                .findAllByCreatorEmail(employee.getEmail(), Sort.by(Sort.Direction.ASC, "id"));
     }
-
-
-
-
 }
