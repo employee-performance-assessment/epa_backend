@@ -1,6 +1,7 @@
 package ru.epa.epabackend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -26,4 +27,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByOwnerEmailAndFinishDateBetween(String email, LocalDate startDate, LocalDate endDate);
 
     List<Task> findAllByExecutorIdAndFinishDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
+
+    @Query(value = "SELECT SUM(t.points) " +
+            "from Task t " +
+            "where t.executor.id = :employeeId " +
+            "and t.finishDate BETWEEN :rangeStart AND :rangeEnd ")
+    Integer getSumPointsByExecutorIdAndThisMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 }

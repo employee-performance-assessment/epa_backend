@@ -33,4 +33,6 @@ public interface AnalyticsService {
      * Получение индивидуальной статистики для сотрудника
      */
     IndividualAnalytics getIndividualStats(LocalDate startDate, LocalDate endDate, String email);
+
+    Integer findQuantityOfPointsPerMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 }
