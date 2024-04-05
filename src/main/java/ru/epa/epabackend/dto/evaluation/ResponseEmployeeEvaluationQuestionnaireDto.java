@@ -4,7 +4,6 @@ import lombok.*;
 import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Класс ResponseEmployeeEvaluationQuestionnaireDto для передачи полной информации об оценке сотрудника.
