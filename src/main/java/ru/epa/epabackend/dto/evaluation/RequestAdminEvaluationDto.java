@@ -21,10 +21,10 @@ public class RequestAdminEvaluationDto {
     /**
      * Список оценок руководителя.
      */
-    List<RequestEmployeeEvaluationDto> evaluationDtoList;
+    private List<RequestEmployeeEvaluationDto> evaluationDtoList;
 
     /**
      * Рекомендация руководителя.
      */
-    RequestRecommendationDto recommendation;
+    private RequestRecommendationDto recommendation;
 }

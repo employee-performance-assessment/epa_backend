@@ -3,6 +3,7 @@ package ru.epa.epabackend.dto.evaluation;
 import lombok.*;
 import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,17 +20,12 @@ import java.util.List;
 public class ResponseEmployeeEvaluationQuestionnaireDto {
 
     /**
-     * Список оценок руководителя.
+     * Список оценок.
      */
-    List<ResponseEmployeeEvaluationShortDto> adminEvaluation;
-
-    /**
-     * Список оценок коллег.
-     */
-    List<ResponseEmployeeEvaluationShortDto> usersEvaluation;
+    private HashMap<String, ResponseEvaluationsAdminUserDto> evaluations;
 
     /**
      * Рекомендация руководителя.
      */
-    ResponseRecommendationShortDto recommendation;
+    private ResponseRecommendationShortDto recommendation;
 }

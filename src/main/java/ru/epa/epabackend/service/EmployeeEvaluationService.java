@@ -41,11 +41,6 @@ public interface EmployeeEvaluationService {
     List<ResponsePersonalRatingDto> findPersonalRatingAdmin(String email);
 
     /**
-     * Получение командного рейтинга за каждый месяц для админа.
-     */
-    List<ResponseRatingFullDto> findCommandRatingForAdmin(String email);
-
-    /**
      * Получение списка оцененных коллег.
      */
     List<Employee> findAllRatedByMe(String email);
@@ -55,8 +50,19 @@ public interface EmployeeEvaluationService {
      */
     List<Employee> findAllRated(String email);
 
+    /**
+     * Получение оценок и рекомендации для сотрудника.
+     */
     ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireId(String email, Long questionnaireId);
 
+    /**
+     * Получение оценок и рекомендации для админа.
+     */
     ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
     Long questionnaireId, Long evaluatedId);
+
+    /**
+     * Получение оценок коллег по id анкеты.
+     */
+    List<ResponseMyEvaluationsDto> findAllMyEvaluationsByEvaluatedId(String email, Long evaluatedId);
 }

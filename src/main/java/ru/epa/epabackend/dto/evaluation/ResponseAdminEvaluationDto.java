@@ -21,10 +21,10 @@ public class ResponseAdminEvaluationDto {
     /**
      * Список оценок руководителя.
      */
-    List<ResponseEmployeeEvaluationShortDto> adminEvaluations;
+    private List<ResponseEmployeeEvaluationShortDto> adminEvaluations;
 
     /**
      * Рекомендация руководителя.
      */
-    ResponseRecommendationShortDto recommendation;
+    private ResponseRecommendationShortDto recommendation;
 }

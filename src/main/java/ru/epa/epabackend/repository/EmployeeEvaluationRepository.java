@@ -51,31 +51,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<ResponseEmployeeEvaluationShortDto> findAllEvaluationsForAdmin(String emailAdmin, Long evaluatedId,
                                                                      Long questionnaireId);
 
-   /* @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingDto(round(avg(score)) rating) " +
-            "from EmployeeEvaluation e " +
-            "where e.evaluated.email = :email " +
-            "and e.createDay BETWEEN :startDay AND :endDay ")
-    //ResponseRatingDto findFullRating(String email, LocalDate startDay, LocalDate endDay);
-
-    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingDto(round(avg(score)) rating) " +
-            "from EmployeeEvaluation e " +
-            "where e.evaluated.email = :email " +
-            "and e.evaluator.role = 'ROLE_ADMIN' " +
-            "and e.createDay BETWEEN :startDay AND :endDay ")
-   // ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay);*/
-
-    //List<EmployeeEvaluation> findAllByEvaluatorEmailAndQuestionnaireId(String email, Long questionnaireId);
-
-    //List<EmployeeEvaluation> findAllByEvaluatorEmail(String email);
-
-
-
-
-   // List<EmployeeEvaluation> findAllByEvaluatorEmailAndEvaluatedId(String email, Long evaluatedId);
-
-   // List<EmployeeEvaluation> findAllByEvaluatorCreatorEmailAndEvaluatedId(String email, Long evaluatedId);
+   List<EmployeeEvaluation> findAllByEvaluatorEmailAndEvaluatedId(String email, Long evaluatedId);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseRatingFullDto(extract(month from e.createDay), round(avg(score)) rating) " +

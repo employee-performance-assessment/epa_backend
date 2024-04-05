@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationShortDto;
 import ru.epa.epabackend.dto.evaluation.ResponseRatingDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.Criteria;
@@ -149,17 +150,17 @@ public class EmployeeEvaluationUnitTests {
                 .findById(employeeEvaluationResult.getId());
     }
 
-   /* @Test
+    /*@Test
     @DisplayName("Получение списка своих оценок от коллег по своему email с вызовом репозитория")
     void shouldFindAllEvaluationsUsersWhenCallRepository() {
-        when(employeeEvaluationRepository.findAllEvaluationsUsers(email))
+        when(employeeEvaluationRepository.findAllEvaluationsUsers(email, ID_1))
                 .thenReturn(List.of(responseEmployeeEvaluationDto));
-        List<ResponseEmployeeEvaluationDto> responseEmployeeEvaluationDtoListResult = employeeEvaluationService
-                .findAllEvaluationsUsers(email);
+        List<ResponseEmployeeEvaluationShortDto> responseEmployeeEvaluationDtoListResult = employeeEvaluationService
+                .findAllEvaluationsUsers(email, ID_1);
         int expectedSize = 1;
         assertNotNull(responseEmployeeEvaluationDtoListResult);
         assertEquals(expectedSize, responseEmployeeEvaluationDtoListResult.size());
-        verify(employeeEvaluationRepository,times(1)).findAllEvaluationsUsers(email);
+        verify(employeeEvaluationRepository,times(1)).findAllEvaluationsUsers(email, ID_1);
     }
 
     @Test

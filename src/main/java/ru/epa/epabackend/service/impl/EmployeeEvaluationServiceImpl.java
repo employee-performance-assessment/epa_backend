@@ -10,6 +10,7 @@ import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.mapper.QuestionnaireMapper;
 import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
@@ -24,8 +25,8 @@ import ru.epa.epabackend.service.QuestionnaireService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Класс EmployeeEvaluationServiceImpl содержит бизнес-логику работы с оценками сотрудников своих коллег.
@@ -43,6 +44,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
     private final EmployeeMapper employeeMapper;
     private final RecommendationMapper recommendationMapper;
+    private final QuestionnaireMapper questionnaireMapper;
     private final EmployeeService employeeService;
     private final CriteriaService criteriaService;
     private final QuestionnaireService questionnaireService;
@@ -89,7 +91,9 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Transactional(readOnly = true)
     public List<ResponseRatingFullDto> findCommandRating(String email) {
         Employee employee = employeeService.findByEmail(email);
-        Long adminId = employee.getCreator().getId();
+        Long adminId = employee.getCreator() == null
+                ? employee.getId()
+                : employee.getCreator().getId();
         log.info("Получение командного рейтинга идентификатору сотрудника");
         return employeeEvaluationRepository.findCommandRating(adminId);
     }
@@ -105,16 +109,8 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение командного рейтинга за каждый месяц для админа.
+     * Получение списка оцененных коллег.
      */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ResponseRatingFullDto> findCommandRatingForAdmin(String adminEmail) {
-        Employee employee = employeeService.findByEmail(adminEmail);
-        Long adminId = employee.getId();
-        log.info("Получение командного рейтинга для админа");
-        return employeeEvaluationRepository.findCommandRating(adminId);
-    }
 
     @Override
     public List<Employee> findAllRatedByMe(String email) {
@@ -122,12 +118,18 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         return employeeEvaluationRepository.findAllRatedByMe(email);
     }
 
+    /**
+     * Получение списка подчиненных для админа.
+     */
     @Override
     public List<Employee> findAllRated(String email) {
-        log.info("Получение списка всех оцененых подчиненных для админа");
+        log.info("Получение списка всех оцененных подчиненных для админа");
         return employeeEvaluationRepository.findAllRated(email);
     }
 
+    /**
+     * Получение оценок по id анкеты.
+     */
     @Override
     public ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireId(String email, Long questionnaireId) {
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = employeeEvaluationRepository
@@ -136,15 +138,17 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsUsers(email, questionnaireId);
         ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
                 .findByRecipientEmailAndQuestionnaireId(email, questionnaireId));
-        log.info("Получение оцененок и рекомендации по id анкеты для руководителя");
+        log.info("Получение оценок и рекомендации по id анкеты для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
-                .adminEvaluation(adminEvaluations)
-                .usersEvaluation(usersEvaluations)
+                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
                 .recommendation(recommendation)
                 .build();
     }
 
+    /**
+     * Получение оценок по id анкеты и id сотрудника.
+     */
     @Override
     public ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
                                                                                                   Long questionnaireId,
@@ -155,13 +159,22 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
         ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
                 .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId));
-        log.info("Получение оцененок и рекомендации по id анкеты и id сотрудника для руководителя");
+        log.info("Получение оценок и рекомендации по id анкеты и id сотрудника для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
-                .adminEvaluation(adminEvaluations)
-                .usersEvaluation(usersEvaluations)
+                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
                 .recommendation(recommendation)
                 .build();
+    }
+
+    /**
+     * Получение поставленных оценок по id анкеты и id сотрудника.
+     */
+    @Override
+    public List<ResponseMyEvaluationsDto> findAllMyEvaluationsByEvaluatedId(String email, Long evaluatedId) {
+        List<EmployeeEvaluation> evaluations = employeeEvaluationRepository
+                .findAllByEvaluatorEmailAndEvaluatedId(email, evaluatedId);
+        return filterMyEvaluations(evaluations);
     }
 
     /**
@@ -186,5 +199,47 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         }
         log.info("Получение рейтинга сотрудников для руководителя");
         return personalRatingList;
+    }
+
+    /**
+     * Сортировка оценок по оцененным коллегам и анкетам.
+     */
+    private List<ResponseMyEvaluationsDto> filterMyEvaluations(List<EmployeeEvaluation> evaluations) {
+        List<ResponseMyEvaluationsDto> myEmployeeEvaluations = new ArrayList<>(evaluations.size());
+        for (EmployeeEvaluation evaluation : evaluations) {
+            ResponseMyEvaluationsDto responseMyEmployeeEvaluationsDto = ResponseMyEvaluationsDto
+                    .builder()
+                    .questionnaire(questionnaireMapper.mapToShortResponseDto(evaluation.getQuestionnaire()))
+                    .responseEmployeeEvaluationList(employeeEvaluationMapper.mapDtoList(List.of(evaluation)))
+                    .build();
+
+            if (!myEmployeeEvaluations.contains(responseMyEmployeeEvaluationsDto)) {
+                myEmployeeEvaluations.add(responseMyEmployeeEvaluationsDto);
+            } else {
+                int index = myEmployeeEvaluations.indexOf(responseMyEmployeeEvaluationsDto);
+                List<ResponseEmployeeEvaluationShortDto> myEvaluationsAdd = myEmployeeEvaluations.get(index)
+                        .getResponseEmployeeEvaluationList();
+                myEvaluationsAdd.add(employeeEvaluationMapper.mapToShortDto(evaluation));
+                myEmployeeEvaluations.get(index).setResponseEmployeeEvaluationList(myEvaluationsAdd);
+            }
+        }
+        return myEmployeeEvaluations;
+    }
+
+    private HashMap<String, ResponseEvaluationsAdminUserDto> filterEvaluations(
+            List<ResponseEmployeeEvaluationShortDto> adminEvaluations,
+            List<ResponseEmployeeEvaluationShortDto> usersEvaluations) {
+
+        HashMap<String, ResponseEvaluationsAdminUserDto> evaluations = new HashMap<>(adminEvaluations.size());
+
+        for (int i = 0; i < adminEvaluations.size(); i++) {
+            ResponseEvaluationsAdminUserDto evaluationsForCriteria = ResponseEvaluationsAdminUserDto
+                    .builder()
+                    .adminScore(adminEvaluations.get(i).getScore())
+                    .colleaguesScore(usersEvaluations.get(i).getScore())
+                    .build();
+            evaluations.put(adminEvaluations.get(i).getName(), evaluationsForCriteria);
+        }
+        return evaluations;
     }
 }

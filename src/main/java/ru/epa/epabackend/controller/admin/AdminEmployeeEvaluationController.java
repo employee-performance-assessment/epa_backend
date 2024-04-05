@@ -50,26 +50,6 @@ public class AdminEmployeeEvaluationController {
     private final RecommendationMapper recommendationMapper;
 
     /**
-     * Эндпойнт получения командного рейтинга.
-     */
-    @Operation(summary = "Получение командного рейтинга",
-            description = "Возвращает список рейтинга команды за каждый оцененный месяц" +
-                    "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
-            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/rating/command")
-    public List<ResponseRatingFullDto> findCommandRating(Principal principal) {
-        return employeeEvaluationService.findCommandRatingForAdmin(principal.getName());
-    }
-
-    /**
      * Эндпойнт получения персонального рейтинга каждого сотрудника за каждый месяц.
      */
     @Operation(summary = "получения персонального рейтинга каждого сотрудника за каждый месяц",

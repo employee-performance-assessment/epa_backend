@@ -41,4 +41,6 @@ public interface EmployeeEvaluationMapper {
     ResponseEmployeeEvaluationShortDto mapToShortDto(EmployeeEvaluation employeeEvaluation);
 
     List<ResponseEmployeeEvaluationShortDto> mapToShortListDto(List<EmployeeEvaluation> evaluations);
+
+    List<ResponseEmployeeEvaluationShortDto> mapDtoList(List<EmployeeEvaluation> employeeEvaluations);
 }

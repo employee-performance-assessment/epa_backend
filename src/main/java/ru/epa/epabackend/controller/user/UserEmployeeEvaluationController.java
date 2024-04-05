@@ -159,4 +159,27 @@ public class UserEmployeeEvaluationController {
     public List<ResponseRatingFullDto> findPersonalRating(Principal principal) {
         return employeeEvaluationService.findPersonalRating(principal.getName());
     }
+
+    /**
+     * Эндпойнт получения списка поставленных оценок по ID оцененного сотрудника.
+     */
+    @Operation(
+            summary = "Получение сотрудником списка поставленных оценок по ID оцененного сотрудника",
+            description = "Возвращает список поставленных оценок" +
+                    "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = ResponseMyEvaluationsDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/my")
+    public List<ResponseMyEvaluationsDto> findAllMyEvaluationsEvaluatedId(Principal principal, @RequestParam Long evaluatedId) {
+        return employeeEvaluationService.findAllMyEvaluationsByEvaluatedId(principal.getName(), evaluatedId);
+    }
 }
