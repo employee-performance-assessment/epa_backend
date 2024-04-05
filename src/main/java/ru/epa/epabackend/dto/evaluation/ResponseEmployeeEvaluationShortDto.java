@@ -3,7 +3,7 @@ package ru.epa.epabackend.dto.evaluation;
 import lombok.*;
 
 /**
- * Класс EvaluationCreateResponseDto для передачи информации об оценках сотрудника.
+ * Класс ResponseEmployeeEvaluationShortDto для получения оценки.
  *
  * @author Михаил Безуглов
  */
@@ -13,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResponseEmployeeEvaluationDto {
+public class ResponseEmployeeEvaluationShortDto {
 
     /**
      * Название критерия.

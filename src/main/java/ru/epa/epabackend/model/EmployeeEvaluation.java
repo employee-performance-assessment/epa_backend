@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 /**
  * Класс Оценки Сотрудника содержит информацию о том кто оценивает
- * и кого оценивают, а также дату оценки и название оценки.
+ * и кого оценивают, а также дату оценки, название оценки и анкету по которой оцениваем.
  *
  * @author Михаил Безуглов
  */
@@ -60,4 +60,11 @@ public class EmployeeEvaluation {
      */
     @JoinColumn(name = "score")
     private Integer score;
+
+    /**
+     * Анкета по которой оцениваем.
+     */
+    @ManyToOne
+    @JoinColumn(name = "questionnaire_id", referencedColumnName = "id")
+    private Questionnaire questionnaire;
 }

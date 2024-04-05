@@ -15,18 +15,13 @@ public interface RecommendationService {
     /**
      * Создание рекомендации.
      */
-    Recommendation create(RequestRecommendationDto requestRecommendationDto,
-                          String recipientEmail, String senderEmail);
+    Recommendation create(RequestRecommendationDto requestRecommendationDto, Long questionnaireId,
+                          Long evaluatedId, String senderEmail);
 
     /**
      * Получение рекомендации по её ID.
      */
     Recommendation findById(Long recommendationId);
-
-    /**
-     * Получение списка рекомендаций по ID сотрудника.
-     */
-    List<Recommendation> findAllByRecipientEmail(String recipientEmail);
 
     /**
      * Получение списка всех рекомендаций.
