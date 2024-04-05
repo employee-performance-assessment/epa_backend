@@ -90,7 +90,7 @@ public class AdminAnalyticController {
     /**
      * Эндпойнт получения администратором суммы баллов по выполненным задачам сотрудника за текущий месяц.
      */
-    @Operation(summary = "Получениадминистратором суммы баллов по выполненным задачам сотрудника за текущий месяц")
+    @Operation(summary = "Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     schema = @Schema(implementation = Integer.class))),
