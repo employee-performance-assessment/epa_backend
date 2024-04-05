@@ -1,6 +1,7 @@
 package ru.epa.epabackend.dto.employee;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +29,11 @@ public class RequestEmployeeDto {
     @Size(min = 1, max = 255, groups = {Create.class, Update.class})
     private String fullName;
 
-    @Size(min = 5, max = 32, groups = {Create.class, Update.class})
+    @Hidden
     @Pattern(regexp = TELEGRAM, groups = {Create.class, Update.class})
     private String nickName;
 
+    @Hidden
     private String city;
 
     @NotBlank(groups = Create.class)
@@ -44,6 +46,7 @@ public class RequestEmployeeDto {
     @Size(min = 8, max = 14, groups = {Create.class, Update.class})
     private String password;
 
+    @Hidden
     @Past(groups = {Create.class, Update.class})
     @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate birthday;
@@ -53,7 +56,7 @@ public class RequestEmployeeDto {
     @Pattern(regexp = CYRILLIC_LATIN_WHITESPACE_AND_DASH, groups = {Create.class, Update.class})
     private String position;
 
-    @Size(min = 2, max = 255, groups = {Create.class, Update.class})
+    @Hidden
     private String department;
 
     @Override

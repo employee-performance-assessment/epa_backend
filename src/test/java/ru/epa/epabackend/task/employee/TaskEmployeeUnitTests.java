@@ -74,15 +74,15 @@ class TaskEmployeeUnitTests {
 
     @Test
     void findAllTasksByEmployeeId_shouldCallRepository() {
-        when(taskRepository.findAllByExecutorIdFilters(ID_2, null)).thenReturn(List.of(task));
+        when(taskRepository.findAllByExecutorId(ID_2)).thenReturn(List.of(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        List<Task> tasksResult = taskService.findAllByExecutorIdFilters(null, principal);
+        List<Task> tasksResult = taskService.findAllByExecutorEmail(principal);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
         assertEquals(expectedSize, tasksResult.size());
-        verify(taskRepository, times(1)).findAllByExecutorIdFilters(ID_2, null);
+        verify(taskRepository, times(1)).findAllByExecutorId(ID_2);
     }
 
     @Test
@@ -91,7 +91,7 @@ class TaskEmployeeUnitTests {
                 .thenReturn(Optional.ofNullable(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        Task task = taskService.findByIdAndExecutorId(principal, this.task.getId());
+        Task task = taskService.findByIdAndExecutorEmail(principal, this.task.getId());
 
         int expectedId = 1;
         assertNotNull(task);
@@ -119,6 +119,6 @@ class TaskEmployeeUnitTests {
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId())).thenReturn(Optional.empty());
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
-        assertThrows(EntityNotFoundException.class, () -> taskService.findByIdAndExecutorId(principal, ID_1));
+        assertThrows(EntityNotFoundException.class, () -> taskService.findByIdAndExecutorEmail(principal, ID_1));
     }
 }

@@ -2,6 +2,7 @@ package ru.epa.epabackend.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
@@ -31,6 +32,7 @@ import java.util.Optional;
  *
  * @author Михаил Безуглов
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -51,6 +53,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public List<EmployeeEvaluation> create(String email, Long evaluatedId, Long questionnaireId,
                                            List<RequestEmployeeEvaluationDto> evaluationRequestDtoList) {
+        log.info("Сохранение оценки");
         Employee evaluated = employeeService.findById(evaluatedId);
         Employee evaluator = employeeService.findByEmail(email);
         Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
@@ -72,6 +75,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     @Transactional(readOnly = true)
     public EmployeeEvaluation findById(Long evaluationEvaluationId) {
+        log.info("Получение оценки по идентификатору {}", evaluationEvaluationId);
         return employeeEvaluationRepository
                 .findById(evaluationEvaluationId).orElseThrow(() ->
                         new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
@@ -86,6 +90,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public List<ResponseRatingFullDto> findCommandRating(String email) {
         Employee employee = employeeService.findByEmail(email);
         Long adminId = employee.getCreator().getId();
+        log.info("Получение командного рейтинга идентификатору сотрудника");
         return employeeEvaluationRepository.findCommandRating(adminId);
     }
 
@@ -95,6 +100,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     @Transactional(readOnly = true)
     public List<ResponseRatingFullDto> findPersonalRating(String email) {
+        log.info("Получение персонального рейтинга за каждый месяц по своему email");
         return employeeEvaluationRepository.findPersonalRating(email);
     }
 
@@ -106,16 +112,19 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public List<ResponseRatingFullDto> findCommandRatingForAdmin(String adminEmail) {
         Employee employee = employeeService.findByEmail(adminEmail);
         Long adminId = employee.getId();
+        log.info("Получение командного рейтинга для админа");
         return employeeEvaluationRepository.findCommandRating(adminId);
     }
 
     @Override
     public List<Employee> findAllRatedByMe(String email) {
+        log.info("Получение списка оцененных коллег");
         return employeeEvaluationRepository.findAllRatedByMe(email);
     }
 
     @Override
     public List<Employee> findAllRated(String email) {
+        log.info("Получение списка всех оцененых подчиненных для админа");
         return employeeEvaluationRepository.findAllRated(email);
     }
 
@@ -127,6 +136,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsUsers(email, questionnaireId);
         ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
                 .findByRecipientEmailAndQuestionnaireId(email, questionnaireId));
+        log.info("Получение оцененок и рекомендации по id анкеты для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
                 .adminEvaluation(adminEvaluations)
@@ -145,6 +155,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
         ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
                 .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId));
+        log.info("Получение оцененок и рекомендации по id анкеты и id сотрудника для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
                 .adminEvaluation(adminEvaluations)
@@ -173,6 +184,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                     .build();
             personalRatingList.add(personalRating);
         }
+        log.info("Получение рейтинга сотрудников для руководителя");
         return personalRatingList;
     }
 }

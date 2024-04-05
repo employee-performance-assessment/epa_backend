@@ -16,9 +16,14 @@ import java.util.List;
 public interface TaskService {
 
     /**
-     * Получение списка задач по ID исполнителя и статусу задачи
+     * Получение списка задач по email исполнителя
      */
-    List<Task> findAllByExecutorIdFilters(String status, Principal principal);
+    List<Task> findAllByExecutorEmail(Principal principal);
+
+    /**
+     * Получение списка задач по email исполнителя и статусу задачи
+     */
+    List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal);
 
     /**
      * Получение списка задач администратором по ID исполнителя и статусу задачи
@@ -28,7 +33,7 @@ public interface TaskService {
     /**
      * Найти задачу по ID задачи и ID исполнителя
      */
-    Task findByIdAndExecutorId(Principal principal, Long taskId);
+    Task findByIdAndExecutorEmail(Principal principal, Long taskId);
 
     /**
      * Обновление статуса задачи
@@ -66,7 +71,7 @@ public interface TaskService {
     List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status);
 
     @Transactional(readOnly = true)
-    Task findByIdAndExecutorId(Long taskId, Long employeeId);
+    Task findByIdAndExecutorEmail(Long taskId, Long employeeId);
 
     @Transactional(readOnly = true)
     Task findById(Long taskId);
