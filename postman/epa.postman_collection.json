@@ -3520,7 +3520,44 @@
 			"name": "Evaluations",
 			"item": [
 				{
-					"name": "add evaluation 1",
+					"name": "get default criteria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria/default",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria",
+								"default"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation 1 Copy",
 					"request": {
 						"method": "POST",
 						"header": [],
