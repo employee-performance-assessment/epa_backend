@@ -37,7 +37,7 @@ class TaskAdminUnitTests {
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
     private static final TaskStatus STATUS = TaskStatus.IN_PROGRESS;
-    private static final String email = "qwert@gmail.com";
+    private static final String email = "qwerty@gmail.com";
     @Mock
     private TaskRepository taskRepository;
     @Mock
