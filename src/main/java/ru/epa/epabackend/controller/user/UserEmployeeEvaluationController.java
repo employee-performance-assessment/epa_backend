@@ -220,4 +220,26 @@ public class UserEmployeeEvaluationController {
     public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Principal principal) {
         return employeeEvaluationService.findEmployeesQuestionnairesAssessed(principal.getName());
     }
+
+    /**
+     * Эндпойнт получения сотрудником оценок по ID анкеты и ID сотрудника в разделе Оцени сотрудника.
+     */
+    @Operation(
+            summary = "Эндпойнт получения сотрудником оценок по ID анкеты и ID сотрудника в разделе Оцени сотрудника ",
+            description = "Возвращает список оценок по заполненной анкете для указанного сотрудника."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseAdminEvaluationDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/assessed")
+    public List<ResponseEmployeeEvaluationShortDto> findAssessedQuestionnaire(
+            Principal principal, @RequestParam Long questionnaireId, @RequestParam Long evaluatedId) {
+        return employeeEvaluationService.findQuestionnaireScores(principal.getName(), questionnaireId, evaluatedId);
+    }
 }

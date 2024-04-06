@@ -119,4 +119,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, " +
             "ee.evaluated.position, ee.questionnaire.created ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
+
+        List<EmployeeEvaluation> findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(Long evaluatorId, Long evaluatedId,
+                                                                           Long questionnaireId);
 }
