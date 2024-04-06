@@ -14,9 +14,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
+import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
 import ru.epa.epabackend.dto.project.ResponseProjectSaveWithEmployeeDto;
 import ru.epa.epabackend.dto.project.ResponseProjectShortDto;
-import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
@@ -135,6 +135,8 @@ public class AdminProjectController {
     @Operation(summary = "Удаление проекта")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(

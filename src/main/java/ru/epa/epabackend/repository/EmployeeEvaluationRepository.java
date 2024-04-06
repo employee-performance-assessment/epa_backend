@@ -2,9 +2,7 @@ package ru.epa.epabackend.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
-import ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto;
-import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationShortDto;
-import ru.epa.epabackend.dto.evaluation.ResponseRatingFullDto;
+import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
@@ -81,7 +79,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<Employee> findAllRated(String email);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
-            "q.id, q.created) " +
+            "ru.epa.epabackend.util.Role.ROLE_USER, q.id, q.created) " +
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
             "where e.id <> :employeeId " +
@@ -99,7 +97,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(Long employeeId, LocalDate startDate);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
-            "q.id, q.created) " +
+            "ru.epa.epabackend.util.Role.ROLE_ADMIN, q.id, q.created) " +
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
             "and q.status = 'SHARED' " +
@@ -113,10 +111,40 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessmentByAdmin(Long employeeId, LocalDate startDate);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(ee.evaluated.id, " +
-            "ee.evaluated.fullName, ee.evaluated.position, ee.questionnaire.id, ee.questionnaire.created) " +
+            "ee.evaluated.fullName, ee.evaluated.position, ee.evaluator.role, ee.questionnaire.id, " +
+            "ee.questionnaire.created) " +
             "from EmployeeEvaluation as ee " +
             "where ee.evaluator.id = :employeeId " +
-            "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, " +
+            "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, ee.evaluator.role, " +
             "ee.evaluated.position, ee.questionnaire.created ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +
+            "questionnaire.created createQuestionnaire, " +
+            "round(avg(score)) middleScore) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :evaluatedId " +
+            "and e.evaluated.creator.email = :adminEmail " +
+            "GROUP BY questionnaire.id, questionnaire.created ")
+    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseRatingDto(round(avg(score)) rating) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :evaluatedId " +
+            "and e.questionnaire.id = :questionnaireId " +
+            "GROUP BY e.questionnaire.id")
+    ResponseRatingDto findRatingByQuestionnaireIdAndEvaluatedId(Long questionnaireId, Long evaluatedId);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseRatingDto(round(avg(score)) rating) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.email = :evaluatedEmail " +
+            "and e.questionnaire.id = :questionnaireId " +
+            "GROUP BY e.questionnaire.id")
+    ResponseRatingDto findRatingByQuestionnaireIdAndEvaluatedEmail(Long questionnaireId, String evaluatedEmail);
+
+        List<EmployeeEvaluation> findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(Long evaluatorId, Long evaluatedId,
+                                                                           Long questionnaireId);
 }

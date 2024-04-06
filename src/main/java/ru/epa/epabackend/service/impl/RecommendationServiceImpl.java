@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
@@ -38,13 +37,13 @@ public class RecommendationServiceImpl implements RecommendationService {
      * Сохранение рекомендации.
      */
     @Override
-    public Recommendation create(RequestRecommendationDto requestRecommendationDto, Long questionnaireId,
-                                 Long evaluatedId, String senderEmail) {
-    log.info("Сохранение рекомендации {}", requestRecommendationDto.getRecommendation());
+    public Recommendation create(String stringRecommendation, Long questionnaireId, Long evaluatedId,
+                                 String senderEmail) {
+    log.info("Сохранение рекомендации {}", stringRecommendation);
         Employee recipient = employeeService.findById(evaluatedId);
         Employee sender = employeeService.findByEmail(senderEmail);
         Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
-        Recommendation recommendation = recommendationMapper.mapToEntity(requestRecommendationDto, questionnaire,
+        Recommendation recommendation = recommendationMapper.mapToEntity(stringRecommendation, questionnaire,
                 recipient, sender);
         recommendation.setCreateDay(LocalDate.now());
         return recommendationRepository.save(recommendation);
@@ -70,5 +69,10 @@ public class RecommendationServiceImpl implements RecommendationService {
     public List<Recommendation> findAll() {
         log.info("Получение всех рекомендаций");
         return recommendationRepository.findAll();
+    }
+
+    @Override
+    public Recommendation getByRecipientIdAndQuestionnaireId(Long evaluatedId, Long questionnaireId) {
+        return recommendationRepository.getByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
     }
 }

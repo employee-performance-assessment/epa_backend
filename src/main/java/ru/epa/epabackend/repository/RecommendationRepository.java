@@ -7,5 +7,5 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
 
     Recommendation findByRecipientEmailAndQuestionnaireId(String email, Long questionnaireId);
 
-    Recommendation findByRecipientIdAndQuestionnaireId(Long recipientId, Long questionnaireId);
+    Recommendation getByRecipientIdAndQuestionnaireId(Long evaluatedId, Long questionnaireId);
 }

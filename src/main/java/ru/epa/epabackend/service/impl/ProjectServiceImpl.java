@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
 import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
+import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.model.Employee;
@@ -157,7 +158,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void checkUserAndProject(Employee user, Project project) {
         log.info("Проверка сотрудника {} и проекта {}", user, project);
         if (!user.getProjects().contains(project))
-            throw new ConflictException(String.format("%s с email %s не относится к проекту с id %d",
+            throw new BadRequestException(String.format("%s с email %s не относится к проекту с id %d",
                     user.getRole(), user.getEmail(), project.getId()));
     }
 }

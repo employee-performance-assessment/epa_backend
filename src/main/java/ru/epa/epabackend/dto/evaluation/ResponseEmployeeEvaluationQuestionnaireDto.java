@@ -1,8 +1,8 @@
 package ru.epa.epabackend.dto.evaluation;
 
 import lombok.*;
-import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 /**
@@ -19,6 +19,16 @@ import java.util.HashMap;
 public class ResponseEmployeeEvaluationQuestionnaireDto {
 
     /**
+     * Дата создания/рассылки анкеты.
+     */
+    private LocalDate createQuestionnaire;
+
+    /**
+     * Средний бал за анкету.
+     */
+    private Double middleScore;
+
+    /**
      * Список оценок.
      */
     private HashMap<String, ResponseEvaluationsAdminUserDto> evaluations;
@@ -26,5 +36,5 @@ public class ResponseEmployeeEvaluationQuestionnaireDto {
     /**
      * Рекомендация руководителя.
      */
-    private ResponseRecommendationShortDto recommendation;
+    private String recommendation;
 }

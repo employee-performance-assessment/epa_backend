@@ -2,9 +2,7 @@ package ru.epa.epabackend.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 import ru.epa.epabackend.dto.recommendation.ResponseRecommendationDto;
-import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Questionnaire;
 import ru.epa.epabackend.model.Recommendation;
@@ -25,15 +23,10 @@ public interface RecommendationMapper {
     ResponseRecommendationDto mapToDto(Recommendation recommendation);
 
     /**
-     * Преобразование из сущности в короткое DTO.
-     */
-    ResponseRecommendationShortDto mapToShortDto(Recommendation recommendation);
-
-    /**
      * Преобразование из DTO в сущность.
      */
     @Mapping(target = "id", ignore = true)
-    Recommendation mapToEntity(RequestRecommendationDto requestRecommendationDto, Questionnaire questionnaire,
+    Recommendation mapToEntity(String recommendation, Questionnaire questionnaire,
                                Employee recipient, Employee sender);
 
     /**
