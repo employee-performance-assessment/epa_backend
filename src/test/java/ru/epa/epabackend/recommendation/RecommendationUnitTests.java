@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Recommendation;
@@ -40,7 +39,7 @@ public class RecommendationUnitTests {
     @Mock
     private EmployeeService employeeService;
     private Recommendation recommendation;
-    private RequestRecommendationDto requestRecommendationDto;
+    private String stringRecommendation;
     private Employee recipient;
     protected Employee sender;
 
@@ -63,9 +62,7 @@ public class RecommendationUnitTests {
                 .recommendation("recommendation")
                 .createDay(LocalDate.now())
                 .build();
-        requestRecommendationDto = RequestRecommendationDto.builder()
-                .recommendation("recommendationDto")
-                .build();
+        stringRecommendation = "recommendationDto";
     }
 
    /* @Test

@@ -1,7 +1,8 @@
 package ru.epa.epabackend.dto.evaluation;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-import ru.epa.epabackend.dto.recommendation.RequestRecommendationDto;
 
 import java.util.List;
 
@@ -24,7 +25,9 @@ public class RequestAdminEvaluationDto {
     private List<RequestEmployeeEvaluationDto> evaluationDtoList;
 
     /**
-     * Рекомендация руководителя.
+     * Описание рекомендации.
      */
-    private RequestRecommendationDto recommendation;
+    @NotBlank
+    @Size(min = 10, max = 600)
+    private String recommendation;
 }

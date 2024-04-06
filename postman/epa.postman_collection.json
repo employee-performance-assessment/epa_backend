@@ -6081,7 +6081,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 5,\r\n      \"score\": 3\r\n    }\r\n  ],\r\n  \"recommendation\": {\r\n    \"recommendation\": \"необходимо больше спать ночью\"\r\n  }\r\n}",
+							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 5,\r\n      \"score\": 3\r\n    }\r\n  ],\r\n  \"recommendation\": \"необходимо больше спать ночью\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -6218,7 +6218,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 5,\r\n      \"score\": 4\r\n    }\r\n  ],\r\n  \"recommendation\": {\r\n    \"recommendation\": \"не сиди долго над заданием. Обращайся к коллегам\"\r\n  }\r\n}",
+							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 5,\r\n      \"score\": 4\r\n    }\r\n  ],\r\n  \"recommendation\": \"не сиди долго над заданием. Обращайся к коллегам\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -6355,7 +6355,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 1,\r\n      \"score\": 2\r\n    }\r\n  ],\r\n  \"recommendation\": {\r\n    \"recommendation\": \"ты молодец, береги себя\"\r\n  }\r\n}",
+							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 1,\r\n      \"score\": 2\r\n    }\r\n  ],\r\n  \"recommendation\": \"ты молодец, береги себя\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -6741,6 +6741,47 @@
 								"user",
 								"evaluations",
 								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
 							]
 						}
 					},
