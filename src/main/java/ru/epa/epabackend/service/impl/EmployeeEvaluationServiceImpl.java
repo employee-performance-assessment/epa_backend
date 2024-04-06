@@ -155,7 +155,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
         Recommendation recommendation = recommendationRepository
-                .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
+                .getByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
         ResponseRatingDto responseRatingDto = employeeEvaluationRepository
                 .findRatingByQuestionnaireIdAndEvaluatedId(questionnaireId, evaluatedId);
         log.info("Получение оценок и рекомендации по id анкеты и id сотрудника для руководителя");
