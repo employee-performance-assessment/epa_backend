@@ -182,9 +182,9 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public List<ResponseEmployeeEvaluationShortDto> findQuestionnaireScores(String email, Long questionnaireId,
                                                                             Long evaluatedId) {
         Employee employee = employeeService.findByEmail(email);
-        return employeeEvaluationMapper.mapToShortListDto(
-                employeeEvaluationRepository.findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(
-                        employee.getId(), evaluatedId, questionnaireId));
+        List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationRepository
+                .findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(employee.getId(), evaluatedId, questionnaireId);
+        return employeeEvaluationMapper.mapToShortListDto(employeeEvaluations);
     }
 
     @Override
