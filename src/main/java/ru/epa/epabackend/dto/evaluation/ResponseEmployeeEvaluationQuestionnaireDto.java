@@ -2,6 +2,7 @@ package ru.epa.epabackend.dto.evaluation;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 /**
@@ -16,6 +17,16 @@ import java.util.HashMap;
 @AllArgsConstructor
 @Builder
 public class ResponseEmployeeEvaluationQuestionnaireDto {
+
+    /**
+     * Дата создания/рассылки анкеты.
+     */
+    private LocalDate createQuestionnaire;
+
+    /**
+     * Средний бал за анкету.
+     */
+    private Double middleScore;
 
     /**
      * Список оценок.

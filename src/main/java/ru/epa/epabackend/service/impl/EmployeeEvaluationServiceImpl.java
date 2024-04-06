@@ -11,10 +11,7 @@ import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.QuestionnaireMapper;
 import ru.epa.epabackend.mapper.RecommendationMapper;
-import ru.epa.epabackend.model.Criteria;
-import ru.epa.epabackend.model.Employee;
-import ru.epa.epabackend.model.EmployeeEvaluation;
-import ru.epa.epabackend.model.Questionnaire;
+import ru.epa.epabackend.model.*;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.repository.RecommendationRepository;
 import ru.epa.epabackend.service.CriteriaService;
@@ -135,13 +132,17 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsAdmin(email, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsUsers(email, questionnaireId);
-        String recommendation = recommendationRepository
-                .findByRecipientEmailAndQuestionnaireId(email, questionnaireId).getRecommendation();
+        Recommendation recommendation = recommendationRepository
+                .findByRecipientEmailAndQuestionnaireId(email, questionnaireId);
+        ResponseRatingDto responseRatingDto = employeeEvaluationRepository
+                .findRatingByQuestionnaireIdAndEvaluatedEmail(questionnaireId, email);
         log.info("Получение оценок и рекомендации по id анкеты для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
+                .createQuestionnaire(recommendation.getQuestionnaire().getCreated())
+                .middleScore(responseRatingDto.getRating())
                 .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
-                .recommendation(recommendation)
+                .recommendation(recommendation.getRecommendation())
                 .build();
     }
 
@@ -156,13 +157,17 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsForAdmin(adminEmail, evaluatedId, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
-        String recommendation = recommendationRepository
-                .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId).getRecommendation();
+        Recommendation recommendation = recommendationRepository
+                .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
+        ResponseRatingDto responseRatingDto = employeeEvaluationRepository
+                .findRatingByQuestionnaireIdAndEvaluatedId(questionnaireId, evaluatedId);
         log.info("Получение оценок и рекомендации по id анкеты и id сотрудника для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
+                .createQuestionnaire(recommendation.getQuestionnaire().getCreated())
+                .middleScore(responseRatingDto.getRating())
                 .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
-                .recommendation(recommendation)
+                .recommendation(recommendation.getRecommendation())
                 .build();
     }
 
@@ -180,6 +185,14 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email) {
         Employee employee = employeeService.findByEmail(email);
             return employeeEvaluationRepository.findEmployeesQuestionnairesAssessed(employee.getId());
+    }
+
+    /**
+     * Получение анкет в которых оценен сотрудник с ID.
+     */
+    @Override
+    public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId) {
+        return employeeEvaluationRepository.findListQuestionnaireByEvaluatedId(adminEmail, evaluatedId);
     }
 
     @Override
@@ -218,7 +231,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Сортировка оценок по оцененным коллегам и анкетам.
+     * Фильтрация оценок по оцененным коллегам и анкетам.
      */
     private List<ResponseMyEvaluationsDto> filterMyEvaluations(List<EmployeeEvaluation> evaluations) {
         List<ResponseMyEvaluationsDto> myEmployeeEvaluations = new ArrayList<>(evaluations.size());
