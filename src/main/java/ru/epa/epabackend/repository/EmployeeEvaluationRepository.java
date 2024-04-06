@@ -2,9 +2,7 @@ package ru.epa.epabackend.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
-import ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto;
-import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationShortDto;
-import ru.epa.epabackend.dto.evaluation.ResponseRatingFullDto;
+import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
@@ -120,6 +118,32 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, ee.evaluator.role, " +
             "ee.evaluated.position, ee.questionnaire.created ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +
+            "questionnaire.created createQuestionnaire, " +
+            "round(avg(score)) middleScore) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :evaluatedId " +
+            "and e.evaluated.creator.email = :adminEmail " +
+            "GROUP BY questionnaire.id, questionnaire.created ")
+    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseRatingDto(round(avg(score)) rating) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :evaluatedId " +
+            "and e.questionnaire.id = :questionnaireId " +
+            "GROUP BY e.questionnaire.id")
+    ResponseRatingDto findRatingByQuestionnaireIdAndEvaluatedId(Long questionnaireId, Long evaluatedId);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseRatingDto(round(avg(score)) rating) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.email = :evaluatedEmail " +
+            "and e.questionnaire.id = :questionnaireId " +
+            "GROUP BY e.questionnaire.id")
+    ResponseRatingDto findRatingByQuestionnaireIdAndEvaluatedEmail(Long questionnaireId, String evaluatedEmail);
 
         List<EmployeeEvaluation> findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(Long evaluatorId, Long evaluatedId,
                                                                            Long questionnaireId);
