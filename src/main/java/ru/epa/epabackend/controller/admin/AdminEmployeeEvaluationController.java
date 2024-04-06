@@ -125,7 +125,7 @@ public class AdminEmployeeEvaluationController {
         return ResponseAdminEvaluationDto
                 .builder()
                 .adminEvaluations(employeeEvaluationMapper.mapToShortListDto(employeeEvaluations))
-                .recommendation(recommendationMapper.mapToShortDto(recommendation))
+                .recommendation(recommendation.getRecommendation())
                 .build();
     }
 
