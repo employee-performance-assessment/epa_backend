@@ -10,7 +10,6 @@ import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.QuestionnaireMapper;
-import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.Criteria;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
@@ -176,12 +175,12 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email) {
         Employee employee = employeeService.findByEmail(email);
-            return employeeEvaluationRepository.findEmployeesQuestionnairesAssessed(employee.getId());
+        return employeeEvaluationRepository.findEmployeesQuestionnairesAssessed(employee.getId());
     }
 
     @Override
     public List<ResponseEmployeeEvaluationShortDto> findQuestionnaireScores(String email, Long questionnaireId,
-                                                                              Long evaluatedId) {
+                                                                            Long evaluatedId) {
         Employee employee = employeeService.findByEmail(email);
         return employeeEvaluationMapper.mapToShortListDto(
                 employeeEvaluationRepository.findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(
