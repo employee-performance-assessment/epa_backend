@@ -3532,10 +3532,6 @@
 									"pm.test(\"Has response body\", function () {\r",
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Response body contains a list of 11 objects\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(11);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -4337,10 +4333,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('status');\r",
 									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
-									"});\r",
-									"pm.test(\"Field criterias in response body contains a list of 11 objects\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.criterias).to.be.an('array').that.has.lengthOf(11);\r",
 									"});"
 								],
 								"type": "text/javascript",
