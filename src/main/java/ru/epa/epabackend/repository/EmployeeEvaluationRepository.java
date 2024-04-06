@@ -2,11 +2,13 @@ package ru.epa.epabackend.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto;
 import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationShortDto;
 import ru.epa.epabackend.dto.evaluation.ResponseRatingFullDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EmployeeEvaluationRepository extends JpaRepositoryImplementation<EmployeeEvaluation, Long> {
@@ -77,4 +79,36 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "from EmployeeEvaluation e " +
             "where e.evaluator.creator.email = :email ")
     List<Employee> findAllRated(String email);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
+            "q.id, q.created) " +
+            "from Questionnaire q " +
+            "inner join Employee e on q.author.id = e.creator.id " +
+            "where e.id <> :employeeId " +
+            "and q.status = 'SHARED' " +
+            "and q.created > :startDate " +
+            "and e.creator.id = " +
+            "(select emp.creator.id " +
+            "from Employee emp " +
+            "where emp.id = :employeeId) " +
+            "and (e.id, q.id) not in " +
+            "(select ee.evaluated.id, ee.questionnaire.id " +
+            "from EmployeeEvaluation as ee " +
+            "where ee.evaluator.id = :employeeId " +
+            "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id) ")
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(Long employeeId, LocalDate startDate);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
+            "q.id, q.created) " +
+            "from Questionnaire q " +
+            "inner join Employee e on q.author.id = e.creator.id " +
+            "and q.status = 'SHARED' " +
+            "and q.created > :startDate " +
+            "and e.creator.id = :employeeId " +
+            "and (e.id, q.id) not in " +
+            "(select ee.evaluated.id, ee.questionnaire.id " +
+            "from EmployeeEvaluation as ee " +
+            "where ee.evaluator.id = :employeeId " +
+            "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id) ")
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessmentByAdmin(Long employeeId, LocalDate startDate);
 }
