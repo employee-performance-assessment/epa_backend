@@ -4,9 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
 import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationFullDto;
-import ru.epa.epabackend.model.Criteria;
-import ru.epa.epabackend.model.Employee;
-import ru.epa.epabackend.model.EmployeeEvaluation;
+import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationShortDto;
+import ru.epa.epabackend.model.*;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
  *
  * @author Михаил Безуглов
  */
-@Mapper(componentModel = "spring", uses = {CriteriaMapper.class, EmployeeMapper.class})
+@Mapper(componentModel = "spring", uses = {CriteriaMapper.class, EmployeeMapper.class, QuestionnaireMapper.class})
 public interface EmployeeEvaluationMapper {
 
     /**
@@ -27,11 +26,21 @@ public interface EmployeeEvaluationMapper {
      * Преобразование из DTO в сущность.
      */
     @Mapping(target = "id", ignore = true)
-    EmployeeEvaluation mapToEntity(RequestEmployeeEvaluationDto requestEmployeeEvaluationDto,
-                                   Employee evaluated, Employee evaluator, Criteria criteria);
+    EmployeeEvaluation mapToEntity(RequestEmployeeEvaluationDto requestEmployeeEvaluationDto, Employee evaluated,
+                                   Questionnaire questionnaire, Employee evaluator, Criteria criteria);
 
     /**
      * Преобразование списка сущностей в список DTO.
      */
     List<ResponseEmployeeEvaluationFullDto> mapList(List<EmployeeEvaluation> employeeEvaluations);
+
+    /**
+     * Преобразование из сущности в DTO.
+     */
+    @Mapping(target = "name", source = "employeeEvaluation.criteria.name")
+    ResponseEmployeeEvaluationShortDto mapToShortDto(EmployeeEvaluation employeeEvaluation);
+
+    List<ResponseEmployeeEvaluationShortDto> mapToShortListDto(List<EmployeeEvaluation> evaluations);
+
+    List<ResponseEmployeeEvaluationShortDto> mapDtoList(List<EmployeeEvaluation> employeeEvaluations);
 }

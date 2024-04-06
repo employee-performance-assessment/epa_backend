@@ -12,11 +12,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
-import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
-import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationFullDto;
+import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
+import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
+import ru.epa.epabackend.mapper.EmployeeMapper;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
 
@@ -38,6 +39,7 @@ public class UserEmployeeEvaluationController {
 
     private final EmployeeEvaluationService employeeEvaluationService;
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
+    private final EmployeeMapper employeeMapper;
 
     /**
      * Эндпойнт добавления оценок сотрудника
@@ -60,27 +62,27 @@ public class UserEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public List<ResponseEmployeeEvaluationFullDto> save(
-            Principal principal,
-            @RequestParam(required = true) Long evaluatedId,
+    public List<ResponseEmployeeEvaluationFullDto> save(Principal principal,
+            @RequestParam Long questionnaireId, @RequestParam Long evaluatedId,
             @Valid @RequestBody List<RequestEmployeeEvaluationDto> evaluationListRequestDto) {
         List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationService.create(principal.getName(),
-                        evaluatedId, evaluationListRequestDto);
+                        evaluatedId, questionnaireId, evaluationListRequestDto);
         return employeeEvaluationMapper.mapList(employeeEvaluations);
     }
 
     /**
-     * Эндпойнт получения сотрудником всех оценок коллег о себе.
+     * Эндпойнт получения сотрудником всех оценок и рекомендации по ID анкеты.
      */
     @Operation(
-            summary = "Получение сотрудником всех своих оценок от коллег",
+            summary = "Получение сотрудником всех своих оценок и рекомендации",
             description = "Возвращает список всех оценок коллег (усредненный по оценкам)" +
+                    "оценки руководителя и рекомендацию руководителя" +
                     "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = ResponseEmployeeEvaluationDto.class)))),
+                    schema = @Schema(implementation = ResponseEmployeeEvaluationQuestionnaireDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -88,30 +90,134 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping()
-    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(Principal principal) {
-        return employeeEvaluationService.findAllEvaluationsUsers(principal.getName());
+    public ResponseEmployeeEvaluationQuestionnaireDto findEvaluationsAndRecommendation(
+            Principal principal, @RequestParam Long questionnaireId) {
+        return employeeEvaluationService.findAllEvaluationsByQuestionnaireId(principal.getName(),
+                questionnaireId);
     }
 
     /**
-     * Эндпойнт получения сотрудником всех оценок руководителя о себе.
+     * Эндпойнт получения списка оцененных сотрудников.
      */
     @Operation(
-            summary = "Получение сотрудником своих оценок от руководителя",
-            description = "Возвращает список оценок руководителя о себе" +
-                    "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список."
+            summary = "Получение сотрудником списка оцененных коллег",
+            description = "Возвращает список оцененных коллег" +
+                    "\n\nВ случае, если не найдено ни одного оцененного сотрудника, возвращает пустой список."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = ResponseEmployeeEvaluationDto.class)))),
+                    schema = @Schema(implementation = ResponseEmployeeShortDto.class)))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/admin")
-    public List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(Principal principal) {
-        return employeeEvaluationService.findAllEvaluationsAdmin(principal.getName());
+    @GetMapping("/list-evaluated")
+    public List<ResponseEmployeeShortDto> findAllRatedByMe(Principal principal) {
+        List<Employee> employees = employeeEvaluationService.findAllRatedByMe(principal.getName());
+        return employeeMapper.mapList(employees);
+    }
+
+    /**
+     * Эндпойнт получения командного рейтинга.
+     */
+    @Operation(summary = "Получение командного рейтинга",
+            description = "Возвращает список рейтинга команды за каждый оцененный месяц" +
+                    "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/rating/command")
+    public List<ResponseRatingFullDto> findCommandRating(Principal principal) {
+        return employeeEvaluationService.findCommandRating(principal.getName());
+    }
+
+    /**
+     * Эндпойнт получения личного рейтинга.
+     */
+    @Operation(summary = "Получение личного рейтинга",
+            description = "Возвращает личный рейтинг за каждый оцененный месяц" +
+                    "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/rating/personal")
+    public List<ResponseRatingFullDto> findPersonalRating(Principal principal) {
+        return employeeEvaluationService.findPersonalRating(principal.getName());
+    }
+
+    /**
+     * Эндпойнт получения списка поставленных оценок по ID оцененного сотрудника.
+     */
+    @Operation(
+            summary = "Получение сотрудником списка поставленных оценок по ID оцененного сотрудника",
+            description = "Возвращает список поставленных оценок" +
+                    "\n\nВ случае, если не найдено ни одной оценке, возвращает пустой список."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = ResponseMyEvaluationsDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/my")
+    public List<ResponseMyEvaluationsDto> findAllMyEvaluationsEvaluatedId(Principal principal, @RequestParam Long evaluatedId) {
+        return employeeEvaluationService.findAllMyEvaluationsByEvaluatedId(principal.getName(), evaluatedId);
+    }
+
+    /**
+     * Эндпоинт получения списка сотрудиков и анкет, по которым их необходимо оценить
+     */
+    @Operation(summary = "Эндпоинт получения списка сотрудиков и анкет, по которым их необходимо оценить")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = ResponseEmployeeAssessDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/assess-list")
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(Principal principal) {
+        return employeeEvaluationService.findEmployeesQuestionnairesForAssessment(principal.getName());
+    }
+
+    /**
+     * Эндпоинт получения списка сотрудиков и анкет, по которым ставились оценки ранее
+     */
+    @Operation(summary = "Эндпоинт получения списка сотрудиков и анкет, по которым ставились оценки ранее")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = ResponseEmployeeAssessDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/assessed-list")
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Principal principal) {
+        return employeeEvaluationService.findEmployeesQuestionnairesAssessed(principal.getName());
     }
 }

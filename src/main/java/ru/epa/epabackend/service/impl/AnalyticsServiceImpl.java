@@ -122,6 +122,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return getIndividualStats(employee, rangeStart, rangeEnd);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Integer findQuantityOfPointsPerMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+        return taskRepository.getSumPointsByExecutorIdAndThisMonth(employeeId, rangeStart, rangeEnd);
+    }
+
     private IndividualAnalytics getIndividualStats(Employee employee, LocalDate rangeStart, LocalDate rangeEnd) {
         List<Task> tasks = taskRepository.findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
         int delayed = countDelayedTasks(tasks);

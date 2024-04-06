@@ -2,6 +2,7 @@ package ru.epa.epabackend.dto.recommendation;
 
 import lombok.*;
 import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
+import ru.epa.epabackend.dto.questionnaire.ResponseQuestionnaireShortDto;
 
 import java.time.LocalDate;
 
@@ -42,4 +43,9 @@ public class ResponseRecommendationDto {
      * Описание рекомендации.
      */
     private String recommendation;
+
+    /**
+     * Анкета по которой оцениваем.
+     */
+    private ResponseQuestionnaireShortDto questionnaire;
 }

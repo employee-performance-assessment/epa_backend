@@ -1,11 +1,9 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.evaluation.RequestEmployeeEvaluationDto;
-import ru.epa.epabackend.dto.evaluation.ResponseEmployeeEvaluationDto;
-import ru.epa.epabackend.dto.evaluation.ResponseRatingDto;
+import ru.epa.epabackend.dto.evaluation.*;
+import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -19,8 +17,7 @@ public interface EmployeeEvaluationService {
     /**
      * Сохранение оценки сотрудника от его руководителя или коллег.
      */
-    List<EmployeeEvaluation> create(String email,
-                                    Long evaluatedId,
+    List<EmployeeEvaluation> create(String email, Long evaluatedId, Long questionnaireId,
                                     List<RequestEmployeeEvaluationDto> evaluationListDto);
 
     /**
@@ -29,22 +26,47 @@ public interface EmployeeEvaluationService {
     EmployeeEvaluation findById(Long employeeEvaluationId);
 
     /**
-     * Получение списка всех оценок коллег.
+     * Получение командного рейтинга за каждый месяц.
      */
-    List<ResponseEmployeeEvaluationDto> findAllEvaluationsUsers(String email);
+    List<ResponseRatingFullDto> findCommandRating(String email);
 
     /**
-     * Получение списка оценок руководителя.
+     * Получение личного рейтинга за каждый месяц.
      */
-    List<ResponseEmployeeEvaluationDto> findAllEvaluationsAdmin(String email);
+    List<ResponseRatingFullDto> findPersonalRating(String email);
 
     /**
-     * Получение рейтинга за определенный период сотрудника от всего коллектива.
+     * Получение рейтинга каждого сотрудника за каждый месяц для админа.
      */
-    ResponseRatingDto findFullRating(String email, LocalDate startDay, LocalDate endDay);
+    List<ResponsePersonalRatingDto> findPersonalRatingAdmin(String email);
 
     /**
-     * Получение рейтинга за определенный период сотрудника только от руководителя.
+     * Получение списка оцененных коллег.
      */
-    ResponseRatingDto findRatingByAdmin(String email, LocalDate startDay, LocalDate endDay);
+    List<Employee> findAllRatedByMe(String email);
+
+    /**
+     * Получение списка оцененных коллег для админа.
+     */
+    List<Employee> findAllRated(String email);
+
+    /**
+     * Получение оценок и рекомендации для сотрудника.
+     */
+    ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireId(String email, Long questionnaireId);
+
+    /**
+     * Получение оценок и рекомендации для админа.
+     */
+    ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
+    Long questionnaireId, Long evaluatedId);
+
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email);
+
+    /**
+     * Получение оценок коллег по id анкеты.
+     */
+    List<ResponseMyEvaluationsDto> findAllMyEvaluationsByEvaluatedId(String email, Long evaluatedId);
+
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email);
 }
