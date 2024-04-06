@@ -181,7 +181,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email) {
         Employee employee = employeeService.findByEmail(email);
         LocalDate startDate = LocalDate.now().minusDays(30);
-        if(employee.getCreator()==null) {
+        if (employee.getCreator() == null) {
             return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessmentByAdmin(employee.getId(), startDate);
         } else {
             return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessment(employee.getId(), startDate);
