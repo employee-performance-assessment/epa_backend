@@ -111,4 +111,12 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "where ee.evaluator.id = :employeeId " +
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id) ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessmentByAdmin(Long employeeId, LocalDate startDate);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(ee.evaluated.id, " +
+            "ee.evaluated.fullName, ee.evaluated.position, ee.questionnaire.id, ee.questionnaire.created) " +
+            "from EmployeeEvaluation as ee " +
+            "where ee.evaluator.id = :employeeId " +
+            "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, " +
+            "ee.evaluated.position, ee.questionnaire.created ")
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
 }
