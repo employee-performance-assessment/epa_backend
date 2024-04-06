@@ -117,7 +117,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, " +
             "ee.evaluated.position, ee.questionnaire.created ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
-
+  
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +
             "questionnaire.created createQuestionnaire, " +
@@ -143,4 +143,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "and e.questionnaire.id = :questionnaireId " +
             "GROUP BY e.questionnaire.id")
     ResponseRatingDto findRatingByQuestionnaireIdAndEvaluatedEmail(Long questionnaireId, String evaluatedEmail);
+
+        List<EmployeeEvaluation> findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(Long evaluatorId, Long evaluatedId,
+                                                                           Long questionnaireId);
 }

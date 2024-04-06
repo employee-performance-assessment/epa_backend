@@ -25,4 +25,9 @@ public interface RecommendationService {
      * Получение списка всех рекомендаций.
      */
     List<Recommendation> findAll();
+
+    /**
+     * Получение рекомендации по id получателя и id анкеты
+     */
+    Recommendation getByRecipientIdAndQuestionnaireId(Long evaluatedId, Long questionnaireId);
 }

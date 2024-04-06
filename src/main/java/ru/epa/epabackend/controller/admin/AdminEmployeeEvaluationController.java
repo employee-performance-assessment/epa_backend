@@ -153,7 +153,6 @@ public class AdminEmployeeEvaluationController {
                 questionnaireId, evaluatedId);
     }
 
-
     /**
      * Эндпойнт получения списка анкет в которых оценен сотрудник.
      */
@@ -166,16 +165,33 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
                     schema = @Schema(implementation = ResponseEmployeeShortDto.class)))),
+      @GetMapping("/list-questionnaire")
+    public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Principal principal, @RequestParam Long evaluatedId) {
+        List<ResponseEvaluatedQuestionnaireDto> listQuestionnaire = employeeEvaluationService
+                .findAllQuestionnaireByEvaluatedId(principal.getName(), evaluatedId);
+        return listQuestionnaire;
+
+    /**
+     * Эндпойнт получения руководителем оценок и рекомендации по ID анкеты и ID сотрудника в разделе Оценка ЭС.
+     */
+    @Operation(
+            summary = "Эндпойнт получения руководителем всех оценок и рекомендации по ID анкеты и ID сотрудника " +
+                    "в разделе Оценка ЭС ",
+            description = "Возвращает список оценок и рекомендацию, оставленные руководителем по определенной анкете " +
+                    "для указанного сотрудника."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ResponseAdminEvaluationDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/list-questionnaire")
-    public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Principal principal, @RequestParam Long evaluatedId) {
-        List<ResponseEvaluatedQuestionnaireDto> listQuestionnaire = employeeEvaluationService
-                .findAllQuestionnaireByEvaluatedId(principal.getName(), evaluatedId);
-        return listQuestionnaire;
+    @GetMapping("/assessed")
+    public ResponseAdminEvaluationDto findAssessedQuestionnaire(
+            Principal principal, @RequestParam Long questionnaireId, @RequestParam Long evaluatedId) {
+        return employeeEvaluationService.findAssessedQuestionnaireByAdmin(principal.getName(), questionnaireId, evaluatedId);
     }
 }
