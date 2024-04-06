@@ -81,7 +81,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<Employee> findAllRated(String email);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
-            "q.id, q.created) " +
+            "ru.epa.epabackend.util.Role.ROLE_USER, q.id, q.created) " +
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
             "where e.id <> :employeeId " +
@@ -99,7 +99,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(Long employeeId, LocalDate startDate);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
-            "q.id, q.created) " +
+            "ru.epa.epabackend.util.Role.ROLE_ADMIN, q.id, q.created) " +
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
             "and q.status = 'SHARED' " +
@@ -113,10 +113,11 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessmentByAdmin(Long employeeId, LocalDate startDate);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(ee.evaluated.id, " +
-            "ee.evaluated.fullName, ee.evaluated.position, ee.questionnaire.id, ee.questionnaire.created) " +
+            "ee.evaluated.fullName, ee.evaluated.position, ee.evaluator.role, ee.questionnaire.id, " +
+            "ee.questionnaire.created) " +
             "from EmployeeEvaluation as ee " +
             "where ee.evaluator.id = :employeeId " +
-            "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, " +
+            "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, ee.evaluator.role, " +
             "ee.evaluated.position, ee.questionnaire.created ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
 
