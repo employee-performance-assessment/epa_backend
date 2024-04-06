@@ -70,4 +70,9 @@ public class RecommendationServiceImpl implements RecommendationService {
         log.info("Получение всех рекомендаций");
         return recommendationRepository.findAll();
     }
+
+    @Override
+    public Recommendation getByRecipientIdAndQuestionnaireId(Long evaluatedId, Long questionnaireId) {
+        return recommendationRepository.getByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
+    }
 }
