@@ -75,6 +75,7 @@ class TaskAdminUnitTests {
         employee = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
+                .creator(admin)
                 .email(email)
                 .build();
         project = Project.builder()
