@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.task.ResponseTaskFullDto;
 import ru.epa.epabackend.dto.task.RequestTaskDto;
+import ru.epa.epabackend.dto.task.ResponseTaskFullDto;
 import ru.epa.epabackend.dto.task.ResponseTaskShortDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.TaskMapper;
@@ -138,9 +138,9 @@ public class AdminTaskController {
      */
     @Operation(summary = "Обновление задачи администратором",
             description = "Возможные статусы задач :" +
-            " Новая задача NEW, Задача над которой ведется работа IN_PROGRESS," +
-            " Задача на проверке у руководителя REVIEW , Задача выполнена DONE," +
-            " Задача отменена или заморожена на неопределенный срок CANCELED")
+                    " Новая задача NEW, Задача над которой ведется работа IN_PROGRESS," +
+                    " Задача на проверке у руководителя REVIEW , Задача выполнена DONE," +
+                    " Задача отменена или заморожена на неопределенный срок CANCELED")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTaskFullDto.class))),
@@ -168,13 +168,13 @@ public class AdminTaskController {
     @Operation(summary = "Удаление задачи администратором", description = "Удаляет задачу, если она существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "CONFLICT", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping("/{taskId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
