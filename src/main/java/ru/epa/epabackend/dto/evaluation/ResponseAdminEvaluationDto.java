@@ -1,7 +1,6 @@
 package ru.epa.epabackend.dto.evaluation;
 
 import lombok.*;
-import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 
 import java.util.List;
 
@@ -26,5 +25,5 @@ public class ResponseAdminEvaluationDto {
     /**
      * Рекомендация руководителя.
      */
-    private ResponseRecommendationShortDto recommendation;
+    private String recommendation;
 }

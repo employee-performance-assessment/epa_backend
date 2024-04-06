@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import ru.epa.epabackend.dto.evaluation.*;
-import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.QuestionnaireMapper;
@@ -136,8 +135,8 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsAdmin(email, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsUsers(email, questionnaireId);
-        ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
-                .findByRecipientEmailAndQuestionnaireId(email, questionnaireId));
+        String recommendation = recommendationRepository
+                .findByRecipientEmailAndQuestionnaireId(email, questionnaireId).getRecommendation();
         log.info("Получение оценок и рекомендации по id анкеты для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
@@ -157,8 +156,8 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsForAdmin(adminEmail, evaluatedId, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
-        ResponseRecommendationShortDto recommendation = recommendationMapper.mapToShortDto(recommendationRepository
-                .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId));
+        String recommendation = recommendationRepository
+                .findByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId).getRecommendation();
         log.info("Получение оценок и рекомендации по id анкеты и id сотрудника для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()

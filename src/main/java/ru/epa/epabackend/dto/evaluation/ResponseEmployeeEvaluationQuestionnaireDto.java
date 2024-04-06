@@ -1,7 +1,6 @@
 package ru.epa.epabackend.dto.evaluation;
 
 import lombok.*;
-import ru.epa.epabackend.dto.recommendation.ResponseRecommendationShortDto;
 
 import java.util.HashMap;
 
@@ -26,5 +25,5 @@ public class ResponseEmployeeEvaluationQuestionnaireDto {
     /**
      * Рекомендация руководителя.
      */
-    private ResponseRecommendationShortDto recommendation;
+    private String recommendation;
 }
