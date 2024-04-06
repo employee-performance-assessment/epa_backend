@@ -10,7 +10,6 @@ import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.QuestionnaireMapper;
-import ru.epa.epabackend.mapper.RecommendationMapper;
 import ru.epa.epabackend.model.*;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.repository.RecommendationRepository;

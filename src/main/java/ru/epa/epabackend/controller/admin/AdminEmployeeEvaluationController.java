@@ -170,13 +170,14 @@ public class AdminEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-      @GetMapping("/list-questionnaire")
+    @GetMapping("/list-questionnaire")
     public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Principal principal,
                                                                                       @RequestParam Long evaluatedId) {
         List<ResponseEvaluatedQuestionnaireDto> listQuestionnaire = employeeEvaluationService
                 .findAllQuestionnaireByEvaluatedId(principal.getName(), evaluatedId);
         return listQuestionnaire;
     }
+
     /**
      * Эндпойнт получения руководителем оценок и рекомендации по ID анкеты и ID сотрудника в разделе Оценка ЭС.
      */
