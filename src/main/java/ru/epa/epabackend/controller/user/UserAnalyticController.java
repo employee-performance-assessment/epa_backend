@@ -1,7 +1,6 @@
 package ru.epa.epabackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,7 +9,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.epa.epabackend.dto.analytics.ResponseIndividualAnalyticsDto;
 import ru.epa.epabackend.dto.analytics.ResponseTeamAnalyticsShortDto;
 import ru.epa.epabackend.exception.ErrorResponse;
@@ -87,9 +89,8 @@ public class UserAnalyticController {
         return analyticsMapper.mapToEntityIndividual(stat);
     }
 
-
     /**
-     * Эндпойнт получения суммы баллов по выполненным задачам сотрудника за текущий месяц.
+     * Эндпойнт получения сотрудником суммы своих баллов по выполненным задачам за текущий месяц.
      */
     @Operation(summary = "Получение суммы баллов по выполненным задачам сотрудника за текущий месяц")
     @ApiResponses(value = {
@@ -101,10 +102,10 @@ public class UserAnalyticController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/points/employee/{employeeId}")
-    public Integer findQuantityOfPointsForCurrentMonth(@Parameter(required = true) @PathVariable Long employeeId) {
+    @GetMapping("/points")
+    public Integer findQuantityOfPointsByUser(Principal principal) {
         LocalDate rangeStart = YearMonth.now().atDay(1);
         LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
-        return analyticService.findQuantityOfPointsForCurrentMonth(employeeId, rangeStart, rangeEnd);
+        return analyticService.findQuantityOfPointsByUser(principal, rangeStart, rangeEnd);
     }
 }

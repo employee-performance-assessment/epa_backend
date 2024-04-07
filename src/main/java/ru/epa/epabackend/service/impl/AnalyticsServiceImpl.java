@@ -13,6 +13,7 @@ import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.AnalyticsService;
 import ru.epa.epabackend.service.EmployeeService;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,12 +124,24 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     }
 
     /**
-     * Получение суммы баллов по выполненным задачам сотрудника за текущий месяц.
+     * Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц.
      */
     @Override
     @Transactional(readOnly = true)
-    public Integer findQuantityOfPointsForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+    public Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+        log.info("Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц");
         return taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employeeId, rangeStart, rangeEnd);
+    }
+
+    /**
+     * Получение сотрудником суммы своих баллов по выполненным задачам за текущий месяц.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Integer findQuantityOfPointsByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd) {
+        log.info("Получение сотрудником суммы своих баллов по выполненным задачам за текущий месяц");
+        Employee employee = employeeService.findByEmail(principal.getName());
+        return taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employee.getId(), rangeStart, rangeEnd);
     }
 
     private IndividualAnalytics getIndividualStats(Employee employee, LocalDate rangeStart, LocalDate rangeEnd) {
