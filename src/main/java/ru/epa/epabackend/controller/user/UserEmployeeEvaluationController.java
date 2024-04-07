@@ -26,6 +26,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
+import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
+import static ru.epa.epabackend.util.DateConstant.DATE_TIME_PATTERN;
+
 /**
  * Класс EmployeeEvaluationControllerUser содержит эндпойнты для авторизованного пользователя, относящиеся к
  * оценке сотрудником коллег и получению своих оценок.
@@ -200,8 +203,13 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/assess-list")
-    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(Principal principal) {
-        return employeeEvaluationService.findEmployeesQuestionnairesForAssessment(principal.getName());
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(
+            Principal principal,
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to) {
+        return employeeEvaluationService.findEmployeesQuestionnairesForAssessment(principal.getName(),
+                text, from, to);
     }
 
     /**

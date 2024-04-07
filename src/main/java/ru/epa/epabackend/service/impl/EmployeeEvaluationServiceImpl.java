@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static ru.epa.epabackend.util.Constants.THIRTY_DAYS;
+
 /**
  * Класс EmployeeEvaluationServiceImpl содержит бизнес-логику работы с оценками сотрудников своих коллег.
  *
@@ -216,13 +218,16 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     @Override
-    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email) {
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email, String text,
+                                                                                    LocalDate from, LocalDate to) {
         Employee employee = employeeService.findByEmail(email);
-        LocalDate startDate = LocalDate.now().minusDays(30);
+        LocalDate startDate = LocalDate.now().minusDays(THIRTY_DAYS);
         if (employee.getCreator() == null) {
-            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessmentByAdmin(employee.getId(), startDate);
+            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessmentByAdmin(employee.getId(),
+                    startDate, text, from, to);
         } else {
-            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessment(employee.getId(), startDate);
+            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessment(employee.getId(),
+                    startDate, text, from, to);
         }
     }
 

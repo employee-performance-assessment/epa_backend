@@ -63,7 +63,8 @@ public interface EmployeeEvaluationService {
     ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
     Long questionnaireId, Long evaluatedId);
 
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email,String text, LocalDate from,
+                                                                             LocalDate to);
 
     /**
      * Получение оценок коллег по id анкеты.
