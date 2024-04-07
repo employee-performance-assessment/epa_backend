@@ -15,6 +15,7 @@ import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.repository.RecommendationRepository;
 import ru.epa.epabackend.service.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -250,12 +251,24 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение среднего рейтинга сотрудника за текущий месяц.
+     * Получение сотрудником своего среднего рейтинга за текущий месяц.
      */
     @Override
     @Transactional(readOnly = true)
-    public Double findAverageRatingForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
-        log.info("Получение среднего рейтинга сотрудника за текущий месяц");
+    public Double findAverageRatingByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd) {
+        log.info("Получение сотрудником своего среднего рейтинга за текущий месяц");
+        Employee employee = employeeService.findByEmail(principal.getName());
+        return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employee.getId(),
+                rangeStart, rangeEnd);
+    }
+
+    /**
+     * Получение администратором среднего рейтинга сотрудника за текущий месяц.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+        log.info("Получение администратором среднего рейтинга сотрудника за текущий месяц");
         return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId, rangeStart, rangeEnd);
     }
 

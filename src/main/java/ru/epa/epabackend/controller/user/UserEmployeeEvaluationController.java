@@ -1,7 +1,6 @@
 package ru.epa.epabackend.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -247,9 +246,9 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения среднего рейтинга сотрудника за текущий месяц.
+     * Эндпойнт получения сотрудником своего среднего рейтинга за текущий месяц.
      */
-    @Operation(summary = "Получение среднего рейтинга сотрудника за текущий месяц")
+    @Operation(summary = "Получение сотрудником своего среднего рейтинга за текущий месяц")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     schema = @Schema(implementation = Integer.class))),
@@ -260,9 +259,9 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating/{employeeId}")
-    public Double findAverageRatingForCurrentMonth(@Parameter(required = true) @PathVariable Long employeeId) {
+    public Double findAverageRatingByUser(Principal principal) {
         LocalDate rangeStart = YearMonth.now().atDay(1);
         LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
-        return employeeEvaluationService.findAverageRatingForCurrentMonth(employeeId, rangeStart, rangeEnd);
+        return employeeEvaluationService.findAverageRatingByUser(principal, rangeStart, rangeEnd);
     }
 }
