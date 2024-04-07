@@ -258,7 +258,7 @@ public class UserEmployeeEvaluationController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/rating/{employeeId}")
+    @GetMapping("/rating")
     public Double findAverageRatingByUser(Principal principal) {
         LocalDate rangeStart = YearMonth.now().atDay(1);
         LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
