@@ -4,6 +4,7 @@ import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -80,5 +81,7 @@ public interface EmployeeEvaluationService {
 
     ResponseAdminEvaluationDto findAssessedQuestionnaireByAdmin(String name, Long questionnaireId, Long evaluatedId);
 
-    Double findAverageRatingForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+    Double findAverageRatingByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd);
+
+    Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 }

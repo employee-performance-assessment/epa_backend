@@ -1,6 +1,7 @@
 package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,6 +26,8 @@ import ru.epa.epabackend.service.EmployeeEvaluationService;
 import ru.epa.epabackend.service.RecommendationService;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 /**
@@ -200,5 +203,25 @@ public class AdminEmployeeEvaluationController {
     public ResponseAdminEvaluationDto findAssessedQuestionnaire(
             Principal principal, @RequestParam Long questionnaireId, @RequestParam Long evaluatedId) {
         return employeeEvaluationService.findAssessedQuestionnaireByAdmin(principal.getName(), questionnaireId, evaluatedId);
+    }
+
+    /**
+     * Эндпойнт получения администратором среднего рейтинга за текущий месяц.
+     */
+    @Operation(summary = "Получение администратором среднего рейтинга за текущий месяц")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    schema = @Schema(implementation = Integer.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/rating/{employeeId}")
+    public Double findAverageRatingByAdmin(@Parameter(required = true) @PathVariable Long employeeId) {
+        LocalDate rangeStart = YearMonth.now().atDay(1);
+        LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
+        return employeeEvaluationService.findAverageRatingByAdmin(employeeId, rangeStart, rangeEnd);
     }
 }
