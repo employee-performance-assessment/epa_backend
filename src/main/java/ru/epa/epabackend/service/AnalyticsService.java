@@ -34,5 +34,8 @@ public interface AnalyticsService {
      */
     IndividualAnalytics getIndividualStats(LocalDate startDate, LocalDate endDate, String email);
 
-    Integer findQuantityOfPointsPerMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+    /**
+     * Получение суммы баллов по выполненным задачам сотрудника за текущий месяц.
+     */
+    Integer findQuantityOfPointsForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 }

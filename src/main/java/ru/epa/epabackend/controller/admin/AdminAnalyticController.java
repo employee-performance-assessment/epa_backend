@@ -86,24 +86,4 @@ public class AdminAnalyticController {
                 .getIndividualStatsByAdmin(rangeStart, rangeEnd, principal.getName());
         return analyticsMapper.mapList(stats);
     }
-
-    /**
-     * Эндпойнт получения администратором суммы баллов по выполненным задачам сотрудника за текущий месяц.
-     */
-    @Operation(summary = "Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    schema = @Schema(implementation = Integer.class))),
-            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/points/employee/{employeeId}")
-    public Integer findQuantityOfPointsPerMonth(@Parameter(required = true) @PathVariable Long employeeId) {
-        LocalDate rangeStart = YearMonth.now().atDay(1);
-        LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
-        return analyticService.findQuantityOfPointsPerMonth(employeeId, rangeStart, rangeEnd);
-    }
 }
