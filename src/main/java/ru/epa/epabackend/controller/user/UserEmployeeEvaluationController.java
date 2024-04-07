@@ -26,9 +26,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
-import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
-import static ru.epa.epabackend.util.DateConstant.DATE_TIME_PATTERN;
-
 /**
  * Класс EmployeeEvaluationControllerUser содержит эндпойнты для авторизованного пользователя, относящиеся к
  * оценке сотрудником коллег и получению своих оценок.
