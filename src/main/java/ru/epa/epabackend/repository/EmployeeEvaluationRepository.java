@@ -123,9 +123,13 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "ee.questionnaire.created) " +
             "from EmployeeEvaluation as ee " +
             "where ee.evaluator.id = :employeeId " +
+            "and (cast(:text as text) is null or lower(ee.evaluated.fullName) like lower(concat('%', cast(:text as text), '%'))) " +
+            "and (nullif((:from), null) is null or ee.questionnaire.created >= :from) " +
+            "and (nullif((:to), null) is null or ee.questionnaire.created <= :to) " +
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, ee.evaluator.role, " +
             "ee.evaluated.position, ee.questionnaire.created ")
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId, String text,
+                                                                        LocalDate from, LocalDate to);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +

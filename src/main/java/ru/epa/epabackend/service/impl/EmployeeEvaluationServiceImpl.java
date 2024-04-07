@@ -181,9 +181,10 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     @Override
-    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email) {
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email, String text,
+                                                                               LocalDate from, LocalDate to) {
         Employee employee = employeeService.findByEmail(email);
-        return employeeEvaluationRepository.findEmployeesQuestionnairesAssessed(employee.getId());
+        return employeeEvaluationRepository.findEmployeesQuestionnairesAssessed(employee.getId(), text, from, to);
     }
 
     @Override

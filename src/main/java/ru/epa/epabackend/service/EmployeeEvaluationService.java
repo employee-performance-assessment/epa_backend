@@ -1,5 +1,6 @@
 package ru.epa.epabackend.service;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
@@ -71,7 +72,8 @@ public interface EmployeeEvaluationService {
      */
     List<ResponseMyEvaluationsDto> findAllMyEvaluationsByEvaluatedId(String email, Long evaluatedId);
 
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email, String text, LocalDate from,
+                                                                        LocalDate to);
 
     /**
      * Получение списка анкет в которых оценен сотрудник с id.
