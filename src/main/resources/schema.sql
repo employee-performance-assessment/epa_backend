@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS employee_evaluation
     CONSTRAINT fk_comeve_on_questionnaire foreign key (questionnaire_id) references questionnaires (id),
     CONSTRAINT fk_comeve_on_criteria foreign key (criteria_id) references criteria (id),
     CONSTRAINT uq_employee_evaluation_for_evaluated_id_evaluator_id_criteria_id_create_day UNIQUE (evaluated_id,
-    evaluator_id, criteria_id, questionnaire_id, create_day)
+    evaluator_id, criteria_id, questionnaire_id)
 );
 
 CREATE TABLE IF NOT EXISTS recommendations
@@ -176,5 +176,5 @@ CREATE TABLE IF NOT EXISTS recommendations
     CONSTRAINT fk_comeve_on_sender foreign key (sender_id) references employees (id),
     CONSTRAINT fk_comeve_on_questionnaire foreign key (questionnaire_id) references questionnaires (id),
     CONSTRAINT uq_recommendation_for_recipient_id_sender_id_create_day UNIQUE (recipient_id,
-    sender_id, questionnaire_id, create_day)
+    sender_id, questionnaire_id)
 );
