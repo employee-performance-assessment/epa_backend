@@ -1,5 +1,6 @@
 package ru.epa.epabackend.dto.project;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +19,6 @@ import ru.epa.epabackend.util.ProjectStatus;
 public class ResponseProjectShortDto {
     private Long id;
     private String name;
+    @Hidden
     private ProjectStatus status;
 }
