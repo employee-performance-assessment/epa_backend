@@ -205,6 +205,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .build();
     }
 
+
     /**
      * Получение анкет в которых оценен сотрудник с ID.
      */
@@ -246,6 +247,16 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         }
         log.info("Получение рейтинга сотрудников для руководителя");
         return personalRatingList;
+    }
+
+    /**
+     * Получение среднего рейтинга сотрудника за текущий месяц.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Double findAverageRatingForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+        log.info("Получение среднего рейтинга сотрудника за текущий месяц");
+        return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId, rangeStart, rangeEnd);
     }
 
     /**
