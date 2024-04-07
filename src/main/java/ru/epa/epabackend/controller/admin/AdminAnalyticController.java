@@ -88,7 +88,7 @@ public class AdminAnalyticController {
     }
 
     /**
-     * Эндпойнт получения администратором суммы баллов по выполненным задачам сотрудника за текущий месяц.
+     * Эндпойнт получения администратором суммы своих баллов по выполненным задачам за текущий месяц.
      */
     @Operation(summary = "Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц")
     @ApiResponses(value = {
@@ -101,9 +101,9 @@ public class AdminAnalyticController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/points/employee/{employeeId}")
-    public Integer findQuantityOfPointsPerMonth(@Parameter(required = true) @PathVariable Long employeeId) {
+    public Integer findQuantityOfPointsByAdmin(@Parameter(required = true) @PathVariable Long employeeId) {
         LocalDate rangeStart = YearMonth.now().atDay(1);
         LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
-        return analyticService.findQuantityOfPointsPerMonth(employeeId, rangeStart, rangeEnd);
+        return analyticService.findQuantityOfPointsByAdmin(employeeId, rangeStart, rangeEnd);
     }
 }

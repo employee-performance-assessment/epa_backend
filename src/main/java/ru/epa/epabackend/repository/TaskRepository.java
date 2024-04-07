@@ -32,5 +32,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "from Task t " +
             "where t.executor.id = :employeeId " +
             "and t.finishDate BETWEEN :rangeStart AND :rangeEnd ")
-    Integer getSumPointsByExecutorIdAndThisMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+    Integer getSumPointsByExecutorIdAndForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 }
