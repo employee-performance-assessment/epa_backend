@@ -49,9 +49,9 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "and e.questionnaire.id = :questionnaireId " +
             "GROUP BY e.criteria.name")
     List<ResponseEmployeeEvaluationShortDto> findAllEvaluationsForAdmin(String emailAdmin, Long evaluatedId,
-                                                                     Long questionnaireId);
+                                                                        Long questionnaireId);
 
-   List<EmployeeEvaluation> findAllByEvaluatorEmailAndEvaluatedId(String email, Long evaluatedId);
+    List<EmployeeEvaluation> findAllByEvaluatorEmailAndEvaluatedId(String email, Long evaluatedId);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseRatingFullDto(extract(month from e.createDay), round(avg(score)) rating) " +
@@ -145,6 +145,12 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "GROUP BY e.questionnaire.id")
     ResponseRatingDto findRatingByQuestionnaireIdAndEvaluatedEmail(Long questionnaireId, String evaluatedEmail);
 
-        List<EmployeeEvaluation> findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(Long evaluatorId, Long evaluatedId,
-                                                                           Long questionnaireId);
+    List<EmployeeEvaluation> findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(Long evaluatorId, Long evaluatedId,
+                                                                               Long questionnaireId);
+
+    @Query(value = "SELECT AVG(e.score) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :employeeId " +
+            "and e.createDay BETWEEN :rangeStart AND :rangeEnd ")
+    Double getAverageRatingByEvaluatedIdAndCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 }
