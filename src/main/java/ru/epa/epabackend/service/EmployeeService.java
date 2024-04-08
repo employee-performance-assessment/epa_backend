@@ -28,5 +28,7 @@ public interface EmployeeService {
 
     List<Employee> findAllByCreatorEmail(String email);
 
+    List<Integer> findAllYearsFromAdminCreation(String email);
+
     void checkAdminForEmployee(Employee admin, Employee employee);
 }
