@@ -200,8 +200,12 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/assess-list")
-    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(Principal principal) {
-        return employeeEvaluationService.findEmployeesQuestionnairesForAssessment(principal.getName());
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(
+            Principal principal,
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to) {
+        return employeeEvaluationService.findEmployeesQuestionnairesForAssessment(principal.getName(), text, from, to);
     }
 
     /**
@@ -219,8 +223,12 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/assessed-list")
-    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Principal principal) {
-        return employeeEvaluationService.findEmployeesQuestionnairesAssessed(principal.getName());
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(
+            Principal principal,
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to) {
+        return employeeEvaluationService.findEmployeesQuestionnairesAssessed(principal.getName(), text, from, to);
     }
 
     /**

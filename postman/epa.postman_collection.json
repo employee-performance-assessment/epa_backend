@@ -6010,6 +6010,210 @@
 					"response": []
 				},
 				{
+					"name": "get list for assessment filter by fullName length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?text=аш",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "аш"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment filter by date length = 0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?from=2024-04-05&to=2024-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2024-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment filter by date length = 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 4 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(4);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?from=2024-04-05&to=2050-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment filter by fullName and date length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?from=2024-04-05&to=2050-04-06&text=шток",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								},
+								{
+									"key": "text",
+									"value": "шток"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get questionnaire by id = 4",
 					"event": [
 						{
@@ -6546,6 +6750,210 @@
 								"user",
 								"evaluations",
 								"assessed-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by fullName length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?text=шток",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "шток"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by date length = 0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?from=2024-04-05&to=2024-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2024-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by date length = 0 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 3 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(3);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?from=2024-04-05&to=2050-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by fullName and date length = 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?from=2024-04-05&to=2050-04-06&text=аш",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								},
+								{
+									"key": "text",
+									"value": "аш"
+								}
 							]
 						}
 					},
