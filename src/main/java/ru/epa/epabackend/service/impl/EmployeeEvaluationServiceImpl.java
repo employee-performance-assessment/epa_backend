@@ -214,8 +214,9 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Получение анкет в которых оценен сотрудник с ID.
      */
     @Override
-    public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId) {
-        return employeeEvaluationRepository.findListQuestionnaireByEvaluatedId(adminEmail, evaluatedId);
+    public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(
+            String adminEmail, Long evaluatedId, Integer stars, LocalDate from, LocalDate to) {
+        return employeeEvaluationRepository.findListQuestionnaireByEvaluatedId(adminEmail, evaluatedId, stars, from, to);
     }
 
     @Override
