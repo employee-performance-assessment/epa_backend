@@ -75,7 +75,8 @@ public interface EmployeeEvaluationService {
     /**
      * Получение списка анкет в которых оценен сотрудник с id.
      */
-    List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId);
+    List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId,
+                                                                              Integer stars, LocalDate from, LocalDate to);
 
     List<ResponseEmployeeEvaluationShortDto> findQuestionnaireScores(String email, Long questionnaireId, Long evaluatedId);
 
