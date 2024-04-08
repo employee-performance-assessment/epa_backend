@@ -179,7 +179,7 @@ public class AdminEmployeeEvaluationController {
     public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(
             Principal principal,
             @RequestParam Long evaluatedId,
-            @RequestParam(required= false) @Min(0) @Max(5) Integer stars,
+            @RequestParam(required = false) @Min(0) @Max(5) Integer stars,
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to) {
         List<ResponseEvaluatedQuestionnaireDto> listQuestionnaire = employeeEvaluationService
