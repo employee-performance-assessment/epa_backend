@@ -53,14 +53,14 @@ public class AdminEmployeeEvaluationController {
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
 
     /**
-     * Эндпойнт получения персонального рейтинга каждого сотрудника за каждый месяц.
+     * Эндпойнт получения руководителем персонального рейтинга сотрудника за каждый месяц указанного года.
      */
-    @Operation(summary = "получения персонального рейтинга каждого сотрудника за каждый месяц",
-            description = "Возвращает список личных рейтингов каждого сотрудника" +
+    @Operation(summary = "получения руководителем персонального рейтинга сотрудника за каждый месяц указанного года",
+            description = "Возвращает список месяцев и среднюю оценку по ним " +
                     "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = ResponsePersonalRatingDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -68,8 +68,9 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating/personal")
-    public List<ResponsePersonalRatingDto> findPersonalRating(Principal principal) {
-        return employeeEvaluationService.findPersonalRatingAdmin(principal.getName());
+    public List<ResponseRatingFullDto> findPersonalRating(Principal principal, @RequestParam Long evaluatedId,
+                                                          @RequestParam Integer year) {
+        return employeeEvaluationService.findPersonalRatingAdmin(principal.getName(), evaluatedId, year);
     }
 
     /**
