@@ -93,4 +93,9 @@ public class ResponseTaskFullDto {
      * выполнил ли в срок задачу исполнитель. Задаются руководителем.
      */
     private Integer penaltyPoints;
+
+    /**
+     * Администратор, создавший задачу
+     */
+    private ResponseEmployeeShortDto owner;
 }

@@ -85,6 +85,9 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "where e.id <> :employeeId " +
             "and q.status = 'SHARED' " +
             "and q.created > :startDate " +
+            "and (nullif((:from), null) is null or q.created >= :from) " +
+            "and (nullif((:to), null) is null or q.created <= :to) " +
+            "and (cast(:text as text) is null or lower(e.fullName) like lower(concat('%', cast(:text as text), '%'))) " +
             "and e.creator.id = " +
             "(select emp.creator.id " +
             "from Employee emp " +
@@ -94,30 +97,39 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "from EmployeeEvaluation as ee " +
             "where ee.evaluator.id = :employeeId " +
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id) ")
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(Long employeeId, LocalDate startDate);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(
+            Long employeeId, LocalDate startDate, String text, LocalDate from, LocalDate to);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
             "ru.epa.epabackend.util.Role.ROLE_ADMIN, q.id, q.created) " +
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
-            "and q.status = 'SHARED' " +
+            "where q.status = 'SHARED' " +
             "and q.created > :startDate " +
+            "and (cast(:text as text) is null or lower(e.fullName) like lower(concat('%', cast(:text as text), '%'))) " +
+            "and (nullif((:from), null) is null or q.created >= :from) " +
+            "and (nullif((:to), null) is null or q.created <= :to) " +
             "and e.creator.id = :employeeId " +
             "and (e.id, q.id) not in " +
             "(select ee.evaluated.id, ee.questionnaire.id " +
             "from EmployeeEvaluation as ee " +
             "where ee.evaluator.id = :employeeId " +
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id) ")
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessmentByAdmin(Long employeeId, LocalDate startDate);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessmentByAdmin(
+            Long employeeId, LocalDate startDate, String text, LocalDate from, LocalDate to);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(ee.evaluated.id, " +
             "ee.evaluated.fullName, ee.evaluated.position, ee.evaluator.role, ee.questionnaire.id, " +
             "ee.questionnaire.created) " +
             "from EmployeeEvaluation as ee " +
             "where ee.evaluator.id = :employeeId " +
+            "and (cast(:text as text) is null or lower(ee.evaluated.fullName) like lower(concat('%', cast(:text as text), '%'))) " +
+            "and (nullif((:from), null) is null or ee.questionnaire.created >= :from) " +
+            "and (nullif((:to), null) is null or ee.questionnaire.created <= :to) " +
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id, ee.evaluated.fullName, ee.evaluator.role, " +
             "ee.evaluated.position, ee.questionnaire.created ")
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(Long employeeId, String text,
+                                                                        LocalDate from, LocalDate to);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +

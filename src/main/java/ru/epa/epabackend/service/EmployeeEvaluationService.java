@@ -63,14 +63,16 @@ public interface EmployeeEvaluationService {
     ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
     Long questionnaireId, Long evaluatedId);
 
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email,String text, LocalDate from,
+                                                                             LocalDate to);
 
     /**
      * Получение оценок коллег по id анкеты.
      */
     List<ResponseMyEvaluationsDto> findAllMyEvaluationsByEvaluatedId(String email, Long evaluatedId);
 
-    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email);
+    List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email, String text, LocalDate from,
+                                                                        LocalDate to);
 
     /**
      * Получение списка анкет в которых оценен сотрудник с id.
