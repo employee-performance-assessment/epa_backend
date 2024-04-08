@@ -1,6 +1,5 @@
 package ru.epa.epabackend.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
