@@ -181,7 +181,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 : admin.getCreated().getYear();
         int currentYear = LocalDate.now().getYear();
         List<Integer> years = new ArrayList<>();
-        for(int i = adminCreationYear; i <= currentYear; i++) {
+        for (int i = adminCreationYear; i <= currentYear; i++) {
             years.add(i);
         }
         return years;

@@ -8028,6 +8028,43 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get list of years from admin creation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/employee/list-of-years",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"employee",
+								"list-of-years"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

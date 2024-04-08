@@ -39,7 +39,8 @@ public class ResponseEmployeeFullDto {
 
     private String department;
 
-    private String created;
+    @JsonFormat(pattern = DATE_PATTERN)
+    private LocalDate created;
 
     @Override
     public String toString() {
