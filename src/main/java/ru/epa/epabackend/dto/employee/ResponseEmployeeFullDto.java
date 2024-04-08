@@ -39,6 +39,8 @@ public class ResponseEmployeeFullDto {
 
     private String department;
 
+    private String created;
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -52,6 +54,7 @@ public class ResponseEmployeeFullDto {
                 ", role=" + role +
                 ", position=" + position +
                 ", department=" + department +
+                ", created=" + created +
                 '}';
     }
 }

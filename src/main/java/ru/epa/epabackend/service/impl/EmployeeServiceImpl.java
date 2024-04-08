@@ -15,6 +15,8 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.service.EmployeeService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
@@ -44,6 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeDto);
         employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
+        employeeToSave.setCreated(LocalDate.now());
         Employee admin = findByEmail(email);
         employeeToSave.setCreator(admin);
         return employeeRepository.save(employeeToSave);
@@ -58,6 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeShortDto);
         employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeShortDto.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
+        employeeToSave.setCreated(LocalDate.now());
         return employeeRepository.save(employeeToSave);
     }
 
@@ -150,5 +154,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> findAllByCreatorEmail(String email) {
         log.info("Получение всех сотрудников для одного админа {}", email);
         return employeeRepository.findAllByCreatorEmail(email, Sort.by(Sort.Direction.ASC, "id"));
+    }
+
+    @Override
+    public List<Integer> findAllYearsFromAdminCreation(String email) {
+        log.info("Получение списка годов с начала регистрации администратора до текущего года.");
+        Employee employee = findByEmail(email);
+        Employee admin = employee.getCreator();
+        int adminCreationYear = admin == null
+                ? employee.getCreated().getYear()
+                : admin.getCreated().getYear();
+        int currentYear = LocalDate.now().getYear();
+        List<Integer> years = new ArrayList<>();
+        for(int i = adminCreationYear; i <= currentYear; i++) {
+            years.add(i);
+        }
+        return years;
     }
 }
