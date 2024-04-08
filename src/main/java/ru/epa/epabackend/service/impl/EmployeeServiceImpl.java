@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
 import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
+import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
@@ -150,5 +151,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> findAllByCreatorEmail(String email) {
         log.info("Получение всех сотрудников для одного админа {}", email);
         return employeeRepository.findAllByCreatorEmail(email, Sort.by(Sort.Direction.ASC, "id"));
+    }
+
+    /**
+     * Проверка, что сотрудник относится к руководителю
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public void checkAdminForEmployee(Employee admin, Employee employee) {
+        if(employee.getCreator()==null){
+            throw new BadRequestException(String.format("Пользователь с id %d не является сотрудником", employee.getId()));
+        } else if(employee.getCreator().getId() != admin.getId()) {
+            throw new BadRequestException(String.format("Сотрудник с id %d не относится к администратору с id %d",
+                    employee.getId(), admin.getId()));
+        }
     }
 }

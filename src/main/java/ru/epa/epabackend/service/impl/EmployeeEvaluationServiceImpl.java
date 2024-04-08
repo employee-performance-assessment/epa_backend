@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
@@ -80,17 +79,17 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение командного рейтинга за каждый месяц.
+     * Получение командного рейтинга за каждый месяц указанного года.
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseRatingFullDto> findCommandRating(String email) {
+    public List<ResponseRatingFullDto> findCommandRating(String email, Integer year) {
         Employee employee = employeeService.findByEmail(email);
         Long adminId = employee.getCreator() == null
                 ? employee.getId()
                 : employee.getCreator().getId();
-        log.info("Получение командного рейтинга идентификатору сотрудника");
-        return employeeEvaluationRepository.findCommandRating(adminId);
+        log.info("Получение командного рейтинга по идентификатору руководителя {} и году {}", adminId, year);
+        return employeeEvaluationRepository.findCommandRating(adminId, year);
     }
 
     /**
@@ -98,9 +97,9 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseRatingFullDto> findPersonalRating(String email) {
+    public List<ResponseRatingFullDto> findPersonalRating(String email, Integer year) {
         log.info("Получение персонального рейтинга за каждый месяц по своему email");
-        return employeeEvaluationRepository.findPersonalRating(email);
+        return employeeEvaluationRepository.findPersonalRating(email, year);
     }
 
     /**
@@ -239,27 +238,17 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение персонального рейтинга каждого сотрудника за каждый месяц.
+     * Получение руководителем персонального рейтинга сотрудника за каждый месяц указанного года.
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ResponsePersonalRatingDto> findPersonalRatingAdmin(String email) {
-        List<Employee> employees = employeeService.findAllByCreatorEmail(email);
-        List<ResponsePersonalRatingDto> personalRatingList = new ArrayList<>(employees.size());
-
-        for (Employee evaluation : employees) {
-            ResponseEmployeeShortDto employeeShortDto = employeeMapper.mapToShortDto(evaluation);
-            List<ResponseRatingFullDto> ratingForMonth = employeeEvaluationRepository
-                    .findPersonalRating(evaluation.getEmail());
-            ResponsePersonalRatingDto personalRating = ResponsePersonalRatingDto
-                    .builder()
-                    .employee(employeeShortDto)
-                    .ratingByMonth(ratingForMonth)
-                    .build();
-            personalRatingList.add(personalRating);
-        }
-        log.info("Получение рейтинга сотрудников для руководителя");
-        return personalRatingList;
+    public List<ResponseRatingFullDto> findPersonalRatingAdmin(String email, Long evaluatedId, Integer year) {
+        log.info("Получение руководителем персонального рейтинга сотрудника с id {} за каждый месяц {} года.",
+                evaluatedId, year);
+        Employee admin = employeeService.findByEmail(email);
+        Employee employee = employeeService.findById(evaluatedId);
+        employeeService.checkAdminForEmployee(admin, employee);
+        return employeeEvaluationRepository.findPersonalRatingByAdmin(evaluatedId, year);
     }
 
     /**
