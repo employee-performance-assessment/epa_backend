@@ -151,14 +151,28 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Получение списка всех задач пользователя администратором с указанным статусом задач
+     * Получение списка всех задач пользователя администратором
      */
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAllByEmployeeId(Long employeeId, String email) {
-        log.info("Получение списка всех задач пользователя с идентификатором {} администратором" +
-                " указанным статусом задач", employeeId);
+        log.info("Получение списка всех задач пользователя с идентификатором {} администратором", employeeId);
         return taskRepository.findAllByOwnerEmailAndExecutorId(email, employeeId);
+    }
+
+    /**
+     * Получение списка всех задач пользователя администратором с указанным статусом задач
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status) {
+        log.info("Получение списка всех задач пользователя с идентификатором {} администратором" +
+                " указанным статусом {} задач", employeeId, status);
+        try {
+            return taskRepository.findAllByOwnerEmailAndExecutorIdAndStatus(email, employeeId, getTaskStatus(status));
+        } catch (IllegalArgumentException exception) {
+            throw new BadRequestException("Неверный статус: " + status);
+        }
     }
 
     /**

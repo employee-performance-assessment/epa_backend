@@ -106,9 +106,16 @@ public class AdminTaskController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/find")
     public List<ResponseTaskShortDto> findAllByEmployeeId(@Valid @RequestParam @Positive Long employeeId,
-                                                          Principal principal) {
-        List<Task> tasks = taskService.findAllByEmployeeId(employeeId, principal.getName());
-        return taskMapper.mapList(tasks);
+                                                          Principal principal,
+                                                          @RequestParam(required = false) String status) {
+
+        List<Task> allByEmployeeId;
+        if (status == null) {
+            allByEmployeeId = taskService.findAllByEmployeeId(employeeId, principal.getName());
+        } else {
+            allByEmployeeId = taskService.findAllByEmployeeIdAndStatus(employeeId, principal.getName(), status);
+        }
+        return taskMapper.mapList(allByEmployeeId);
     }
 
     /**
