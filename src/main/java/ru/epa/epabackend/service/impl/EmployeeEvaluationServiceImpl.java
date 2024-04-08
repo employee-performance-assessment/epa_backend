@@ -131,6 +131,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsAdmin(email, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsUsers(email, questionnaireId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
         Recommendation recommendation = recommendationRepository
                 .findByRecipientEmailAndQuestionnaireId(email, questionnaireId);
         ResponseRatingDto responseRatingDto = employeeEvaluationRepository
@@ -138,10 +139,12 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         log.info("Получение оценок и рекомендации по id анкеты для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
-                .createQuestionnaire(recommendation.getQuestionnaire().getCreated())
-                .middleScore(responseRatingDto.getRating())
-                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
-                .recommendation(recommendation.getRecommendation())
+                .createQuestionnaire(questionnaire.getCreated())
+                .middleScore(responseRatingDto == null ? 0 : responseRatingDto.getRating())
+                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations, questionnaire.getCriterias()))
+                .recommendation(recommendation == null
+                        ? "Рекомендация не оставлена"
+                        : recommendation.getRecommendation())
                 .build();
     }
 
@@ -158,15 +161,19 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
         Recommendation recommendation = recommendationRepository
                 .getByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
         ResponseRatingDto responseRatingDto = employeeEvaluationRepository
                 .findRatingByQuestionnaireIdAndEvaluatedId(questionnaireId, evaluatedId);
         log.info("Получение оценок и рекомендации по id анкеты и id сотрудника для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
-                .createQuestionnaire(recommendation.getQuestionnaire().getCreated())
-                .middleScore(responseRatingDto.getRating())
-                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
-                .recommendation(recommendation.getRecommendation())
+                .createQuestionnaire(questionnaire.getCreated())
+                .middleScore(responseRatingDto == null
+                        ? 0 : responseRatingDto.getRating())
+                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations, questionnaire.getCriterias()))
+                .recommendation(recommendation == null
+                        ? "Рекомендация не оставлена"
+                        : recommendation.getRecommendation())
                 .build();
     }
 
@@ -305,17 +312,19 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
 
     private HashMap<String, ResponseEvaluationsAdminUserDto> filterEvaluations(
             List<ResponseEmployeeEvaluationShortDto> adminEvaluations,
-            List<ResponseEmployeeEvaluationShortDto> usersEvaluations) {
+            List<ResponseEmployeeEvaluationShortDto> usersEvaluations, List<Criteria> criteria) {
 
-        HashMap<String, ResponseEvaluationsAdminUserDto> evaluations = new HashMap<>(adminEvaluations.size());
+        HashMap<String, ResponseEvaluationsAdminUserDto> evaluations = new HashMap<>(criteria.size());
 
-        for (int i = 0; i < adminEvaluations.size(); i++) {
+        for (int i = 0; i < criteria.size(); i++) {
+            double adminScore = adminEvaluations.isEmpty() ? 0 : adminEvaluations.get(i).getScore();
+            double userScore = usersEvaluations.isEmpty() ? 0 : usersEvaluations.get(i).getScore();
             ResponseEvaluationsAdminUserDto evaluationsForCriteria = ResponseEvaluationsAdminUserDto
                     .builder()
-                    .adminScore(adminEvaluations.get(i).getScore())
-                    .colleaguesScore(usersEvaluations.get(i).getScore())
+                    .adminScore(adminScore)
+                    .colleaguesScore(userScore)
                     .build();
-            evaluations.put(adminEvaluations.get(i).getName(), evaluationsForCriteria);
+            evaluations.put(criteria.get(i).getName(), evaluationsForCriteria);
         }
         return evaluations;
     }
