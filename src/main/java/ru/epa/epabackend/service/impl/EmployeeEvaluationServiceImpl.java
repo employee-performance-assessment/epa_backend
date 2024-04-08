@@ -143,8 +143,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .middleScore(responseRatingDto == null ? 0 : responseRatingDto.getRating())
                 .evaluations(filterEvaluations(adminEvaluations, usersEvaluations, questionnaire.getCriterias()))
                 .recommendation(recommendation == null
-                        ? "Рекомендация не оставлена"
-                        : recommendation.getRecommendation())
+                        ? "" : recommendation.getRecommendation())
                 .build();
     }
 
@@ -172,8 +171,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                         ? 0 : responseRatingDto.getRating())
                 .evaluations(filterEvaluations(adminEvaluations, usersEvaluations, questionnaire.getCriterias()))
                 .recommendation(recommendation == null
-                        ? "Рекомендация не оставлена"
-                        : recommendation.getRecommendation())
+                        ? "" : recommendation.getRecommendation())
                 .build();
     }
 
