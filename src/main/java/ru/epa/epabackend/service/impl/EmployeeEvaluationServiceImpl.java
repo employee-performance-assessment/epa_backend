@@ -220,7 +220,18 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(
             String adminEmail, Long evaluatedId, Integer stars, LocalDate from, LocalDate to) {
-        return employeeEvaluationRepository.findListQuestionnaireByEvaluatedId(adminEmail, evaluatedId, stars, from, to);
+        return employeeEvaluationRepository.findListQuestionnaireByAdminEmailAndEvaluatedId(adminEmail, evaluatedId, stars, from, to);
+    }
+
+    /**
+     * Получение списка анкет в которых оценен сотрудник с email.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedEmail(
+            String email, Integer stars, LocalDate from, LocalDate to) {
+        Employee employee = employeeService.findByEmail(email);
+        return employeeEvaluationRepository.findListQuestionnaireByEvaluatedId(employee.getId(), stars, from, to);
     }
 
     @Override
