@@ -155,9 +155,22 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
             "GROUP BY questionnaire.id, questionnaire.created " +
             "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
-    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId,
-                                                                               Integer stars, LocalDate from,
-                                                                               LocalDate to);
+    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByAdminEmailAndEvaluatedId(String adminEmail, Long evaluatedId,
+                                                                                            Integer stars, LocalDate from,
+                                                                                            LocalDate to);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +
+            "questionnaire.created createQuestionnaire, " +
+            "round(avg(score)) middleScore) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :evaluatedId " +
+            "and (nullif(:from, null) is null or e.questionnaire.created >= :from) " +
+            "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
+            "GROUP BY questionnaire.id, questionnaire.created " +
+            "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
+    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Long evaluatedId, Integer stars,
+                                                                               LocalDate from, LocalDate to);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseRatingDto(round(avg(score)) rating) " +
