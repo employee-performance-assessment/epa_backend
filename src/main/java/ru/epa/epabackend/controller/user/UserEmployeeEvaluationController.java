@@ -293,7 +293,7 @@ public class UserEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/list-questionnaire")
-    public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(
+    public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedEmail(
             Principal principal,
             @RequestParam(required = false) @Min(0) @Max(5) Integer stars,
             @RequestParam(required = false) LocalDate from,
