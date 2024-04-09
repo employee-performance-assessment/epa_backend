@@ -54,19 +54,32 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<EmployeeEvaluation> findAllByEvaluatorEmailAndEvaluatedId(String email, Long evaluatedId);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingFullDto(extract(month from e.createDay), round(avg(score)) rating) " +
+            ".ResponseRatingFullDto(month(e.createDay), round(avg(score)) rating) " +
             "from EmployeeEvaluation e " +
-            "where e.evaluator.creator.id = :adminId " +
-            "or e.evaluator.id = :adminId " +
-            "GROUP BY e.createDay")
-    List<ResponseRatingFullDto> findCommandRating(Long adminId);
+            "where (e.evaluator.creator.id = :adminId " +
+            "or e.evaluator.id = :adminId) " +
+            "and year(e.createDay) = :year " +
+            "group by month(e.createDay) " +
+            "order by month(e.createDay) desc")
+    List<ResponseRatingFullDto> findCommandRating(Long adminId, Integer year);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingFullDto(extract(month from e.createDay), round(avg(score)) rating) " +
+            ".ResponseRatingFullDto(month(e.createDay), round(avg(score)) rating) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.email = :email " +
-            "GROUP BY e.createDay")
-    List<ResponseRatingFullDto> findPersonalRating(String email);
+            "and year(e.createDay) = :year " +
+            "group by month(e.createDay) " +
+            "order by month(e.createDay) desc")
+    List<ResponseRatingFullDto> findPersonalRating(String email, Integer year);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseRatingFullDto(month(e.createDay), round(avg(score)) rating) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :evaluatedId " +
+            "and year(e.createDay) = :year " +
+            "group by month(e.createDay) " +
+            "order by month(e.createDay) desc")
+    List<ResponseRatingFullDto> findPersonalRatingByAdmin(Long evaluatedId, Integer year);
 
     @Query(value = "select e.evaluated " +
             "from EmployeeEvaluation e " +
@@ -138,8 +151,26 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :evaluatedId " +
             "and e.evaluated.creator.email = :adminEmail " +
-            "GROUP BY questionnaire.id, questionnaire.created ")
-    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId);
+            "and (nullif(:from, null) is null or e.questionnaire.created >= :from) " +
+            "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
+            "GROUP BY questionnaire.id, questionnaire.created " +
+            "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
+    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByAdminEmailAndEvaluatedId(String adminEmail, Long evaluatedId,
+                                                                                            Integer stars, LocalDate from,
+                                                                                            LocalDate to);
+
+    @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
+            ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +
+            "questionnaire.created createQuestionnaire, " +
+            "round(avg(score)) middleScore) " +
+            "from EmployeeEvaluation e " +
+            "where e.evaluated.id = :evaluatedId " +
+            "and (nullif(:from, null) is null or e.questionnaire.created >= :from) " +
+            "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
+            "GROUP BY questionnaire.id, questionnaire.created " +
+            "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
+    List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Long evaluatedId, Integer stars,
+                                                                               LocalDate from, LocalDate to);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseRatingDto(round(avg(score)) rating) " +

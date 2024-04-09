@@ -28,19 +28,19 @@ public interface EmployeeEvaluationService {
     EmployeeEvaluation findById(Long employeeEvaluationId);
 
     /**
-     * Получение командного рейтинга за каждый месяц.
+     * Получение командного рейтинга за каждый месяц указанного года.
      */
-    List<ResponseRatingFullDto> findCommandRating(String email);
+    List<ResponseRatingFullDto> findCommandRating(String email, Integer year);
 
     /**
      * Получение личного рейтинга за каждый месяц.
      */
-    List<ResponseRatingFullDto> findPersonalRating(String email);
+    List<ResponseRatingFullDto> findPersonalRating(String email, Integer year);
 
     /**
-     * Получение рейтинга каждого сотрудника за каждый месяц для админа.
+     * Получение руководителем рейтинга сотрудника за каждый месяц указанного года.
      */
-    List<ResponsePersonalRatingDto> findPersonalRatingAdmin(String email);
+    List<ResponseRatingFullDto> findPersonalRatingAdmin(String email, Long evaluatedId, Integer year);
 
     /**
      * Получение списка оцененных коллег.
@@ -77,7 +77,13 @@ public interface EmployeeEvaluationService {
     /**
      * Получение списка анкет в которых оценен сотрудник с id.
      */
-    List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId);
+    List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId,
+                                                                              Integer stars, LocalDate from, LocalDate to);
+
+    /**
+     * Получение списка анкет в которых оценен сотрудник с email.
+     */
+    List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedEmail(String email, Integer stars, LocalDate from, LocalDate to);
 
     List<ResponseEmployeeEvaluationShortDto> findQuestionnaireScores(String email, Long questionnaireId, Long evaluatedId);
 

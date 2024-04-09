@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS employees
     position   VARCHAR(255),
     department VARCHAR(100),
     creator_id BIGINT REFERENCES employees (id),
+    created DATE,
     CONSTRAINT pk_useremployee PRIMARY KEY (id),
     CONSTRAINT uq_employees_name_email UNIQUE (email)
 );

@@ -102,4 +102,23 @@ public class UserEmployeeController {
     public ResponseEmployeeFullDto getMe(Principal principal) {
         return employeeMapper.mapToFullDto(employeeService.findByEmail(principal.getName()));
     }
+
+    /**
+     * Эндпоинт получения списка годов начиная с регистрации администратора до текущего года
+     */
+    @Operation(summary = "Эндпоинт получения списка годов начиная с регистрации администратора до текущего года")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = Integer.class)))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    }
+    )
+    @GetMapping("/list-of-years")
+    public List<Integer> findAllYearsFromAdminCreation(Principal principal) {
+        return employeeService.findAllYearsFromAdminCreation(principal.getName());
+    }
 }

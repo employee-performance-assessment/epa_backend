@@ -10,11 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
 import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
+import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.service.EmployeeService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
@@ -44,6 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeDto);
         employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
+        employeeToSave.setCreated(LocalDate.now());
         Employee admin = findByEmail(email);
         employeeToSave.setCreator(admin);
         return employeeRepository.save(employeeToSave);
@@ -58,6 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeShortDto);
         employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeShortDto.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
+        employeeToSave.setCreated(LocalDate.now());
         return employeeRepository.save(employeeToSave);
     }
 
@@ -150,5 +155,35 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> findAllByCreatorEmail(String email) {
         log.info("Получение всех сотрудников для одного админа {}", email);
         return employeeRepository.findAllByCreatorEmail(email, Sort.by(Sort.Direction.ASC, "id"));
+    }
+
+    /**
+     * Проверка, что сотрудник относится к руководителю
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public void checkAdminForEmployee(Employee admin, Employee employee) {
+        if (employee.getCreator() == null) {
+            throw new BadRequestException(String.format("Пользователь с id %d не является сотрудником", employee.getId()));
+        } else if (employee.getCreator().getId() != admin.getId()) {
+            throw new BadRequestException(String.format("Сотрудник с id %d не относится к администратору с id %d",
+                    employee.getId(), admin.getId()));
+        }
+    }
+
+    @Override
+    public List<Integer> findAllYearsFromAdminCreation(String email) {
+        log.info("Получение списка годов с начала регистрации администратора до текущего года.");
+        Employee employee = findByEmail(email);
+        Employee admin = employee.getCreator();
+        int adminCreationYear = admin == null
+                ? employee.getCreated().getYear()
+                : admin.getCreated().getYear();
+        int currentYear = LocalDate.now().getYear();
+        List<Integer> years = new ArrayList<>();
+        for (int i = adminCreationYear; i <= currentYear; i++) {
+            years.add(i);
+        }
+        return years;
     }
 }
