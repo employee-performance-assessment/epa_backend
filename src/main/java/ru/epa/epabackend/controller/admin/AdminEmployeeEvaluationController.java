@@ -1,6 +1,7 @@
 package ru.epa.epabackend.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +28,8 @@ import ru.epa.epabackend.service.EmployeeEvaluationService;
 import ru.epa.epabackend.service.RecommendationService;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 /**
@@ -48,14 +53,14 @@ public class AdminEmployeeEvaluationController {
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
 
     /**
-     * Эндпойнт получения персонального рейтинга каждого сотрудника за каждый месяц.
+     * Эндпойнт получения руководителем персонального рейтинга сотрудника за каждый месяц указанного года.
      */
-    @Operation(summary = "получения персонального рейтинга каждого сотрудника за каждый месяц",
-            description = "Возвращает список личных рейтингов каждого сотрудника" +
+    @Operation(summary = "получения руководителем персонального рейтинга сотрудника за каждый месяц указанного года",
+            description = "Возвращает список месяцев и среднюю оценку по ним " +
                     "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
+                    mediaType = "application/json", schema = @Schema(implementation = ResponsePersonalRatingDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
@@ -63,8 +68,9 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating/personal")
-    public List<ResponsePersonalRatingDto> findPersonalRating(Principal principal) {
-        return employeeEvaluationService.findPersonalRatingAdmin(principal.getName());
+    public List<ResponseRatingFullDto> findPersonalRating(Principal principal, @RequestParam Long evaluatedId,
+                                                          @RequestParam Integer year) {
+        return employeeEvaluationService.findPersonalRatingAdmin(principal.getName(), evaluatedId, year);
     }
 
     /**
@@ -171,10 +177,14 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/list-questionnaire")
-    public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Principal principal,
-                                                                                      @RequestParam Long evaluatedId) {
+    public List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(
+            Principal principal,
+            @RequestParam Long evaluatedId,
+            @RequestParam(required = false) @Min(0) @Max(5) Integer stars,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to) {
         List<ResponseEvaluatedQuestionnaireDto> listQuestionnaire = employeeEvaluationService
-                .findAllQuestionnaireByEvaluatedId(principal.getName(), evaluatedId);
+                .findAllQuestionnaireByEvaluatedId(principal.getName(), evaluatedId, stars, from, to);
         return listQuestionnaire;
     }
 
@@ -200,5 +210,25 @@ public class AdminEmployeeEvaluationController {
     public ResponseAdminEvaluationDto findAssessedQuestionnaire(
             Principal principal, @RequestParam Long questionnaireId, @RequestParam Long evaluatedId) {
         return employeeEvaluationService.findAssessedQuestionnaireByAdmin(principal.getName(), questionnaireId, evaluatedId);
+    }
+
+    /**
+     * Эндпойнт получения администратором среднего рейтинга за текущий месяц.
+     */
+    @Operation(summary = "Получение администратором среднего рейтинга за текущий месяц")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    schema = @Schema(implementation = Integer.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/rating/{employeeId}")
+    public Double findAverageRatingByAdmin(@Parameter(required = true) @PathVariable Long employeeId) {
+        LocalDate rangeStart = YearMonth.now().atDay(1);
+        LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
+        return employeeEvaluationService.findAverageRatingByAdmin(employeeId, rangeStart, rangeEnd);
     }
 }

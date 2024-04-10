@@ -1,8 +1,10 @@
 package ru.epa.epabackend.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.model.IndividualAnalytics;
 import ru.epa.epabackend.model.TeamAnalytics;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,5 +36,11 @@ public interface AnalyticsService {
      */
     IndividualAnalytics getIndividualStats(LocalDate startDate, LocalDate endDate, String email);
 
-    Integer findQuantityOfPointsPerMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+    /**
+     * Получение суммы баллов по выполненным задачам сотрудника за текущий месяц.
+     */
+    Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+
+    @Transactional(readOnly = true)
+    Integer findQuantityOfPointsByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd);
 }

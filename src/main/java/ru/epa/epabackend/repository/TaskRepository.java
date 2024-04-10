@@ -22,6 +22,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByOwnerEmailAndExecutorId(String email, Long executorId);
 
+    List<Task> findAllByOwnerEmailAndExecutorIdAndStatus(String email, Long executorId, TaskStatus status);
+
     List<Task> findAllByOwnerIdAndFinishDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
 
     List<Task> findAllByOwnerEmailAndFinishDateBetween(String email, LocalDate startDate, LocalDate endDate);
@@ -32,5 +34,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "from Task t " +
             "where t.executor.id = :employeeId " +
             "and t.finishDate BETWEEN :rangeStart AND :rangeEnd ")
-    Integer getSumPointsByExecutorIdAndThisMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+    Integer getSumPointsByExecutorIdAndForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 }

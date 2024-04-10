@@ -88,6 +88,11 @@ public class Employee implements UserDetails {
     private Employee creator;
 
     /**
+     * Дата регистрации.
+     */
+    private LocalDate created;
+
+    /**
      * Список задач сотрудника.
      */
     @OneToMany
@@ -173,6 +178,7 @@ public class Employee implements UserDetails {
                 ", department=" + department +
                 ", tasks=" + tasks +
                 ", technologies=" + technologies +
+                ", created=" + created +
                 '}';
     }
 }

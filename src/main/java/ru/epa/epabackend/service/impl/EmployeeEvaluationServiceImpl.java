@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
@@ -15,10 +14,13 @@ import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.repository.RecommendationRepository;
 import ru.epa.epabackend.service.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static ru.epa.epabackend.util.Constants.THIRTY_DAYS;
 
 /**
  * Класс EmployeeEvaluationServiceImpl содержит бизнес-логику работы с оценками сотрудников своих коллег.
@@ -77,17 +79,17 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение командного рейтинга за каждый месяц.
+     * Получение командного рейтинга за каждый месяц указанного года.
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseRatingFullDto> findCommandRating(String email) {
+    public List<ResponseRatingFullDto> findCommandRating(String email, Integer year) {
         Employee employee = employeeService.findByEmail(email);
         Long adminId = employee.getCreator() == null
                 ? employee.getId()
                 : employee.getCreator().getId();
-        log.info("Получение командного рейтинга идентификатору сотрудника");
-        return employeeEvaluationRepository.findCommandRating(adminId);
+        log.info("Получение командного рейтинга по идентификатору руководителя {} и году {}", adminId, year);
+        return employeeEvaluationRepository.findCommandRating(adminId, year);
     }
 
     /**
@@ -95,9 +97,9 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseRatingFullDto> findPersonalRating(String email) {
+    public List<ResponseRatingFullDto> findPersonalRating(String email, Integer year) {
         log.info("Получение персонального рейтинга за каждый месяц по своему email");
-        return employeeEvaluationRepository.findPersonalRating(email);
+        return employeeEvaluationRepository.findPersonalRating(email, year);
     }
 
     /**
@@ -128,6 +130,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsAdmin(email, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsUsers(email, questionnaireId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
         Recommendation recommendation = recommendationRepository
                 .findByRecipientEmailAndQuestionnaireId(email, questionnaireId);
         ResponseRatingDto responseRatingDto = employeeEvaluationRepository
@@ -135,10 +138,11 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         log.info("Получение оценок и рекомендации по id анкеты для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
-                .createQuestionnaire(recommendation.getQuestionnaire().getCreated())
-                .middleScore(responseRatingDto.getRating())
-                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
-                .recommendation(recommendation.getRecommendation())
+                .createQuestionnaire(questionnaire.getCreated())
+                .middleScore(responseRatingDto == null ? 0 : responseRatingDto.getRating())
+                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations, questionnaire.getCriterias()))
+                .recommendation(recommendation == null
+                        ? "" : recommendation.getRecommendation())
                 .build();
     }
 
@@ -155,15 +159,18 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .findAllEvaluationsUsersForAdmin(evaluatedId, questionnaireId);
         Recommendation recommendation = recommendationRepository
                 .getByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
         ResponseRatingDto responseRatingDto = employeeEvaluationRepository
                 .findRatingByQuestionnaireIdAndEvaluatedId(questionnaireId, evaluatedId);
         log.info("Получение оценок и рекомендации по id анкеты и id сотрудника для руководителя");
         return ResponseEmployeeEvaluationQuestionnaireDto
                 .builder()
-                .createQuestionnaire(recommendation.getQuestionnaire().getCreated())
-                .middleScore(responseRatingDto.getRating())
-                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations))
-                .recommendation(recommendation.getRecommendation())
+                .createQuestionnaire(questionnaire.getCreated())
+                .middleScore(responseRatingDto == null
+                        ? 0 : responseRatingDto.getRating())
+                .evaluations(filterEvaluations(adminEvaluations, usersEvaluations, questionnaire.getCriterias()))
+                .recommendation(recommendation == null
+                        ? "" : recommendation.getRecommendation())
                 .build();
     }
 
@@ -178,9 +185,10 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     @Override
-    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email) {
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email, String text,
+                                                                               LocalDate from, LocalDate to) {
         Employee employee = employeeService.findByEmail(email);
-        return employeeEvaluationRepository.findEmployeesQuestionnairesAssessed(employee.getId());
+        return employeeEvaluationRepository.findEmployeesQuestionnairesAssessed(employee.getId(), text, from, to);
     }
 
     @Override
@@ -205,47 +213,75 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .build();
     }
 
+
     /**
      * Получение анкет в которых оценен сотрудник с ID.
      */
     @Override
-    public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId) {
-        return employeeEvaluationRepository.findListQuestionnaireByEvaluatedId(adminEmail, evaluatedId);
+    public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(
+            String adminEmail, Long evaluatedId, Integer stars, LocalDate from, LocalDate to) {
+        return employeeEvaluationRepository.findListQuestionnaireByAdminEmailAndEvaluatedId(adminEmail, evaluatedId, stars, from, to);
+    }
+
+    /**
+     * Получение списка анкет в которых оценен сотрудник с email.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedEmail(
+            String email, Integer stars, LocalDate from, LocalDate to) {
+        Employee employee = employeeService.findByEmail(email);
+        return employeeEvaluationRepository.findListQuestionnaireByEvaluatedId(employee.getId(), stars, from, to);
     }
 
     @Override
-    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email) {
+    public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email, String text,
+                                                                                    LocalDate from, LocalDate to) {
         Employee employee = employeeService.findByEmail(email);
-        LocalDate startDate = LocalDate.now().minusDays(30);
+        LocalDate startDate = LocalDate.now().minusDays(THIRTY_DAYS);
         if (employee.getCreator() == null) {
-            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessmentByAdmin(employee.getId(), startDate);
+            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessmentByAdmin(employee.getId(),
+                    startDate, text, from, to);
         } else {
-            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessment(employee.getId(), startDate);
+            return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessment(employee.getId(),
+                    startDate, text, from, to);
         }
     }
 
     /**
-     * Получение персонального рейтинга каждого сотрудника за каждый месяц.
+     * Получение руководителем персонального рейтинга сотрудника за каждый месяц указанного года.
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ResponsePersonalRatingDto> findPersonalRatingAdmin(String email) {
-        List<Employee> employees = employeeService.findAllByCreatorEmail(email);
-        List<ResponsePersonalRatingDto> personalRatingList = new ArrayList<>(employees.size());
+    public List<ResponseRatingFullDto> findPersonalRatingAdmin(String email, Long evaluatedId, Integer year) {
+        log.info("Получение руководителем персонального рейтинга сотрудника с id {} за каждый месяц {} года.",
+                evaluatedId, year);
+        Employee admin = employeeService.findByEmail(email);
+        Employee employee = employeeService.findById(evaluatedId);
+        employeeService.checkAdminForEmployee(admin, employee);
+        return employeeEvaluationRepository.findPersonalRatingByAdmin(evaluatedId, year);
+    }
 
-        for (Employee evaluation : employees) {
-            ResponseEmployeeShortDto employeeShortDto = employeeMapper.mapToShortDto(evaluation);
-            List<ResponseRatingFullDto> ratingForMonth = employeeEvaluationRepository
-                    .findPersonalRating(evaluation.getEmail());
-            ResponsePersonalRatingDto personalRating = ResponsePersonalRatingDto
-                    .builder()
-                    .employee(employeeShortDto)
-                    .ratingByMonth(ratingForMonth)
-                    .build();
-            personalRatingList.add(personalRating);
-        }
-        log.info("Получение рейтинга сотрудников для руководителя");
-        return personalRatingList;
+    /**
+     * Получение сотрудником своего среднего рейтинга за текущий месяц.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Double findAverageRatingByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd) {
+        log.info("Получение сотрудником своего среднего рейтинга за текущий месяц");
+        Employee employee = employeeService.findByEmail(principal.getName());
+        return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employee.getId(),
+                rangeStart, rangeEnd);
+    }
+
+    /**
+     * Получение администратором среднего рейтинга сотрудника за текущий месяц.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+        log.info("Получение администратором среднего рейтинга сотрудника за текущий месяц");
+        return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId, rangeStart, rangeEnd);
     }
 
     /**
@@ -275,17 +311,19 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
 
     private HashMap<String, ResponseEvaluationsAdminUserDto> filterEvaluations(
             List<ResponseEmployeeEvaluationShortDto> adminEvaluations,
-            List<ResponseEmployeeEvaluationShortDto> usersEvaluations) {
+            List<ResponseEmployeeEvaluationShortDto> usersEvaluations, List<Criteria> criteria) {
 
-        HashMap<String, ResponseEvaluationsAdminUserDto> evaluations = new HashMap<>(adminEvaluations.size());
+        HashMap<String, ResponseEvaluationsAdminUserDto> evaluations = new HashMap<>(criteria.size());
 
-        for (int i = 0; i < adminEvaluations.size(); i++) {
+        for (int i = 0; i < criteria.size(); i++) {
+            double adminScore = adminEvaluations.isEmpty() ? 0 : adminEvaluations.get(i).getScore();
+            double userScore = usersEvaluations.isEmpty() ? 0 : usersEvaluations.get(i).getScore();
             ResponseEvaluationsAdminUserDto evaluationsForCriteria = ResponseEvaluationsAdminUserDto
                     .builder()
-                    .adminScore(adminEvaluations.get(i).getScore())
-                    .colleaguesScore(usersEvaluations.get(i).getScore())
+                    .adminScore(adminScore)
+                    .colleaguesScore(userScore)
                     .build();
-            evaluations.put(adminEvaluations.get(i).getName(), evaluationsForCriteria);
+            evaluations.put(criteria.get(i).getName(), evaluationsForCriteria);
         }
         return evaluations;
     }
