@@ -270,8 +270,11 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public Double findAverageRatingByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd) {
         log.info("Получение сотрудником своего среднего рейтинга за текущий месяц");
         Employee employee = employeeService.findByEmail(principal.getName());
-        return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employee.getId(),
+        Double averageRating = employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employee.getId(),
                 rangeStart, rangeEnd);
+        double scale = Math.pow(10, 2);
+        Double averageRatingWithScale = Math.ceil(averageRating * scale) / scale;
+        return averageRatingWithScale;
     }
 
     /**
@@ -281,7 +284,11 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Transactional(readOnly = true)
     public Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
         log.info("Получение администратором среднего рейтинга сотрудника за текущий месяц");
-        return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId, rangeStart, rangeEnd);
+        Double averageRating = employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId,
+                rangeStart, rangeEnd);
+        double scale = Math.pow(10, 2);
+        Double averageRatingWithScale = Math.ceil(averageRating * scale) / scale;
+        return averageRatingWithScale;
     }
 
     /**
