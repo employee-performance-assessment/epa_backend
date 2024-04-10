@@ -31,4 +31,6 @@ public interface EmployeeService {
     List<Integer> findAllYearsFromAdminCreation(String email);
 
     void checkAdminForEmployee(Employee admin, Employee employee);
+
+    void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated);
 }
