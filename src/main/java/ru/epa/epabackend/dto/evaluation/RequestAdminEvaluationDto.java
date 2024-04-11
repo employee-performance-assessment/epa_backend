@@ -1,5 +1,6 @@
 package ru.epa.epabackend.dto.evaluation;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -25,7 +26,7 @@ public class RequestAdminEvaluationDto {
     /**
      * Список оценок руководителя.
      */
-    private List<RequestEmployeeEvaluationDto> evaluationDtoList;
+    private List<@Valid RequestEmployeeEvaluationDto> evaluationDtoList;
 
     /**
      * Описание рекомендации.

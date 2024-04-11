@@ -88,8 +88,8 @@ public class AdminEmployeeController {
     @PatchMapping("/{employeeId}")
     public ResponseEmployeeFullDto updateEmployee(@PathVariable @Parameter(required = true) Long employeeId,
                                                   @Validated(Update.class) @RequestBody @Parameter(required = true)
-                                                  RequestEmployeeDto requestEmployeeDto) {
-        return employeeMapper.mapToFullDto(employeeService.update(employeeId, requestEmployeeDto));
+                                                  RequestEmployeeDto requestEmployeeDto, Principal principal) {
+        return employeeMapper.mapToFullDto(employeeService.update(employeeId, requestEmployeeDto, principal.getName()));
     }
 
     /**

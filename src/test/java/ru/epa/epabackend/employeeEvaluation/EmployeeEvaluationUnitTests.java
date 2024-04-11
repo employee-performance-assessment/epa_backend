@@ -69,20 +69,22 @@ public class EmployeeEvaluationUnitTests {
 
     @BeforeEach
     public void init() {
+        admin = Employee.builder()
+                .id(ID_2)
+                .role(Role.ROLE_ADMIN)
+                .email(adminEmail)
+                .build();
         evaluator = Employee.builder()
                 .id(ID_1)
                 .role(Role.ROLE_USER)
+                .creator(admin)
                 .email(email)
                 .build();
         evaluated = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
+                .creator(admin)
                 .email(email)
-                .build();
-        admin = Employee.builder()
-                .id(ID_0)
-                .role(Role.ROLE_ADMIN)
-                .email(adminEmail)
                 .build();
         criteria = Criteria.builder()
                 .id(ID_1)
