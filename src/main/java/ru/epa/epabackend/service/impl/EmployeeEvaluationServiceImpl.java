@@ -216,6 +216,11 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public ResponseAdminEvaluationDto findAssessedQuestionnaireByAdmin(String email, Long questionnaireId,
                                                                        Long evaluatedId) {
+        Employee admin = employeeService.findByEmail(email);
+        Employee employee = employeeService.findById(evaluatedId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
+        employeeService.checkAdminForEmployee(admin, employee);
+        questionnaireService.checkAdminForQuestionnaire(admin, questionnaire);
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = findQuestionnaireScores(email, questionnaireId,
                 evaluatedId);
         String stringRecommendation = recommendationService
