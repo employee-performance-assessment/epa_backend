@@ -104,6 +104,7 @@ public class EmployeeTests {
         employee.setPassword("12345");
         when(employeeRepository.save(employee)).thenReturn(employee);
         when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(admin));
+        employee.setCreator(admin);
         int expectedId = 2;
 
         Employee employeeResult = employeeService.update(employee.getId(), requestEmployeeDto, email);
