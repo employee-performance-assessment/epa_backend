@@ -292,8 +292,11 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+    public Double findAverageRatingByAdmin(String email, Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
         log.info("Получение администратором среднего рейтинга сотрудника за текущий месяц");
+        Employee employee = employeeService.findById(employeeId);
+        Employee admin = employeeService.findByEmail(email);
+        employeeService.checkAdminForEmployee(admin, employee);
         return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId, rangeStart, rangeEnd);
     }
 

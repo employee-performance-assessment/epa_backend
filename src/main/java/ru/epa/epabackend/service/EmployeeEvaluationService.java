@@ -92,7 +92,7 @@ public interface EmployeeEvaluationService {
 
     Double findAverageRatingByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd);
 
-    Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+    Double findAverageRatingByAdmin(String email, Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 
     void checkQuestionnaireForEvaluator(Questionnaire questionnaire, Employee evaluator);
 }
