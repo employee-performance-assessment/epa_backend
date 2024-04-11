@@ -12,7 +12,7 @@ public interface EmployeeService {
 
     Employee createSelfRegister(RequestEmployeeShortDto requestEmployeeShortDto);
 
-    Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto);
+    Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto, String adminEmail);
 
     void delete(Long employeeId);
 
