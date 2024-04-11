@@ -3,6 +3,7 @@ package ru.epa.epabackend.service;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
+import ru.epa.epabackend.model.Questionnaire;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -92,4 +93,6 @@ public interface EmployeeEvaluationService {
     Double findAverageRatingByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd);
 
     Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+
+    void checkQuestionnaireForEvaluator(Questionnaire questionnaire, Employee evaluator);
 }

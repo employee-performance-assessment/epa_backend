@@ -3,6 +3,7 @@ package ru.epa.epabackend.dto.evaluation;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import ru.epa.epabackend.util.ValidationGroups;
 
 /**
@@ -28,5 +29,6 @@ public class RequestEmployeeEvaluationDto {
     /**
      * Количество звезд.
      */
+    @Range(min = 1, max = 5)
     private Integer score;
 }

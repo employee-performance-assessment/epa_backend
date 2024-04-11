@@ -19,6 +19,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
 import static ru.epa.epabackend.util.Role.ROLE_USER;
@@ -185,5 +186,25 @@ public class EmployeeServiceImpl implements EmployeeService {
             years.add(i);
         }
         return years;
+    }
+
+    /**
+     * Проверка, что сотрудник оценивает своего коллегу или является его руководителем
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated) {
+        if (evaluator.getCreator() != null
+                && evaluated.getCreator() != null
+                && !Objects.equals(evaluator.getCreator().getId(), evaluated.getCreator().getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш коллега", evaluated.getId()));
+        } else if (evaluator.getCreator() == null
+                && evaluated.getCreator() != null
+                && !Objects.equals(evaluator.getId(), evaluated.getCreator().getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш сотрудник", evaluated.getId()));
+        } else if (evaluated.getCreator() == null) {
+            throw new BadRequestException(String.format("Пользователь с id %d является руководителем",
+                    evaluated.getId()));
+        }
     }
 }
