@@ -154,7 +154,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "and (nullif(:from, null) is null or e.questionnaire.created >= :from) " +
             "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
             "GROUP BY questionnaire.id, questionnaire.created " +
-            "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
+            "having (nullif(:stars, null) is null or cast(floor(avg(score)) as int) = :stars) ")
     List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByAdminEmailAndEvaluatedId(String adminEmail, Long evaluatedId,
                                                                                             Integer stars, LocalDate from,
                                                                                             LocalDate to);
@@ -168,7 +168,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "and (nullif(:from, null) is null or e.questionnaire.created >= :from) " +
             "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
             "GROUP BY questionnaire.id, questionnaire.created " +
-            "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
+            "having (nullif(:stars, null) is null or cast(floor(avg(score)) as int) = :stars) ")
     List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Long evaluatedId, Integer stars,
                                                                                LocalDate from, LocalDate to);
 
