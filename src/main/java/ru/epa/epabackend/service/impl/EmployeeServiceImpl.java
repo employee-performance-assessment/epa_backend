@@ -76,7 +76,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee oldEmployee = findById(employeeId);
         Employee admin = findByEmail(adminEmail);
 
-        checkEvaluatorOrAdminForEmployee(admin, oldEmployee);
+        checkAdminForEmployee(admin, oldEmployee);
 
         String password = requestEmployeeDto.getPassword();
 
@@ -170,7 +170,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void checkAdminForEmployee(Employee admin, Employee employee) {
         if (employee.getCreator() == null) {
             throw new BadRequestException(String.format("Пользователь с id %d не является сотрудником", employee.getId()));
-        } else if (employee.getCreator().getId() != admin.getId()) {
+        } else if (!Objects.equals(employee.getCreator().getId(), admin.getId())) {
             throw new BadRequestException(String.format("Сотрудник с id %d не относится к администратору с id %d",
                     employee.getId(), admin.getId()));
         }
@@ -197,7 +197,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     @Transactional(readOnly = true)
-    public void checkEvaluatorOrAdminForEmployee(Employee evaluator, Employee evaluated) {
+    public void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated) {
         if (evaluator.getCreator() != null
                 && evaluated.getCreator() != null
                 && !Objects.equals(evaluator.getCreator().getId(), evaluated.getCreator().getId())) {

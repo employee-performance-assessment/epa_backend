@@ -32,5 +32,5 @@ public interface EmployeeService {
 
     void checkAdminForEmployee(Employee admin, Employee employee);
 
-    void checkEvaluatorOrAdminForEmployee(Employee evaluator, Employee evaluated);
+    void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated);
 }
