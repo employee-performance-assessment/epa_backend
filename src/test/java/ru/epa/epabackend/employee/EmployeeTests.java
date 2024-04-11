@@ -103,8 +103,11 @@ public class EmployeeTests {
         when(employeeRepository.findById(ID_2)).thenReturn(Optional.of(employee));
         employee.setPassword("12345");
         when(employeeRepository.save(employee)).thenReturn(employee);
-        Employee employeeResult = employeeService.update(employee.getId(), requestEmployeeDto, email);
+        when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(admin));
         int expectedId = 2;
+
+        Employee employeeResult = employeeService.update(employee.getId(), requestEmployeeDto, email);
+
         assertNotNull(employeeResult);
         assertEquals(expectedId, employeeResult.getId());
         verify(employeeRepository,times(1)).save(employeeResult);
