@@ -209,7 +209,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public void checkAdminForQuestionnaire(Employee admin, Questionnaire questionnaire) {
         Long adminId = admin.getId();
         Long authorId = questionnaire.getAuthor().getId();
-        if(!Objects.equals(adminId, authorId)) {
+        if (!Objects.equals(adminId, authorId)) {
             throw new BadRequestException(String.format("Руководитель с id %d не является автором анкеты с id %d",
                     adminId, questionnaire.getId()));
         }
