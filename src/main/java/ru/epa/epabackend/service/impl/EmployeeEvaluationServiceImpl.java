@@ -163,6 +163,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         Employee admin = employeeService.findByEmail(adminEmail);
         Employee employee = employeeService.findById(evaluatedId);
         employeeService.checkAdminForEmployee(admin, employee);
+        questionnaireService.checkAdminForQuestionnaire(admin, questionnaire);
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsForAdmin(adminEmail, evaluatedId, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
