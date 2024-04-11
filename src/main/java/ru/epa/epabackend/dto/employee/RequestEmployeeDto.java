@@ -30,7 +30,6 @@ public class RequestEmployeeDto {
     private String fullName;
 
     @Hidden
-    @Pattern(regexp = TELEGRAM, groups = {Create.class, Update.class})
     private String nickName;
 
     @Hidden
