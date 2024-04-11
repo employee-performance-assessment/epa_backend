@@ -96,6 +96,8 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
             "where e.id <> :employeeId " +
+            "and e.created <= q.created " +
+            "and q.created >= :employeeCreated " +
             "and q.status = 'SHARED' " +
             "and q.created > :startDate " +
             "and (nullif((:from), null) is null or q.created >= :from) " +
@@ -111,13 +113,14 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "where ee.evaluator.id = :employeeId " +
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id) ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(
-            Long employeeId, LocalDate startDate, String text, LocalDate from, LocalDate to);
+            Long employeeId, LocalDate startDate, String text, LocalDate from, LocalDate to, LocalDate employeeCreated);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
             "ru.epa.epabackend.util.Role.ROLE_ADMIN, q.id, q.created) " +
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
-            "where q.status = 'SHARED' " +
+            "where e.created <= q.created " +
+            "and q.status = 'SHARED' " +
             "and q.created > :startDate " +
             "and (cast(:text as text) is null or lower(e.fullName) like lower(concat('%', cast(:text as text), '%'))) " +
             "and (nullif((:from), null) is null or q.created >= :from) " +

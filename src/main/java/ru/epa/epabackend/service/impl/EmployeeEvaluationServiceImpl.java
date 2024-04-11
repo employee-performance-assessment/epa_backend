@@ -255,8 +255,9 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
             return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessmentByAdmin(employee.getId(),
                     startDate, text, from, to);
         } else {
+            LocalDate employeeCreated = employee.getCreated();
             return employeeEvaluationRepository.findEmployeesQuestionnairesForAssessment(employee.getId(),
-                    startDate, text, from, to);
+                    startDate, text, from, to, employeeCreated);
         }
     }
 
