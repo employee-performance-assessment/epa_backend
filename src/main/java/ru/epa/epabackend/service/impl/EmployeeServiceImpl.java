@@ -71,9 +71,13 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Обновление сотрудника
      */
     @Override
-    public Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto) {
+    public Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto, String adminEmail) {
         log.info("Обновление существующего сотрудника {}", requestEmployeeDto.getFullName());
         Employee oldEmployee = findById(employeeId);
+        Employee admin = findByEmail(adminEmail);
+
+        checkEvaluatorOrAdminForEmployee(admin, oldEmployee);
+
         String password = requestEmployeeDto.getPassword();
 
         if (password != null && !password.isBlank()) {
@@ -193,7 +197,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     @Transactional(readOnly = true)
-    public void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated) {
+    public void checkEvaluatorOrAdminForEmployee(Employee evaluator, Employee evaluated) {
         if (evaluator.getCreator() != null
                 && evaluated.getCreator() != null
                 && !Objects.equals(evaluator.getCreator().getId(), evaluated.getCreator().getId())) {
