@@ -14,6 +14,7 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
+import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
@@ -35,6 +36,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper;
     private final EmployeeService employeeService;
     private final EmployeeRepository employeeRepository;
+    private final TaskRepository taskRepository;
 
     /**
      * Получение проекта по id
@@ -133,6 +135,9 @@ public class ProjectServiceImpl implements ProjectService {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
+        if(taskRepository.existsByProjectId(projectId)) {
+            throw new ConflictException("Невозможно удалить проект, пока к нему привязаны задачи");
+        }
         projectRepository.delete(project);
     }
 
