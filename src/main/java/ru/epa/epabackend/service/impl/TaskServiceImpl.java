@@ -52,6 +52,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * Получение списка всех задач админом по определенному проекту админом
+     */
+    @Override
+    public List<Task> findAllByProjectId(String email, Long projectId) {
+        Employee admin = employeeService.findByEmail(email);
+        Project project = projectService.findById(projectId);
+        projectService.checkUserAndProject(admin, project);
+        return taskRepository.findAllByProjectId(projectId);
+    }
+
+    /**
      * Найти задачу по ID админом
      */
     @Override

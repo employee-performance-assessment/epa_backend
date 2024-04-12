@@ -51,6 +51,11 @@ public interface TaskService {
     List<Task> findAll(String email);
 
     /**
+     * Получение списка всех задач по определенному проекту админом
+     */
+    List<Task> findAllByProjectId(String email, Long projectId);
+
+    /**
      * Создание задачи
      */
     Task create(RequestTaskDto taskDto, String email);
