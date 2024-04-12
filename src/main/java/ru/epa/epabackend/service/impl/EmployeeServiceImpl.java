@@ -203,17 +203,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated) {
         Employee evaluatorCreator = evaluator.getCreator();
         Employee evaluatedCreator = evaluated.getCreator();
-        if (evaluatorCreator != null
-                && evaluatedCreator != null
-                && !Objects.equals(evaluatorCreator.getId(), evaluatedCreator.getId())) {
-            throw new BadRequestException(String.format("Пользователь с id %d не ваш коллега", evaluated.getId()));
-        } else if (evaluatorCreator == null
-                && evaluatedCreator != null
-                && !Objects.equals(evaluator.getId(), evaluatedCreator.getId())) {
-            throw new BadRequestException(String.format("Пользователь с id %d не ваш сотрудник", evaluated.getId()));
-        } else if (evaluatedCreator == null) {
+        if (evaluatedCreator == null) {
             throw new BadRequestException(String.format("Пользователь с id %d является руководителем",
                     evaluated.getId()));
+        }
+        if (evaluatorCreator != null && !Objects.equals(evaluatorCreator.getId(), evaluatedCreator.getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш коллега", evaluated.getId()));
+        }
+        if (evaluatorCreator == null && !Objects.equals(evaluator.getId(), evaluatedCreator.getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш сотрудник", evaluated.getId()));
         }
     }
 }
