@@ -52,6 +52,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * Получение списка всех задач админом по определенному проекту админом
+     */
+    @Override
+    public List<Task> findAllByProjectId(String email, Long projectId) {
+        Employee admin = employeeService.findByEmail(email);
+        Project project = projectService.findById(projectId);
+        projectService.checkUserAndProject(admin, project);
+        return taskRepository.findAllByProjectId(projectId);
+    }
+
+    /**
      * Найти задачу по ID админом
      */
     @Override
@@ -249,6 +260,38 @@ public class TaskServiceImpl implements TaskService {
         log.info("Получение задачи из репозитория по идентификатору {}", taskId);
         return taskRepository.findById(taskId).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
+    }
+
+    /**
+     * Получение списка всех задач команды сотрудником по определенному проекту
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllForEmployeeByProjectId(String email, Long projectId) {
+        log.info("Получение списка всех задач команды сотрудником");
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator();
+        if (admin == null) {
+            throw new BadRequestException("Пользователь является администратором, а не сотрудником");
+        }
+        Project project = projectService.findById(projectId);
+        projectService.checkUserAndProject(admin, project);
+        return taskRepository.findAllByProjectId(projectId);
+    }
+
+    /**
+     * Получение списка всех задач команды сотрудником
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllForEmployee(String email) {
+        log.info("Получение списка всех задач команды сотрудником");
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator();
+        if (admin == null) {
+            throw new BadRequestException("Пользователь является администратором, а не сотрудником");
+        }
+        return taskRepository.findAllByOwnerId(admin.getId());
     }
 
     /**
