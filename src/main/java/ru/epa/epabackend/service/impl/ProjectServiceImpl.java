@@ -135,7 +135,7 @@ public class ProjectServiceImpl implements ProjectService {
         Employee admin = employeeService.findByEmail(email);
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
-        if(taskRepository.existsByProjectId(projectId)) {
+        if (taskRepository.existsByProjectId(projectId)) {
             throw new ConflictException("Невозможно удалить проект, пока к нему привязаны задачи");
         }
         projectRepository.delete(project);
