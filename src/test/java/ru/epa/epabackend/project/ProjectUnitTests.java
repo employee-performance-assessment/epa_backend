@@ -16,6 +16,7 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
+import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.service.impl.ProjectServiceImpl;
 import ru.epa.epabackend.util.Role;
@@ -40,6 +41,8 @@ public class ProjectUnitTests {
     private EmployeeServiceImpl employeeService;
     @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
+    private TaskRepository taskRepository;
     @InjectMocks
     private ProjectServiceImpl projectService;
     private Employee admin;
@@ -225,6 +228,7 @@ public class ProjectUnitTests {
                 .projects(List.of(project))
                 .build();
         when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(taskRepository.existsByProjectId(ID_1)).thenReturn(false);
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         projectService.delete(ID_1, email);
         verify(projectRepository, times(1)).delete(project);
