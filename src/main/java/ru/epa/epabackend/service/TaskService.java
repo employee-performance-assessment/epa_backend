@@ -85,4 +85,8 @@ public interface TaskService {
 
     @Transactional(readOnly = true)
     Task findById(Long taskId);
+
+    List<Task> findAllForEmployeeByProjectId(String email, Long projectId);
+
+    List<Task> findAllForEmployee(String email);
 }

@@ -263,6 +263,38 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * Получение списка всех задач команды сотрудником по определенному проекту
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllForEmployeeByProjectId(String email, Long projectId) {
+        log.info("Получение списка всех задач команды сотрудником");
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator();
+        if (admin == null) {
+            throw new BadRequestException("Пользователь является администратором, а не сотрудником");
+        }
+        Project project = projectService.findById(projectId);
+        projectService.checkUserAndProject(admin, project);
+        return taskRepository.findAllByProjectId(projectId);
+    }
+
+    /**
+     * Получение списка всех задач команды сотрудником
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllForEmployee(String email) {
+        log.info("Получение списка всех задач команды сотрудником");
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator();
+        if (admin == null) {
+            throw new BadRequestException("Пользователь является администратором, а не сотрудником");
+        }
+        return taskRepository.findAllByOwnerId(admin.getId());
+    }
+
+    /**
      * Проверка исполнителя задач при обновлении задачи. Если исполнитель поменялся, то
      * ищем его айди в репозитории, если находим, то возвращаем его. Если не найден, то
      * берем из задачи старого исполнителя.
