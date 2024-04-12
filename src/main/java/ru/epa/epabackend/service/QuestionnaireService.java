@@ -28,4 +28,6 @@ public interface QuestionnaireService {
     boolean isDayPassedAfterShareQuestionnaire(String email);
 
     Questionnaire updateLastWithDefault(String email);
+
+    void checkAdminForQuestionnaire(Employee admin, Questionnaire questionnaire);
 }
