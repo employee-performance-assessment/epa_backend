@@ -63,7 +63,7 @@ public class AdminTaskController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     public List<ResponseTaskShortDto> findAll(Principal principal, @RequestParam(required = false) Long projectId) {
-        if(projectId!=null){
+        if (projectId != null) {
             return taskMapper.mapList(taskService.findAllByProjectId(principal.getName(), projectId));
         } else {
             return taskMapper.mapList(taskService.findAll(principal.getName()));
