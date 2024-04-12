@@ -62,8 +62,12 @@ public class AdminTaskController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<ResponseTaskShortDto> findAll(Principal principal) {
-        return taskMapper.mapList(taskService.findAll(principal.getName()));
+    public List<ResponseTaskShortDto> findAll(Principal principal, @RequestParam(required = false) Long projectId) {
+        if (projectId != null) {
+            return taskMapper.mapList(taskService.findAllByProjectId(principal.getName(), projectId));
+        } else {
+            return taskMapper.mapList(taskService.findAll(principal.getName()));
+        }
     }
 
     /**

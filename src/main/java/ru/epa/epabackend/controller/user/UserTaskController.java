@@ -143,4 +143,30 @@ public class UserTaskController {
         List<Task> byProjectIdAndStatus = taskService.findByProjectIdAndStatus(projectId, status);
         return taskMapper.mapList(byProjectIdAndStatus);
     }
+
+    /**
+     * Эндпойнт поиска всех задач сотрудником для канбан доски. Видим все задачи всех сотрудников администратора.
+     */
+    @Operation(summary = "Эндпойнт поиска всех задач сотрудником для канбан доски. " +
+            "Видим все задачи всех сотрудников администратора.",
+            description = "Возвращает список задач в сокращенном виде. " +
+                    "В случае, если не найдено ни одной задачи, возвращает пустой список.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    mediaType = "application/json", array = @ArraySchema(
+                    schema = @Schema(implementation = ResponseTaskShortDto.class)))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @GetMapping("/all-employees")
+    public List<ResponseTaskShortDto> findAllForEmployee(Principal principal, @RequestParam(required = false) Long projectId) {
+        if (projectId != null) {
+            return taskMapper.mapList(taskService.findAllForEmployeeByProjectId(principal.getName(), projectId));
+        } else {
+            return taskMapper.mapList(taskService.findAllForEmployee(principal.getName()));
+        }
+    }
 }
