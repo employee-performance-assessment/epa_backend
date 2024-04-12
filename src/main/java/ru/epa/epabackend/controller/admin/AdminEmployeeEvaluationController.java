@@ -226,9 +226,9 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating/{employeeId}")
-    public Double findAverageRatingByAdmin(@Parameter(required = true) @PathVariable Long employeeId) {
+    public Double findAverageRatingByAdmin(@Parameter(required = true) @PathVariable Long employeeId, Principal principal) {
         LocalDate rangeStart = YearMonth.now().atDay(1);
         LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
-        return employeeEvaluationService.findAverageRatingByAdmin(employeeId, rangeStart, rangeEnd);
+        return employeeEvaluationService.findAverageRatingByAdmin(principal.getName(), employeeId, rangeStart, rangeEnd);
     }
 }

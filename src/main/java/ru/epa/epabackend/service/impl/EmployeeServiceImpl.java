@@ -201,17 +201,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional(readOnly = true)
     public void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated) {
-        if (evaluator.getCreator() != null
-                && evaluated.getCreator() != null
-                && !Objects.equals(evaluator.getCreator().getId(), evaluated.getCreator().getId())) {
-            throw new BadRequestException(String.format("Пользователь с id %d не ваш коллега", evaluated.getId()));
-        } else if (evaluator.getCreator() == null
-                && evaluated.getCreator() != null
-                && !Objects.equals(evaluator.getId(), evaluated.getCreator().getId())) {
-            throw new BadRequestException(String.format("Пользователь с id %d не ваш сотрудник", evaluated.getId()));
-        } else if (evaluated.getCreator() == null) {
+        Employee evaluatorCreator = evaluator.getCreator();
+        Employee evaluatedCreator = evaluated.getCreator();
+        if (evaluatedCreator == null) {
             throw new BadRequestException(String.format("Пользователь с id %d является руководителем",
                     evaluated.getId()));
+        }
+        if (evaluatorCreator != null && !Objects.equals(evaluatorCreator.getId(), evaluatedCreator.getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш коллега", evaluated.getId()));
+        }
+        if (evaluatorCreator == null && !Objects.equals(evaluator.getId(), evaluatedCreator.getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш сотрудник", evaluated.getId()));
         }
     }
 }

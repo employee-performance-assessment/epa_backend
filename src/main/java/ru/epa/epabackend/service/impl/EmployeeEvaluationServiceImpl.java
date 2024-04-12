@@ -163,6 +163,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         Employee admin = employeeService.findByEmail(adminEmail);
         Employee employee = employeeService.findById(evaluatedId);
         employeeService.checkAdminForEmployee(admin, employee);
+        questionnaireService.checkAdminForQuestionnaire(admin, questionnaire);
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsForAdmin(adminEmail, evaluatedId, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
@@ -206,15 +207,25 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public List<ResponseEmployeeEvaluationShortDto> findQuestionnaireScores(String email, Long questionnaireId,
                                                                             Long evaluatedId) {
-        Employee employee = employeeService.findByEmail(email);
+        Employee evaluator = employeeService.findByEmail(email);
+        Employee evaluated = employeeService.findById(evaluatedId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
+        employeeService.checkEvaluatorForEmployee(evaluator, evaluated);
+        questionnaireService.checkAdminForQuestionnaire(evaluator.getCreator() == null ? evaluator : evaluator.getCreator(),
+                questionnaire);
         List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationRepository
-                .findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(employee.getId(), evaluatedId, questionnaireId);
+                .findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(evaluator.getId(), evaluatedId, questionnaireId);
         return employeeEvaluationMapper.mapToShortListDto(employeeEvaluations);
     }
 
     @Override
     public ResponseAdminEvaluationDto findAssessedQuestionnaireByAdmin(String email, Long questionnaireId,
                                                                        Long evaluatedId) {
+        Employee admin = employeeService.findByEmail(email);
+        Employee employee = employeeService.findById(evaluatedId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
+        employeeService.checkAdminForEmployee(admin, employee);
+        questionnaireService.checkAdminForQuestionnaire(admin, questionnaire);
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = findQuestionnaireScores(email, questionnaireId,
                 evaluatedId);
         String stringRecommendation = recommendationService
@@ -292,8 +303,11 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+    public Double findAverageRatingByAdmin(String email, Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
         log.info("Получение администратором среднего рейтинга сотрудника за текущий месяц");
+        Employee employee = employeeService.findById(employeeId);
+        Employee admin = employeeService.findByEmail(email);
+        employeeService.checkAdminForEmployee(admin, employee);
         return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId, rangeStart, rangeEnd);
     }
 
