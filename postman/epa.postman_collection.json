@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5fd1a593-31f8-4db1-b453-185c7e7ae750",
+		"_postman_id": "4865fec0-2d6b-4780-b741-28b30e27efc1",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26701489"
+		"_exporter_id": "21428156"
 	},
 	"item": [
 		{
@@ -6845,7 +6845,7 @@
 									"pm.test(\"Middle score is equal to 5 for idQuestionnaire 4\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 4);\r",
-									"    pm.expect(foundItem.middleScore).to.eql(5);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(4.5);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -7707,6 +7707,49 @@
 					"response": []
 				},
 				{
+					"name": "get evaluated questionnaires for me (id =11) with stars from 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/list-questionnaire?stars=4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "stars",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Save token employee 12",
 					"event": [
 						{
@@ -7794,6 +7837,49 @@
 					"response": []
 				},
 				{
+					"name": "get evaluated questionnaires for me (id =12) with stars from 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/list-questionnaire?stars=3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "stars",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Save token admin",
 					"event": [
 						{
@@ -7856,12 +7942,12 @@
 									"pm.test(\"Middle score is equal to 4 for idQuestionnaire 3\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 3);\r",
-									"    pm.expect(foundItem.middleScore).to.eql(4);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.5);\r",
 									"});\r",
 									"pm.test(\"Middle score is equal to 3 for idQuestionnaire 4\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 4);\r",
-									"    pm.expect(foundItem.middleScore).to.eql(3);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.25);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -7934,7 +8020,7 @@
 					"response": []
 				},
 				{
-					"name": "get evaluated questionnaires for employee 12 by middleScore length=1",
+					"name": "get evaluated questionnaires for employee 12 by middleScore length=2",
 					"event": [
 						{
 							"listen": "test",
@@ -7943,9 +8029,9 @@
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -7996,12 +8082,12 @@
 									"pm.test(\"Middle score is equal to 4 for idQuestionnaire 3\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 3);\r",
-									"    pm.expect(foundItem.middleScore).to.eql(4);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.5);\r",
 									"});\r",
 									"pm.test(\"Middle score is equal to 3 for idQuestionnaire 4\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 4);\r",
-									"    pm.expect(foundItem.middleScore).to.eql(3);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.25);\r",
 									"});"
 								],
 								"type": "text/javascript",

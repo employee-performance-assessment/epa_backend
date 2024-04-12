@@ -12,7 +12,7 @@ import java.util.List;
 public interface EmployeeEvaluationRepository extends JpaRepositoryImplementation<EmployeeEvaluation, Long> {
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEmployeeEvaluationShortDto(criteria.name, " +
-            "round(avg(score))) " +
+            "round(avg(score), 2)) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.email = :email " +
             "and e.evaluator.role = 'ROLE_USER' " +
@@ -22,7 +22,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEmployeeEvaluationShortDto(criteria.name, " +
-            "round(avg(score))) " +
+            "round(avg(score), 2)) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :evaluatedId " +
             "and e.evaluator.role = 'ROLE_USER' " +
@@ -32,7 +32,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEmployeeEvaluationShortDto(criteria.name, " +
-            "round(avg(score))) " +
+            "round(avg(score), 2)) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.email = :email " +
             "and e.evaluator.role = 'ROLE_ADMIN' " +
@@ -42,7 +42,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEmployeeEvaluationShortDto(criteria.name, " +
-            "round(avg(score))) " +
+            "round(avg(score), 2)) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :evaluatedId " +
             "and e.evaluator.email = :emailAdmin " +
@@ -54,7 +54,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<EmployeeEvaluation> findAllByEvaluatorEmailAndEvaluatedId(String email, Long evaluatedId);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingFullDto(month(e.createDay), round(avg(score)) rating) " +
+            ".ResponseRatingFullDto(month(e.createDay), round(avg(score), 2) rating) " +
             "from EmployeeEvaluation e " +
             "where (e.evaluator.creator.id = :adminId " +
             "or e.evaluator.id = :adminId) " +
@@ -64,7 +64,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<ResponseRatingFullDto> findCommandRating(Long adminId, Integer year);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingFullDto(month(e.createDay), round(avg(score)) rating) " +
+            ".ResponseRatingFullDto(month(e.createDay), round(avg(score), 2) rating) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.email = :email " +
             "and year(e.createDay) = :year " +
@@ -73,7 +73,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<ResponseRatingFullDto> findPersonalRating(String email, Integer year);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingFullDto(month(e.createDay), round(avg(score)) rating) " +
+            ".ResponseRatingFullDto(month(e.createDay), round(avg(score), 2) rating) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :evaluatedId " +
             "and year(e.createDay) = :year " +
@@ -96,6 +96,8 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
             "where e.id <> :employeeId " +
+            "and e.created <= q.created " +
+            "and q.created >= :employeeCreated " +
             "and q.status = 'SHARED' " +
             "and q.created > :startDate " +
             "and (nullif((:from), null) is null or q.created >= :from) " +
@@ -111,13 +113,14 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "where ee.evaluator.id = :employeeId " +
             "group by ee.evaluator.id, ee.evaluated.id, ee.questionnaire.id) ")
     List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(
-            Long employeeId, LocalDate startDate, String text, LocalDate from, LocalDate to);
+            Long employeeId, LocalDate startDate, String text, LocalDate from, LocalDate to, LocalDate employeeCreated);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation.ResponseEmployeeAssessDto(e.id, e.fullName, e.position, " +
             "ru.epa.epabackend.util.Role.ROLE_ADMIN, q.id, q.created) " +
             "from Questionnaire q " +
             "inner join Employee e on q.author.id = e.creator.id " +
-            "where q.status = 'SHARED' " +
+            "where e.created <= q.created " +
+            "and q.status = 'SHARED' " +
             "and q.created > :startDate " +
             "and (cast(:text as text) is null or lower(e.fullName) like lower(concat('%', cast(:text as text), '%'))) " +
             "and (nullif((:from), null) is null or q.created >= :from) " +
@@ -147,14 +150,14 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +
             "questionnaire.created createQuestionnaire, " +
-            "round(avg(score)) middleScore) " +
+            "round(avg(score), 2) middleScore) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :evaluatedId " +
             "and e.evaluated.creator.email = :adminEmail " +
             "and (nullif(:from, null) is null or e.questionnaire.created >= :from) " +
             "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
             "GROUP BY questionnaire.id, questionnaire.created " +
-            "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
+            "having (nullif(:stars, null) is null or cast(floor(avg(score)) as int) = :stars) ")
     List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByAdminEmailAndEvaluatedId(String adminEmail, Long evaluatedId,
                                                                                             Integer stars, LocalDate from,
                                                                                             LocalDate to);
@@ -162,18 +165,18 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
             ".ResponseEvaluatedQuestionnaireDto(questionnaire.id idQuestionnaire, " +
             "questionnaire.created createQuestionnaire, " +
-            "round(avg(score)) middleScore) " +
+            "round(avg(score), 2) middleScore) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :evaluatedId " +
             "and (nullif(:from, null) is null or e.questionnaire.created >= :from) " +
             "and (nullif(:to, null) is null or e.questionnaire.created <= :to) " +
             "GROUP BY questionnaire.id, questionnaire.created " +
-            "having (nullif(:stars, null) is null or cast(round(avg(score)) as int) = :stars) ")
+            "having (nullif(:stars, null) is null or cast(floor(avg(score)) as int) = :stars) ")
     List<ResponseEvaluatedQuestionnaireDto> findListQuestionnaireByEvaluatedId(Long evaluatedId, Integer stars,
                                                                                LocalDate from, LocalDate to);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingDto(round(avg(score)) rating) " +
+            ".ResponseRatingDto(round(avg(score), 2) rating) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :evaluatedId " +
             "and e.questionnaire.id = :questionnaireId " +
@@ -181,7 +184,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     ResponseRatingDto findRatingByQuestionnaireIdAndEvaluatedId(Long questionnaireId, Long evaluatedId);
 
     @Query(value = "select new ru.epa.epabackend.dto.evaluation" +
-            ".ResponseRatingDto(round(avg(score)) rating) " +
+            ".ResponseRatingDto(round(avg(score), 2) rating) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.email = :evaluatedEmail " +
             "and e.questionnaire.id = :questionnaireId " +
@@ -191,7 +194,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     List<EmployeeEvaluation> findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(Long evaluatorId, Long evaluatedId,
                                                                                Long questionnaireId);
 
-    @Query(value = "SELECT AVG(e.score) " +
+    @Query(value = "SELECT round(AVG(e.score), 2) " +
             "from EmployeeEvaluation e " +
             "where e.evaluated.id = :employeeId " +
             "and e.createDay BETWEEN :rangeStart AND :rangeEnd ")

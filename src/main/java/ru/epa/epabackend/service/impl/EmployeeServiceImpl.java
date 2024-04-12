@@ -19,6 +19,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.epa.epabackend.util.Role.ROLE_ADMIN;
 import static ru.epa.epabackend.util.Role.ROLE_USER;
@@ -70,9 +71,13 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Обновление сотрудника
      */
     @Override
-    public Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto) {
+    public Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto, String adminEmail) {
         log.info("Обновление существующего сотрудника {}", requestEmployeeDto.getFullName());
         Employee oldEmployee = findById(employeeId);
+        Employee admin = findByEmail(adminEmail);
+
+        checkAdminForEmployee(admin, oldEmployee);
+
         String password = requestEmployeeDto.getPassword();
 
         if (password != null && !password.isBlank()) {
@@ -164,8 +169,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     public void checkAdminForEmployee(Employee admin, Employee employee) {
         if (employee.getCreator() == null) {
-            throw new BadRequestException(String.format("Пользователь с id %d не является сотрудником", employee.getId()));
-        } else if (employee.getCreator().getId() != admin.getId()) {
+            if (!Objects.equals(admin.getId(), employee.getId())) {
+                throw new BadRequestException(String.format("Пользователь с id %d не является сотрудником",
+                        employee.getId()));
+            }
+        } else if (!Objects.equals(employee.getCreator().getId(), admin.getId())) {
             throw new BadRequestException(String.format("Сотрудник с id %d не относится к администратору с id %d",
                     employee.getId(), admin.getId()));
         }
@@ -185,5 +193,25 @@ public class EmployeeServiceImpl implements EmployeeService {
             years.add(i);
         }
         return years;
+    }
+
+    /**
+     * Проверка, что сотрудник оценивает своего коллегу или является его руководителем
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated) {
+        Employee evaluatorCreator = evaluator.getCreator();
+        Employee evaluatedCreator = evaluated.getCreator();
+        if (evaluatedCreator == null) {
+            throw new BadRequestException(String.format("Пользователь с id %d является руководителем",
+                    evaluated.getId()));
+        }
+        if (evaluatorCreator != null && !Objects.equals(evaluatorCreator.getId(), evaluatedCreator.getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш коллега", evaluated.getId()));
+        }
+        if (evaluatorCreator == null && !Objects.equals(evaluator.getId(), evaluatedCreator.getId())) {
+            throw new BadRequestException(String.format("Пользователь с id %d не ваш сотрудник", evaluated.getId()));
+        }
     }
 }

@@ -12,7 +12,7 @@ public interface EmployeeService {
 
     Employee createSelfRegister(RequestEmployeeShortDto requestEmployeeShortDto);
 
-    Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto);
+    Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto, String adminEmail);
 
     void delete(Long employeeId);
 
@@ -31,4 +31,6 @@ public interface EmployeeService {
     List<Integer> findAllYearsFromAdminCreation(String email);
 
     void checkAdminForEmployee(Employee admin, Employee employee);
+
+    void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated);
 }

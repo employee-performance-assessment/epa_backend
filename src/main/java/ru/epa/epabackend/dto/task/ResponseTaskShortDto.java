@@ -35,6 +35,12 @@ public class ResponseTaskShortDto {
     private ResponseProjectShortDto project;
 
     /**
+     * Дата создания задачи.
+     */
+    @JsonFormat(pattern = DateConstant.DATE_PATTERN)
+    private LocalDate createDate;
+
+    /**
      * Дата до которой должна выполниться задача..
      */
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)

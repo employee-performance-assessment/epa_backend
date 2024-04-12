@@ -19,6 +19,7 @@ import ru.epa.epabackend.util.QuestionnaireStatus;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -202,5 +203,15 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         questionnaire.setCriterias(criteriaService.findDefault());
         questionnaire.setCreated(LocalDate.now());
         return questionnaireRepository.save(questionnaire);
+    }
+
+    @Override
+    public void checkAdminForQuestionnaire(Employee admin, Questionnaire questionnaire) {
+        Long adminId = admin.getId();
+        Long authorId = questionnaire.getAuthor().getId();
+        if (!Objects.equals(adminId, authorId)) {
+            throw new BadRequestException(String.format("Руководитель с id %d не является автором анкеты с id %d",
+                    adminId, questionnaire.getId()));
+        }
     }
 }
