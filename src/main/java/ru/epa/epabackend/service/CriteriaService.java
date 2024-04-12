@@ -23,23 +23,9 @@ public interface CriteriaService {
     Criteria findById(Long evaluationId);
 
     /**
-     * Получение списка всех критериев оценок.
-     */
-    List<Criteria> findAll();
-
-    /**
-     * Удаление критерия оценки.
-     */
-    void delete(Long evaluationId);
-
-    /**
      * Получение списка стандартных критериев
      */
     List<Criteria> findDefault();
-
-    boolean isNameExists(String name);
-
-    Criteria findByName(String name);
 
     List<Criteria> findExistentAndSaveNonExistentCriterias(List<RequestCriteriaDto> criterias);
 }

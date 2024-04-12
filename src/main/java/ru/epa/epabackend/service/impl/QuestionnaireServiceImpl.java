@@ -35,20 +35,6 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final CriteriaService criteriaService;
 
     /**
-     * Получение самой последней анкеты админа с указанным статусом
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
-        log.info("Получение самой последней анкеты админа с указанным статусом {}", status);
-        Employee author = employeeService.findByEmail(email).getCreator();
-        String authorEmail = author == null ? email : author.getEmail();
-        return questionnaireRepository.findFirstByAuthorEmailAndStatusOrderByIdDesc(authorEmail, status)
-                .orElseThrow(() -> new EntityNotFoundException(String
-                        .format("Анкеты для администратора с email %s и статусом %s не найдена", email, status)));
-    }
-
-    /**
      * Получение последней анкеты админа по email
      * Если есть анкета со статусом CREATED, то возвращаем её
      * Если есть анкета со статусом SHARED, то создаём новую анкету со статусом CREATED и возвращаем её

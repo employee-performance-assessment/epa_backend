@@ -42,31 +42,6 @@ public class UserQuestionnaireController {
     private final QuestionnaireMapper questionnaireMapper;
 
     /**
-     * Получение короткой информации о последней заполненной администратором анкете со статусом SHARED
-     * В случае отсутствия у администратора анкеты со статусом SHARED возвращается ошибка
-     */
-    @Operation(summary = "Получение короткой информации о последней заполненной администратором анкете со статусом SHARED",
-            description = "В случае отсутствия у администратора анкеты со статусом SHARED возвращается ошибка")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ResponseQuestionnaireShortDto.class))),
-            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class))),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = org.springframework.web.ErrorResponse.class)))})
-    @GetMapping("/last-shared")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseQuestionnaireShortDto findShortLastByAuthorAndStatus(Principal principal) {
-        Questionnaire questionnaire = questionnaireService.findLastByAuthorAndStatus(principal.getName(),
-                QuestionnaireStatus.SHARED);
-        return questionnaireMapper.mapToShortResponseDto(questionnaire);
-    }
-
-    /**
      * Получение полной информации об отправленной (SHARED) анкете по id
      * Если анкету получает кто-то, чей админ не является автором анкеты, то возвращается ошибка
      * Если анкета имеет статус CREATED, то возвращается ошибка

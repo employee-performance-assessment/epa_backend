@@ -70,23 +70,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Сохранение сотрудника в проект
-     */
-    @Override
-    public Project saveWithEmployee(Long projectId, Long employeeId, String email) {
-        log.info("Сохранение сотрудника с идентификатором {} в проект с идентификатором {}", employeeId, projectId);
-        Employee admin = employeeService.findByEmail(email);
-        Employee employee = employeeService.findById(employeeId);
-        Project project = findById(projectId);
-        checkUserAndProject(admin, project);
-        if (project.getEmployees().contains(employee))
-            throw new ConflictException(String.format("Сотрудник с id %d уже добавлен к проекту", employeeId));
-        List<Employee> employees = project.getEmployees();
-        employees.add(employee);
-        return projectRepository.save(project);
-    }
-
-    /**
      * Поиск всех создателей
      */
     @Override
@@ -98,19 +81,6 @@ public class ProjectServiceImpl implements ProjectService {
             return projectRepository.findByEmployees(employee);
         }
         return projectRepository.findByEmployees(employee.getCreator());
-    }
-
-    /**
-     * Поиск всех по проекту и роли
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Employee> findAllByProjectIdAndRole(Long projectId, Role role, String email) {
-        log.info("Поиск всех по проекту с идентификатором {} и роли {}", projectId, role);
-        Employee admin = employeeService.findByEmail(email);
-        Project project = findById(projectId);
-        checkUserAndProject(admin, project);
-        return employeeRepository.findByProjectsAndRole(findById(projectId), role);
     }
 
     /**
@@ -139,21 +109,6 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ConflictException("Невозможно удалить проект, пока к нему привязаны задачи");
         }
         projectRepository.delete(project);
-    }
-
-    /**
-     * Удаление сотрудника из проекта
-     */
-    @Override
-    public void deleteEmployeeFromProject(Long projectId, Long employeeId, String email) {
-        log.info("Удаление сотрудника с идентификатором {} из проекта с идентификатором {}", employeeId, projectId);
-        Employee admin = employeeService.findByEmail(email);
-        Project project = findById(projectId);
-        checkUserAndProject(admin, project);
-        Employee employee = employeeService.findById(employeeId);
-        checkUserAndProject(employee, project);
-        project.getEmployees().remove(employee);
-        projectRepository.save(project);
     }
 
     /**

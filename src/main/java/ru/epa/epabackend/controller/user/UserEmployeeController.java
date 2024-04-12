@@ -79,7 +79,7 @@ public class UserEmployeeController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{employeeId}")
     public ResponseEmployeeFullDto findByIdDto(@PathVariable @Parameter(required = true) Long employeeId) {
-        return employeeMapper.mapToFullDto(employeeService.findByIdDto(employeeId));
+        return employeeMapper.mapToFullDto(employeeService.findById(employeeId));
     }
 
     /**
@@ -110,7 +110,7 @@ public class UserEmployeeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = Integer.class)))),
+                    schema = @Schema(implementation = Integer.class)))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
