@@ -119,6 +119,7 @@ class TaskEmployeeUnitTests {
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
         when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId())).thenReturn(Optional.empty());
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
+        when(employeeService.findById(employee.getId())).thenReturn(employee);
         assertThrows(EntityNotFoundException.class, () -> taskService.findByIdAndExecutorEmail(principal, ID_1));
     }
 }

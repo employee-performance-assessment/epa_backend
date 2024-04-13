@@ -44,9 +44,8 @@ public class CriteriaServiceImpl implements CriteriaService {
     @Transactional(readOnly = true)
     public Criteria findById(Long criteriaId) {
         log.info("Получение оценки по идентификатору {}", criteriaId);
-        Criteria criteria = criteriaRepository.findById(criteriaId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Критерий оценки с id %s не найден", criteriaId)));
-        return criteria;
+        return criteriaRepository.findById(criteriaId).orElseThrow(() ->
+                new EntityNotFoundException("Критерий оценки не найден"));
     }
 
     /**

@@ -46,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Project findById(Long projectId) {
         log.info("Получение проекта по id {}", projectId);
         return projectRepository.findById(projectId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Проект с id %s не найден", projectId)));
+                new EntityNotFoundException("Проект не найден"));
     }
 
     /**
@@ -106,7 +106,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = findById(projectId);
         checkUserAndProject(admin, project);
         if (taskRepository.existsByProjectId(projectId)) {
-            throw new ConflictException("Невозможно удалить проект, пока к нему привязаны задачи");
+            throw new ConflictException(String.format("Невозможно удалить проект %s, пока к нему привязаны задачи",
+                    project.getName()));
         }
         projectRepository.delete(project);
     }
@@ -115,10 +116,10 @@ public class ProjectServiceImpl implements ProjectService {
      * Проверка сотрудника и проекта
      */
     @Override
-    public void checkUserAndProject(Employee user, Project project) {
-        log.info("Проверка сотрудника {} и проекта {}", user, project);
-        if (!user.getProjects().contains(project))
-            throw new BadRequestException(String.format("%s с email %s не относится к проекту с id %d",
-                    user.getRole(), user.getEmail(), project.getId()));
+    public void checkUserAndProject(Employee admin, Project project) {
+        log.info("Проверка руководителя {} и проекта {}", admin, project);
+        if (!admin.getProjects().contains(project))
+            throw new BadRequestException(String.format("Руководитель %s не состоит в проекте %s",
+                    admin.getFullName(), project.getName()));
     }
 }

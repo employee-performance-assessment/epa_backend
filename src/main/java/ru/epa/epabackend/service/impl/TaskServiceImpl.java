@@ -157,7 +157,7 @@ public class TaskServiceImpl implements TaskService {
         try {
             return taskRepository.findAllByExecutorIdAndStatus(employee.getId(), getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
-            throw new BadRequestException("Неверный статус: " + status);
+            throw new BadRequestException("Указан неверный статус задачи");
         }
     }
 
@@ -182,7 +182,7 @@ public class TaskServiceImpl implements TaskService {
         try {
             return taskRepository.findAllByOwnerEmailAndExecutorIdAndStatus(email, employeeId, getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
-            throw new BadRequestException("Неверный статус: " + status);
+            throw new BadRequestException("Указан неверный статус задачи");
         }
     }
 
@@ -213,7 +213,7 @@ public class TaskServiceImpl implements TaskService {
             task.setStatus(taskStatus);
             return taskRepository.save(task);
         } catch (IllegalArgumentException exception) {
-            throw new BadRequestException("Неверный статус: " + status);
+            throw new BadRequestException("Указан неверный статус задачи");
         }
     }
 
@@ -225,9 +225,10 @@ public class TaskServiceImpl implements TaskService {
     public Task findByIdAndExecutorEmail(Long taskId, Long employeeId) {
         log.info("Получение задачи из репозитория по идентификатору задачи {} " +
                 "и по идентификатору исполнителя {}", taskId, employeeId);
+        Employee employee = employeeService.findById(employeeId);
         return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Задача с id %s и исполнителем с id %s не найдена",
-                        taskId, employeeId)));
+                new EntityNotFoundException(String.format("Не найдена задача для исполнителя %s",
+                        employee.getFullName())));
     }
 
     /**
@@ -259,7 +260,7 @@ public class TaskServiceImpl implements TaskService {
     public Task findById(Long taskId) {
         log.info("Получение задачи из репозитория по идентификатору {}", taskId);
         return taskRepository.findById(taskId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
+                new EntityNotFoundException("Задача не найдена"));
     }
 
     /**
@@ -272,7 +273,7 @@ public class TaskServiceImpl implements TaskService {
         Employee employee = employeeService.findByEmail(email);
         Employee admin = employee.getCreator();
         if (admin == null) {
-            throw new BadRequestException("Пользователь является администратором, а не сотрудником");
+            findAllByProjectId(employee.getEmail(), projectId);
         }
         Project project = projectService.findById(projectId);
         projectService.checkUserAndProject(admin, project);
@@ -289,7 +290,7 @@ public class TaskServiceImpl implements TaskService {
         Employee employee = employeeService.findByEmail(email);
         Employee admin = employee.getCreator();
         if (admin == null) {
-            throw new BadRequestException("Пользователь является администратором, а не сотрудником");
+            findAll(employee.getEmail());
         }
         return taskRepository.findAllByOwnerId(admin.getId());
     }
