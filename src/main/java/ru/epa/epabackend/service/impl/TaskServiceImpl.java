@@ -100,6 +100,9 @@ public class TaskServiceImpl implements TaskService {
         Task oldTask = findById(taskId);
         Project project = oldTask.getProject();
         Employee admin = employeeService.findByEmail(email);
+        if (!taskRepository.existsByIdAndOwnerEmail(taskId, email)) {
+            throw new BadRequestException("Администратор не является автором задачи");
+        }
         projectService.checkUserAndProject(admin, project);
         Employee executor = checkExecutor(requestTaskDto, oldTask);
         taskMapper.updateFields(requestTaskDto, project, executor, oldTask);
@@ -128,10 +131,13 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+    public List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status, String email) {
         log.info("Получение списка задач проекта с идентификатором {} с определенным статусом {} задач",
                 projectId, status);
-        projectService.findById(projectId);
+        Project project = projectService.findById(projectId);
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator() == null ? employee : employee.getCreator();
+        projectService.checkUserAndProject(admin, project);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status);
     }
 

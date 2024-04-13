@@ -139,8 +139,8 @@ public class UserTaskController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/project/{projectId}")
     public List<ResponseTaskShortDto> findByProjectIdAndStatus(@PathVariable Long projectId,
-                                                               @RequestParam TaskStatus status) {
-        List<Task> byProjectIdAndStatus = taskService.findByProjectIdAndStatus(projectId, status);
+                                                               @RequestParam TaskStatus status, Principal principal) {
+        List<Task> byProjectIdAndStatus = taskService.findByProjectIdAndStatus(projectId, status, principal.getName());
         return taskMapper.mapList(byProjectIdAndStatus);
     }
 

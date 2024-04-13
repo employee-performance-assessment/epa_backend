@@ -41,4 +41,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByProjectId(Long projectId);
 
     List<Task> findAllByOwnerId(Long ownerId);
+
+    boolean existsByExecutorId(Long employeeId);
+
+    boolean existsByIdAndOwnerEmail(Long taskId, String email);
 }
