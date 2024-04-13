@@ -112,16 +112,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     /**
-     * Получение сотрудника по id
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Employee findByIdDto(Long employeeId) {
-        log.info("Получение сотрудника по идентификатору {}", employeeId);
-        return findById(employeeId);
-    }
-
-    /**
      * Получение данных сотрудника для аутентификации
      */
     @Override

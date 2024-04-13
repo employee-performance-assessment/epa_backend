@@ -18,8 +18,6 @@ public interface EmployeeService {
 
     List<Employee> findAll();
 
-    Employee findByIdDto(Long employeeId);
-
     UserDetailsService userDetailsService();
 
     Employee findByEmail(String email);

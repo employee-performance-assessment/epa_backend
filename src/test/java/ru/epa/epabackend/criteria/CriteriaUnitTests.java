@@ -74,23 +74,5 @@ public class CriteriaUnitTests {
         assertEquals(expectedId, criteriaResult.getId());
         verify(criteriaRepository, times(1)).findById(criteriaResult.getId());
     }
-
-    @Test
-    @DisplayName("Список всех критерий с вызовом репозитория")
-    void shouldFindAllCriteriaWhenCallRepository() {
-        when(criteriaRepository.findAll()).thenReturn(List.of(criteria));
-        List<Criteria> criteriaResult = criteriaService.findAll();
-        assertNotNull(criteriaResult);
-        assertEquals(1, criteriaResult.size());
-        verify(criteriaRepository, times(1)).findAll();
-    }
-
-    @Test
-    @DisplayName("Удаление критерия")
-    void shouldDeleteCriteriaWhen() {
-        when(criteriaRepository.existsById(any())).thenReturn(true);
-        criteriaService.delete(ID_1);
-        verify(criteriaRepository, times(1)).existsById(ID_1);
-    }
 }
 

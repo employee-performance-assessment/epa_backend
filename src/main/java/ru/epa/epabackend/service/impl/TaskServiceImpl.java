@@ -85,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
         Project project = projectService.findById(requestTaskDto.getProjectId());
         Employee executor = employeeService.findById(requestTaskDto.getExecutorId());
         Employee admin = employeeService.findByEmail(email);
-        checkEmployeeCreatorIsAdmin(admin, executor);
+        employeeService.checkAdminForEmployee(admin, executor);
         projectService.checkUserAndProject(admin, project);
         requestTaskDto.setStatus("NEW");
         return taskRepository.save(taskMapper.mapToEntity(requestTaskDto, project, executor, admin));
@@ -308,12 +308,5 @@ public class TaskServiceImpl implements TaskService {
             executor = oldTask.getExecutor();
         }
         return executor;
-    }
-
-    private void checkEmployeeCreatorIsAdmin(Employee admin, Employee executor) {
-        if (!(admin.getId().equals(executor.getCreator().getId()))) {
-            throw new EntityNotFoundException(String.format("У администратора с id %s нет сотрудника с id %s",
-                    admin.getId(), executor.getId()));
-        }
     }
 }

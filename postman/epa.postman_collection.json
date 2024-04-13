@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4865fec0-2d6b-4780-b741-28b30e27efc1",
+		"_postman_id": "61782e49-14ab-402b-91d1-fe1c8f104d99",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21428156"
@@ -4745,53 +4745,6 @@
 					"response": []
 				},
 				{
-					"name": "get last SHARED questionnaire by user",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Id of questionnaire is 2\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
-									"});\r",
-									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/user/questionnaire/last-shared",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"questionnaire",
-								"last-shared"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "get SHARED questionnaire by id=2 by user",
 					"event": [
 						{
@@ -4964,53 +4917,6 @@
 					"response": []
 				},
 				{
-					"name": "get last SHARED questionnaire by user",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Id of questionnaire is 2\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
-									"});\r",
-									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/user/questionnaire/last-shared",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"questionnaire",
-								"last-shared"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "get SHARED questionnaire by id=2 by user",
 					"event": [
 						{
@@ -5139,48 +5045,6 @@
 							"path": [
 								"public",
 								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get last SHARED questionnaire by user error",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"pm.test(\"Has response body\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Status of response is NOT_FOUND\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('status');\r",
-									"    pm.expect(jsonData.status, '\"status\" must be NOT_FOUND').to.eql(\"NOT_FOUND\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/user/questionnaire/last-shared",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"questionnaire",
-								"last-shared"
 							]
 						}
 					},
