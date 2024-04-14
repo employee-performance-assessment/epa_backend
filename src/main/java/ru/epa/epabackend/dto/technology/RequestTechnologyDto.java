@@ -23,7 +23,8 @@ public class RequestTechnologyDto {
     /**
      * Название технологии.
      */
-    @NotBlank
-    @Size(min = 3, max = 255, groups = {Create.class, Update.class})
+    @NotBlank(message = "Название не должно быть пустым")
+    @Size(min = 3, max = 255, groups = {Create.class, Update.class}, message = "Допустимая длина названия технологии " +
+            "от 3 до 255 символов")
     private String name;
 }
