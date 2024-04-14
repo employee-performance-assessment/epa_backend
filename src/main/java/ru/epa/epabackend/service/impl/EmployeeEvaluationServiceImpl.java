@@ -56,7 +56,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         checkQuestionnaireForEvaluator(questionnaire, evaluator);
         List<Long> criteriaIds = evaluationRequestDtoList.stream()
                 .map(RequestEmployeeEvaluationDto::getCriteriaId).collect(Collectors.toList());
-        if(employeeEvaluationRepository.existsByCriteriaIdIn(criteriaIds)) {
+        if (employeeEvaluationRepository.existsByCriteriaIdIn(criteriaIds)) {
             throw new ConflictException(String.format("Существует оценка по одному или нескольким критериям анкеты " +
                     "для оцениваемого пользователя %s", evaluated.getFullName()));
         }
