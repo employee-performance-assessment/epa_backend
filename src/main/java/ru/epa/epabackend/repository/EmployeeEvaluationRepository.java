@@ -201,4 +201,6 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
     Double getAverageRatingByEvaluatedIdAndCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 
     Boolean existsByEvaluatedIdOrEvaluatorId(Long employeeId, Long sameEmployeeId);
+
+    boolean existsByCriteriaIdIn(List<Long> criteriaIds);
 }
