@@ -16,7 +16,7 @@ public interface EmployeeService {
 
     void delete(Long employeeId, String email);
 
-    List<Employee> findAll();
+    List<Employee> findAll(String email);
 
     UserDetailsService userDetailsService();
 
