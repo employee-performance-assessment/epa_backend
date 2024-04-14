@@ -30,7 +30,7 @@ public class CriteriaUnitTests {
     @Mock
     private CriteriaMapper criteriaMapper;
     @InjectMocks
-    CriteriaServiceImpl criteriaService;
+    private CriteriaServiceImpl criteriaService;
     private Criteria criteria;
     private List<Criteria> criteriaList;
     private List<RequestCriteriaDto> requestCriteriaDtoList;

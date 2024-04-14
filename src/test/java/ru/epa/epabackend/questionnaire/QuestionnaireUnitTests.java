@@ -45,17 +45,16 @@ public class QuestionnaireUnitTests {
     private EmployeeService employeeService;
     @Mock
     private CriteriaService criteriaService;
-    Employee admin;
-    Employee author;
+    private Employee admin;
+    private Employee author;
     List<Criteria> criterias = new ArrayList<>();
     List<RequestCriteriaDto> criteriasDto = new ArrayList<>();
-
-    Questionnaire questionnaire1;
-    Questionnaire questionnaire2;
-    Criteria criteria;
-    RequestCriteriaDto requestCriteriaDto;
+    private Questionnaire questionnaire1;
+    private Questionnaire questionnaire2;
+    private Criteria criteria;
+    private RequestCriteriaDto requestCriteriaDto;
     Optional<Questionnaire> lastQuestionnaire;
-    RequestQuestionnaireDto requestQuestionnaireDto;
+    private RequestQuestionnaireDto requestQuestionnaireDto;
 
     @BeforeEach
     public void unit() {

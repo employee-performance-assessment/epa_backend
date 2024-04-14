@@ -40,7 +40,7 @@ public class AnalyticsUnitTests {
     @InjectMocks
     private AnalyticsServiceImpl analyticsService;
     private Employee admin;
-    private Employee employee;
+    private Employee employee1;
     private Employee employee2;
     private Task task;
     private Task task2;
@@ -50,19 +50,21 @@ public class AnalyticsUnitTests {
 
     @BeforeEach
     public void unit() {
-        employee = Employee.builder()
+        employee1 = Employee.builder()
                 .id(ID_1)
                 .email(email1)
                 .build();
         employee2 = Employee.builder()
                 .id(ID_2)
                 .email(email2)
-                .creator(employee)
+                .fullName("employee2")
+                .creator(employee1)
+                .position("user")
                 .build();
         task = Task.builder()
                 .id(ID_1)
                 .name("task1")
-                .executor(employee)
+                .executor(employee1)
                 .createDate(createDate)
                 .startDate(startDate)
                 .deadLine(deadLineDate)
@@ -71,7 +73,7 @@ public class AnalyticsUnitTests {
         task2 = Task.builder()
                 .id(ID_2)
                 .name("task2")
-                .executor(employee)
+                .executor(employee1)
                 .createDate(createDate)
                 .startDate(startDate)
                 .deadLine(finishDate)
@@ -79,11 +81,15 @@ public class AnalyticsUnitTests {
                 .build();
         individualAnalytics = IndividualAnalytics.builder()
                 .employeeId(ID_2)
+                .employeeFullName("employee2")
+                .employeePosition("user")
+                .completedOnTimePercent(50)
+                .delayedPercent(50)
                 .build();
         List<Employee> leaders = new ArrayList<>();
         leaders.add(employee2);
         teamAnalytics = TeamAnalytics.builder()
-                .completedOnTimePercent(10)
+                .delayedPercent(100)
                 .delayedPercent(10)
                 .leaders(leaders)
                 .build();
@@ -97,18 +103,18 @@ public class AnalyticsUnitTests {
         List<Task> allTasks = new ArrayList<>();
         allTasks.add(task);
         Map<Employee, List<Task>> employeeTasks = new HashMap<>();
-        employeeTasks.put(employee, allTasks);
-        leaders.add(employee);
+        employeeTasks.put(employee1, allTasks);
+        leaders.add(employee1);
         deadlineViolators.add(employee2);
-
+        teamAnalytics.setDeadlineViolators(deadlineViolators);
         when(taskRepository.findAllByOwnerEmailAndFinishDateBetween(email1, rangeStart, rangeEnd))
                 .thenReturn(allTasks);
-
         TeamAnalytics teamAnalyticsResult = analyticsService.getTeamStatsByAdmin(rangeStart, rangeEnd, email1);
-        List<Employee> expectedAnalytics = new ArrayList<>();
-        expectedAnalytics.add(employee);
+        int expectedLeadersId = 1;
+        int expectedCompletedOnTimePercent = 100;
         assertNotNull(teamAnalyticsResult);
-        assertEquals(expectedAnalytics, teamAnalyticsResult.getLeaders());
+        assertEquals(expectedLeadersId, teamAnalyticsResult.getLeaders().get(0).getId());
+        assertEquals(expectedCompletedOnTimePercent,teamAnalyticsResult.getCompletedOnTimePercent());
     }
 
     @Test
@@ -117,13 +123,20 @@ public class AnalyticsUnitTests {
         List<IndividualAnalytics> employeesShortDto = new ArrayList<>();
         List<Employee> employees = new ArrayList<>();
         employees.add(employee2);
-        when(employeeService.findAllByCreatorEmail(email2)).thenReturn(List.of(employee2));
+        employees.add(employee1);
+        when(employeeService.findAllByCreatorEmail(email2)).thenReturn(employees);
         employeesShortDto.add(individualAnalytics);
         List<IndividualAnalytics> individualAnalyticsResult = analyticsService
                 .getIndividualStatsByAdmin(rangeStart, rangeEnd, email2);
-        int expectedAnalyticsSize = 1;
+        int expectedAnalyticsSize = 2;
+        int expectedEmployeeId = 2;
+        String expectedEmployeeName = "employee2";
+        String expectedEmployeePosition = "user";
         assertNotNull(individualAnalyticsResult);
         assertEquals(expectedAnalyticsSize, individualAnalyticsResult.size());
+        assertEquals(expectedEmployeeId,individualAnalyticsResult.get(0).getEmployeeId());
+        assertEquals(expectedEmployeeName,individualAnalyticsResult.get(0).getEmployeeFullName());
+        assertEquals(expectedEmployeePosition,individualAnalyticsResult.get(0).getEmployeePosition());
     }
 
     @Test
@@ -132,7 +145,7 @@ public class AnalyticsUnitTests {
         when(employeeService.findByEmail(email2)).thenReturn(employee2);
         List<Task> tasks = new ArrayList<>();
         tasks.add(task2);
-        employee.setTasks(Set.of(task2));
+        employee1.setTasks(Set.of(task2));
         when(taskRepository.findAllByOwnerIdAndFinishDateBetween(ID_1, rangeStart, rangeEnd)).thenReturn(tasks);
         TeamAnalytics teamAnalyticsResult = analyticsService.getTeamStats(rangeStart, rangeEnd, email2);
         int expectedPercent = 100;
