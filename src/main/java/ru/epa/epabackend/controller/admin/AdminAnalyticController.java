@@ -101,9 +101,10 @@ public class AdminAnalyticController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/points/employee/{employeeId}")
-    public Integer findQuantityOfPointsByAdmin(@Parameter(required = true) @PathVariable Long employeeId) {
+    public Integer findQuantityOfPointsByAdmin(@Parameter(required = true) @PathVariable Long employeeId,
+                                               Principal principal) {
         LocalDate rangeStart = YearMonth.now().atDay(1);
         LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
-        return analyticService.findQuantityOfPointsByAdmin(employeeId, rangeStart, rangeEnd);
+        return analyticService.findQuantityOfPointsByAdmin(employeeId, rangeStart, rangeEnd, principal.getName());
     }
 }

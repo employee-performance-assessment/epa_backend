@@ -11,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
 import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.repository.EmployeeRepository;
+import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.EmployeeService;
 
 import java.time.LocalDate;
@@ -38,13 +41,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmployeeMapper employeeMapper;
+    private final EmployeeEvaluationRepository employeeEvaluationRepository;
+    private final TaskRepository taskRepository;
 
     /**
      * Создание нового сотрудника
      */
     @Override
     public Employee create(RequestEmployeeDto requestEmployeeDto, String email) {
-        log.info("Создание нового сотрудника {}", requestEmployeeDto.getFullName());
+        String employeeEmail = requestEmployeeDto.getEmail();
+        log.info("Создание нового сотрудника {} с email {}", requestEmployeeDto.getFullName(), employeeEmail);
+        if (employeeRepository.existsByEmail(employeeEmail)) {
+            throw new ConflictException("Пользователь с таким email уже существует.");
+        }
         Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeDto);
         employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeDto.getPassword()));
         employeeToSave.setRole(ROLE_USER);
@@ -59,7 +68,11 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Employee createSelfRegister(RequestEmployeeShortDto requestEmployeeShortDto) {
+        String employeeEmail = requestEmployeeShortDto.getEmail();
         log.info("Создание нового сотрудника {}", requestEmployeeShortDto.getFullName());
+        if (employeeRepository.existsByEmail(employeeEmail)) {
+            throw new ConflictException("Пользователь с таким email уже существует.");
+        }
         Employee employeeToSave = employeeMapper.mapToEntity(requestEmployeeShortDto);
         employeeToSave.setPassword(passwordEncoder.encode(requestEmployeeShortDto.getPassword()));
         employeeToSave.setRole(ROLE_ADMIN);
@@ -92,13 +105,18 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Удаление сотрудника
      */
     @Override
-    public void delete(Long employeeId) {
+    public void delete(Long employeeId, String email) {
         log.info("Удаление сотрудника по идентификатору {}", employeeId);
-        if (employeeRepository.existsById(employeeId)) {
-            employeeRepository.deleteById(employeeId);
-        } else {
-            throw new EntityNotFoundException("Сотрудник не найден");
+        Employee admin = findByEmail(email);
+        Employee employee = findById(employeeId);
+        checkAdminForEmployee(admin, employee);
+        if (employeeEvaluationRepository.existsByEvaluatedIdOrEvaluatorId(employeeId, employeeId)) {
+            throw new ConflictException("Нельзя удалить сотрудника, с которым связаны оценки");
         }
+        if (taskRepository.existsByExecutorId(employeeId)) {
+            throw new ConflictException("Нельзя удалить сотрудника, у которого были задачи");
+        }
+        employeeRepository.deleteById(employeeId);
     }
 
     /**
@@ -109,6 +127,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> findAll() {
         log.info("Получение всех сотрудников");
         return employeeRepository.findAll();
+    }
+
+    /**
+     * Получение сотрудника по id. Можно запрашивать сотрудника того же админа
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Employee findByIdDto(Long employeeId, String email) {
+        log.info("Получение сотрудника по идентификатору {}", employeeId);
+        Employee user = findByEmail(email);
+        Employee admin = user.getCreator() == null ? user : user.getCreator();
+        Employee employee = findById(employeeId);
+        checkAdminForEmployee(admin, employee);
+        return employee;
     }
 
     /**

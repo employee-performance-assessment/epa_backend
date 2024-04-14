@@ -14,7 +14,7 @@ public interface EmployeeService {
 
     Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto, String adminEmail);
 
-    void delete(Long employeeId);
+    void delete(Long employeeId, String email);
 
     List<Employee> findAll();
 
@@ -31,4 +31,6 @@ public interface EmployeeService {
     void checkAdminForEmployee(Employee admin, Employee employee);
 
     void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated);
+
+    Employee findByIdDto(Long employeeId, String email);
 }

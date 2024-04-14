@@ -78,7 +78,7 @@ public interface TaskService {
     /**
      * Получение списка задач проекта с определенным статусом задач
      */
-    List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status);
+    List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status, String email);
 
     @Transactional(readOnly = true)
     Task findByIdAndExecutorEmail(Long taskId, Long employeeId);
