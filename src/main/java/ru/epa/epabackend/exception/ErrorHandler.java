@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Hidden
 @Slf4j
@@ -33,7 +37,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validateException(MethodArgumentNotValidException e) {
         log.info(e.getMessage());
-        return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        String message = e.getBindingResult().getAllErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .findFirst().orElse("");
+        return new ErrorResponse(HttpStatus.BAD_REQUEST, message);
     }
 
     @ExceptionHandler
