@@ -296,7 +296,7 @@ public class TaskServiceImpl implements TaskService {
         Employee employee = employeeService.findByEmail(email);
         Employee admin = employee.getCreator();
         if (admin == null) {
-            findAll(employee.getEmail());
+            return findAll(employee.getEmail());
         }
         return taskRepository.findAllByOwnerId(admin.getId());
     }
