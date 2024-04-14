@@ -199,4 +199,6 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
             "where e.evaluated.id = :employeeId " +
             "and e.createDay BETWEEN :rangeStart AND :rangeEnd ")
     Double getAverageRatingByEvaluatedIdAndCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+
+    Boolean existsByEvaluatedIdOrEvaluatorId(Long employeeId, Long sameEmployeeId);
 }

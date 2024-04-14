@@ -78,8 +78,9 @@ public class UserEmployeeController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/{employeeId}")
-    public ResponseEmployeeFullDto findByIdDto(@PathVariable @Parameter(required = true) Long employeeId) {
-        return employeeMapper.mapToFullDto(employeeService.findById(employeeId));
+    public ResponseEmployeeFullDto findByIdDto(@PathVariable @Parameter(required = true) Long employeeId,
+                                               Principal principal) {
+        return employeeMapper.mapToFullDto(employeeService.findByIdDto(employeeId, principal.getName()));
     }
 
     /**

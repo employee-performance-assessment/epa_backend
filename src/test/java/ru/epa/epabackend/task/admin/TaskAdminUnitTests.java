@@ -66,6 +66,7 @@ class TaskAdminUnitTests {
         admin = Employee.builder()
                 .id(ID_1)
                 .role(Role.ROLE_ADMIN)
+                .email(email)
                 .build();
         employeeShortDto = ResponseEmployeeShortDto.builder()
                 .id(ID_1)
@@ -153,7 +154,7 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-
+        when(taskRepository.existsByIdAndOwnerEmail(ID_1, email)).thenReturn(true);
         Task task = taskService.update(ID_1, taskInDto, email);
 
         int expectedId = 1;
@@ -168,6 +169,7 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
+        when(taskRepository.existsByIdAndOwnerEmail(ID_1, email)).thenReturn(true);
 
         Task task = taskService.update(ID_1, taskInDto, email);
 

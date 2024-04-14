@@ -128,8 +128,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+    public Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd, String email) {
         log.info("Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц");
+        Employee employee = employeeService.findById(employeeId);
+        Employee admin = employeeService.findByEmail(email);
+        employeeService.checkAdminForEmployee(admin, employee);
         return taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employeeId, rangeStart, rangeEnd);
     }
 

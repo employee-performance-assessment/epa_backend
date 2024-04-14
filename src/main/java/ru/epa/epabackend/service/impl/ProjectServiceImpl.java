@@ -118,7 +118,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void checkUserAndProject(Employee user, Project project) {
         log.info("Проверка сотрудника {} и проекта {}", user, project);
         if (!user.getProjects().contains(project))
-            throw new BadRequestException(String.format("%s с email %s не относится к проекту с id %d",
+            throw new BadRequestException(String.format("Пользователь не состоит в запрашиваемом проекте",
                     user.getRole(), user.getEmail(), project.getId()));
     }
 }
