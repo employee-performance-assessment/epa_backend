@@ -171,7 +171,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findById(Long employeeId) {
         log.info("Получение сотрудника по идентификатору {}", employeeId);
         return employeeRepository.findById(employeeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Сотрудник с id %s не найден", employeeId)));
+                new EntityNotFoundException("Сотрудник не найден"));
     }
 
     /**
@@ -192,12 +192,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void checkAdminForEmployee(Employee admin, Employee employee) {
         if (employee.getCreator() == null) {
             if (!Objects.equals(admin.getId(), employee.getId())) {
-                throw new BadRequestException(String.format("Пользователь с id %d не является сотрудником",
-                        employee.getId()));
+                throw new BadRequestException(String.format("Пользователь %s не является сотрудником",
+                        employee.getFullName()));
             }
         } else if (!Objects.equals(employee.getCreator().getId(), admin.getId())) {
-            throw new BadRequestException(String.format("Сотрудник с id %d не относится к администратору с id %d",
-                    employee.getId(), admin.getId()));
+            throw new BadRequestException(String.format("%s не является сотрудником руководителя %s",
+                    employee.getFullName(), admin.getFullName()));
         }
     }
 
@@ -226,14 +226,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee evaluatorCreator = evaluator.getCreator();
         Employee evaluatedCreator = evaluated.getCreator();
         if (evaluatedCreator == null) {
-            throw new BadRequestException(String.format("Пользователь с id %d является руководителем",
-                    evaluated.getId()));
+            throw new BadRequestException(String.format("Оцениваемый пользователь %s является руководителем",
+                    evaluated.getFullName()));
         }
         if (evaluatorCreator != null && !Objects.equals(evaluatorCreator.getId(), evaluatedCreator.getId())) {
-            throw new BadRequestException(String.format("Пользователь с id %d не ваш коллега", evaluated.getId()));
+            throw new BadRequestException(String.format("Сотрудник %s не ваш коллега", evaluated.getFullName()));
         }
         if (evaluatorCreator == null && !Objects.equals(evaluator.getId(), evaluatedCreator.getId())) {
-            throw new BadRequestException(String.format("Пользователь с id %d не ваш сотрудник", evaluated.getId()));
+            throw new BadRequestException(String.format("Оцениваемый пользователь %s не ваш сотрудник",
+                    evaluated.getFullName()));
         }
     }
 }

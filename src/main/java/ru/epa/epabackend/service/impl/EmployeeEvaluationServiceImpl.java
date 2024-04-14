@@ -287,12 +287,10 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public void checkQuestionnaireForEvaluator(Questionnaire questionnaire, Employee evaluator) {
         if (evaluator.getCreator() != null
                 && !Objects.equals(questionnaire.getAuthor().getId(), evaluator.getCreator().getId())) {
-            throw new BadRequestException(String.format("Анкета с id %d создана не вашим руководителем",
-                    questionnaire.getId()));
+            throw new BadRequestException("Анкета создана не вашим руководителем");
         } else if (evaluator.getCreator() == null
                 && !Objects.equals(questionnaire.getAuthor().getId(), evaluator.getId())) {
-            throw new BadRequestException(String.format("Анкета с id %d создана не вами",
-                    questionnaire.getId()));
+            throw new BadRequestException("Анкета создана не вами");
         }
     }
 }
