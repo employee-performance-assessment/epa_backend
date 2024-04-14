@@ -9,8 +9,6 @@ import ru.epa.epabackend.util.QuestionnaireStatus;
 import java.util.List;
 
 public interface QuestionnaireService {
-    Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status);
-
     Questionnaire findLastByAuthorEmail(String email);
 
     Questionnaire saveWithParameters(QuestionnaireStatus status, Employee author, List<Criteria> criterias);
@@ -28,4 +26,6 @@ public interface QuestionnaireService {
     boolean isDayPassedAfterShareQuestionnaire(String email);
 
     Questionnaire updateLastWithDefault(String email);
+
+    void checkAdminForQuestionnaire(Employee admin, Questionnaire questionnaire);
 }

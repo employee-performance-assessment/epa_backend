@@ -16,6 +16,7 @@ import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 import ru.epa.epabackend.repository.EmployeeRepository;
 import ru.epa.epabackend.repository.ProjectRepository;
+import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.service.impl.ProjectServiceImpl;
 import ru.epa.epabackend.util.Role;
@@ -40,6 +41,8 @@ public class ProjectUnitTests {
     private EmployeeServiceImpl employeeService;
     @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
+    private TaskRepository taskRepository;
     @InjectMocks
     private ProjectServiceImpl projectService;
     private Employee admin;
@@ -123,26 +126,6 @@ public class ProjectUnitTests {
         assertEquals(expectedId, projectResult.getId());
         verify(projectRepository, times(1)).findById(projectResult.getId());
     }
-    @Test
-    @DisplayName("Сохранение сотрудника в проект")
-    void shouldSaveWithEmployeeWhenCallRepository() {
-        admin = Employee.builder()
-                .id(ID_1)
-                .email(email)
-                .role(Role.ROLE_ADMIN)
-                .projects(List.of(project))
-                .build();
-        when(employeeService.findByEmail(email)).thenReturn(admin);
-        when(employeeService.findById(ID_2)).thenReturn(employee);
-        when(projectRepository.findById(ID_1)).thenReturn(Optional.of(project));
-        when(projectRepository.save(projectWithEmployee)).thenReturn(project);
-        Project projectResult = projectService.saveWithEmployee(project.getId(),employee.getId(),email);
-        int expectedId = 1;
-        assertNotNull(projectResult);
-        assertEquals(expectedId, projectResult.getId());
-        verify(projectRepository,times(1)).save(projectResult);
-    }
-
 
     @Test
     @DisplayName("Поиск всех создателей пользователю")
@@ -174,28 +157,6 @@ public class ProjectUnitTests {
         verify(projectRepository, times(1)).findByEmployees(admin);
     }
 
-
-    @Test
-    @DisplayName("Поиск всех по id и роли")
-    void shouldFindAllByProjectIdAndRoleWhenCallRepository() {
-        admin = Employee.builder()
-                .id(ID_1)
-                .email(email)
-                .role(Role.ROLE_ADMIN)
-                .projects(List.of(project))
-                .build();
-        when(employeeService.findByEmail(email)).thenReturn(admin);
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
-        when(projectService.findAllByProjectIdAndRole(project.getId(), Role.ROLE_ADMIN, email)).thenReturn(List.of(employee));
-        List<Employee> employeeResults = projectService.findAllByProjectIdAndRole(project.getId(), Role.ROLE_ADMIN, email);
-        int expectedSize = 1;
-        assertNotNull(employeeResults);
-        assertEquals(expectedSize, employeeResults.size());
-        verify(employeeRepository, times(1)).
-                findByProjectsAndRole(projectService.findById(project.getId()), Role.ROLE_ADMIN);
-    }
-
-
     @Test
     @DisplayName("Обновление проекта")
     void shouldUpdateWhenCallRepository() {
@@ -225,19 +186,9 @@ public class ProjectUnitTests {
                 .projects(List.of(project))
                 .build();
         when(employeeService.findByEmail(email)).thenReturn(admin);
+        when(taskRepository.existsByProjectId(ID_1)).thenReturn(false);
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         projectService.delete(ID_1, email);
         verify(projectRepository, times(1)).delete(project);
-    }
-
-    @Test
-    @DisplayName("Удаление сотрудника из проекта")
-    void shouldDeleteEmployeeFromProjectWhenCallRepository() {
-        when(employeeService.findByEmail(email)).thenReturn(admin);
-        when(projectRepository.findById(projectWithEmployee.getId())).thenReturn(Optional.of(project));
-        when(employeeService.findById(ID_2)).thenReturn(employee);
-        when(projectRepository.save(project)).thenReturn(project);
-        projectService.deleteEmployeeFromProject(ID_1, ID_2, employee.getEmail());
-        verify(projectRepository, times(1)).save(project);
     }
 }

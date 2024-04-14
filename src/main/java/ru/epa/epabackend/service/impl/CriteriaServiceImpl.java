@@ -44,32 +44,8 @@ public class CriteriaServiceImpl implements CriteriaService {
     @Transactional(readOnly = true)
     public Criteria findById(Long criteriaId) {
         log.info("Получение оценки по идентификатору {}", criteriaId);
-        Criteria criteria = criteriaRepository.findById(criteriaId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Критерий оценки с id %s не найден", criteriaId)));
-        return criteria;
-    }
-
-    /**
-     * Получение списка критериев оценок.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Criteria> findAll() {
-        log.info("Получение списка критериев оценок");
-        return criteriaRepository.findAll();
-    }
-
-    /**
-     * Удаление критерия оценки по её ID.
-     */
-    @Override
-    public void delete(Long criteriaId) {
-        log.info("Удаление критерия оценки по её идентификатору {}", criteriaId);
-        if (criteriaRepository.existsById(criteriaId)) {
-            criteriaRepository.deleteById(criteriaId);
-        } else {
-            throw new EntityNotFoundException(String.format("Критерий оценки с id %s не найден", criteriaId));
-        }
+        return criteriaRepository.findById(criteriaId).orElseThrow(() ->
+                new EntityNotFoundException("Критерий оценки не найден"));
     }
 
     /**
@@ -80,27 +56,6 @@ public class CriteriaServiceImpl implements CriteriaService {
     public List<Criteria> findDefault() {
         log.info("Получение дефолтных критериев (по умолчанию)");
         return criteriaRepository.findAllByIsDefault(true);
-    }
-
-    /**
-     * Проверка, существует ли в БД критерий с указанным именем
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isNameExists(String name) {
-        log.info("Существует ли в БД критерий с указанным именем {}", name);
-        return criteriaRepository.existsByName(name);
-    }
-
-    /**
-     * Получение критерия по его имени
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Criteria findByName(String name) {
-        log.info("Получение критерия по его имени {}", name);
-        return criteriaRepository.findByName(name).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Критерий с именем %s не найден", name)));
     }
 
     /**

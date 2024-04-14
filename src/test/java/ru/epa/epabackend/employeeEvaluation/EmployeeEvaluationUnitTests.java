@@ -132,26 +132,6 @@ public class EmployeeEvaluationUnitTests {
         verify(employeeEvaluationRepository,times(1)).saveAll(employeeEvaluationListResult);
     }
 
-    @Test
-    @DisplayName("Поиск оценки по Id с исключением Not Found Exception")
-    void shouldFindByIdWhenThrowNotFoundException() throws ValidationException {
-        when(employeeEvaluationRepository.findById(ID_1)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> employeeEvaluationService.findById(ID_1));
-    }
-
-    @Test
-    @DisplayName("Поиск оценки по Id с вызовом репозитория")
-    void shouldFindByIdProjectWhenCallRepository() {
-        when(employeeEvaluationRepository.findById(employeeEvaluation.getId()))
-                .thenReturn(Optional.ofNullable(employeeEvaluation));
-        EmployeeEvaluation employeeEvaluationResult = employeeEvaluationService
-                .findById(this.employeeEvaluation.getId());
-        long expectedId = 1L;
-        assertEquals(expectedId, employeeEvaluationResult.getId());
-        verify(employeeEvaluationRepository, times(1))
-                .findById(employeeEvaluationResult.getId());
-    }
-
     /*@Test
     @DisplayName("Получение списка своих оценок от коллег по своему email с вызовом репозитория")
     void shouldFindAllEvaluationsUsersWhenCallRepository() {

@@ -1,6 +1,5 @@
 package ru.epa.epabackend.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
-import ru.epa.epabackend.mapper.EmployeeMapper;
-import ru.epa.epabackend.mapper.QuestionnaireMapper;
 import ru.epa.epabackend.model.*;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.repository.RecommendationRepository;
@@ -38,8 +35,6 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     private final EmployeeEvaluationRepository employeeEvaluationRepository;
     private final RecommendationRepository recommendationRepository;
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
-    private final EmployeeMapper employeeMapper;
-    private final QuestionnaireMapper questionnaireMapper;
     private final EmployeeService employeeService;
     private final CriteriaService criteriaService;
     private final QuestionnaireService questionnaireService;
@@ -70,19 +65,6 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение оценки по id.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public EmployeeEvaluation findById(Long evaluationEvaluationId) {
-        log.info("Получение оценки по идентификатору {}", evaluationEvaluationId);
-        return employeeEvaluationRepository
-                .findById(evaluationEvaluationId).orElseThrow(() ->
-                        new EntityNotFoundException(String.format("Оценка сотрудника с id %s не найдена",
-                                evaluationEvaluationId)));
-    }
-
-    /**
      * Получение командного рейтинга за каждый месяц указанного года.
      */
     @Override
@@ -104,25 +86,6 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public List<ResponseRatingFullDto> findPersonalRating(String email, Integer year) {
         log.info("Получение персонального рейтинга за каждый месяц по своему email");
         return employeeEvaluationRepository.findPersonalRating(email, year);
-    }
-
-    /**
-     * Получение списка оцененных коллег.
-     */
-
-    @Override
-    public List<Employee> findAllRatedByMe(String email) {
-        log.info("Получение списка оцененных коллег");
-        return employeeEvaluationRepository.findAllRatedByMe(email);
-    }
-
-    /**
-     * Получение списка подчиненных для админа.
-     */
-    @Override
-    public List<Employee> findAllRated(String email) {
-        log.info("Получение списка всех оцененных подчиненных для админа");
-        return employeeEvaluationRepository.findAllRated(email);
     }
 
     /**
@@ -163,6 +126,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         Employee admin = employeeService.findByEmail(adminEmail);
         Employee employee = employeeService.findById(evaluatedId);
         employeeService.checkAdminForEmployee(admin, employee);
+        questionnaireService.checkAdminForQuestionnaire(admin, questionnaire);
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsForAdmin(adminEmail, evaluatedId, questionnaireId);
         List<ResponseEmployeeEvaluationShortDto> usersEvaluations = employeeEvaluationRepository
@@ -183,19 +147,6 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .build();
     }
 
-    /**
-     * Получение поставленных оценок по id сотрудника.
-     */
-    @Override
-    public List<ResponseMyEvaluationsDto> findAllMyEvaluationsByEvaluatedId(String email, Long evaluatedId) {
-        Employee evaluator = employeeService.findByEmail(email);
-        Employee evaluated = employeeService.findById(evaluatedId);
-        employeeService.checkEvaluatorForEmployee(evaluator, evaluated);
-        List<EmployeeEvaluation> evaluations = employeeEvaluationRepository
-                .findAllByEvaluatorEmailAndEvaluatedId(email, evaluatedId);
-        return filterMyEvaluations(evaluations);
-    }
-
     @Override
     public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email, String text,
                                                                                LocalDate from, LocalDate to) {
@@ -206,15 +157,25 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     @Override
     public List<ResponseEmployeeEvaluationShortDto> findQuestionnaireScores(String email, Long questionnaireId,
                                                                             Long evaluatedId) {
-        Employee employee = employeeService.findByEmail(email);
+        Employee evaluator = employeeService.findByEmail(email);
+        Employee evaluated = employeeService.findById(evaluatedId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
+        employeeService.checkEvaluatorForEmployee(evaluator, evaluated);
+        questionnaireService.checkAdminForQuestionnaire(evaluator.getCreator() == null ? evaluator : evaluator.getCreator(),
+                questionnaire);
         List<EmployeeEvaluation> employeeEvaluations = employeeEvaluationRepository
-                .findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(employee.getId(), evaluatedId, questionnaireId);
+                .findByEvaluatorIdAndEvaluatedIdAndQuestionnaireId(evaluator.getId(), evaluatedId, questionnaireId);
         return employeeEvaluationMapper.mapToShortListDto(employeeEvaluations);
     }
 
     @Override
     public ResponseAdminEvaluationDto findAssessedQuestionnaireByAdmin(String email, Long questionnaireId,
                                                                        Long evaluatedId) {
+        Employee admin = employeeService.findByEmail(email);
+        Employee employee = employeeService.findById(evaluatedId);
+        Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
+        employeeService.checkAdminForEmployee(admin, employee);
+        questionnaireService.checkAdminForQuestionnaire(admin, questionnaire);
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = findQuestionnaireScores(email, questionnaireId,
                 evaluatedId);
         String stringRecommendation = recommendationService
@@ -224,7 +185,6 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
                 .recommendation(stringRecommendation)
                 .build();
     }
-
 
     /**
      * Получение анкет в которых оценен сотрудник с ID.
@@ -292,34 +252,12 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      */
     @Override
     @Transactional(readOnly = true)
-    public Double findAverageRatingByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
+    public Double findAverageRatingByAdmin(String email, Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
         log.info("Получение администратором среднего рейтинга сотрудника за текущий месяц");
+        Employee employee = employeeService.findById(employeeId);
+        Employee admin = employeeService.findByEmail(email);
+        employeeService.checkAdminForEmployee(admin, employee);
         return employeeEvaluationRepository.getAverageRatingByEvaluatedIdAndCurrentMonth(employeeId, rangeStart, rangeEnd);
-    }
-
-    /**
-     * Фильтрация оценок по оцененным коллегам и анкетам.
-     */
-    private List<ResponseMyEvaluationsDto> filterMyEvaluations(List<EmployeeEvaluation> evaluations) {
-        List<ResponseMyEvaluationsDto> myEmployeeEvaluations = new ArrayList<>(evaluations.size());
-        for (EmployeeEvaluation evaluation : evaluations) {
-            ResponseMyEvaluationsDto responseMyEmployeeEvaluationsDto = ResponseMyEvaluationsDto
-                    .builder()
-                    .questionnaire(questionnaireMapper.mapToShortResponseDto(evaluation.getQuestionnaire()))
-                    .responseEmployeeEvaluationList(employeeEvaluationMapper.mapDtoList(List.of(evaluation)))
-                    .build();
-
-            if (!myEmployeeEvaluations.contains(responseMyEmployeeEvaluationsDto)) {
-                myEmployeeEvaluations.add(responseMyEmployeeEvaluationsDto);
-            } else {
-                int index = myEmployeeEvaluations.indexOf(responseMyEmployeeEvaluationsDto);
-                List<ResponseEmployeeEvaluationShortDto> myEvaluationsAdd = myEmployeeEvaluations.get(index)
-                        .getResponseEmployeeEvaluationList();
-                myEvaluationsAdd.add(employeeEvaluationMapper.mapToShortDto(evaluation));
-                myEmployeeEvaluations.get(index).setResponseEmployeeEvaluationList(myEvaluationsAdd);
-            }
-        }
-        return myEmployeeEvaluations;
     }
 
     private HashMap<String, ResponseEvaluationsAdminUserDto> filterEvaluations(
@@ -349,12 +287,10 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     public void checkQuestionnaireForEvaluator(Questionnaire questionnaire, Employee evaluator) {
         if (evaluator.getCreator() != null
                 && !Objects.equals(questionnaire.getAuthor().getId(), evaluator.getCreator().getId())) {
-            throw new BadRequestException(String.format("Анкета с id %d создана не вашим руководителем",
-                    questionnaire.getId()));
+            throw new BadRequestException("Анкета создана не вашим руководителем");
         } else if (evaluator.getCreator() == null
                 && !Objects.equals(questionnaire.getAuthor().getId(), evaluator.getId())) {
-            throw new BadRequestException(String.format("Анкета с id %d создана не вами",
-                    questionnaire.getId()));
+            throw new BadRequestException("Анкета создана не вами");
         }
     }
 }

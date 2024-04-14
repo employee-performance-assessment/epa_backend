@@ -16,12 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.mapper.EmployeeMapper;
-import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.EmployeeEvaluation;
 import ru.epa.epabackend.model.Recommendation;
 import ru.epa.epabackend.service.EmployeeEvaluationService;
@@ -71,30 +69,6 @@ public class AdminEmployeeEvaluationController {
     public List<ResponseRatingFullDto> findPersonalRating(Principal principal, @RequestParam Long evaluatedId,
                                                           @RequestParam Integer year) {
         return employeeEvaluationService.findPersonalRatingAdmin(principal.getName(), evaluatedId, year);
-    }
-
-    /**
-     * Эндпойнт получения списка оцененных сотрудников.
-     */
-    @Operation(
-            summary = "Получение сотрудником списка оцененных коллег",
-            description = "Возвращает список оцененных коллег" +
-                    "\n\nВ случае, если не найдено ни одного оцененного сотрудника, возвращает пустой список."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    mediaType = "application/json", array = @ArraySchema(
-                    schema = @Schema(implementation = ResponseEmployeeShortDto.class)))),
-            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/list-evaluated")
-    public List<ResponseEmployeeShortDto> findAllRated(Principal principal) {
-        List<Employee> employees = employeeEvaluationService.findAllRated(principal.getName());
-        return employeeMapper.mapList(employees);
     }
 
     /**
@@ -226,9 +200,9 @@ public class AdminEmployeeEvaluationController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/rating/{employeeId}")
-    public Double findAverageRatingByAdmin(@Parameter(required = true) @PathVariable Long employeeId) {
+    public Double findAverageRatingByAdmin(@Parameter(required = true) @PathVariable Long employeeId, Principal principal) {
         LocalDate rangeStart = YearMonth.now().atDay(1);
         LocalDate rangeEnd = YearMonth.now().atEndOfMonth();
-        return employeeEvaluationService.findAverageRatingByAdmin(employeeId, rangeStart, rangeEnd);
+        return employeeEvaluationService.findAverageRatingByAdmin(principal.getName(), employeeId, rangeStart, rangeEnd);
     }
 }

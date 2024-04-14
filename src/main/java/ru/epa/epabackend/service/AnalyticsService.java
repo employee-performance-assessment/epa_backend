@@ -39,7 +39,7 @@ public interface AnalyticsService {
     /**
      * Получение суммы баллов по выполненным задачам сотрудника за текущий месяц.
      */
-    Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
+    Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd, String email);
 
     @Transactional(readOnly = true)
     Integer findQuantityOfPointsByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd);
