@@ -202,5 +202,7 @@ public interface EmployeeEvaluationRepository extends JpaRepositoryImplementatio
 
     Boolean existsByEvaluatedIdOrEvaluatorId(Long employeeId, Long sameEmployeeId);
 
-    boolean existsByCriteriaIdIn(List<Long> criteriaIds);
+    boolean existsByEvaluatorIdAndCriteriaIdInAndQuestionnaireIdAndEvaluatedId(Long evaluatorId,
+                                                                               List<Long> criteriaIds,
+                                                                               Long questionnaireId, Long evaluatedId);
 }
