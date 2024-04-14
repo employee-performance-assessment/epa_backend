@@ -1,7 +1,5 @@
 package ru.epa.epabackend.recommendation;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +19,6 @@ import ru.epa.epabackend.util.QuestionnaireStatus;
 import ru.epa.epabackend.util.Role;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -74,62 +70,32 @@ public class RecommendationUnitTests {
                 .build();
     }
 
-   @Test
-   @DisplayName("Создание рекомендации с вызовом репозитория")
-   void shouldCreateWhenCallRepository() {
-       when(employeeService.findById(ID_2)).thenReturn(recipient);//recipient - evaluated
-       when(employeeService.findByEmail(email_1)).thenReturn(sender);
-       when(questionnaireService.findById(ID_1)).thenReturn(questionnaire);
-       when(recommendationMapper.mapToEntity("recommendation",questionnaire,recipient,sender))
-               .thenReturn(recommendation);
-       when(recommendationRepository.save(recommendation)).thenReturn(recommendation);
-       Recommendation recommendationResult = recommendationService
-               .create(recommendation.getRecommendation(),questionnaire.getId(),recipient.getId(),sender.getEmail());
-       int expectedId = 1;
-       assertNotNull(recommendationResult);
-       assertEquals(expectedId,recommendationResult.getId());
-       verify(recommendationRepository,times(1)).save(recommendationResult);
-   }
-
-
     @Test
-    @DisplayName("Получение рекомендации по id с исключением Not Found Exception")
-    void shouldFindByIdWhenThrowNotFoundException() throws ValidationException {
-        when(recommendationRepository.findById(ID_2)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> recommendationService.findById(ID_2));
-    }
-
-    @Test
-    @DisplayName("Получение рекомендации по id с вызовом репозитория")
-    void shouldFindByIdWhenCallRepository() {
-        when(recommendationRepository.findById(recommendation.getId())).thenReturn(Optional.ofNullable(recommendation));
-        Recommendation recommendationResult = recommendationService.findById(this.recommendation.getId());
-        long expectedId = 1L;
-        assertEquals(expectedId, recommendationResult.getId());
-        verify(recommendationRepository, times(1)).findById(recommendationResult.getId());
-    }
-
-
-    @Test
-    @DisplayName("Получение всех рекомендаций с вызовом репозитория")
-    void shouldFindAllWhenCallRepository() {
-        when(recommendationRepository.findAll()).thenReturn(List.of(recommendation));
-        List<Recommendation> recommendationResult = recommendationService.findAll();
-        int expectedSize = 1;
+    @DisplayName("Создание рекомендации с вызовом репозитория")
+    void shouldCreateWhenCallRepository() {
+        when(employeeService.findById(ID_2)).thenReturn(recipient);//recipient - evaluated
+        when(employeeService.findByEmail(email_1)).thenReturn(sender);
+        when(questionnaireService.findById(ID_1)).thenReturn(questionnaire);
+        when(recommendationMapper.mapToEntity("recommendation", questionnaire, recipient, sender))
+                .thenReturn(recommendation);
+        when(recommendationRepository.save(recommendation)).thenReturn(recommendation);
+        Recommendation recommendationResult = recommendationService
+                .create(recommendation.getRecommendation(), questionnaire.getId(), recipient.getId(), sender.getEmail());
+        int expectedId = 1;
         assertNotNull(recommendationResult);
-        assertEquals(expectedSize, recommendationResult.size());
-        verify(recommendationRepository, times(1)).findAll();
+        assertEquals(expectedId, recommendationResult.getId());
+        verify(recommendationRepository, times(1)).save(recommendationResult);
     }
 
     @Test
     @DisplayName("Получение рекомендации по Id сотрудника, получившего рекомендацию и Id анкеты")
-        void shouldGetByRecipientIdAndQuestionnaireIdWhenCallRepository(){
-        when(recommendationRepository.getByRecipientIdAndQuestionnaireId(ID_2,ID_1)).thenReturn(recommendation);
+    void shouldGetByRecipientIdAndQuestionnaireIdWhenCallRepository() {
+        when(recommendationRepository.getByRecipientIdAndQuestionnaireId(ID_2, ID_1)).thenReturn(recommendation);
         Recommendation recommendationResult = recommendationService
-                .getByRecipientIdAndQuestionnaireId(recipient.getId(),questionnaire.getId());
+                .getByRecipientIdAndQuestionnaireId(recipient.getId(), questionnaire.getId());
         long expectedId = 1L;
         assertEquals(expectedId, recommendationResult.getId());
-        verify(recommendationRepository,times(1))
-                .getByRecipientIdAndQuestionnaireId(recipient.getId(),questionnaire.getId());
+        verify(recommendationRepository, times(1))
+                .getByRecipientIdAndQuestionnaireId(recipient.getId(), questionnaire.getId());
     }
 }

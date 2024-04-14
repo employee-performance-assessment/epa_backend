@@ -37,4 +37,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Integer getSumPointsByExecutorIdAndForCurrentMonth(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd);
 
     Boolean existsByProjectId(Long projectId);
+
+    List<Task> findAllByProjectId(Long projectId);
+
+    List<Task> findAllByOwnerId(Long ownerId);
+
+    boolean existsByExecutorId(Long employeeId);
+
+    boolean existsByIdAndOwnerEmail(Long taskId, String email);
+
+    Optional<Task> findByIdAndOwnerId(Long taskId, Long id);
 }

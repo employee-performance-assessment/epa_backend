@@ -90,19 +90,6 @@ public class QuestionnaireUnitTests {
     }
 
     @Test
-    @DisplayName("Получение самой последней анкеты админа с указанным статусом")
-    void shouldFindLastByAuthorAndStatusWhenCallRepository() {
-        when(employeeService.findByEmail(email1)).thenReturn(admin);
-        when(questionnaireRepository.findFirstByAuthorEmailAndStatusOrderByIdDesc(email1, QuestionnaireStatus.CREATED))
-                .thenReturn(Optional.ofNullable(questionnaire1));
-        Questionnaire questionnaireResult = questionnaireService
-                .findLastByAuthorAndStatus(email1, QuestionnaireStatus.CREATED);
-        int expectedId = 1;
-        assertNotNull(questionnaireResult);
-        assertEquals(expectedId, questionnaireResult.getId());
-    }
-
-    @Test
     @DisplayName("Получение последней анкеты админа по email" +
             " Если есть анкета со статусом CREATED, то возвращаем её")
     void shouldFindLastByAuthorEmailWhenQuestionnaireHaveStatusCreated() {
@@ -213,7 +200,7 @@ public class QuestionnaireUnitTests {
 
     @Test
     @DisplayName("Отправление анкеты сотрудникам - изменение статуса последней анкеты с CREATED на SHARED")
-    void shouldSendQuestionnaireToEmployeesWhenCallRepositoryQuestionnaireStatusToShared(){
+    void shouldSendQuestionnaireToEmployeesWhenCallRepositoryQuestionnaireStatusToShared() {
         when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);
         when(questionnaireService.sendQuestionnaireToEmployees(email1)).thenReturn(questionnaire1);
@@ -227,12 +214,12 @@ public class QuestionnaireUnitTests {
     @Test
     @DisplayName("Последняя анкета имела статус SHARED, поэтому создаётся дубликат анкеты с новым id и датой " +
             "и статусом SHARED")
-    void shouldSendQuestionnaireToEmployeesWhenQuestionnaireHaveStatusShared(){
+    void shouldSendQuestionnaireToEmployeesWhenQuestionnaireHaveStatusShared() {
         when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
         when(employeeService.findByEmail(email1)).thenReturn(admin);
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);
         when(questionnaireService
-                .saveWithParameters(QuestionnaireStatus.SHARED,admin,criterias)).thenReturn(questionnaire1);
+                .saveWithParameters(QuestionnaireStatus.SHARED, admin, criterias)).thenReturn(questionnaire1);
         Questionnaire questionnaireResult = questionnaireService.sendQuestionnaireToEmployees(email1);
         long expectedId = 1L;
         assertNotNull(questionnaireResult);
@@ -242,13 +229,13 @@ public class QuestionnaireUnitTests {
     @Test
     @DisplayName("Отправление анкеты сотрудникам. " +
             "У админа нет анкет, поэтому создаётся анкета с дефолтными критериями и статусом SHARED")
-    void shouldSendQuestionnaireToEmployeesWhenAdminDintHaveQuestionnaire(){
+    void shouldSendQuestionnaireToEmployeesWhenAdminDintHaveQuestionnaire() {
         lastQuestionnaire = Optional.empty();
         when(employeeService.findByEmail(email1)).thenReturn(admin);
         when(criteriaService.findDefault()).thenReturn(criterias);
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);
         when(questionnaireService
-                .saveWithParameters(QuestionnaireStatus.SHARED,admin,criterias)).thenReturn(questionnaire1);
+                .saveWithParameters(QuestionnaireStatus.SHARED, admin, criterias)).thenReturn(questionnaire1);
         Questionnaire questionnaireResult = questionnaireService.sendQuestionnaireToEmployees(email1);
         long expectedId = 1L;
         assertNotNull(questionnaireResult);
@@ -258,11 +245,11 @@ public class QuestionnaireUnitTests {
 
     @Test
     @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или администратора")
-    void shouldFindByEmailAndIdWhenReturnQuestionnaire(){
+    void shouldFindByEmailAndIdWhenReturnQuestionnaire() {
         when(employeeService.findByEmail(email1)).thenReturn(admin);
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);//убрать для 2 варианта
         when(questionnaireRepository.findById(ID_1)).thenReturn(Optional.of(questionnaire1));
-        Questionnaire questionnaireResult = questionnaireService.findByEmailAndId(email1,questionnaire1.getId());
+        Questionnaire questionnaireResult = questionnaireService.findByEmailAndId(email1, questionnaire1.getId());
         long expectedId = 1L;
         assertNotNull(questionnaireResult);
         assertEquals(expectedId, questionnaireResult.getId());
@@ -271,39 +258,39 @@ public class QuestionnaireUnitTests {
     @Test
     @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или администратора " +
             "с исключением BadRequestException")
-    void shouldFindByEmailAndIdWhenReturnBadRequestExceptionWhenAdminNotAuthor(){
+    void shouldFindByEmailAndIdWhenReturnBadRequestExceptionWhenAdminNotAuthor() {
         when(employeeService.findByEmail(email2)).thenReturn(author);
         when(questionnaireRepository.findById(ID_1)).thenReturn(Optional.of(questionnaire1));
-        assertThrows(BadRequestException.class, () -> questionnaireService.findByEmailAndId(email2,ID_1));
+        assertThrows(BadRequestException.class, () -> questionnaireService.findByEmailAndId(email2, ID_1));
     }
 
     @Test
     @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или администратора " +
             "с исключением BadRequestException")
-    void shouldFindByEmailAndIdWhenReturnBadRequestExceptionWhenQuestionnaireHaveStatusCreated(){
+    void shouldFindByEmailAndIdWhenReturnBadRequestExceptionWhenQuestionnaireHaveStatusCreated() {
         when(employeeService.findByEmail(email1)).thenReturn(admin);
         when(questionnaireRepository.findById(ID_1)).thenReturn(Optional.of(questionnaire1));
-        assertThrows(BadRequestException.class, () -> questionnaireService.findByEmailAndId(email1,ID_1));
+        assertThrows(BadRequestException.class, () -> questionnaireService.findByEmailAndId(email1, ID_1));
     }
 
     @Test
     @DisplayName("Получение всех анкет админа с определенным статусом любым сотрудником")
-    void shouldFindAllByAuthorIdAndStatusWhenCallRepository(){
+    void shouldFindAllByAuthorIdAndStatusWhenCallRepository() {
         when(employeeService.findByEmail(email1)).thenReturn(admin);
-        when(questionnaireRepository.findAllByAuthorIdAndStatus(ID_1,QuestionnaireStatus.CREATED))
+        when(questionnaireRepository.findAllByAuthorIdAndStatus(ID_1, QuestionnaireStatus.CREATED))
                 .thenReturn(List.of(questionnaire1));
         List<Questionnaire> questionnaireListResult = questionnaireService
                 .findAllByAuthorIdAndStatus(admin.getEmail(), QuestionnaireStatus.CREATED);
         int expectedSize = 1;
         assertNotNull(questionnaireListResult);
         assertEquals(expectedSize, questionnaireListResult.size());
-        verify(questionnaireRepository,times(1))
+        verify(questionnaireRepository, times(1))
                 .findAllByAuthorIdAndStatus(admin.getId(), questionnaire1.getStatus());
     }
 
     @Test
     @DisplayName("")
-    void shouldUpdateLastWithDefaultWhenCallRepository(){
+    void shouldUpdateLastWithDefaultWhenCallRepository() {
         when(questionnaireService.findLastByAuthorEmail(email1)).thenReturn(questionnaire1);
         questionnaire1.setCreated(LocalDate.now());
         when(questionnaireService.updateLastWithDefault(email1)).thenReturn(questionnaire1);

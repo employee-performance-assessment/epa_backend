@@ -35,20 +35,6 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final CriteriaService criteriaService;
 
     /**
-     * Получение самой последней анкеты админа с указанным статусом
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Questionnaire findLastByAuthorAndStatus(String email, QuestionnaireStatus status) {
-        log.info("Получение самой последней анкеты админа с указанным статусом {}", status);
-        Employee author = employeeService.findByEmail(email).getCreator();
-        String authorEmail = author == null ? email : author.getEmail();
-        return questionnaireRepository.findFirstByAuthorEmailAndStatusOrderByIdDesc(authorEmail, status)
-                .orElseThrow(() -> new EntityNotFoundException(String
-                        .format("Анкеты для администратора с email %s и статусом %s не найдена", email, status)));
-    }
-
-    /**
      * Получение последней анкеты админа по email
      * Если есть анкета со статусом CREATED, то возвращаем её
      * Если есть анкета со статусом SHARED, то создаём новую анкету со статусом CREATED и возвращаем её
@@ -96,8 +82,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         if (lastQuestionnaire.isEmpty()) {
             throw new BadRequestException("Необходимо создать заранее анкету для возможности редактирования");
         } else if (QuestionnaireStatus.SHARED.equals(lastQuestionnaire.get().getStatus())) {
-            throw new BadRequestException("Невозможно обновить анкету со статусом SHARED. Воспользуйтесь " +
-                    "получением последней анкеты со статусом CREATED.");
+            throw new BadRequestException("Невозможно обновить разосланную анкету. " +
+                    "Сперва воспользуйтесь получением последней анкеты");
         }
 
         List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto
@@ -116,7 +102,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Questionnaire findById(long id) {
         log.info("Получение анкеты по её идентификатору {}", id);
         return questionnaireRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Анкета с id %d не найдена", id)));
+                new EntityNotFoundException("Анкета не найдена"));
     }
 
     /**
@@ -161,12 +147,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Long authorId = author == null ? employee.getId() : author.getId();
         Questionnaire questionnaire = findById(questionnaireId);
         if (!authorId.equals(questionnaire.getAuthor().getId())) {
-            throw new BadRequestException("Чтобы иметь доступ к анкете, необходимо, чтобы " +
-                    "ваш администратор был её автором");
+            throw new BadRequestException("Невозможно посмотреть анкету. Она создана не вашим руководителем");
         }
         if (QuestionnaireStatus.CREATED.equals(questionnaire.getStatus())) {
-            throw new BadRequestException(String.format("Администратор еще не опубликовал анкету. " +
-                    "Запрашиваемая анкета c id %d имеет статус %s", questionnaireId, questionnaire.getStatus()));
+            throw new BadRequestException("Запрашиваемая анкета еще не разослана руководителем");
         }
         return questionnaire;
     }
@@ -210,8 +194,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Long adminId = admin.getId();
         Long authorId = questionnaire.getAuthor().getId();
         if (!Objects.equals(adminId, authorId)) {
-            throw new BadRequestException(String.format("Руководитель с id %d не является автором анкеты с id %d",
-                    adminId, questionnaire.getId()));
+            throw new BadRequestException(String.format("Руководитель %s не является автором запрашиваемой анкеты",
+                    admin.getFullName()));
         }
     }
 }

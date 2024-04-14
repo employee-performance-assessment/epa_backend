@@ -1,6 +1,5 @@
 package ru.epa.epabackend.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import ru.epa.epabackend.service.QuestionnaireService;
 import ru.epa.epabackend.service.RecommendationService;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Класс RecommendationServiceImpl содержит бизнес-логику работы с рекомендациями.
@@ -47,28 +45,6 @@ public class RecommendationServiceImpl implements RecommendationService {
                 recipient, sender);
         recommendation.setCreateDay(LocalDate.now());
         return recommendationRepository.save(recommendation);
-    }
-
-    /**
-     * Получение рекомендации по ID.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Recommendation findById(Long recommendationId) {
-        log.info("Получение рекомендации идентификатору {}", recommendationId);
-        return recommendationRepository.findById(recommendationId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Рекомендация с id %s не найдена",
-                        recommendationId)));
-    }
-
-    /**
-     * Получение всех рекомендаций.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Recommendation> findAll() {
-        log.info("Получение всех рекомендаций");
-        return recommendationRepository.findAll();
     }
 
     @Override

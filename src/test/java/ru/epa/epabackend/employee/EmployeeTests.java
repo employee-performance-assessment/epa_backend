@@ -15,7 +15,9 @@ import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
 import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
 import ru.epa.epabackend.repository.EmployeeRepository;
+import ru.epa.epabackend.repository.TaskRepository;
 import ru.epa.epabackend.service.impl.EmployeeServiceImpl;
 import ru.epa.epabackend.util.Role;
 
@@ -30,10 +32,12 @@ public class EmployeeTests {
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
     private static final String email = "qwerty@gmail.com";
-
-
     @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
+    private EmployeeEvaluationRepository employeeEvaluationRepository;
+    @Mock
+    private TaskRepository taskRepository;
     @InjectMocks
     private EmployeeServiceImpl employeeService;
     @Mock
@@ -56,6 +60,7 @@ public class EmployeeTests {
         employee = Employee.builder()
                 .id(ID_2)
                 .email(email)
+                .creator(admin)
                 .build();
         requestEmployeeDto = RequestEmployeeDto.builder()
                 .email(email)
@@ -106,9 +111,7 @@ public class EmployeeTests {
         when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(admin));
         employee.setCreator(admin);
         int expectedId = 2;
-
         Employee employeeResult = employeeService.update(employee.getId(), requestEmployeeDto, email);
-
         assertNotNull(employeeResult);
         assertEquals(expectedId, employeeResult.getId());
         verify(employeeRepository,times(1)).save(employeeResult);
@@ -117,11 +120,17 @@ public class EmployeeTests {
     @Test
     @DisplayName("Удаление сотрудника с вызовом репозитория")
     void shouldDeleteWhenCallRepository() {
-        when(employeeRepository.existsById(any())).thenReturn(true);
-        employeeService.delete(ID_2);
-        verify(employeeRepository, times(1)).existsById(ID_2);
+        when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(admin));
+        when(employeeRepository.findById(ID_2)).thenReturn(Optional.of(employee));
+        when(employeeEvaluationRepository.existsByEvaluatedIdOrEvaluatorId(ID_2, ID_2)).thenReturn(false);
+        when(taskRepository.existsByExecutorId(ID_2)).thenReturn(false);
+        employeeService.delete(ID_2, email);
+        verify(employeeRepository, times(1)).findByEmail(email);
+        verify(employeeRepository, times(1)).findById(ID_2);
+        verify(employeeEvaluationRepository, times(1)).existsByEvaluatedIdOrEvaluatorId(ID_2, ID_2);
+        verify(taskRepository, times(1)).existsByExecutorId(ID_2);
+        verify(employeeRepository, times(1)).deleteById(ID_2);
     }
-
 
     @Test
     @DisplayName("Получение всех сотрудников с вызовом репозитория")
@@ -132,7 +141,6 @@ public class EmployeeTests {
         assertEquals(1, employeeResult.size());
         verify(employeeRepository, times(1)).findAll();
     }
-
 
     @Test
     @DisplayName("Получение сотрудника по email с исключением Not Found Exception")

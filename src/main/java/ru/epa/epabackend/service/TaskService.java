@@ -51,6 +51,11 @@ public interface TaskService {
     List<Task> findAll(String email);
 
     /**
+     * Получение списка всех задач по определенному проекту админом
+     */
+    List<Task> findAllByProjectId(String email, Long projectId);
+
+    /**
      * Создание задачи
      */
     Task create(RequestTaskDto taskDto, String email);
@@ -73,11 +78,15 @@ public interface TaskService {
     /**
      * Получение списка задач проекта с определенным статусом задач
      */
-    List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status);
+    List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status, String email);
 
     @Transactional(readOnly = true)
     Task findByIdAndExecutorEmail(Long taskId, Long employeeId);
 
     @Transactional(readOnly = true)
     Task findById(Long taskId);
+
+    List<Task> findAllForEmployeeByProjectId(String email, Long projectId);
+
+    List<Task> findAllForEmployee(String email);
 }

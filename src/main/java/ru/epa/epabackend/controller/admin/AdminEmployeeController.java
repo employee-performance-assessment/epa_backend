@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.ResponseEmployeeFullDto;
 import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
+import ru.epa.epabackend.dto.employee.ResponseEmployeeFullDto;
 import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeMapper;
@@ -109,8 +109,8 @@ public class AdminEmployeeController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @DeleteMapping("/{employeeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteEmployee(@PathVariable @Parameter(required = true) Long employeeId) {
-        employeeService.delete(employeeId);
+    public void deleteEmployee(@PathVariable @Parameter(required = true) Long employeeId, Principal principal) {
+        employeeService.delete(employeeId, principal.getName());
     }
 
     /**

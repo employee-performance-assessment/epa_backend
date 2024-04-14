@@ -1,7 +1,5 @@
 package ru.epa.epabackend.employeeEvaluation;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +24,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -205,26 +202,6 @@ public class EmployeeEvaluationUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск оценки по Id с исключением Not Found Exception")
-    void shouldFindByIdWhenThrowNotFoundException() throws ValidationException {
-        when(employeeEvaluationRepository.findById(ID_1)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> employeeEvaluationService.findById(ID_1));
-    }
-
-    @Test
-    @DisplayName("Поиск оценки по Id с вызовом репозитория")
-    void shouldFindByIdProjectWhenCallRepository() {
-        when(employeeEvaluationRepository.findById(employeeEvaluation.getId()))
-                .thenReturn(Optional.ofNullable(employeeEvaluation));
-        EmployeeEvaluation employeeEvaluationResult = employeeEvaluationService
-                .findById(this.employeeEvaluation.getId());
-        long expectedId = 1L;
-        assertEquals(expectedId, employeeEvaluationResult.getId());
-        verify(employeeEvaluationRepository, times(1))
-                .findById(employeeEvaluationResult.getId());
-    }
-
-    @Test
     @DisplayName("Получение командного рейтинга за каждый месяц указанного года с вызовом репозитория")
     void shouldFindCommandRatingWhenCallRepository() {
         when(employeeService.findByEmail(email1)).thenReturn(evaluator);
@@ -253,36 +230,6 @@ public class EmployeeEvaluationUnitTests {
         assertEquals(expectedSize, responseRatingFullDtoListResult.size());
         assertEquals(expectedRating, responseRatingFullDtoListResult.get(0).getRating());
         assertEquals(expectedMonthNumber, responseRatingFullDtoListResult.get(0).getMonthNumber());
-    }
-
-    @Test
-    @DisplayName("Получение списка оцененных коллег с вызовом репозитория")
-    void shouldFindAllRatedByMeWhenCallRepository() {
-        when(employeeEvaluationRepository.findAllRatedByMe(email1)).thenReturn(employees);
-        List<Employee> employeesResult = employeeEvaluationService.findAllRatedByMe(evaluator.getEmail());
-        int expectedSize = 2;
-        int expectedEmployeeId = 3;
-        String expectedEmployeeEmail = adminEmail;
-        assertNotNull(employeesResult);
-        assertEquals(expectedSize, employeesResult.size());
-        assertEquals(expectedEmployeeId, employeesResult.get(0).getId());
-        assertEquals(expectedEmployeeEmail, employeesResult.get(1).getEmail());
-    }
-
-    @Test
-    @DisplayName("Получение списка подчиненных для админа с вызовом репозитория")
-    void shouldFindAllRatedWhenCallRepository() {
-        employees.remove(1);
-        employees.add(evaluator);
-        when(employeeEvaluationRepository.findAllRated(adminEmail)).thenReturn(employees);
-        List<Employee> employeesResult = employeeEvaluationService.findAllRated(adminEmail);
-        int expectedSize = 2;
-        int expectedEmployeeId = 3;
-        String expectedEmployeeEmail = email1;
-        assertNotNull(employeesResult);
-        assertEquals(expectedSize, employeesResult.size());
-        assertEquals(expectedEmployeeId, employeesResult.get(0).getId());
-        assertEquals(expectedEmployeeEmail, employeesResult.get(1).getEmail());
     }
 
     @Test

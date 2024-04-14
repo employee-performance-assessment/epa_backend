@@ -52,6 +52,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * Получение списка всех задач админом по определенному проекту админом
+     */
+    @Override
+    public List<Task> findAllByProjectId(String email, Long projectId) {
+        Employee admin = employeeService.findByEmail(email);
+        Project project = projectService.findById(projectId);
+        projectService.checkUserAndProject(admin, project);
+        return taskRepository.findAllByProjectId(projectId);
+    }
+
+    /**
      * Найти задачу по ID админом
      */
     @Override
@@ -74,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
         Project project = projectService.findById(requestTaskDto.getProjectId());
         Employee executor = employeeService.findById(requestTaskDto.getExecutorId());
         Employee admin = employeeService.findByEmail(email);
-        checkEmployeeCreatorIsAdmin(admin, executor);
+        employeeService.checkAdminForEmployee(admin, executor);
         projectService.checkUserAndProject(admin, project);
         requestTaskDto.setStatus("NEW");
         return taskRepository.save(taskMapper.mapToEntity(requestTaskDto, project, executor, admin));
@@ -89,6 +100,9 @@ public class TaskServiceImpl implements TaskService {
         Task oldTask = findById(taskId);
         Project project = oldTask.getProject();
         Employee admin = employeeService.findByEmail(email);
+        if (!taskRepository.existsByIdAndOwnerEmail(taskId, email)) {
+            throw new BadRequestException("Администратор не является автором задачи");
+        }
         projectService.checkUserAndProject(admin, project);
         Employee executor = checkExecutor(requestTaskDto, oldTask);
         taskMapper.updateFields(requestTaskDto, project, executor, oldTask);
@@ -117,10 +131,13 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status) {
+    public List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status, String email) {
         log.info("Получение списка задач проекта с идентификатором {} с определенным статусом {} задач",
                 projectId, status);
-        projectService.findById(projectId);
+        Project project = projectService.findById(projectId);
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator() == null ? employee : employee.getCreator();
+        projectService.checkUserAndProject(admin, project);
         return taskRepository.findAllByProjectIdAndStatus(projectId, status);
     }
 
@@ -146,7 +163,7 @@ public class TaskServiceImpl implements TaskService {
         try {
             return taskRepository.findAllByExecutorIdAndStatus(employee.getId(), getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
-            throw new BadRequestException("Неверный статус: " + status);
+            throw new BadRequestException("Указан неверный статус задачи");
         }
     }
 
@@ -171,7 +188,7 @@ public class TaskServiceImpl implements TaskService {
         try {
             return taskRepository.findAllByOwnerEmailAndExecutorIdAndStatus(email, employeeId, getTaskStatus(status));
         } catch (IllegalArgumentException exception) {
-            throw new BadRequestException("Неверный статус: " + status);
+            throw new BadRequestException("Указан неверный статус задачи");
         }
     }
 
@@ -193,16 +210,19 @@ public class TaskServiceImpl implements TaskService {
     public Task updateStatus(Long taskId, String status, Principal principal) {
         log.info("Обновление статуса задачи с идентификатором {}", taskId);
         Employee employee = employeeService.findByEmail(principal.getName());
+        Long adminId = employee.getCreator() == null ? employee.getId() : employee.getCreator().getId();
         try {
             TaskStatus taskStatus = getTaskStatus(status);
-            Task task = findByIdAndExecutorEmail(taskId, employee.getId());
+            Task task = taskRepository.findByIdAndOwnerId(taskId, adminId).orElseThrow(() ->
+                    new EntityNotFoundException(String.format("Не найдена задача для исполнителя %s",
+                            employee.getFullName())));
             if (taskStatus == TaskStatus.IN_PROGRESS) {
                 task.setStartDate(LocalDate.now());
             }
             task.setStatus(taskStatus);
             return taskRepository.save(task);
         } catch (IllegalArgumentException exception) {
-            throw new BadRequestException("Неверный статус: " + status);
+            throw new BadRequestException("Указан неверный статус задачи");
         }
     }
 
@@ -214,9 +234,10 @@ public class TaskServiceImpl implements TaskService {
     public Task findByIdAndExecutorEmail(Long taskId, Long employeeId) {
         log.info("Получение задачи из репозитория по идентификатору задачи {} " +
                 "и по идентификатору исполнителя {}", taskId, employeeId);
+        Employee employee = employeeService.findById(employeeId);
         return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Задача с id %s и исполнителем с id %s не найдена",
-                        taskId, employeeId)));
+                new EntityNotFoundException(String.format("Не найдена задача для исполнителя %s",
+                        employee.getFullName())));
     }
 
     /**
@@ -248,7 +269,39 @@ public class TaskServiceImpl implements TaskService {
     public Task findById(Long taskId) {
         log.info("Получение задачи из репозитория по идентификатору {}", taskId);
         return taskRepository.findById(taskId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Задача с id %s не найдена", taskId)));
+                new EntityNotFoundException("Задача не найдена"));
+    }
+
+    /**
+     * Получение списка всех задач команды сотрудником по определенному проекту
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllForEmployeeByProjectId(String email, Long projectId) {
+        log.info("Получение списка всех задач команды сотрудником");
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator();
+        if (admin == null) {
+            findAllByProjectId(employee.getEmail(), projectId);
+        }
+        Project project = projectService.findById(projectId);
+        projectService.checkUserAndProject(admin, project);
+        return taskRepository.findAllByProjectId(projectId);
+    }
+
+    /**
+     * Получение списка всех задач команды сотрудником
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Task> findAllForEmployee(String email) {
+        log.info("Получение списка всех задач команды сотрудником");
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator();
+        if (admin == null) {
+            return findAll(employee.getEmail());
+        }
+        return taskRepository.findAllByOwnerId(admin.getId());
     }
 
     /**
@@ -265,12 +318,5 @@ public class TaskServiceImpl implements TaskService {
             executor = oldTask.getExecutor();
         }
         return executor;
-    }
-
-    private void checkEmployeeCreatorIsAdmin(Employee admin, Employee executor) {
-        if (!(admin.getId().equals(executor.getCreator().getId()))) {
-            throw new EntityNotFoundException(String.format("У администратора с id %s нет сотрудника с id %s",
-                    admin.getId(), executor.getId()));
-        }
     }
 }
