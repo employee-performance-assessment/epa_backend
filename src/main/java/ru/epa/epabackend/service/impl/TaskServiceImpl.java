@@ -210,9 +210,12 @@ public class TaskServiceImpl implements TaskService {
     public Task updateStatus(Long taskId, String status, Principal principal) {
         log.info("Обновление статуса задачи с идентификатором {}", taskId);
         Employee employee = employeeService.findByEmail(principal.getName());
+        Long adminId = employee.getCreator() == null ? employee.getId() : employee.getCreator().getId();
         try {
             TaskStatus taskStatus = getTaskStatus(status);
-            Task task = findByIdAndExecutorEmail(taskId, employee.getId());
+            Task task = taskRepository.findByIdAndOwnerId(taskId, adminId).orElseThrow(() ->
+                    new EntityNotFoundException(String.format("Не найдена задача для исполнителя %s",
+                            employee.getFullName())));
             if (taskStatus == TaskStatus.IN_PROGRESS) {
                 task.setStartDate(LocalDate.now());
             }
@@ -296,7 +299,7 @@ public class TaskServiceImpl implements TaskService {
         Employee employee = employeeService.findByEmail(email);
         Employee admin = employee.getCreator();
         if (admin == null) {
-            findAll(employee.getEmail());
+            return findAll(employee.getEmail());
         }
         return taskRepository.findAllByOwnerId(admin.getId());
     }

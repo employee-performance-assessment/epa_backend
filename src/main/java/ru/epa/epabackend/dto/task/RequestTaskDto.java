@@ -27,37 +27,41 @@ public class RequestTaskDto {
     /**
      * Название задачи.
      */
-    @NotBlank(groups = {Create.class})
-    @Size(min = 1, max = 255, groups = {Create.class, Update.class})
-    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS, groups = {Create.class, Update.class})
+    @NotBlank(groups = {Create.class}, message = "Название не должно быть пустым")
+    @Size(min = 1, max = 255, groups = {Create.class, Update.class},
+            message = "Допустимая длина названия задачи от 1 до 255 символов")
+    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS, groups = {Create.class, Update.class},
+    message = "В названии задачи разрешены русские, английские символы, цифры, пробел, тире, точка и запятая")
     private String name;
 
     /**
      * Описание задачи.
      */
-    @NotBlank(groups = {Create.class})
-    @Size(min = 1, max = 255, groups = {Create.class, Update.class})
-    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS, groups = {Create.class, Update.class})
+    @NotBlank(groups = {Create.class}, message = "Описание задачи не должно быть пустым")
+    @Size(min = 1, max = 255, groups = {Create.class, Update.class},
+            message = "Допустимая длина описания задачи от 1 до 255 символов")
+    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS, groups = {Create.class, Update.class},
+            message = "В описании задачи разрешены русские, английские символы, цифры, пробел, тире, точка и запятая")
     private String description;
 
     /**
      * ID проекта.
      */
-    @NotNull(groups = {Create.class})
-    @Positive(groups = {Create.class, Update.class})
+    @NotNull(groups = {Create.class}, message = "Необходимо указать проект")
+    @Positive(groups = {Create.class, Update.class}, message = "id проекта должен быть положительным числом")
     private Long projectId;
 
     /**
      * ID Сотрудника, выполняющего задачу.
      */
-    @Positive(groups = {Create.class, Update.class})
+    @Positive(groups = {Create.class, Update.class}, message = "id исполнителя должен быть положительным числом")
     private Long executorId;
 
     /**
      * Дата до которой должна выполниться задача..
      */
-    @NotNull(groups = {Create.class})
-    @FutureOrPresent(groups = {Create.class, Update.class})
+    @NotNull(groups = {Create.class}, message = "Необходимо указать дедлайн")
+    @FutureOrPresent(groups = {Create.class, Update.class}, message = "Невозможно указать дедлайн в прошлом")
     @JsonFormat(pattern = DateConstant.DATE_PATTERN)
     private LocalDate deadLine;
 
@@ -70,17 +74,20 @@ public class RequestTaskDto {
     /**
      * Сложность задачи измеряемая в баллах, задается руководителем.
      */
-    @NotNull(groups = {Create.class})
-    @Positive(groups = {Create.class, Update.class})
-    @Range(min = 0, max = 99999, groups = {Create.class, Update.class})
+    @NotNull(groups = {Create.class}, message = "Необходимо указать баллы за задачу")
+    @Positive(groups = {Create.class, Update.class}, message = "Баллы за задачу измеряются положительным числом")
+    @Range(min = 0, max = 99999, groups = {Create.class, Update.class}, message = "Допустимый диапазон баллов за " +
+            "задачу от 0 до 99999")
     private Integer basicPoints;
 
     /**
      * Дополнительные баллы, которые вычитаются или прибавляются, в зависимости от того
      * выполнил ли в срок задачу исполнитель. Задаются руководителем.
      */
-    @NotNull(groups = {Create.class})
-    @Positive(groups = {Create.class, Update.class})
-    @Range(min = 0, max = 99999, groups = {Create.class, Update.class})
+    @NotNull(groups = {Create.class}, message = "Необходимо указать бонусные и штрафные баллы")
+    @Positive(groups = {Create.class, Update.class}, message = "Бонусные и штрафные баллы за задачу измеряются " +
+            "положительным числом")
+    @Range(min = 0, max = 99999, groups = {Create.class, Update.class}, message = "Допустимый диапазон бонусных " +
+            "и штрафных баллов за задачу от 0 до 99999")
     private Integer penaltyPoints;
 }

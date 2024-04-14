@@ -101,7 +101,7 @@ class TaskEmployeeUnitTests {
 
     @Test
     void updateTask_shouldCallRepository() {
-        when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
+        when(taskRepository.findByIdAndOwnerId(task.getId(), employee.getId()))
                 .thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(task)).thenReturn(task);
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
