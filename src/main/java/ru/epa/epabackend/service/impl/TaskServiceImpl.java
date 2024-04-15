@@ -219,6 +219,10 @@ public class TaskServiceImpl implements TaskService {
             if (taskStatus == TaskStatus.IN_PROGRESS) {
                 task.setStartDate(LocalDate.now());
             }
+            if (taskStatus == TaskStatus.DONE) {
+                setPointsToEmployeeAfterTaskDone(task);
+                task.setFinishDate(LocalDate.now());
+            }
             task.setStatus(taskStatus);
             return taskRepository.save(task);
         } catch (IllegalArgumentException exception) {

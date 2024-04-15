@@ -118,7 +118,6 @@ public class UserTaskController {
                                             @Parameter(required = true) @RequestParam String status,
                                             Principal principal) {
         return taskMapper.mapToFullDto(taskService.updateStatus(taskId, status, principal));
-
     }
 
     /**
