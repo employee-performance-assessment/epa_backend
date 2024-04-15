@@ -133,7 +133,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         Employee employee = employeeService.findById(employeeId);
         Employee admin = employeeService.findByEmail(email);
         employeeService.checkAdminForEmployee(admin, employee);
-        return taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employeeId, rangeStart, rangeEnd);
+        Integer points = taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employeeId, rangeStart, rangeEnd);
+        return points == null ? 0 : points;
     }
 
     /**
@@ -144,7 +145,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     public Integer findQuantityOfPointsByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd) {
         log.info("Получение сотрудником суммы своих баллов по выполненным задачам за текущий месяц");
         Employee employee = employeeService.findByEmail(principal.getName());
-        return taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employee.getId(), rangeStart, rangeEnd);
+        Integer points = taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employee.getId(), rangeStart, rangeEnd);
+        return points == null ? 0 : points;
     }
 
     private IndividualAnalytics getIndividualStats(Employee employee, LocalDate rangeStart, LocalDate rangeEnd) {
