@@ -22,9 +22,7 @@ import ru.epa.epabackend.service.impl.QuestionnaireServiceImpl;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,6 +53,7 @@ public class QuestionnaireUnitTests {
     private RequestCriteriaDto requestCriteriaDto;
     Optional<Questionnaire> lastQuestionnaire;
     private RequestQuestionnaireDto requestQuestionnaireDto;
+    private Set<String> uniqueCriterias;
 
     @BeforeEach
     public void unit() {
@@ -153,8 +152,10 @@ public class QuestionnaireUnitTests {
     @Test
     @DisplayName("Обновление анкеты, имея анкету и email админа")
     void shouldUpdateLastWhenCallRepository() {
+        uniqueCriterias = new HashSet<>();
+        uniqueCriterias.add("criteriaDto");
         when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
-        when(criteriaService.findExistentAndSaveNonExistentCriterias(criteriasDto)).thenReturn(criterias);
+        when(criteriaService.findExistentAndSaveNonExistentCriterias(uniqueCriterias)).thenReturn(criterias);
         when(questionnaireRepository.save(questionnaire1)).thenReturn(questionnaire1);
         Questionnaire questionnaireResult = questionnaireService.updateLast(requestQuestionnaireDto, email1);
         int expectedId = 1;
