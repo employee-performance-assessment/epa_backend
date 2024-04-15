@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8541c106-cccd-4eb6-95df-a3bc78548664",
+		"_postman_id": "328b6406-e472-4a04-a079-c150b55b996a",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21428156"
@@ -33,7 +33,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
+							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"IGOR@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -79,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"raw": "{\r\n  \"email\": \"igor@YANDEX.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -223,7 +223,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\",\r\n  \"position\": \"dev\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"MAIL@mail.ru\",\r\n  \"password\": \"password1\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -233,6 +233,98 @@
 							"path": [
 								"admin",
 								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Employee high register email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"mail@mail.RU\",\r\n  \"password\": \"password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@YANDEX.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
 							]
 						}
 					},
@@ -490,7 +582,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\",\r\n  \"position\": \"dev\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@MAIL.ru\",\r\n  \"password\": \"password2\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",

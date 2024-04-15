@@ -34,6 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional(readOnly = true)
     public ResponseJwt getToken(RequestJwt requestJwt) {
         log.info("Получение JWT токена по запросу");
+        requestJwt.setEmail(requestJwt.getEmail().toLowerCase());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestJwt.getEmail(), requestJwt.getPassword()));
         UserDetails userDetails = employeeService.findByEmail(requestJwt.getEmail());
         return new ResponseJwt(jwtService.generateToken(userDetails));
