@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "dca1f57d-1104-4583-a95b-4a0b0c7e2330",
+		"_postman_id": "8541c106-cccd-4eb6-95df-a3bc78548664",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21428156"
@@ -5041,6 +5041,61 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=3 duplicate name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Проверка количества элементов в criterias - их два\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.criterias.length).to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n        {\r\n\t\t\t\"name\":\"помогает коллегам\"\r\n\t\t},\r\n        {\r\n\t\t\t\"name\":\"помогает коллегам\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/questionnaire/last",
 							"host": [

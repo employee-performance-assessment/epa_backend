@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.epa.epabackend.dto.criteria.RequestCriteriaDto;
 import ru.epa.epabackend.dto.questionnaire.RequestQuestionnaireDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.model.Criteria;
@@ -17,10 +18,8 @@ import ru.epa.epabackend.service.QuestionnaireService;
 import ru.epa.epabackend.util.QuestionnaireStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Класс QuestionnaireServiceImpl содержит логику работы с анкетами
@@ -85,9 +84,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             throw new BadRequestException("Невозможно обновить разосланную анкету. " +
                     "Сперва воспользуйтесь получением последней анкеты");
         }
+        Set<String> uniqueCriterias = requestQuestionnaireDto.getCriterias().stream().map(
+                RequestCriteriaDto::getName).collect(Collectors.toSet());
 
-        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(requestQuestionnaireDto
-                .getCriterias());
+        List<Criteria> criterias = criteriaService.findExistentAndSaveNonExistentCriterias(uniqueCriterias);
         Questionnaire questionnaire = lastQuestionnaire.get();
         questionnaire.setCriterias(criterias);
         questionnaire.setCreated(LocalDate.now());
