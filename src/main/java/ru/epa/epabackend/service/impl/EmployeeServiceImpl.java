@@ -88,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto, String adminEmail) {
         log.info("Обновление существующего сотрудника {}", requestEmployeeDto.getFullName());
-        if(requestEmployeeDto.getEmail()!=null) {
+        if (requestEmployeeDto.getEmail() != null) {
             requestEmployeeDto.setEmail(requestEmployeeDto.getEmail().toLowerCase());
         }
         Employee oldEmployee = findById(employeeId);
