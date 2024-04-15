@@ -49,6 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Employee create(RequestEmployeeDto requestEmployeeDto, String email) {
+        requestEmployeeDto.setEmail(requestEmployeeDto.getEmail().toLowerCase());
         String employeeEmail = requestEmployeeDto.getEmail();
         log.info("Создание нового сотрудника {} с email {}", requestEmployeeDto.getFullName(), employeeEmail);
         if (employeeRepository.existsByEmail(employeeEmail)) {
@@ -68,6 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Employee createSelfRegister(RequestEmployeeShortDto requestEmployeeShortDto) {
+        requestEmployeeShortDto.setEmail(requestEmployeeShortDto.getEmail().toLowerCase());
         String employeeEmail = requestEmployeeShortDto.getEmail();
         log.info("Создание нового сотрудника {}", requestEmployeeShortDto.getFullName());
         if (employeeRepository.existsByEmail(employeeEmail)) {
@@ -86,6 +88,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee update(Long employeeId, RequestEmployeeDto requestEmployeeDto, String adminEmail) {
         log.info("Обновление существующего сотрудника {}", requestEmployeeDto.getFullName());
+        if (requestEmployeeDto.getEmail() != null) {
+            requestEmployeeDto.setEmail(requestEmployeeDto.getEmail().toLowerCase());
+        }
         Employee oldEmployee = findById(employeeId);
         Employee admin = findByEmail(adminEmail);
 
@@ -96,7 +101,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (password != null && !password.isBlank()) {
             oldEmployee.setPassword(passwordEncoder.encode(password));
         }
-
         employeeMapper.updateFields(requestEmployeeDto, oldEmployee);
         return employeeRepository.save(oldEmployee);
     }
@@ -124,9 +128,11 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Employee> findAll() {
+    public List<Employee> findAll(String email) {
+        Employee employee = findByEmail(email);
+        String adminEmail = employee.getCreator() != null ? employee.getCreator().getEmail() : employee.getEmail();
         log.info("Получение всех сотрудников");
-        return employeeRepository.findAll();
+        return employeeRepository.findAllByCreatorEmail(adminEmail, Sort.by(Sort.Direction.ASC, "id"));
     }
 
     /**

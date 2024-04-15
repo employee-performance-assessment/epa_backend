@@ -135,11 +135,14 @@ public class EmployeeTests {
     @Test
     @DisplayName("Получение всех сотрудников с вызовом репозитория")
     void shouldFindAllWhenCallRepository() {
-        when(employeeRepository.findAll()).thenReturn(List.of(employee));
-        List<Employee> employeeResult = employeeService.findAll();
+        when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(employee));
+        when(employeeRepository.findAllByCreatorEmail(email, Sort.by(Sort.Direction.ASC, "id")))
+                .thenReturn(List.of(employee));
+        List<Employee> employeeResult = employeeService.findAll(email);
         assertNotNull(employeeResult);
         assertEquals(1, employeeResult.size());
-        verify(employeeRepository, times(1)).findAll();
+        verify(employeeRepository, times(1)).findAllByCreatorEmail(email,
+                Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Test
