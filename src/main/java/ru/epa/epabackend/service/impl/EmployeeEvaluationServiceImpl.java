@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.evaluation.*;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
+import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.EmployeeEvaluationMapper;
 import ru.epa.epabackend.model.*;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static ru.epa.epabackend.util.Constants.THIRTY_DAYS;
 
@@ -52,6 +54,13 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
         Questionnaire questionnaire = questionnaireService.findById(questionnaireId);
         employeeService.checkEvaluatorForEmployee(evaluator, evaluated);
         checkQuestionnaireForEvaluator(questionnaire, evaluator);
+        List<Long> criteriaIds = evaluationRequestDtoList.stream()
+                .map(RequestEmployeeEvaluationDto::getCriteriaId).collect(Collectors.toList());
+        if (employeeEvaluationRepository.existsByEvaluatorIdAndCriteriaIdInAndQuestionnaireIdAndEvaluatedId(evaluator.getId(),
+                criteriaIds, questionnaireId, evaluatedId)) {
+            throw new ConflictException(String.format("Существует оценка по одному или нескольким критериям анкеты " +
+                    "для оцениваемого пользователя %s", evaluated.getFullName()));
+        }
         List<EmployeeEvaluation> employeeEvaluations = new ArrayList<>(evaluationRequestDtoList.size());
 
         for (RequestEmployeeEvaluationDto evaluationRequestDto : evaluationRequestDtoList) {
