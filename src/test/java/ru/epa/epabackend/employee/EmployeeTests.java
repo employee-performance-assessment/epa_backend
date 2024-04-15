@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.epa.epabackend.dto.employee.RequestEmployeeDto;
 import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
-import ru.epa.epabackend.exception.exceptions.ConflictException;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.repository.EmployeeEvaluationRepository;
@@ -33,8 +32,6 @@ public class EmployeeTests {
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
     private static final String email = "qwerty@gmail.com";
-
-
     @Mock
     private EmployeeRepository employeeRepository;
     @Mock
@@ -114,9 +111,7 @@ public class EmployeeTests {
         when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(admin));
         employee.setCreator(admin);
         int expectedId = 2;
-
         Employee employeeResult = employeeService.update(employee.getId(), requestEmployeeDto, email);
-
         assertNotNull(employeeResult);
         assertEquals(expectedId, employeeResult.getId());
         verify(employeeRepository,times(1)).save(employeeResult);
@@ -137,7 +132,6 @@ public class EmployeeTests {
         verify(employeeRepository, times(1)).deleteById(ID_2);
     }
 
-
     @Test
     @DisplayName("Получение всех сотрудников с вызовом репозитория")
     void shouldFindAllWhenCallRepository() {
@@ -150,7 +144,6 @@ public class EmployeeTests {
         verify(employeeRepository, times(1)).findAllByCreatorEmail(email,
                 Sort.by(Sort.Direction.ASC, "id"));
     }
-
 
     @Test
     @DisplayName("Получение сотрудника по email с исключением Not Found Exception")
