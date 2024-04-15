@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "918d89f7-6a76-4aed-bbef-1da89ce5f030",
+		"_postman_id": "dca1f57d-1104-4583-a95b-4a0b0c7e2330",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21428156"
@@ -519,12 +519,7 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.length, 'List length must be 4').to.eql(4);\r",
-									"});\r",
-									"pm.test(\"Test employee[2] 'fullName' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData[2]).to.have.property('fullName');\r",
-									"    pm.expect(jsonData[2].fullName, '\"fullName\" must be \"Иванов Джон Иванович\"').to.eql(\"Иванов Джон Иванович\");\r",
+									"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);\r",
 									"});"
 								],
 								"type": "text/javascript",

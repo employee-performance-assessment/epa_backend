@@ -124,9 +124,11 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Employee> findAll() {
+    public List<Employee> findAll(String email) {
+        Employee employee = findByEmail(email);
+        String adminEmail = employee.getCreator() != null ? employee.getCreator().getEmail() : employee.getEmail();
         log.info("Получение всех сотрудников");
-        return employeeRepository.findAll();
+        return employeeRepository.findAllByCreatorEmail(adminEmail, Sort.by(Sort.Direction.ASC, "id"));
     }
 
     /**
