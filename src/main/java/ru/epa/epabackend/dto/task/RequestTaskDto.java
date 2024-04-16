@@ -9,6 +9,7 @@ import ru.epa.epabackend.util.DateConstant;
 import java.time.LocalDate;
 
 import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_ALPHABET_AND_NUMBERS;
+import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS;
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -40,8 +41,9 @@ public class RequestTaskDto {
     @NotBlank(groups = {Create.class}, message = "Описание задачи не должно быть пустым")
     @Size(min = 1, max = 255, groups = {Create.class, Update.class},
             message = "Допустимая длина описания задачи от 1 до 255 символов")
-    @Pattern(regexp = CYRILLIC_LATIN_ALPHABET_AND_NUMBERS, groups = {Create.class, Update.class},
-            message = "В описании задачи разрешены русские, английские символы, цифры, пробел, тире, точка и запятая")
+    @Pattern(regexp = CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS, groups = {Create.class, Update.class},
+            message = "В описании задачи разрешены русские, английские символы, цифры, пробел и спецсимволы " +
+                    ",:;?!*+%-<>@[]/_{}$#")
     private String description;
 
     /**
