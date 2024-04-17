@@ -44,7 +44,7 @@ public class RequestEmployeeDto {
 
     @NotEmpty(groups = {Create.class}, message = "Пароль не должен быть пустым")
     @Pattern(regexp = LATIN_NUMBERS_SPECIAL_CHARACTERS_AND_ONE_UPPERCASE_LETTER, groups = {Create.class, Update.class},
-            message = "В поле пароль разрешены английские символы, цифры и спецсимволы ,:;?!*+%-<>@[]/\\_{}$#")
+            message = "В поле пароль разрешены английские символы, цифры и спецсимволы ,:;?!*+%-<>@[]/_{}$#")
     @Size(min = 8, max = 14, groups = {Create.class, Update.class}, message = "Допустимая длина пароля от 8 до 14 " +
             "символов")
     private String password;

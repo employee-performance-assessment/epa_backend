@@ -35,6 +35,6 @@ public class RequestAdminEvaluationDto {
     @Size(min = 1, max = 255, message = "Допустимая длина поля рекомендации от 1 до 255 символов")
     @Pattern(regexp = CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS,
             message = "В поле рекомендация разрешены русские, английские символы, цифры, пробел и спецсимволы " +
-                    ",:;?!*+%-<>@[]/\\_{}$#")
+                    ",:;?!*+%-<>@[]/_{}$#")
     private String recommendation;
 }

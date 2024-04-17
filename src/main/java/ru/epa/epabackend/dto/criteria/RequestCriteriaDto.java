@@ -27,6 +27,6 @@ public class RequestCriteriaDto {
     @Size(min = 1, max = 100, message = "Допустимая длина названия критерия от 1 до 100 символов")
     @Pattern(regexp = CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS,
             message = "В названии критерия оценки разрешены русские, английские символы, цифры, пробел и спецсимволы " +
-                    ",:;?!*+%-<>@[]/\\_{}$#")
+                    ",:;?!*+%-<>@[]/_{}$#")
     private String name;
 }

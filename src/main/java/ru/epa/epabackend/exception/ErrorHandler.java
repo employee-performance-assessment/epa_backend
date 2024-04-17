@@ -45,7 +45,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validateException(BadCredentialsException e) {
         log.info(e.getMessage());
-        return new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST, "Неверный email или пароль");
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

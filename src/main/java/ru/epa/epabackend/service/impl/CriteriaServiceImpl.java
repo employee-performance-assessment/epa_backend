@@ -12,6 +12,7 @@ import ru.epa.epabackend.repository.CriteriaRepository;
 import ru.epa.epabackend.service.CriteriaService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -62,10 +63,11 @@ public class CriteriaServiceImpl implements CriteriaService {
      * Сохранение множества критериев, при котором критерии с существующими именами не перезаписываются
      */
     @Override
-    public List<Criteria> findExistentAndSaveNonExistentCriterias(List<RequestCriteriaDto> criterias) {
+    public List<Criteria> findExistentAndSaveNonExistentCriterias(Set<String> criterias) {
         log.info("Сохранение множества критериев");
         return criterias.stream()
-                .map(c -> criteriaRepository.findByName(c.getName())
-                        .orElseGet(() -> criteriaRepository.save(criteriaMapper.mapToEntity(c)))).collect(Collectors.toList());
+                .map(c -> criteriaRepository.findByName(c)
+                        .orElseGet(() -> criteriaRepository.save(criteriaMapper.mapToEntity(
+                                RequestCriteriaDto.builder().name(c).build())))).collect(Collectors.toList());
     }
 }

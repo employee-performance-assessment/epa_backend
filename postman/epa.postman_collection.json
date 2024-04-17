@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "918d89f7-6a76-4aed-bbef-1da89ce5f030",
+		"_postman_id": "328b6406-e472-4a04-a079-c150b55b996a",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21428156"
@@ -33,7 +33,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
+							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"IGOR@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -79,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"raw": "{\r\n  \"email\": \"igor@YANDEX.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -223,7 +223,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\",\r\n  \"position\": \"dev\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"MAIL@mail.ru\",\r\n  \"password\": \"password1\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -233,6 +233,98 @@
 							"path": [
 								"admin",
 								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Employee high register email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"mail@mail.RU\",\r\n  \"password\": \"password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@YANDEX.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
 							]
 						}
 					},
@@ -490,7 +582,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\",\r\n  \"position\": \"dev\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@MAIL.ru\",\r\n  \"password\": \"password2\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -519,12 +611,7 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.length, 'List length must be 4').to.eql(4);\r",
-									"});\r",
-									"pm.test(\"Test employee[2] 'fullName' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData[2]).to.have.property('fullName');\r",
-									"    pm.expect(jsonData[2].fullName, '\"fullName\" must be \"Иванов Джон Иванович\"').to.eql(\"Иванов Джон Иванович\");\r",
+									"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -5046,6 +5133,61 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=3 duplicate name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Проверка количества элементов в criterias - их два\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.criterias.length).to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n        {\r\n\t\t\t\"name\":\"помогает коллегам\"\r\n\t\t},\r\n        {\r\n\t\t\t\"name\":\"помогает коллегам\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/questionnaire/last",
 							"host": [

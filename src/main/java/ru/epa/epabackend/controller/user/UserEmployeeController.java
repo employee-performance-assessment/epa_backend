@@ -40,7 +40,7 @@ public class UserEmployeeController {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпойнт получения всех сотрудников в сокращенном виде
+     * Эндпойнт получения пользователем всех сотрудников вашего админа в сокращенном виде
      */
     @Operation(summary = "Получение всех сотрудников",
             description = "Возвращает список сотрудников в сокращенном виде\n\n" +
@@ -56,8 +56,8 @@ public class UserEmployeeController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
-    public List<ResponseEmployeeShortDto> findAll() {
-        List<Employee> employees = employeeService.findAll();
+    public List<ResponseEmployeeShortDto> findAll(Principal principal) {
+        List<Employee> employees = employeeService.findAll(principal.getName());
         return employeeMapper.mapList(employees);
     }
 
