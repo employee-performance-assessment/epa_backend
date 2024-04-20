@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=root
 
   epa-backend:
-    image: jackobthelion/epa-backend:latest
+    image: konstantinosipov/epa-backend:latest
     container_name: epa-backend
     ports:
       - "60606:8080"
