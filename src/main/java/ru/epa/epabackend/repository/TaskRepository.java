@@ -48,8 +48,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "FROM Task t " +
             "WHERE t.owner.email = :email " +
             "AND t.executor.id = :employeeId " +
-            "AND ((nullif((cast(:text as text)), null) is null or LOWER(t.name) LIKE %:text%) " +
-            "OR (nullif((cast(:text as text)), null) is null or LOWER(t.description) LIKE %:text%))")
+            "AND ((nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.name) LIKE lower(concat('%', cast(:text as text), '%'))) " +
+            "OR (nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.description) LIKE lower(concat('%', cast(:text as text), '%'))))")
     List<Task> findTasksByOwnerEmailAndExecutorIdAndText(String email, Long employeeId, String text);
 
     @Query("SELECT t " +
@@ -57,23 +59,29 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "WHERE t.owner.email = :email " +
             "AND t.executor.id = :employeeId " +
             "AND t.status = :status " +
-            "AND ((nullif((cast(:text as text)), null) is null or LOWER(t.name) LIKE %:text%) " +
-            "OR (nullif((cast(:text as text)), null) is null or LOWER(t.description) LIKE %:text%))")
+            "AND ((nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.name) LIKE lower(concat('%', cast(:text as text), '%'))) " +
+            "OR (nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.description) LIKE lower(concat('%', cast(:text as text), '%'))))")
     List<Task> findTasksByOwnerEmailAndExecutorIdAndStatusAndText(String email, Long employeeId, TaskStatus status,
                                                                   String text);
 
     @Query("SELECT t " +
             "FROM Task t " +
             "WHERE t.executor.id = :employeeId " +
-            "AND ((nullif((cast(:text as text)), null) is null or LOWER(t.name) LIKE %:text%) " +
-            "OR (nullif((cast(:text as text)), null) is null or LOWER(t.description) LIKE %:text%))")
+            "AND ((nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.name) LIKE lower(concat('%', cast(:text as text), '%'))) " +
+            "OR (nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.description) LIKE lower(concat('%', cast(:text as text), '%'))))")
     List<Task> findAllByExecutorIdAndText(Long employeeId, String text);
 
     @Query("SELECT t " +
             "FROM Task t " +
             "WHERE t.executor.id = :employeeId " +
             "AND t.status = :status " +
-            "AND ((nullif((cast(:text as text)), null) is null or LOWER(t.name) LIKE %:text%) " +
-            "OR (nullif((cast(:text as text)), null) is null or LOWER(t.description) LIKE %:text%))")
+            "AND ((nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.name) LIKE lower(concat('%', cast(:text as text), '%'))) " +
+            "OR (nullif((cast(:text as text)), null) is null " +
+            "or LOWER(t.description) LIKE lower(concat('%', cast(:text as text), '%'))))")
     List<Task> findAllByExecutorIdAndStatusAndText(Long employeeId, TaskStatus status, String text);
 }
