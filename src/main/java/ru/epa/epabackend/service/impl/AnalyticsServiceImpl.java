@@ -124,12 +124,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     }
 
     /**
-     * Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц.
+     * Получение админом суммы баллов по выполненным задачам сотрудника за текущий месяц.
      */
     @Override
     @Transactional(readOnly = true)
     public Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd, String email) {
-        log.info("Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц");
+        log.info("Получение админом суммы баллов по выполненным задачам сотрудника за текущий месяц");
         Employee employee = employeeService.findById(employeeId);
         Employee admin = employeeService.findByEmail(email);
         employeeService.checkAdminForEmployee(admin, employee);

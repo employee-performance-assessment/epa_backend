@@ -70,12 +70,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     * Поиск всех создателей
+     * Получение проектов админа по email админа или сотрудника
      */
     @Override
     @Transactional(readOnly = true)
     public List<Project> findAllByCreator(String email) {
-        log.info("Поиск всех создателей");
+        log.info("Получение проектов админа по email админа или сотрудника");
         Employee employee = employeeService.findByEmail(email);
         if (employee.getRole() == Role.ROLE_ADMIN) {
             return projectRepository.findByEmployees(employee);

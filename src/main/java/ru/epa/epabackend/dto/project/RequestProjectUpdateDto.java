@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import ru.epa.epabackend.util.ProjectStatus;
 
 /**
- * Класс ProjectUpdateRequestDto для передачи тела запроса проекта на сервер для обновления
+ * Класс для передачи тела запроса проекта на сервер для обновления
  *
  * @author Константин Осипов
  */

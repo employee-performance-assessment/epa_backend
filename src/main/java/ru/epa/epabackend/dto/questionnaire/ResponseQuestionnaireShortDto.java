@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
 
 /**
- * Класс QuestionnaireFullResponseDto для передачи сокращенной информации об анкете
+ * Класс для передачи сокращенной информации об анкете
  */
 @Data
 @AllArgsConstructor

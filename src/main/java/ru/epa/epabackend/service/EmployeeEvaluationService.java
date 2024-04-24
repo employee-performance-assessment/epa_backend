@@ -18,33 +18,33 @@ import java.util.List;
 public interface EmployeeEvaluationService {
 
     /**
-     * Сохранение оценки сотрудника от его руководителя или коллег.
+     * Сохранение оценки сотрудника от его руководителя или коллег
      */
     List<EmployeeEvaluation> create(String email, Long evaluatedId, Long questionnaireId,
                                     List<RequestEmployeeEvaluationDto> evaluationListDto);
 
     /**
-     * Получение командного рейтинга за каждый месяц указанного года.
+     * Получение командного рейтинга за каждый месяц указанного года
      */
     List<ResponseRatingFullDto> findCommandRating(String email, Integer year);
 
     /**
-     * Получение личного рейтинга за каждый месяц.
+     * Получение личного рейтинга за каждый месяц
      */
     List<ResponseRatingFullDto> findPersonalRating(String email, Integer year);
 
     /**
-     * Получение руководителем рейтинга сотрудника за каждый месяц указанного года.
+     * Получение руководителем рейтинга сотрудника за каждый месяц указанного года
      */
     List<ResponseRatingFullDto> findPersonalRatingAdmin(String email, Long evaluatedId, Integer year);
 
     /**
-     * Получение оценок и рекомендации для сотрудника.
+     * Получение оценок и рекомендации для сотрудника
      */
     ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireId(String email, Long questionnaireId);
 
     /**
-     * Получение оценок и рекомендации для админа.
+     * Получение оценок и рекомендации для админа
      */
     ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireIdForAdmin(String adminEmail,
     Long questionnaireId, Long evaluatedId);
@@ -56,13 +56,13 @@ public interface EmployeeEvaluationService {
                                                                         LocalDate to);
 
     /**
-     * Получение списка анкет в которых оценен сотрудник с id.
+     * Получение списка анкет в которых оценен сотрудник с id
      */
     List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(String adminEmail, Long evaluatedId,
                                                                               Integer stars, LocalDate from, LocalDate to);
 
     /**
-     * Получение списка анкет в которых оценен сотрудник с email.
+     * Получение списка анкет в которых оценен сотрудник с email
      */
     List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedEmail(String email, Integer stars, LocalDate from, LocalDate to);
 

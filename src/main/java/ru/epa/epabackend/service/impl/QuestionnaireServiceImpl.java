@@ -54,7 +54,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                 return saveWithParameters(QuestionnaireStatus.CREATED, author, criterias);
             }
         } else {
-            log.info("У админа не было анкет, поэтому создаётся новая анкета со статусом CREATED и дефолтными критериями");
+            log.info("У администратора не было анкет, поэтому создаётся новая анкета со статусом CREATED и дефолтными критериями");
             Employee author = employeeService.findByEmail(email);
             return saveWithParameters(QuestionnaireStatus.CREATED, author, criteriaService.findDefault());
         }
@@ -135,12 +135,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     /**
-     * Получение анкеты админа по id анкеты и по email сотрудника или администратора
+     * Получение анкеты админа по id анкеты и по email сотрудника или админа
      */
     @Override
     @Transactional(readOnly = true)
     public Questionnaire findByEmailAndId(String email, long questionnaireId) {
-        log.info("Получение анкеты админа по идентификатору анкеты {} и по email сотрудника или администратора",
+        log.info("Получение анкеты админа по идентификатору анкеты {} и по email сотрудника или админа",
                 questionnaireId);
         Employee employee = employeeService.findByEmail(email);
         Employee author = employee.getCreator();

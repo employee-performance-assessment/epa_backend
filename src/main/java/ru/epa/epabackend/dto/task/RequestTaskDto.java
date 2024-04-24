@@ -14,7 +14,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TaskRequestDto для передачи тела запроса на сервер с данными для создания и обновления задачи
+ * Класс для передачи тела запроса на сервер с данными для создания и обновления задачи
  *
  * @author Владислав Осипов
  */
@@ -26,7 +26,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class RequestTaskDto {
 
     /**
-     * Название задачи.
+     * Название задачи
      */
     @NotBlank(groups = {Create.class}, message = "Название не должно быть пустым")
     @Size(min = 1, max = 255, groups = {Create.class, Update.class},
@@ -36,7 +36,7 @@ public class RequestTaskDto {
     private String name;
 
     /**
-     * Описание задачи.
+     * Описание задачи
      */
     @NotBlank(groups = {Create.class}, message = "Описание задачи не должно быть пустым")
     @Size(min = 1, max = 255, groups = {Create.class, Update.class},
@@ -47,20 +47,20 @@ public class RequestTaskDto {
     private String description;
 
     /**
-     * ID проекта.
+     * ID проекта
      */
     @NotNull(groups = {Create.class}, message = "Необходимо указать проект")
     @Positive(groups = {Create.class, Update.class}, message = "id проекта должен быть положительным числом")
     private Long projectId;
 
     /**
-     * ID Сотрудника, выполняющего задачу.
+     * ID Сотрудника, выполняющего задачу
      */
     @Positive(groups = {Create.class, Update.class}, message = "id исполнителя должен быть положительным числом")
     private Long executorId;
 
     /**
-     * Дата до которой должна выполниться задача..
+     * Дата до которой должна выполниться задача
      */
     @NotNull(groups = {Create.class}, message = "Необходимо указать дедлайн")
     @FutureOrPresent(groups = {Create.class, Update.class}, message = "Невозможно указать дедлайн в прошлом")
@@ -69,12 +69,12 @@ public class RequestTaskDto {
 
     /**
      * Статус выполнения задачи
-     * Возможные статусы: NEW, IN_PROGRESS, REVIEW, DONE, CANCELED.
+     * Возможные статусы: NEW, IN_PROGRESS, REVIEW, DONE, CANCELED
      */
     private String status;
 
     /**
-     * Сложность задачи измеряемая в баллах, задается руководителем.
+     * Сложность задачи измеряемая в баллах, задается руководителем
      */
     @NotNull(groups = {Create.class}, message = "Необходимо указать баллы за задачу")
     @Positive(groups = {Create.class, Update.class}, message = "Баллы за задачу измеряются положительным числом")

@@ -5,8 +5,7 @@ import lombok.*;
 import java.time.LocalDate;
 
 /**
- * Класс ResponseEvaluationsAdminUserDto для передачи информации
- * о поставленных оценках сотрудника.
+ * Класс для передачи информации о поставленных оценках сотрудника.
  *
  * @author Михаил Безуглов
  */
@@ -19,17 +18,17 @@ import java.time.LocalDate;
 public class ResponseEvaluatedQuestionnaireDto {
 
     /**
-     * Идентификатор анкеты.
+     * Идентификатор анкеты
      */
     private Long idQuestionnaire;
 
     /**
-     * Дата создания/рассылки анкеты.
+     * Дата создания/рассылки анкеты
      */
     private LocalDate createQuestionnaire;
 
     /**
-     * Средний бал за анкету.
+     * Средний бал за анкету
      */
     private Double middleScore;
 }

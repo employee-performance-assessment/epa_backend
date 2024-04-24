@@ -6,7 +6,7 @@ import ru.epa.epabackend.dto.employee.ResponseEmployeeAnalyticsDto;
 import java.util.List;
 
 /**
- * Класс TaskAnalyticsFullResponseDto для передачи сокращенной информации о задаче, предназначенной для списков
+ * Класс для передачи сокращенной информации о задаче, предназначенной для списков
  *
  * @author Владислав Осипов
  */

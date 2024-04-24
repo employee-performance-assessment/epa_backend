@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_WHITESPACE_AND_DASH;
 
 /**
- * Класс ProjectCreateRequestDto для передачи тела запроса создания проекта на сервер
+ * Класс для передачи тела запроса создания проекта на сервер
  *
  * @author Константин Осипов
  */

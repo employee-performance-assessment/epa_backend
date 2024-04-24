@@ -3,7 +3,7 @@ package ru.epa.epabackend.dto.criteria;
 import lombok.*;
 
 /**
- * Класс EvaluationRequestDto для передачи информации об критерии оценки.
+ * Класс для передачи информации об критерии оценки
  *
  * @author Михаил Безуглов
  */
@@ -16,12 +16,12 @@ import lombok.*;
 public class ResponseCriteriaShortDto {
 
     /**
-     * Идентификатор критерия оценки.
+     * Идентификатор критерия оценки
      */
     private long id;
 
     /**
-     * Название критерия оценки.
+     * Название критерия оценки
      */
     private String name;
 

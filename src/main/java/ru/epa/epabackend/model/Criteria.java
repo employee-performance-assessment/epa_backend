@@ -20,14 +20,14 @@ import lombok.*;
 public class Criteria {
 
     /**
-     * Идентификатор оценки.
+     * Идентификатор оценки
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Название оценки.
+     * Название оценки
      */
     private String name;
 

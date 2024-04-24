@@ -7,19 +7,19 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Интерфейс EvaluationService содержит методы действий с критериями оценок для администратора.
+ * Интерфейс EvaluationService содержит методы действий с критериями оценок для админа
  *
  * @author Михаил Безуглов
  */
 public interface CriteriaService {
 
     /**
-     * Создание критерия оценки.
+     * Создание критерия оценки
      */
     List<Criteria> create(List<RequestCriteriaDto> requestCriteriaDtoList);
 
     /**
-     * Найти критерий оценки по его ID.
+     * Получение критерия оценки по id
      */
     Criteria findById(Long evaluationId);
 

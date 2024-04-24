@@ -281,7 +281,7 @@ public class EmployeeEvaluationUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск анкет сотрудников, прошедших оценку")
+    @DisplayName("Получение анкет сотрудников, прошедших оценку")
     void shouldFindEmployeesQuestionnairesAssessedWhenCallRepository() {
         responseEmployeeAssessDto = ResponseEmployeeAssessDto.builder()
                 .employeeId(ID_3)
@@ -429,7 +429,7 @@ public class EmployeeEvaluationUnitTests {
     }
 
     @Test
-    @DisplayName("Получение администратором среднего рейтинга сотрудника за текущий месяц")
+    @DisplayName("Получение админом среднего рейтинга сотрудника за текущий месяц")
     void shouldFindAverageRatingByAdminWhenCallRepository(){
         when(employeeService.findById(ID_3)).thenReturn(evaluated);
         when(employeeService.findByEmail(adminEmail)).thenReturn(admin);

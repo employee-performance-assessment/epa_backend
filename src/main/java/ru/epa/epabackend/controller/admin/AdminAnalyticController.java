@@ -26,12 +26,12 @@ import java.time.YearMonth;
 import java.util.List;
 
 /**
- * Класс AnalyticControllerAdmin содержит эндпойнты для администратора, относящиеся к аналитике.
+ * Класс содержит эндпойнты для админа, относящиеся к аналитике.
  *
  * @author Владислав Осипов
  */
 @SecurityRequirement(name = "JWT")
-@Tag(name = "Admin: Аналитика", description = "Закрытый API для работы с аналитикой")
+@Tag(name = "Admin: Аналитика", description = "API админа для работы с аналитикой")
 @RestController
 @RequestMapping("/admin/stat")
 @RequiredArgsConstructor
@@ -42,9 +42,9 @@ public class AdminAnalyticController {
     private final AnalyticsMapper analyticsMapper;
 
     /**
-     * Эндпойнт получения статистики команды администратором за определенный период.
+     * Получение командной статистики админом за определенный период.
      */
-    @Operation(summary = "Получение командной статистики администратором")
+    @Operation(summary = "Получение командной статистики админом за определенный период.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTeamAnalyticsFullDto.class))),
@@ -64,9 +64,9 @@ public class AdminAnalyticController {
     }
 
     /**
-     * Эндпойнт получения индивидуальной статистики администратором за определенный период.
+     * Получения индивидуальной статистики админом за определенный период.
      */
-    @Operation(summary = "Получения индивидуальной статистики администратором")
+    @Operation(summary = "Получения индивидуальной статистики админом за определенный период.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
@@ -88,9 +88,10 @@ public class AdminAnalyticController {
     }
 
     /**
-     * Эндпойнт получения администратором суммы своих баллов по выполненным задачам за текущий месяц.
+     * Получение админом суммы баллов сотрудника по выполненным задачам сотрудника за текущий месяц
      */
-    @Operation(summary = "Получение администратором суммы баллов по выполненным задачам сотрудника за текущий месяц")
+    @Operation(summary = "Получение админом суммы баллов сотрудника по выполненным задачам сотрудника за " +
+            "текущий месяц")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     schema = @Schema(implementation = Integer.class))),

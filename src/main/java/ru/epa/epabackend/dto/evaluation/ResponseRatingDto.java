@@ -3,7 +3,7 @@ package ru.epa.epabackend.dto.evaluation;
 import lombok.*;
 
 /**
- * Класс RatingResponseDto для получения рейтинга сотрудника.
+ * Класс  для получения рейтинга сотрудника
  *
  * @author Михаил Безуглов
  */
@@ -16,7 +16,7 @@ import lombok.*;
 public class ResponseRatingDto {
 
     /**
-     * Рейтинг сотрудника.
+     * Рейтинг сотрудника
      */
     private Double rating;
 }

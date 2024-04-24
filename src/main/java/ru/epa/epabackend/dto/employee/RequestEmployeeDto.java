@@ -11,7 +11,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс EmployeeRequestDto для передачи тела запроса на сервер с полными данными для создания и обновления сотрудника
+ * Класс для передачи тела запроса на сервер с полными данными для создания и обновления сотрудника
  *
  * @author Валентина Вахламова
  */

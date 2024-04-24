@@ -25,11 +25,11 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Класс EmployeeControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к сотрудникам.
+ * Класс содержит эндпойнты для авторизованного пользователя, относящиеся к сотрудникам
  *
  * @author Валентина Вахламова
  */
-@Tag(name = "Private: Сотрудники", description = "Закрытый API для работы с пользователями")
+@Tag(name = "Private: Сотрудники", description = "API пользователя для работы с пользователями")
 @SecurityRequirement(name = "JWT")
 @RequiredArgsConstructor
 @RestController
@@ -40,9 +40,9 @@ public class UserEmployeeController {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпойнт получения пользователем всех сотрудников вашего админа в сокращенном виде
+     * Получение всех сотрудников вашего админа в сокращенном виде
      */
-    @Operation(summary = "Получение всех сотрудников",
+    @Operation(summary = "Получение всех сотрудников вашего админа в сокращенном виде",
             description = "Возвращает список сотрудников в сокращенном виде\n\n" +
                     "В случае, если не найдено ни одного сотрудника, возвращает пустой список.")
     @ApiResponses(value = {
@@ -62,9 +62,9 @@ public class UserEmployeeController {
     }
 
     /**
-     * Эндпойнт получения полных данных о сотруднике по id
+     * Получение полных данных о сотруднике по id
      */
-    @Operation(summary = "Получение информации о сотруднике по id",
+    @Operation(summary = "Получение полных данных о сотруднике по id",
             description = "Возвращает полную информацию о сотруднике по id, если он существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
@@ -84,7 +84,7 @@ public class UserEmployeeController {
     }
 
     /**
-     * Эндпойнт получения полных данных о сотруднике по токену
+     * Получение информации о владельце токена
      */
     @Operation(summary = "Получение информации о владельце токена",
             description = "Возвращает полную информацию о владельце токена, если он существует в базе данных.")
@@ -105,9 +105,9 @@ public class UserEmployeeController {
     }
 
     /**
-     * Эндпоинт получения списка годов начиная с регистрации администратора до текущего года
+     * Получение списка годов начиная с регистрации админа до текущего года
      */
-    @Operation(summary = "Эндпоинт получения списка годов начиная с регистрации администратора до текущего года")
+    @Operation(summary = "Получение списка годов начиная с регистрации админа до текущего года")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(

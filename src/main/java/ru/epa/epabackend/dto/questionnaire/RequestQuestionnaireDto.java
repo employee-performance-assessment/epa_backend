@@ -15,7 +15,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс QuestionnaireRequestDto для создания или обновления анкеты со списком критериев
+ * Класс для создания или обновления анкеты со списком критериев
  */
 @Data
 @NoArgsConstructor

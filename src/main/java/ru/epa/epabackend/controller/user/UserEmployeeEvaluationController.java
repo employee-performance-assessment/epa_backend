@@ -26,12 +26,12 @@ import java.time.YearMonth;
 import java.util.List;
 
 /**
- * Класс EmployeeEvaluationControllerUser содержит эндпойнты для авторизованного пользователя, относящиеся к
- * оценке сотрудником коллег и получению своих оценок.
+ * Класс содержит эндпойнты для авторизованного пользователя, относящиеся к оценке сотрудником коллег и получению
+ * своих оценок
  *
  * @author Михаил Безуглов
  */
-@Tag(name = "Private: Оценки Сотрудников", description = "Закрытый API для работы с оценками сотрудников")
+@Tag(name = "Private: Оценки Сотрудников", description = "API пользователя для работы с оценками сотрудников")
 @SecurityRequirement(name = "JWT")
 @RequiredArgsConstructor
 @RestController
@@ -42,10 +42,9 @@ public class UserEmployeeEvaluationController {
     private final EmployeeEvaluationMapper employeeEvaluationMapper;
 
     /**
-     * Эндпойнт добавления оценок сотрудника
+     * Добавление оценок сотрудника
      */
-    @Operation(summary = "Сохранения оценок сотрудника своего коллеги",
-            description = "При успешном добавлении возвращается код 201 Created.")
+    @Operation(summary = "Добавление оценок сотрудника по анкете")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
@@ -71,7 +70,7 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения сотрудником всех оценок и рекомендации по ID анкеты.
+     * Получение сотрудником всех оценок и рекомендации по ID анкеты
      */
     @Operation(
             summary = "Получение сотрудником всех своих оценок и рекомендации",
@@ -97,7 +96,7 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения командного рейтинга по месяца указанного года.
+     * Получение командного рейтинга по месяца указанного года
      */
     @Operation(summary = "Получение командного рейтинга по месяцам указанного года. ",
             description = "Возвращает список рейтинга команды за каждый оцененный месяц" +
@@ -117,11 +116,10 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения личного рейтинга.
+     * Получения личного рейтинга по месяцам года
      */
-    @Operation(summary = "Получение личного рейтинга",
-            description = "Возвращает личный рейтинг за каждый оцененный месяц" +
-                    "\n\nВ случае, если не найдено ни одной оценки, возвращает пустой список.")
+    @Operation(summary = "Получения личного рейтинга по месяцам года",
+            description = "В случае, если не найдено ни одной оценки, возвращает пустой список.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseRatingDto.class))),
@@ -137,9 +135,9 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпоинт получения списка сотрудиков и анкет, по которым их необходимо оценить
+     * Получение списка сотрудиков и анкет, по которым их необходимо оценить
      */
-    @Operation(summary = "Эндпоинт получения списка сотрудиков и анкет, по которым их необходимо оценить")
+    @Operation(summary = "Получение списка сотрудиков и анкет, по которым их необходимо оценить")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
@@ -160,9 +158,9 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпоинт получения списка сотрудиков и анкет, по которым ставились оценки ранее
+     * Получение списка сотрудиков и анкет, по которым ставились оценки ранее
      */
-    @Operation(summary = "Эндпоинт получения списка сотрудиков и анкет, по которым ставились оценки ранее")
+    @Operation(summary = "Получение списка сотрудиков и анкет, по которым ставились оценки ранее")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
@@ -183,10 +181,10 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения сотрудником оценок по ID анкеты и ID сотрудника в разделе Оцени сотрудника.
+     * Получение сотрудником оценок по id анкеты и сотрудника в разделе Оцени сотрудника
      */
     @Operation(
-            summary = "Эндпойнт получения сотрудником оценок по ID анкеты и ID сотрудника в разделе Оцени сотрудника ",
+            summary = "Получение сотрудником оценок по id анкеты и сотрудника в разделе Оцени сотрудника ",
             description = "Возвращает список оценок по заполненной анкете для указанного сотрудника."
     )
     @ApiResponses(value = {
@@ -205,7 +203,7 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения сотрудником своего среднего рейтинга за текущий месяц.
+     * Получение сотрудником своего среднего рейтинга за текущий месяц
      */
     @Operation(summary = "Получение сотрудником своего среднего рейтинга за текущий месяц")
     @ApiResponses(value = {
@@ -225,7 +223,7 @@ public class UserEmployeeEvaluationController {
     }
 
     /**
-     * Эндпойнт получения сотрудником списка анкет, в которых он оценен.
+     * Получение сотрудником списка анкет, в которых он оценен
      */
     @Operation(
             summary = "Получение сотрудником списка анкет, в которых он оценен",

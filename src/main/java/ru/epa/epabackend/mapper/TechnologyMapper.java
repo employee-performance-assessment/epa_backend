@@ -8,7 +8,7 @@ import ru.epa.epabackend.model.Technology;
 import java.util.List;
 
 /**
- * Класс TechnologyMapper содержит преобразование сущности.
+ * Класс TechnologyMapper содержит преобразование сущности
  *
  * @author Артем Масалкин
  */
@@ -16,12 +16,12 @@ import java.util.List;
 public interface TechnologyMapper {
 
     /**
-     * Преобразование из сущности в DTO.
+     * Преобразование из сущности в DTO
      */
     ResponseTechnologyDto mapToDto(Technology technology);
 
     /**
-     * Преобразование из DTO в сущность.
+     * Преобразование из DTO в сущность
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "employees", ignore = true)

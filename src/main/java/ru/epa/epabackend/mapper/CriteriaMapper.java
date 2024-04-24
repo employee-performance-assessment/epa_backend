@@ -8,7 +8,7 @@ import ru.epa.epabackend.model.Criteria;
 import java.util.List;
 
 /**
- * Класс EvaluationMapper содержит преобразование сущности.
+ * Класс EvaluationMapper содержит преобразование сущности
  *
  * @author Михаил Безуглов
  */
@@ -16,22 +16,22 @@ import java.util.List;
 public interface CriteriaMapper {
 
     /**
-     * Преобразование из сущности в DTO.
+     * Преобразование из сущности в DTO
      */
     ResponseCriteriaDto mapToDto(Criteria criteria);
 
     /**
-     * Преобразование из DTO в сущность.
+     * Преобразование из DTO в сущность
      */
     Criteria mapToEntity(RequestCriteriaDto requestCriteriaDto);
 
     /**
-     * Преобразование списка сущностей в список DTO.
+     * Преобразование списка сущностей в список DTO
      */
     List<ResponseCriteriaDto> mapList(List<Criteria> criteria);
 
     /**
-     * Преобразование списка DTO в список сущностей.
+     * Преобразование списка DTO в список сущностей
      */
     List<Criteria> mapListToEntity(List<RequestCriteriaDto> requestCriteriaDtoList);
 }

@@ -23,19 +23,19 @@ import java.util.Set;
 public class Technology {
 
     /**
-     * Идентификатор технологии.
+     * Идентификатор технологии
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Название технологии.
+     * Название технологии
      */
     private String name;
 
     /**
-     * Список сотрудников, владеющих определёнными технологиями.
+     * Список сотрудников, владеющих определёнными технологиями
      */
     @ManyToMany
     @JoinTable(

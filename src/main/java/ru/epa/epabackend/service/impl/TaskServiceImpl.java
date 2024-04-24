@@ -168,23 +168,23 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Получение списка всех задач пользователя администратором
+     * Получение списка всех задач пользователя админом
      */
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAllByEmployeeId(Long employeeId, String email, String text) {
-        log.info("Получение списка всех задач пользователя с идентификатором {} администратором", employeeId);
+        log.info("Получение списка всех задач пользователя с идентификатором {} админом", employeeId);
         return taskRepository.findTasksByOwnerEmailAndExecutorIdAndText(
                 email, employeeId, text);
     }
 
     /**
-     * Получение списка всех задач пользователя администратором с указанным статусом задач
+     * Получение списка всех задач пользователя админом с указанным статусом задач
      */
     @Override
     @Transactional(readOnly = true)
     public List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status, String text) {
-        log.info("Получение списка всех задач пользователя с идентификатором {} администратором" +
+        log.info("Получение списка всех задач пользователя с идентификатором {} админом" +
                 " указанным статусом {} задач", employeeId, status);
         try {
             return taskRepository.findTasksByOwnerEmailAndExecutorIdAndStatusAndText(

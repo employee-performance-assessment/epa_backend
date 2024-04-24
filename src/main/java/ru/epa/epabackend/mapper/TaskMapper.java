@@ -11,7 +11,7 @@ import ru.epa.epabackend.model.Task;
 import java.util.List;
 
 /**
- * Интерфейс TaskMapper содержит преобразование сущности.
+ * Интерфейс TaskMapper содержит преобразование сущности
  *
  * @author Владислав Осипов
  */
@@ -19,7 +19,7 @@ import java.util.List;
 public interface TaskMapper {
 
     /**
-     * Преобразование из DTO в сущность.
+     * Преобразование из DTO в сущность
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", source = "requestTaskDto.status")
@@ -31,17 +31,17 @@ public interface TaskMapper {
     Task mapToEntity(RequestTaskDto requestTaskDto, Project project, Employee executor, Employee owner);
 
     /**
-     * Преобразование из сущности в DTO, при создании.
+     * Преобразование из сущности в DTO, при создании
      */
     ResponseTaskFullDto mapToFullDto(Task task);
 
     /**
-     * Преобразование из списка задач в список с краткой информацией о задаче.
+     * Преобразование из списка задач в список с краткой информацией о задаче
      */
     List<ResponseTaskShortDto> mapList(List<Task> tasks);
 
     /**
-     * Обновление полей при обновлении задачи.
+     * Обновление полей при обновлении задачи
      */
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)

@@ -6,7 +6,7 @@ import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
 import java.util.List;
 
 /**
- * Класс ResponseRatingCommandDto для получения рейтинга сотрудников по месяцам.
+ * Класс для получения рейтинга сотрудников по месяцам
  *
  * @author Михаил Безуглов
  */
@@ -19,12 +19,12 @@ import java.util.List;
 public class ResponsePersonalRatingDto {
 
     /**
-     * Сокращенная информация о сотруднике.
+     * Сокращенная информация о сотруднике
      */
     private ResponseEmployeeShortDto employee;
 
     /**
-     * Рейтинг сотрудника по месяцам.
+     * Рейтинг сотрудника по месяцам
      */
     private List<ResponseRatingFullDto> ratingByMonth;
 }

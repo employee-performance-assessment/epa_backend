@@ -29,11 +29,11 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс EmployeeControllerAdmin содержит эндпойнты для администратора, относящиеся к сотрудникам.
+ * Класс содержит эндпойнты для админа, относящиеся к сотрудникам.
  *
  * @author Валентина Вахламова
  */
-@Tag(name = "Admin: Сотрудники", description = "API для работы с пользователями")
+@Tag(name = "Admin: Сотрудники", description = "API админа для работы с сотрудниками")
 @SecurityRequirement(name = "JWT")
 @Slf4j
 @RequiredArgsConstructor
@@ -45,7 +45,7 @@ public class AdminEmployeeController {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпойнт добавления нового сотрудника
+     * Добавление нового сотрудника
      */
     @Operation(summary = "Добавление нового сотрудника")
     @ApiResponses(value = {
@@ -68,7 +68,7 @@ public class AdminEmployeeController {
     }
 
     /**
-     * Эндпойнт по обновлению существующего сотрудника
+     * Обновление сотрудника
      */
     @Operation(summary = "Обновление сотрудника",
             description = "Обновляет данные сотрудника, если он существует в базе данных.")
@@ -93,7 +93,7 @@ public class AdminEmployeeController {
     }
 
     /**
-     * Эндпойнт удаления сотрудника
+     * Удаление сотрудника
      */
     @Operation(summary = "Удаление сотрудника",
             description = "Удаляет данные сотрудника, если он существует в базе данных.")
@@ -114,9 +114,9 @@ public class AdminEmployeeController {
     }
 
     /**
-     * Эндпойнт получения всех сотрудников для одного админа
+     * Получение всех сотрудников текущего админа
      */
-    @Operation(summary = "Получение всех сотрудников для текущего админа",
+    @Operation(summary = "Получение всех сотрудников текущего админа",
             description = "Возвращает список сотрудников в сокращенном виде одной команды для одного админа\n\n" +
                     "В случае, если не найдено ни одного сотрудника, возвращает пустой список.")
     @ApiResponses(value = {

@@ -3,7 +3,7 @@ package ru.epa.epabackend.dto.technology;
 import lombok.*;
 
 /**
- * Класс TechnologyResponseDto для передачи информации о технологии
+ * Класс для передачи информации о технологии
  *
  * @author Артем Масалкин
  */
@@ -16,12 +16,12 @@ import lombok.*;
 public class ResponseTechnologyDto {
 
     /**
-     * Id технологии.
+     * Id технологии
      */
     private Long id;
 
     /**
-     * Название технологии.
+     * Название технологии
      */
     private String name;
 }

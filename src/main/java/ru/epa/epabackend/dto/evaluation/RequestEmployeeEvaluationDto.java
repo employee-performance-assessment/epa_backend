@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Range;
 import ru.epa.epabackend.util.ValidationGroups;
 
 /**
- * Класс EvaluationCreateRequestDto для передачи тела запроса на сервер для создания оценки.
+ * Класс для передачи тела запроса на сервер для создания оценки
  *
  * @author Михаил Безуглов
  */
@@ -20,7 +20,7 @@ import ru.epa.epabackend.util.ValidationGroups;
 public class RequestEmployeeEvaluationDto {
 
     /**
-     * Название оценки.
+     * Название оценки
      */
     @NotNull(groups = {ValidationGroups.Create.class}, message = "Необходимо указать id критерия")
     @Positive(groups = {ValidationGroups.Create.class, ValidationGroups.Update.class}, message = "id критерия должен " +

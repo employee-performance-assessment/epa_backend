@@ -10,7 +10,7 @@ import ru.epa.epabackend.model.*;
 import java.util.List;
 
 /**
- * Класс EmployeeEvaluationMapper содержит преобразование сущности.
+ * Класс EmployeeEvaluationMapper содержит преобразование сущности
  *
  * @author Михаил Безуглов
  */
@@ -18,24 +18,24 @@ import java.util.List;
 public interface EmployeeEvaluationMapper {
 
     /**
-     * Преобразование из сущности в DTO.
+     * Преобразование из сущности в DTO
      */
     ResponseEmployeeEvaluationFullDto mapToDto(EmployeeEvaluation employeeEvaluation);
 
     /**
-     * Преобразование из DTO в сущность.
+     * Преобразование из DTO в сущность
      */
     @Mapping(target = "id", ignore = true)
     EmployeeEvaluation mapToEntity(RequestEmployeeEvaluationDto requestEmployeeEvaluationDto, Employee evaluated,
                                    Questionnaire questionnaire, Employee evaluator, Criteria criteria);
 
     /**
-     * Преобразование списка сущностей в список DTO.
+     * Преобразование списка сущностей в список DTO
      */
     List<ResponseEmployeeEvaluationFullDto> mapList(List<EmployeeEvaluation> employeeEvaluations);
 
     /**
-     * Преобразование из сущности в DTO.
+     * Преобразование из сущности в DTO
      */
     @Mapping(target = "name", source = "employeeEvaluation.criteria.name")
     ResponseEmployeeEvaluationShortDto mapToShortDto(EmployeeEvaluation employeeEvaluation);

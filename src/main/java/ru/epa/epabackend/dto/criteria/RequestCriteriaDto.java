@@ -8,7 +8,7 @@ import lombok.*;
 import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS;
 
 /**
- * Класс EvaluationRequestDto для передачи тела запроса на сервер для создания критерия оценки.
+ * Класс для передачи тела запроса на сервер для создания критерия оценки
  *
  * @author Михаил Безуглов
  */
@@ -21,7 +21,7 @@ import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_NUMBERS_SPECI
 public class RequestCriteriaDto {
 
     /**
-     * Название критерия оценки.
+     * Название критерия оценки
      */
     @NotBlank(message = "Название не должно быть пустым")
     @Size(min = 1, max = 100, message = "Допустимая длина названия критерия от 1 до 100 символов")

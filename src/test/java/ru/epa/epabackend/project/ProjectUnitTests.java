@@ -111,14 +111,14 @@ public class ProjectUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск проекта по Id с исключением Not Found Exception")
+    @DisplayName("Получение проекта по id с исключением Not Found Exception")
     void shouldFindByIdProjectWhenThrowNotFoundException() throws ValidationException {
         when(projectRepository.findById(ID_1)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> projectService.findById(ID_1));
     }
 
     @Test
-    @DisplayName("Поиск проекта по Id с вызовом репозитория")
+    @DisplayName("Получение проекта по id с вызовом репозитория")
     void shouldFindByIdProjectWhenCallRepository() {
         when(projectRepository.findById(project.getId())).thenReturn(Optional.ofNullable(project));
         Project projectResult = projectService.findById(this.project.getId());
@@ -128,7 +128,7 @@ public class ProjectUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск всех создателей пользователю")
+    @DisplayName("Получение проектов по email сотрудника или админа")
     void shouldFindAllByCreatorWhenCallRepositoryAndEmployee() {
         admin = Employee.builder()
                 .id(ID_1)
@@ -146,7 +146,7 @@ public class ProjectUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск всех создателей по админу")
+    @DisplayName("Получение приекто по email админа")
     void shouldFindAllByCreatorWhenCallRepositoryAndAdmin() {
         when(employeeService.findByEmail(email)).thenReturn(admin);
         when(projectService.findAllByCreator(email)).thenReturn(List.of(project));

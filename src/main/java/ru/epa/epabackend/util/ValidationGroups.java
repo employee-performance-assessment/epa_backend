@@ -3,7 +3,7 @@ package ru.epa.epabackend.util;
 import jakarta.validation.groups.Default;
 
 /**
- * Утилитный класс ValidationGroups для разделения валидации входящих данных при создании и обновлении.
+ * Утилитный класс ValidationGroups для разделения валидации входящих данных при создании и обновлении
  *
  * @author Валентина Вахламова
  */

@@ -257,12 +257,12 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     /**
-     * Получение администратором среднего рейтинга сотрудника за текущий месяц.
+     * Получение админом среднего рейтинга сотрудника за текущий месяц.
      */
     @Override
     @Transactional(readOnly = true)
     public Double findAverageRatingByAdmin(String email, Long employeeId, LocalDate rangeStart, LocalDate rangeEnd) {
-        log.info("Получение администратором среднего рейтинга сотрудника за текущий месяц");
+        log.info("Получение админом среднего рейтинга сотрудника за текущий месяц");
         Employee employee = employeeService.findById(employeeId);
         Employee admin = employeeService.findByEmail(email);
         employeeService.checkAdminForEmployee(admin, employee);

@@ -22,40 +22,40 @@ import java.time.LocalDate;
 public class Recommendation {
 
     /**
-     * Идентификатор рекомендации.
+     * Идентификатор рекомендации
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Сотрудник, получивший рекомендацию.
+     * Сотрудник, получивший рекомендацию
      */
     @ManyToOne
     @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private Employee recipient;
 
     /**
-     * Руководитель, отправивший рекомендацию.
+     * Руководитель, отправивший рекомендацию
      */
     @ManyToOne
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private Employee sender;
 
     /**
-     * Дата создания рекомендации.
+     * Дата создания рекомендации
      */
     @Column(name = "create_day")
     private LocalDate createDay;
 
     /**
-     * Описание рекомендации.
+     * Описание рекомендации
      */
     @JoinColumn(name = "recommendation")
     private String recommendation;
 
     /**
-     * Анкета по которой оцениваем.
+     * Анкета по которой оцениваем
      */
     @ManyToOne
     @JoinColumn(name = "questionnaire_id", referencedColumnName = "id")

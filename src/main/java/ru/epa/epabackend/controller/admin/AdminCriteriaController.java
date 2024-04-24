@@ -22,11 +22,11 @@ import ru.epa.epabackend.service.CriteriaService;
 import java.util.List;
 
 /**
- * Класс AdminCriteriaController содержит эндпойнты для администратора, относящиеся к критериям оценок.
+ * Класс содержит эндпойнты для админа, относящиеся к критериям оценок.
  *
  * @author Михаил Безуглов
  */
-@Tag(name = "Admin: Критерии оценок", description = "API администратора для работы с критериями оценок")
+@Tag(name = "Admin: Критерии оценок", description = "API админа для работы с критериями оценок")
 @SecurityRequirement(name = "JWT")
 @Validated
 @RestController
@@ -38,9 +38,9 @@ public class AdminCriteriaController {
     private final CriteriaMapper criteriaMapper;
 
     /**
-     * Эндпойнт получения дефолтных критериев (по умолчанию).
+     * Получение дефолтных критериев (по умолчанию).
      */
-    @Operation(summary = "Эндпойнт получения дефолтных критериев (по умолчанию).")
+    @Operation(summary = "Получение дефолтных критериев (по умолчанию).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(

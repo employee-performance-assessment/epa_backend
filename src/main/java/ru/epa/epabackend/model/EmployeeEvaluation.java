@@ -22,47 +22,47 @@ import java.time.LocalDate;
 public class EmployeeEvaluation {
 
     /**
-     * Идентификатор оценки сотрудника.
+     * Идентификатор оценки сотрудника
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Сотрудник, которого оцениваем.
+     * Сотрудник, которого оцениваем
      */
     @ManyToOne
     @JoinColumn(name = "evaluated_id", referencedColumnName = "id")
     private Employee evaluated;
 
     /**
-     * Сотрудник, который оценивает.
+     * Сотрудник, который оценивает
      */
     @ManyToOne
     @JoinColumn(name = "evaluator_id", referencedColumnName = "id")
     private Employee evaluator;
 
     /**
-     * Дата оценки.
+     * Дата оценки
      */
     @Column(name = "create_day")
     private LocalDate createDay = LocalDate.now();
 
     /**
-     * Название оценки.
+     * Название оценки
      */
     @ManyToOne
     @JoinColumn(name = "criteria_id", referencedColumnName = "id")
     private Criteria criteria;
 
     /**
-     * Количество звезд.
+     * Количество звезд
      */
     @JoinColumn(name = "score")
     private Integer score;
 
     /**
-     * Анкета по которой оцениваем.
+     * Анкета по которой оцениваем
      */
     @ManyToOne
     @JoinColumn(name = "questionnaire_id", referencedColumnName = "id")

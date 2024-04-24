@@ -26,12 +26,12 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 
 /**
- * Класс AnalyticControllerUser содержит эндпойнты для атворизованного пользователя, относящиеся к аналитике.
+ * Класс содержит эндпойнты для атворизованного пользователя, относящиеся к аналитике.
  *
  * @author Владислав Осипов
  */
 @SecurityRequirement(name = "JWT")
-@Tag(name = "Private: Аналатика", description = "Закрытый API для работы с аналитикой")
+@Tag(name = "Private: Аналитика", description = "API пользователя для работы с аналитикой")
 @RestController
 @RequestMapping("user/stat")
 @RequiredArgsConstructor
@@ -42,9 +42,9 @@ public class UserAnalyticController {
     private final AnalyticsMapper analyticsMapper;
 
     /**
-     * Эндпойнт получения статистики команды сотрудником за определенный период.
+     * Получение командной статистики сотрудником за определенный период
      */
-    @Operation(summary = "Получения командной статистики сотрудником")
+    @Operation(summary = "Получение командной статистики сотрудником за определенный период")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTeamAnalyticsShortDto.class))),
@@ -66,9 +66,9 @@ public class UserAnalyticController {
     }
 
     /**
-     * Эндпойнт получения индивидуальной статистики сотрудником за определенный период.
+     * Получение индивидуальной статистики сотрудником за определенный период
      */
-    @Operation(summary = "Получения индивидуальной статистики сотрудником")
+    @Operation(summary = "Получение индивидуальной статистики сотрудником за определенный период")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseIndividualAnalyticsDto.class))),
@@ -90,9 +90,9 @@ public class UserAnalyticController {
     }
 
     /**
-     * Эндпойнт получения сотрудником суммы своих баллов по выполненным задачам за текущий месяц.
+     * Получение сотрудником суммы своих баллов по выполненным задачам за текущий месяц
      */
-    @Operation(summary = "Получение суммы баллов по выполненным задачам сотрудника за текущий месяц")
+    @Operation(summary = "Получение сотрудником суммы своих баллов по выполненным задачам за текущий месяц")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     schema = @Schema(implementation = Integer.class))),

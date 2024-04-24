@@ -9,7 +9,7 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Интерфейс TaskService содержит методы действий с задачами .
+ * Интерфейс TaskService содержит методы действий с задачами
  *
  * @author Владислав Осипов
  */
@@ -26,17 +26,17 @@ public interface TaskService {
     List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal, String text);
 
     /**
-     * Получение списка задач администратором по ID исполнителя
+     * Получение списка задач админом по id исполнителя
      */
     List<Task> findAllByEmployeeId(Long employeeId, String email, String text);
 
     /**
-     * Получение списка задач администратором по ID исполнителя и статусу задачи
+     * Получение списка задач админом по id исполнителя и статусу задачи
      */
     List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status, String text);
 
     /**
-     * Найти задачу по ID задачи и ID исполнителя
+     * Получение задачи по id задачи и исполнителю
      */
     Task findByIdAndExecutorEmail(Principal principal, Long taskId);
 
@@ -56,12 +56,12 @@ public interface TaskService {
     List<Task> findAllByProjectId(String email, Long projectId);
 
     /**
-     * Создание задачи
+     * Добавление задачи
      */
     Task create(RequestTaskDto taskDto, String email);
 
     /**
-     * Найти задачу по ID
+     * Получение задачи по id
      */
     Task findDtoById(Long taskId, String email);
 

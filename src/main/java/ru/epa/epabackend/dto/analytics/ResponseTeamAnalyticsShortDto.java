@@ -3,7 +3,7 @@ package ru.epa.epabackend.dto.analytics;
 import lombok.*;
 
 /**
- * Класс TaskAnalyticsShortResponseDto для передачи сокращенной информации о задаче, предназначенной для списков
+ * Класс для передачи сокращенной информации о задаче, предназначенной для списков
  *
  * @author Владислав Осипов
  */
