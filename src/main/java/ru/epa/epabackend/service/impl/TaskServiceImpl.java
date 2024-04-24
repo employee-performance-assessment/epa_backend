@@ -145,10 +145,10 @@ public class TaskServiceImpl implements TaskService {
      * Получение списка всех задач пользователя
      */
     @Transactional(readOnly = true)
-    public List<Task> findAllByExecutorEmail(Principal principal) {
+    public List<Task> findAllByExecutorEmail(Principal principal, String text) {
         Employee employee = employeeService.findByEmail(principal.getName());
         log.info("Получение списка всех задач пользователя с идентификатором {}", employee.getId());
-        return taskRepository.findAllByExecutorId(employee.getId());
+        return taskRepository.findAllByExecutorIdAndText(employee.getId(), text);
     }
 
     /**
@@ -156,12 +156,12 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal) {
+    public List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal, String text) {
         Employee employee = employeeService.findByEmail(principal.getName());
         log.info("Получение списка всех задач пользователя с идентификатором {} с указанным статусом {} задач",
                 employee.getId(), status);
         try {
-            return taskRepository.findAllByExecutorIdAndStatus(employee.getId(), getTaskStatus(status));
+            return taskRepository.findAllByExecutorIdAndStatusAndText(employee.getId(), getTaskStatus(status), text);
         } catch (IllegalArgumentException exception) {
             throw new BadRequestException("Указан неверный статус задачи");
         }
@@ -172,9 +172,10 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAllByEmployeeId(Long employeeId, String email) {
+    public List<Task> findAllByEmployeeId(Long employeeId, String email, String text) {
         log.info("Получение списка всех задач пользователя с идентификатором {} администратором", employeeId);
-        return taskRepository.findAllByOwnerEmailAndExecutorId(email, employeeId);
+        return taskRepository.findTasksByOwnerEmailAndExecutorIdAndText(
+                email, employeeId, text);
     }
 
     /**
@@ -182,11 +183,12 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status) {
+    public List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status, String text) {
         log.info("Получение списка всех задач пользователя с идентификатором {} администратором" +
                 " указанным статусом {} задач", employeeId, status);
         try {
-            return taskRepository.findAllByOwnerEmailAndExecutorIdAndStatus(email, employeeId, getTaskStatus(status));
+            return taskRepository.findTasksByOwnerEmailAndExecutorIdAndStatusAndText(
+                    email, employeeId, getTaskStatus(status), text);
         } catch (IllegalArgumentException exception) {
             throw new BadRequestException("Указан неверный статус задачи");
         }
