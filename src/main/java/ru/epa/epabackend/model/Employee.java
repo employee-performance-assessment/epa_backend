@@ -40,17 +40,6 @@ public class Employee implements UserDetails {
     private String fullName;
 
     /**
-     * Ник в корпоративном мессенджере.
-     */
-    @Column(name = "nick_name")
-    private String nickName;
-
-    /**
-     * Город проживания.
-     */
-    private String city;
-
-    /**
      * Логин сотрудника - email.
      */
     private String email;
@@ -59,11 +48,6 @@ public class Employee implements UserDetails {
      * Пароль.
      */
     private String password;
-
-    /**
-     * День рождения.
-     */
-    private LocalDate birthday;
 
     /**
      * Роль/грейд
@@ -76,11 +60,6 @@ public class Employee implements UserDetails {
      * Должность.
      */
     private String position;
-
-    /**
-     * Отдел/подразделение.
-     */
-    private String department;
 
     @OneToOne
     @JoinColumn(name = "creator_id")
@@ -168,14 +147,10 @@ public class Employee implements UserDetails {
         return "Employee{" +
                 "id=" + id +
                 ", full name='" + fullName + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", city='" + city + '\'' +
                 ", email='" + email + '\'' +
                 ", password={masked}" +
-                ", birthday=" + birthday +
                 ", role=" + role +
                 ", position=" + position +
-                ", department=" + department +
                 ", tasks=" + tasks +
                 ", technologies=" + technologies +
                 ", created=" + created +

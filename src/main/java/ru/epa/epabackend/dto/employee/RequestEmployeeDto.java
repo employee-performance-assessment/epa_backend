@@ -1,16 +1,12 @@
 package ru.epa.epabackend.dto.employee;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
-
-import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
-import static ru.epa.epabackend.util.StringPatterns.*;
+import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_WHITESPACE_AND_DASH;
+import static ru.epa.epabackend.util.StringPatterns.LATIN_NUMBERS_SPECIAL_CHARACTERS_AND_ONE_UPPERCASE_LETTER;
 import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
@@ -31,12 +27,6 @@ public class RequestEmployeeDto {
             "от 1 до 255 символов")
     private String fullName;
 
-    @Hidden
-    private String nickName;
-
-    @Hidden
-    private String city;
-
     @NotBlank(groups = Create.class, message = "email не должен быть пустым")
     @Email(groups = {Create.class, Update.class}, message = "Поле email имеет некорректный формат")
     @Size(min = 3, max = 255, groups = {Create.class, Update.class}, message = "Допустимая длина поля email от 3 до 255 символов")
@@ -49,11 +39,6 @@ public class RequestEmployeeDto {
             "символов")
     private String password;
 
-    @Hidden
-    @Past(groups = {Create.class, Update.class}, message = "День рождения должен быть в прошлом")
-    @JsonFormat(pattern = DATE_PATTERN)
-    private LocalDate birthday;
-
     @NotBlank(groups = {Create.class}, message = "Поле должность не должно быть пустым")
     @Size(min = 1, max = 255, groups = {Create.class, Update.class}, message = "Допустимая длина поля должность от 1" +
             " до 255 символов")
@@ -61,20 +46,13 @@ public class RequestEmployeeDto {
             message = "В поле должность разрешены русские, английские символы, пробел и дефис")
     private String position;
 
-    @Hidden
-    private String department;
-
     @Override
     public String toString() {
         return "Employee{" +
                 ", fullName='" + fullName + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", city='" + city + '\'' +
                 ", email='" + email + '\'' +
                 ", password={masked}" +
-                ", birthday=" + birthday +
                 ", position=" + position +
-                ", department=" + department +
                 '}';
     }
 }

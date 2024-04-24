@@ -24,20 +24,11 @@ public class ResponseEmployeeFullDto {
 
     private String fullName;
 
-    private String nickName;
-
-    private String city;
-
     private String email;
-
-    @JsonFormat(pattern = DATE_PATTERN)
-    private LocalDate birthday;
 
     private Role role;
 
     private String position;
-
-    private String department;
 
     @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate created;
@@ -47,14 +38,10 @@ public class ResponseEmployeeFullDto {
         return "Employee{" +
                 "id=" + id +
                 ", fullName='" + fullName + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", city='" + city + '\'' +
                 ", email='" + email + '\'' +
                 ", password={masked}" +
-                ", birthday=" + birthday +
                 ", role=" + role +
                 ", position=" + position +
-                ", department=" + department +
                 ", created=" + created +
                 '}';
     }
