@@ -18,22 +18,22 @@ public interface TaskService {
     /**
      * Получение списка задач по email исполнителя
      */
-    List<Task> findAllByExecutorEmail(Principal principal);
+    List<Task> findAllByExecutorEmail(Principal principal, String text);
 
     /**
      * Получение списка задач по email исполнителя и статусу задачи
      */
-    List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal);
+    List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal, String text);
 
     /**
      * Получение списка задач администратором по ID исполнителя
      */
-    List<Task> findAllByEmployeeId(Long employeeId, String email);
+    List<Task> findAllByEmployeeId(Long employeeId, String email, String text);
 
     /**
      * Получение списка задач администратором по ID исполнителя и статусу задачи
      */
-    List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status);
+    List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status, String text);
 
     /**
      * Найти задачу по ID задачи и ID исполнителя

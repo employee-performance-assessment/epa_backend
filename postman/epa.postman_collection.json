@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "328b6406-e472-4a04-a079-c150b55b996a",
+		"_postman_id": "440686d8-623f-4e10-8b01-52d02db0ad36",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21428156"
@@ -7977,7 +7977,7 @@
 			"name": "Check assess",
 			"item": [
 				{
-					"name": "Save token admin id=2",
+					"name": "Save token admin id=6",
 					"event": [
 						{
 							"listen": "test",
@@ -8234,6 +8234,137 @@
 								{
 									"key": "status",
 									"value": "NEW"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access task search by text",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/find?employeeId=6&&text=y",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								"find"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "6"
+								},
+								{
+									"key": null,
+									"value": null
+								},
+								{
+									"key": "text",
+									"value": "y"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token user id=6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access task search by text Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/task?text=p",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"task"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "p"
 								}
 							]
 						}

@@ -41,9 +41,11 @@ public class UserTaskController {
     private final TaskMapper taskMapper;
 
     /**
-     * Эндпойнт поиска всех задач по email сотрудника с возможной фильтрацией по статусу задачи.
+     * Эндпойнт поиска всех задач по email сотрудника с возможной фильтрацией по статусу задачи,
+     * по имени и описанию задачи.
      */
-    @Operation(summary = "Получение всех задач по email сотрудника с возможной фильрацией по статусу задачи",
+    @Operation(summary = "Получение всех задач по email сотрудника с возможной фильрацией по статусу задачи, " +
+            "по имени и описанию задачи",
             description = "Возвращает список задач в сокращенном виде в случае, " +
                     "если не найдено ни одной задачи, возвращает пустой список.")
     @ApiResponses(value = {
@@ -58,12 +60,13 @@ public class UserTaskController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping
     public List<ResponseTaskShortDto> findAllByEmployeeEmailAndStatus(Principal principal,
-                                                                      @RequestParam(required = false) String status) {
+                                                                      @RequestParam(required = false) String status,
+                                                                      @RequestParam(required = false) String text) {
         List<Task> allByExecutor;
         if (status == null) {
-            allByExecutor = taskService.findAllByExecutorEmail(principal);
+            allByExecutor = taskService.findAllByExecutorEmail(principal, text);
         } else {
-            allByExecutor = taskService.findAllByExecutorEmailAndStatus(status, principal);
+            allByExecutor = taskService.findAllByExecutorEmailAndStatus(status, principal, text);
         }
         return taskMapper.mapList(allByExecutor);
     }
