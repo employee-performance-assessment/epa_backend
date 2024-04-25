@@ -6,34 +6,34 @@ import ru.epa.epabackend.model.Technology;
 import java.util.List;
 
 /**
- * Интерфейс TechnologyService содержит методы действий с технологией.
+ * Интерфейс TechnologyService содержит методы действий с технологией
  *
  * @author Артем Масалкин
  */
 public interface TechnologyService {
 
     /**
-     * Добавление технологии.
+     * Добавление технологии
      */
     Technology create(RequestTechnologyDto technologyDto);
 
     /**
-     * Получение технологии по идентификатору.
+     * Получение технологии по идентификатору
      */
     Technology findById(Long technologyId);
 
     /**
-     * Обновление технологии.
+     * Обновление технологии
      */
     Technology update(RequestTechnologyDto technologyDto, Long technologyId);
 
     /**
-     * Получение списка всех технологий.
+     * Получение списка всех технологий
      */
     List<Technology> findAll();
 
     /**
-     * Удаление технологии по идентификатору.
+     * Удаление технологии по идентификатору
      */
     void delete(Long technologyById);
 }

@@ -30,12 +30,12 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TaskControllerAdmin содержит эндпойнты для администратора, относящиеся к задачам.
+ * Класс содержит эндпойнты для админа, относящиеся к задачам.
  *
  * @author Владислав Осипов
  */
 @SecurityRequirement(name = "JWT")
-@Tag(name = "Admin: Задачи", description = "Закрытый API для работы с задачами")
+@Tag(name = "Admin: Задачи", description = "API админа для работы с задачами")
 @RestController
 @RequestMapping("/admin/task")
 @RequiredArgsConstructor
@@ -46,9 +46,9 @@ public class AdminTaskController {
     private final TaskMapper taskMapper;
 
     /**
-     * Эндпойнт поиска всех задач администратором.
+     * Получение всех задач админом
      */
-    @Operation(summary = "Получение всех задач администратором",
+    @Operation(summary = "Получение всех задач админом",
             description = "Возвращает список задач в сокращенном виде. " +
                     "В случае, если не найдено ни одной задачи, возвращает пустой список.")
     @ApiResponses(value = {
@@ -71,9 +71,9 @@ public class AdminTaskController {
     }
 
     /**
-     * Эндпойнт поиска задачи по ID администратором.
+     * Получение информации о задаче админом
      */
-    @Operation(summary = "Получение информации о задаче администратором",
+    @Operation(summary = "Получение информации о задаче админом",
             description = "Возвращает полную информацию о задаче, если она существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
@@ -93,9 +93,9 @@ public class AdminTaskController {
     }
 
     /**
-     * Эндпойнт поиска всех задач сотрудника по ID администратором с возможным поиском по названию или описанию задачи
+     * Получение информации о всех задачах сотрудника админом с возможным поиском по названию или описанию задачи
      */
-    @Operation(summary = "Получение информации о всех задачах сотрудника администратором с возможным поиском по " +
+    @Operation(summary = "Получение информации о всех задачах сотрудника админом с возможным поиском по " +
             "названию или описанию задачи",
             description = "Возвращает полную информацию о всех задачах сотрудника, если она существует в базе данных.")
     @ApiResponses(value = {
@@ -125,9 +125,9 @@ public class AdminTaskController {
     }
 
     /**
-     * Эндпойнт создания задачи.
+     * Добавление новой задачи админом
      */
-    @Operation(summary = "Добавление новой задачи администратором")
+    @Operation(summary = "Добавление новой задачи админом")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTaskFullDto.class))),
@@ -147,9 +147,9 @@ public class AdminTaskController {
     }
 
     /**
-     * Эндпойнт обновления задачи.
+     * Обновление задачи админом
      */
-    @Operation(summary = "Обновление задачи администратором",
+    @Operation(summary = "Обновление задачи админом",
             description = "Возможные статусы задач :" +
                     " Новая задача NEW, Задача над которой ведется работа IN_PROGRESS," +
                     " Задача на проверке у руководителя REVIEW , Задача выполнена DONE," +
@@ -176,9 +176,9 @@ public class AdminTaskController {
     }
 
     /**
-     * Эндпойнт удаления задачи.
+     * Удаление задачи админом
      */
-    @Operation(summary = "Удаление задачи администратором", description = "Удаляет задачу, если она существует в базе данных.")
+    @Operation(summary = "Удаление задачи админом", description = "Удаляет задачу, если она существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(

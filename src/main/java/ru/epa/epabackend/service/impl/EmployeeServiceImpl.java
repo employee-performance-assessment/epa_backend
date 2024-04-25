@@ -65,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     /**
-     * Саморегистрация администратора
+     * Саморегистрация админа
      */
     @Override
     public Employee createSelfRegister(RequestEmployeeShortDto requestEmployeeShortDto) {
@@ -209,7 +209,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<Integer> findAllYearsFromAdminCreation(String email) {
-        log.info("Получение списка годов с начала регистрации администратора до текущего года.");
+        log.info("Получение списка годов с начала регистрации админа до текущего года.");
         Employee employee = findByEmail(email);
         Employee admin = employee.getCreator();
         int adminCreationYear = admin == null

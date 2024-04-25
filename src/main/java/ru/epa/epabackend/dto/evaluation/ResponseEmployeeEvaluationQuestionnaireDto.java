@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 /**
- * Класс ResponseEmployeeEvaluationQuestionnaireDto для передачи полной информации об оценке сотрудника.
+ * Класс для передачи полной информации об оценке сотрудника
  *
  * @author Михаил Безуглов
  */
@@ -19,22 +19,22 @@ import java.util.HashMap;
 public class ResponseEmployeeEvaluationQuestionnaireDto {
 
     /**
-     * Дата создания/рассылки анкеты.
+     * Дата создания/рассылки анкеты
      */
     private LocalDate createQuestionnaire;
 
     /**
-     * Средний бал за анкету.
+     * Средний бал за анкету
      */
     private Double middleScore;
 
     /**
-     * Список оценок.
+     * Список оценок
      */
     private HashMap<String, ResponseEvaluationsAdminUserDto> evaluations;
 
     /**
-     * Рекомендация руководителя.
+     * Рекомендация руководителя
      */
     private String recommendation;
 }

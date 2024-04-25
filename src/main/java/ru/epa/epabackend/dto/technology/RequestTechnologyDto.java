@@ -8,7 +8,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TechnologyRequestDto для передачи тела запроса на сервер с данными для создания и обновления технологии
+ * Класс для передачи тела запроса на сервер с данными для создания и обновления технологии
  *
  * @author Артем Масалкин
  */
@@ -21,7 +21,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 public class RequestTechnologyDto {
 
     /**
-     * Название технологии.
+     * Название технологии
      */
     @NotBlank(message = "Название не должно быть пустым")
     @Size(min = 3, max = 255, groups = {Create.class, Update.class}, message = "Допустимая длина названия технологии " +

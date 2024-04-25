@@ -25,7 +25,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс TechnologyController содержит эндпойнты для администратора, относящиеся к технологиям.
+ * Класс содержит эндпойнты для админа, относящиеся к технологиям.
  *
  * @author Артем Масалкин
  */
@@ -35,16 +35,16 @@ import static ru.epa.epabackend.util.ValidationGroups.Update;
 @RequestMapping("/admin/technology")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT")
-@Tag(name = "Admin: Технологии", description = "API для работы с технологиями")
+@Tag(name = "Admin: Технологии", description = "API админа для работы с технологиями")
 public class AdminTechnologyController {
 
     private final TechnologyService technologyService;
     private final TechnologyMapper technologyMapper;
 
     /**
-     * Эндпойнт создания технологии.
+     * Добавление технологии
      */
-    @Operation(summary = "Создание новой технологии")
+    @Operation(summary = "Добавление технологии")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseTechnologyDto.class))),
@@ -63,7 +63,7 @@ public class AdminTechnologyController {
     }
 
     /**
-     * Эндпойнт обновления технологии.
+     * Обновление технологии
      */
     @Operation(summary = "Обновление технологии", description = "Обновляет технологию, если она существует в базе данных.")
     @ApiResponses(value = {
@@ -87,9 +87,9 @@ public class AdminTechnologyController {
     }
 
     /**
-     * Эндпойнт получения данных технологии по id
+     * Получение технологии по id
      */
-    @Operation(summary = "Получение информации о технологии по id",
+    @Operation(summary = "Получение технологии по id",
             description = "Возвращает полную информацию о технологии по id, если он существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
@@ -106,9 +106,9 @@ public class AdminTechnologyController {
     }
 
     /**
-     * Эндпойнт выведения списка всех технологий.
+     * Получение списка всех технологий
      */
-    @Operation(summary = "Возвращает список всех технологий")
+    @Operation(summary = "Получение списка всех технологий")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     mediaType = "application/json", array = @ArraySchema(
@@ -126,9 +126,9 @@ public class AdminTechnologyController {
     }
 
     /**
-     * Эндпойнт удаления технологии.
+     * Удаление технологии
      */
-    @Operation(summary = "Удаляет технологию", description = "Удаляет технологию, если она существует в базе данных.")
+    @Operation(summary = "Удаление технологии", description = "Удаляет технологию, если она существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(

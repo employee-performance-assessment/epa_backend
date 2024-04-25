@@ -245,7 +245,7 @@ public class QuestionnaireUnitTests {
 
 
     @Test
-    @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или администратора")
+    @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или админа")
     void shouldFindByEmailAndIdWhenReturnQuestionnaire() {
         when(employeeService.findByEmail(email1)).thenReturn(admin);
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);//убрать для 2 варианта
@@ -257,7 +257,7 @@ public class QuestionnaireUnitTests {
     }
 
     @Test
-    @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или администратора " +
+    @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или админа " +
             "с исключением BadRequestException")
     void shouldFindByEmailAndIdWhenReturnBadRequestExceptionWhenAdminNotAuthor() {
         when(employeeService.findByEmail(email2)).thenReturn(author);
@@ -266,7 +266,7 @@ public class QuestionnaireUnitTests {
     }
 
     @Test
-    @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или администратора " +
+    @DisplayName("Получение анкеты админа по id анкеты и по email сотрудника или админа " +
             "с исключением BadRequestException")
     void shouldFindByEmailAndIdWhenReturnBadRequestExceptionWhenQuestionnaireHaveStatusCreated() {
         when(employeeService.findByEmail(email1)).thenReturn(admin);

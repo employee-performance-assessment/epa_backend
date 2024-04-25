@@ -24,34 +24,34 @@ import java.util.Set;
 public class Course {
 
     /**
-     * Идентификатор курса.
+     * Идентификатор курса
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Название курса.
+     * Название курса
      */
     private String name;
 
     /**
-     * Ссылка на курс.
+     * Ссылка на курс
      */
     private String link;
 
     /**
-     * Дата начала курса.
+     * Дата начала курса
      */
     private LocalDate startDate;
 
     /**
-     * Дата окончания курса.
+     * Дата окончания курса
      */
     private LocalDate finishDate;
 
     /**
-     * Поле стек технологий курса.
+     * Поле стек технологий курса
      */
     @ManyToMany
     @JoinTable(

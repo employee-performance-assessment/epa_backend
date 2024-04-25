@@ -10,7 +10,7 @@ import ru.epa.epabackend.model.Recommendation;
 import java.util.List;
 
 /**
- * Класс RecommendationMapper содержит преобразование сущности.
+ * Класс RecommendationMapper содержит преобразование сущности
  *
  * @author Михаил Безуглов
  */
@@ -18,19 +18,19 @@ import java.util.List;
 public interface RecommendationMapper {
 
     /**
-     * Преобразование из сущности в DTO.
+     * Преобразование из сущности в DTO
      */
     ResponseRecommendationDto mapToDto(Recommendation recommendation);
 
     /**
-     * Преобразование из DTO в сущность.
+     * Преобразование из DTO в сущность
      */
     @Mapping(target = "id", ignore = true)
     Recommendation mapToEntity(String recommendation, Questionnaire questionnaire,
                                Employee recipient, Employee sender);
 
     /**
-     * Преобразование списка сущностей в список DTO.
+     * Преобразование списка сущностей в список DTO
      */
     List<ResponseRecommendationDto> mapList(List<Recommendation> recommendations);
 }

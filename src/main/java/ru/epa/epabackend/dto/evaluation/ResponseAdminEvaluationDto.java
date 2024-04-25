@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.List;
 
 /**
- * Класс ResponseAdminEvaluationDto для передачи информации о сохраненной оценке поставленной руководителем.
+ * Класс для передачи информации о сохраненной оценке поставленной руководителем
  *
  * @author Михаил Безуглов
  */
@@ -18,12 +18,12 @@ import java.util.List;
 public class ResponseAdminEvaluationDto {
 
     /**
-     * Список оценок руководителя.
+     * Список оценок руководителя
      */
     private List<ResponseEmployeeEvaluationShortDto> adminEvaluations;
 
     /**
-     * Рекомендация руководителя.
+     * Рекомендация руководителя
      */
     private String recommendation;
 }

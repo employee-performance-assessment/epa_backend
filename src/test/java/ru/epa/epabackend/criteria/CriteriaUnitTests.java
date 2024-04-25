@@ -59,14 +59,14 @@ public class CriteriaUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск критерия по Id с исключением Not Found Exception")
+    @DisplayName("Получение критерия по id с исключением Not Found Exception")
     void shouldFindByIdCriteriaWhenThrowNotFoundException() throws ValidationException {
         when(criteriaRepository.findById(ID_1)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> criteriaService.findById(ID_1));
     }
 
     @Test
-    @DisplayName("Поиск критерия по Id с вызовом репозитория")
+    @DisplayName("Получение критерия по id с вызовом репозитория")
     void shouldFindByIdCriteriaWhenCallRepository() {
         when(criteriaRepository.findById(criteria.getId())).thenReturn(Optional.ofNullable(criteria));
         Criteria criteriaResult = criteriaService.findById(this.criteria.getId());

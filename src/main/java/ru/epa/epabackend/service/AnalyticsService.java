@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Интерфейс AnalyticsService содержит методы для аналитики задач и оценок .
+ * Интерфейс AnalyticsService содержит методы для аналитики задач и оценок
  *
  * @author Владислав Осипов
  */
@@ -37,7 +37,7 @@ public interface AnalyticsService {
     IndividualAnalytics getIndividualStats(LocalDate startDate, LocalDate endDate, String email);
 
     /**
-     * Получение суммы баллов по выполненным задачам сотрудника за текущий месяц.
+     * Получение суммы баллов по выполненным задачам сотрудника за текущий месяц
      */
     Integer findQuantityOfPointsByAdmin(Long employeeId, LocalDate rangeStart, LocalDate rangeEnd, String email);
 

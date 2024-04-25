@@ -25,20 +25,20 @@ import java.util.List;
 public class Project {
 
     /**
-     * Идентификатор проекта.
+     * Идентификатор проекта
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Название проекта.
+     * Название проекта
      */
     private String name;
 
     /**
      * Статус проекта
-     * Возможные статусы проекта:  ABANDONED, TODO, WIP, COMPLETED, DISTRIBUTED.
+     * Возможные статусы проекта:  ABANDONED, TODO, WIP, COMPLETED, DISTRIBUTED
      */
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
@@ -50,7 +50,7 @@ public class Project {
     private LocalDate created;
 
     /**
-     * Список задач проекта.
+     * Список задач проекта
      */
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY)
@@ -58,7 +58,7 @@ public class Project {
     private List<Task> tasks;
 
     /**
-     * Список сотрудников проекта.
+     * Список сотрудников проекта
      */
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY)

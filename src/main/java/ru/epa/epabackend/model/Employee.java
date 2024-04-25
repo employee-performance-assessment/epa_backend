@@ -27,37 +27,37 @@ import java.util.*;
 public class Employee implements UserDetails {
 
     /**
-     * Идентификатор сотрудника.
+     * Идентификатор сотрудника
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Полное имя ФИО.
+     * Полное имя ФИО
      */
     @Column(name = "full_name")
     private String fullName;
 
     /**
-     * Логин сотрудника - email.
+     * Логин сотрудника - email
      */
     private String email;
 
     /**
-     * Пароль.
+     * Пароль
      */
     private String password;
 
     /**
      * Роль/грейд
-     * Возможные роли: ADMIN, USER.
+     * Возможные роли: ADMIN, USER
      */
     @Enumerated(EnumType.STRING)
     private Role role;
 
     /**
-     * Должность.
+     * Должность
      */
     private String position;
 
@@ -67,12 +67,12 @@ public class Employee implements UserDetails {
     private Employee creator;
 
     /**
-     * Дата регистрации.
+     * Дата регистрации
      */
     private LocalDate created;
 
     /**
-     * Список задач сотрудника.
+     * Список задач сотрудника
      */
     @OneToMany
     @JoinColumn(name = "executor_id")
@@ -80,7 +80,7 @@ public class Employee implements UserDetails {
     private Set<Task> tasks = new HashSet<>();
 
     /**
-     * Стек технологий, которыми владеет сотрудник.
+     * Стек технологий, которыми владеет сотрудник
      */
     @ManyToMany
     @JoinTable(
@@ -91,7 +91,7 @@ public class Employee implements UserDetails {
     private Set<Technology> technologies = new HashSet<>();
 
     /**
-     * Список проектов сотрудника.
+     * Список проектов сотрудника
      */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "projects_employees",

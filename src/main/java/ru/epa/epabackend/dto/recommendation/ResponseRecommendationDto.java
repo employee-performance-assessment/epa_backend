@@ -7,7 +7,7 @@ import ru.epa.epabackend.dto.questionnaire.ResponseQuestionnaireShortDto;
 import java.time.LocalDate;
 
 /**
- * Класс RecommendationResponseDto для передачи информации о рекомендации сотрудника.
+ * Класс для передачи информации о рекомендации сотрудника
  *
  * @author Михаил Безуглов
  */
@@ -20,32 +20,32 @@ import java.time.LocalDate;
 public class ResponseRecommendationDto {
 
     /**
-     * Идентификатор рекомендации.
+     * Идентификатор рекомендации
      */
     private Long id;
 
     /**
-     * Сотрудник, получивший рекомендацию.
+     * Сотрудник, получивший рекомендацию
      */
     private ResponseEmployeeShortDto recipient;
 
     /**
-     * Руководитель, отправивший рекомендацию.
+     * Руководитель, отправивший рекомендацию
      */
     private ResponseEmployeeShortDto sender;
 
     /**
-     * Дата создания рекомендации.
+     * Дата создания рекомендации
      */
     private LocalDate createDay;
 
     /**
-     * Описание рекомендации.
+     * Описание рекомендации
      */
     private String recommendation;
 
     /**
-     * Анкета по которой оцениваем.
+     * Анкета по которой оцениваем
      */
     private ResponseQuestionnaireShortDto questionnaire;
 }

@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Класс ResponseEmployeeEvaluationsByQuestionnaireIdDto для передачи информации
- * о поставленных оценках сотрудника.
+ * Класс для передачи информации о поставленных оценках сотрудника
  *
  * @author Михаил Безуглов
  */
@@ -21,12 +20,12 @@ import java.util.Objects;
 public class ResponseMyEvaluationsDto {
 
     /**
-     * Сокращенная информация об анкете.
+     * Сокращенная информация об анкете
      */
     private ResponseQuestionnaireShortDto questionnaire;
 
     /**
-     * Список оценок коллеги.
+     * Список оценок коллеги
      */
     private List<ResponseEmployeeEvaluationShortDto> responseEmployeeEvaluationList;
 

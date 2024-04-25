@@ -15,7 +15,7 @@ import java.util.List;
 import static ru.epa.epabackend.util.DateConstant.DATE_PATTERN;
 
 /**
- * Класс QuestionnaireFullResponseDto для передачи полной информации об анкете
+ * Класс для передачи полной информации об анкете
  */
 @Data
 @NoArgsConstructor

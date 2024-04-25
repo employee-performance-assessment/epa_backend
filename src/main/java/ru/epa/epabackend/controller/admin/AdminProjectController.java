@@ -23,11 +23,11 @@ import ru.epa.epabackend.service.ProjectService;
 import java.security.Principal;
 
 /**
- * Класс ProjectControllerAdmin содержит эндпойнты для администратора, относящиеся к проектам.
+ * Класс содержит эндпойнты для админа, относящиеся к проектам.
  *
  * @author Константин Осипов
  */
-@Tag(name = "Admin: Проекты", description = "API администратора для работы с проектами")
+@Tag(name = "Admin: Проекты", description = "API админа для работы с проектами")
 @SecurityRequirement(name = "JWT")
 @Validated
 @RestController
@@ -39,7 +39,7 @@ public class AdminProjectController {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпойнт добавления нового проекта
+     * Добавление нового проекта
      */
     @Operation(summary = "Добавление нового проекта")
     @ApiResponses(value = {
@@ -61,7 +61,7 @@ public class AdminProjectController {
     }
 
     /**
-     * Эндпойнт изменения информации о проекте
+     * Изменение информации о проекте
      */
     @Operation(summary = "Изменение информации о проекте")
     @ApiResponses(value = {
@@ -86,7 +86,7 @@ public class AdminProjectController {
     }
 
     /**
-     * Эндпойнт удаления проекта
+     * Удаление проекта
      */
     @Operation(summary = "Удаление проекта")
     @ApiResponses(value = {

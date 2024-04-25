@@ -29,7 +29,7 @@ public class Questionnaire {
     private long id;
 
     /**
-     * Администратор, создавший анкету
+     * Админ, создавший анкету
      */
     @ToString.Exclude
     @OneToOne

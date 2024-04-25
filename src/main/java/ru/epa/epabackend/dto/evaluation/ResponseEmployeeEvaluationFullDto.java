@@ -8,7 +8,7 @@ import ru.epa.epabackend.dto.questionnaire.ResponseQuestionnaireShortDto;
 import java.time.LocalDate;
 
 /**
- * Класс EvaluationCreateRequestDto для передачи полной информации об оценке сотрудника.
+ * Класс для передачи полной информации об оценке сотрудника
  *
  * @author Михаил Безуглов
  */
@@ -21,37 +21,37 @@ import java.time.LocalDate;
 public class ResponseEmployeeEvaluationFullDto {
 
     /**
-     * Идентификатор оценки сотрудника.
+     * Идентификатор оценки сотрудника
      */
     private Long id;
 
     /**
-     * Сотрудник, которого оцениваем.
+     * Сотрудник, которого оцениваем
      */
     private ResponseEmployeeShortDto evaluated;
 
     /**
-     * Сотрудник, который оценивает.
+     * Сотрудник, который оценивает
      */
     private ResponseEmployeeShortDto evaluator;
 
     /**
-     * Дата оценки.
+     * Дата оценки
      */
     private LocalDate createDay;
 
     /**
-     * Анкета по которой оцениваем.
+     * Анкета по которой оцениваем
      */
     private ResponseQuestionnaireShortDto questionnaire;
 
     /**
-     * Название оценки.
+     * Название оценки
      */
     private ResponseCriteriaShortDto criteria;
 
     /**
-     * Количество звезд.
+     * Количество звезд
      */
     private Integer score;
 }

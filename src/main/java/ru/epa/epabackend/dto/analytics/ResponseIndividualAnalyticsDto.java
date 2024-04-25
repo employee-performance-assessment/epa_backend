@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Класс EmployeeShortAnalyticsResponseDto для передачи сокращенной информации о сотруднике и аналитике сделанных им
- * задач.
+ * Класс для передачи сокращенной информации о сотруднике и аналитике сделанных им задач
  *
  * @author Владислав Осипов
  */

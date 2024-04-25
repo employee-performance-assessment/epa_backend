@@ -69,14 +69,14 @@ public class TechnologyUnitTests {
     }
 
     @Test
-    @DisplayName("Поиск технологии по Id с исключением Not Found Exception")
+    @DisplayName("Получение технологии по id с исключением Not Found Exception")
     void shouldFindByIdTechnologyWhenThrowNotFoundException() throws ValidationException {
         when(technologyRepository.findById(ID_1)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> technologyService.findById(ID_1));
     }
 
     @Test
-    @DisplayName("Поиск технологии по Id с вызовом репозитория")
+    @DisplayName("Получение технологии по id с вызовом репозитория")
     void shouldFindByIdTechnologyWhenCallRepository() {
         when(technologyRepository.findById(technology.getId())).thenReturn(Optional.ofNullable(technology));
         Technology technologyResult = technologyService.findById(this.technology.getId());

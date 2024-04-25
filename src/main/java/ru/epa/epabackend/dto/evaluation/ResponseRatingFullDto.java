@@ -3,7 +3,7 @@ package ru.epa.epabackend.dto.evaluation;
 import lombok.*;
 
 /**
- * Класс RatingResponseFullDto для получения рейтинга сотрудника или команды по месяцам.
+ * Класс для получения рейтинга сотрудника или команды по месяцам
  *
  * @author Михаил Безуглов
  */
@@ -16,12 +16,12 @@ import lombok.*;
 public class ResponseRatingFullDto {
 
     /**
-     * Номер месяца в котором произведен расчет рейтинга.
+     * Номер месяца в котором произведен расчет рейтинга
      */
     private Integer monthNumber;
 
     /**
-     * Рейтинг сотрудника.
+     * Рейтинг сотрудника
      */
     private Double rating;
 }

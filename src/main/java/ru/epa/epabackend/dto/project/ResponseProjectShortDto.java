@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.epa.epabackend.util.ProjectStatus;
 
 /**
- * Класс ProjectShortResponseDto для передачи короткой информации о проекте
+ * Класс для передачи короткой информации о проекте
  *
  * @author Константин Осипов
  */

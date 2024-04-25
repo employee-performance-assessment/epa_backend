@@ -11,7 +11,7 @@ import java.util.List;
 import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_NUMBERS_SPECIAL_CHARACTERS;
 
 /**
- * Класс EvaluationCreateRequestDto для передачи тела запроса на сервер для создания оценки.
+ * Класс для передачи тела запроса на сервер для создания оценки
  *
  * @author Михаил Безуглов
  */
@@ -24,12 +24,12 @@ import static ru.epa.epabackend.util.StringPatterns.CYRILLIC_LATIN_NUMBERS_SPECI
 public class RequestAdminEvaluationDto {
 
     /**
-     * Список оценок руководителя.
+     * Список оценок руководителя
      */
     private List<@Valid RequestEmployeeEvaluationDto> evaluationDtoList;
 
     /**
-     * Описание рекомендации.
+     * Описание рекомендации
      */
     @NotBlank(message = "Поле рекомендация не должно быть пустым")
     @Size(min = 1, max = 255, message = "Допустимая длина поля рекомендации от 1 до 255 символов")

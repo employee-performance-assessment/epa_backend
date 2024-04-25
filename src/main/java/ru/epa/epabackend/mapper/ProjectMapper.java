@@ -12,7 +12,7 @@ import ru.epa.epabackend.model.Project;
 import java.util.List;
 
 /**
- * Класс ProjectMapper содержит преобразование сущности.
+ * Класс ProjectMapper содержит преобразование сущности
  *
  * @author Владислав Осипов и Константин Осипов
  */

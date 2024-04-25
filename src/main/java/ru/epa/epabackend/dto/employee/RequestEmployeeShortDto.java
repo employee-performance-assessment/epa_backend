@@ -11,7 +11,7 @@ import static ru.epa.epabackend.util.ValidationGroups.Create;
 import static ru.epa.epabackend.util.ValidationGroups.Update;
 
 /**
- * Класс EmployeeShortRequestDto для передачи тела запроса на сервер с сокращенными данными для саморегистрации админа
+ * Класс для передачи тела запроса на сервер с сокращенными данными для саморегистрации админа
  *
  * @author Валентина Вахламова
  */

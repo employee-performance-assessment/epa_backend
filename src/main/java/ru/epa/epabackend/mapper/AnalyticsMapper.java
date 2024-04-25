@@ -10,7 +10,7 @@ import ru.epa.epabackend.model.TeamAnalytics;
 import java.util.List;
 
 /**
- * Интерфейс AnalyticsMapper содержит преобразование сущности.
+ * Интерфейс AnalyticsMapper содержит преобразование сущности
  *
  * @author Владислав Осипов
  */
@@ -18,7 +18,7 @@ import java.util.List;
 public interface AnalyticsMapper {
 
     /**
-     * Преобразование из сущности в Dto.
+     * Преобразование из сущности в Dto
      */
     ResponseIndividualAnalyticsDto mapToEntityIndividual(IndividualAnalytics individualAnalytics);
 
@@ -30,7 +30,7 @@ public interface AnalyticsMapper {
     ResponseTeamAnalyticsFullDto mapToFullDto(TeamAnalytics teamAnalytics);
 
     /**
-     * Преобразование из сущности в кракое DTO
+     * Преобразование из сущности в краткое DTO
      */
     ResponseTeamAnalyticsShortDto mapToShortDto(TeamAnalytics teamAnalytics);
 }

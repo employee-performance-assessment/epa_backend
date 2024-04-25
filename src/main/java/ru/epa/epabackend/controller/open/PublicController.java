@@ -24,7 +24,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.util.ValidationGroups.Create;
 
 /**
- * Класс PublicController представляет из себя публичный API для получения токена и саморегистрации администратора.
+ * Класс представляет из себя публичный API для получения токена и саморегистрации админа.
  *
  * @author Егор Яковлев
  */
@@ -39,7 +39,7 @@ public class PublicController {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Эндпойнт для получения токена при входе сотрудника
+     * Получение токена при входе пользователя
      */
     @Operation(summary = "Получение JWT токена по паре логин пароль")
     @ApiResponses(value = {
@@ -56,9 +56,9 @@ public class PublicController {
     }
 
     /**
-     * Эндпойнт для саморегистрации администратора
+     * Саморегистрация админа
      */
-    @Operation(summary = "Саморегистрация администратора")
+    @Operation(summary = "Саморегистрация админа")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = ResponseEmployeeFullDto.class))),

@@ -3,8 +3,7 @@ package ru.epa.epabackend.dto.evaluation;
 import lombok.*;
 
 /**
- * Класс ResponseEvaluationsAdminUserDto для передачи информации
- * о поставленных оценках сотрудника.
+ * Класс для передачи информации о поставленных оценках сотрудника
  *
  * @author Михаил Безуглов
  */
@@ -17,12 +16,12 @@ import lombok.*;
 public class ResponseEvaluationsAdminUserDto {
 
     /**
-     * Оценка руководителя.
+     * Оценка руководителя
      */
     private Double adminScore;
 
     /**
-     * Оценка сотрудников.
+     * Оценка сотрудников
      */
     private Double colleaguesScore;
 }
