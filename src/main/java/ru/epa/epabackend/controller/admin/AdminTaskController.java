@@ -93,9 +93,10 @@ public class AdminTaskController {
     }
 
     /**
-     * Эндпойнт поиска всех задач сотрудника по ID администратором.
+     * Эндпойнт поиска всех задач сотрудника по ID администратором с возможным поиском по названию или описанию задачи
      */
-    @Operation(summary = "Получение информации о всех задачах сотрудника администратором",
+    @Operation(summary = "Получение информации о всех задачах сотрудника администратором с возможным поиском по " +
+            "названию или описанию задачи",
             description = "Возвращает полную информацию о всех задачах сотрудника, если она существует в базе данных.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
@@ -111,13 +112,14 @@ public class AdminTaskController {
     @GetMapping("/find")
     public List<ResponseTaskShortDto> findAllByEmployeeId(@Valid @RequestParam @Positive Long employeeId,
                                                           Principal principal,
-                                                          @RequestParam(required = false) String status) {
+                                                          @RequestParam(required = false) String status,
+                                                          @RequestParam(required = false) String text) {
 
         List<Task> allByEmployeeId;
         if (status == null) {
-            allByEmployeeId = taskService.findAllByEmployeeId(employeeId, principal.getName());
+            allByEmployeeId = taskService.findAllByEmployeeId(employeeId, principal.getName(), text);
         } else {
-            allByEmployeeId = taskService.findAllByEmployeeIdAndStatus(employeeId, principal.getName(), status);
+            allByEmployeeId = taskService.findAllByEmployeeIdAndStatus(employeeId, principal.getName(), status, text);
         }
         return taskMapper.mapList(allByEmployeeId);
     }

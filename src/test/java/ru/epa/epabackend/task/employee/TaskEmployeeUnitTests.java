@@ -74,15 +74,15 @@ class TaskEmployeeUnitTests {
 
     @Test
     void findAllTasksByEmployeeId_shouldCallRepository() {
-        when(taskRepository.findAllByExecutorId(ID_2)).thenReturn(List.of(task));
+        when(taskRepository.findAllByExecutorIdAndText(ID_2, null)).thenReturn(List.of(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        List<Task> tasksResult = taskService.findAllByExecutorEmail(principal);
+        List<Task> tasksResult = taskService.findAllByExecutorEmail(principal, null);
 
         int expectedSize = 1;
         assertNotNull(tasksResult);
         assertEquals(expectedSize, tasksResult.size());
-        verify(taskRepository, times(1)).findAllByExecutorId(ID_2);
+        verify(taskRepository, times(1)).findAllByExecutorIdAndText(ID_2, null);
     }
 
     @Test
