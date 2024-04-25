@@ -120,7 +120,7 @@ public class TaskServiceImpl implements TaskService {
     public void delete(Long taskId, String email) {
         log.info("Удаление задачи с идентификатором {} админом", taskId);
         Task task = findById(taskId);
-        if(task.getStatus() == TaskStatus.DONE) {
+        if (task.getStatus() == TaskStatus.DONE) {
             throw new BadRequestException("Администратор не может удалить выполненную задачу");
         }
         Project project = task.getProject();
