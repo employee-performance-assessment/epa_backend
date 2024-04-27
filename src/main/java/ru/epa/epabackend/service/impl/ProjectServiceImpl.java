@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
+import ru.epa.epabackend.dto.project.RequestProjectCreateUpdateDto;
 import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
@@ -20,6 +21,7 @@ import ru.epa.epabackend.service.ProjectService;
 import ru.epa.epabackend.util.Role;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс ProjectServiceImpl содержит бизнес-логику работы с проектами
@@ -121,5 +123,27 @@ public class ProjectServiceImpl implements ProjectService {
         if (!admin.getProjects().contains(project))
             throw new BadRequestException(String.format("Руководитель %s не состоит в проекте %s",
                     admin.getFullName(), project.getName()));
+    }
+
+    @Override
+    public List<Project> saveList(String email, List<RequestProjectCreateUpdateDto> requestProjectCreateUpdateDtos) {
+        log.info("Сохранение множества проектов");
+        Employee admin = employeeService.findByEmail(email);
+        return requestProjectCreateUpdateDtos.stream()
+                .map(p -> {
+                    if (p.getId() == null) {
+                        if (projectRepository.existsByNameAndEmployeesEmailIn(p.getName(), List.of(email))) {
+                            throw new ConflictException(String.format("Проект с названием %s уже существует", p.getName()));
+                        }
+                        return projectRepository
+                                .save(projectMapper.mapToEntity(p, List.of(admin)));
+                    } else {
+                        Project project = findById(p.getId());
+                        checkUserAndProject(admin, project);
+                        projectMapper.updateFields(p, project);
+                        return projectRepository.save(project);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }
