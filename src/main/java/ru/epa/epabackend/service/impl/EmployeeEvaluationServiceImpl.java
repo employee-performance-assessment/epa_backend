@@ -101,6 +101,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Получение оценок по id анкеты.
      */
     @Override
+    @Transactional(readOnly = true)
     public ResponseEmployeeEvaluationQuestionnaireDto findAllEvaluationsByQuestionnaireId(String email, Long questionnaireId) {
         List<ResponseEmployeeEvaluationShortDto> adminEvaluations = employeeEvaluationRepository
                 .findAllEvaluationsAdmin(email, questionnaireId);
@@ -157,6 +158,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesAssessed(String email, String text,
                                                                                LocalDate from, LocalDate to) {
         Employee employee = employeeService.findByEmail(email);
@@ -164,6 +166,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseEmployeeEvaluationShortDto> findQuestionnaireScores(String email, Long questionnaireId,
                                                                             Long evaluatedId) {
         Employee evaluator = employeeService.findByEmail(email);
@@ -178,6 +181,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseAdminEvaluationDto findAssessedQuestionnaireByAdmin(String email, Long questionnaireId,
                                                                        Long evaluatedId) {
         Employee admin = employeeService.findByEmail(email);
@@ -199,6 +203,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Получение анкет в которых оценен сотрудник с ID.
      */
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseEvaluatedQuestionnaireDto> findAllQuestionnaireByEvaluatedId(
             String adminEmail, Long evaluatedId, Integer stars, LocalDate from, LocalDate to) {
         return employeeEvaluationRepository.findListQuestionnaireByAdminEmailAndEvaluatedId(adminEmail, evaluatedId, stars, from, to);
@@ -216,6 +221,7 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseEmployeeAssessDto> findEmployeesQuestionnairesForAssessment(String email, String text,
                                                                                     LocalDate from, LocalDate to) {
         Employee employee = employeeService.findByEmail(email);
@@ -292,7 +298,6 @@ public class EmployeeEvaluationServiceImpl implements EmployeeEvaluationService 
      * Проверка, что сотрудник оценивает своего коллегу по анкете своего руководителя
      */
     @Override
-    @Transactional(readOnly = true)
     public void checkQuestionnaireForEvaluator(Questionnaire questionnaire, Employee evaluator) {
         if (evaluator.getCreator() != null
                 && !Objects.equals(questionnaire.getAuthor().getId(), evaluator.getCreator().getId())) {

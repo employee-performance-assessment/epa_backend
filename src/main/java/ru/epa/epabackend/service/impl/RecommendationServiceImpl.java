@@ -48,6 +48,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Recommendation getByRecipientIdAndQuestionnaireId(Long evaluatedId, Long questionnaireId) {
         return recommendationRepository.getByRecipientIdAndQuestionnaireId(evaluatedId, questionnaireId);
     }

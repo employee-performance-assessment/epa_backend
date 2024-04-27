@@ -66,6 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
      * Получение dto проекта по id
      */
     @Override
+    @Transactional(readOnly = true)
     public Project findDtoById(Long projectId, String email) {
         log.info("Получение dto проекта по идентификатору {}", projectId);
         return findById(projectId);
