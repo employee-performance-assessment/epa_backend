@@ -4,7 +4,6 @@ package ru.epa.epabackend.service;
 import ru.epa.epabackend.dto.project.RequestProjectCreateDto;
 import ru.epa.epabackend.dto.project.RequestProjectCreateUpdateDto;
 import ru.epa.epabackend.dto.project.RequestProjectUpdateDto;
-import ru.epa.epabackend.dto.project.ResponseProjectShortDto;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
 
