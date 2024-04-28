@@ -172,6 +172,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
      * Получение флага true/false прошёл ли день с последней отправки анкеты
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean isDayPassedAfterShareQuestionnaire(String email) {
         log.info("Получение флага true/false прошёл ли день с последней отправки анкеты");
         Optional<Questionnaire> lastQuestionnaire = questionnaireRepository

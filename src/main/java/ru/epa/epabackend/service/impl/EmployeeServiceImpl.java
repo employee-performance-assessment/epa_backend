@@ -153,6 +153,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Получение данных сотрудника для аутентификации
      */
     @Override
+    @Transactional(readOnly = true)
     public UserDetailsService userDetailsService() {
         log.info("Получение данных сотрудника для аутентификации");
         return this::findByEmail;
@@ -194,7 +195,6 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Проверка, что сотрудник относится к руководителю
      */
     @Override
-    @Transactional(readOnly = true)
     public void checkAdminForEmployee(Employee admin, Employee employee) {
         if (employee.getCreator() == null) {
             if (!Objects.equals(admin.getId(), employee.getId())) {
@@ -208,6 +208,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Integer> findAllYearsFromAdminCreation(String email) {
         log.info("Получение списка годов с начала регистрации админа до текущего года.");
         Employee employee = findByEmail(email);
@@ -227,7 +228,6 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Проверка, что сотрудник оценивает своего коллегу или является его руководителем
      */
     @Override
-    @Transactional(readOnly = true)
     public void checkEvaluatorForEmployee(Employee evaluator, Employee evaluated) {
         Employee evaluatorCreator = evaluator.getCreator();
         Employee evaluatedCreator = evaluated.getCreator();
