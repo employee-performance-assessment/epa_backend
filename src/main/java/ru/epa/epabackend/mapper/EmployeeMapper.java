@@ -14,13 +14,11 @@ public interface EmployeeMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
     Employee mapToEntity(RequestEmployeeDto requestEmployeeDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
     Employee mapToEntity(RequestEmployeeShortDto requestEmployeeShortDto);
 
@@ -35,7 +33,6 @@ public interface EmployeeMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    @Mapping(target = "technologies", ignore = true)
     @Mapping(target = "projects", ignore = true)
     @Mapping(target = "password", ignore = true)
     Employee updateFields(RequestEmployeeDto requestEmployeeDto, @MappingTarget Employee oldEmployee);

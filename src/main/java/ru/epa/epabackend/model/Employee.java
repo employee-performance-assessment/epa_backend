@@ -12,8 +12,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- * Класс Сотрудник содержит информацию о логине и пароле (для логина используется email),
- * дате рождения, должности/грейду и стеке технологий сотрудника.
+ * Класс Сотрудник содержит информацию о полном имени, логине и пароле (для логина используется email),
+ * должности.
  *
  * @author Михаил Безуглов и Валентина Вахламова
  */
@@ -50,7 +50,7 @@ public class Employee implements UserDetails {
     private String password;
 
     /**
-     * Роль/грейд
+     * Роль
      * Возможные роли: ADMIN, USER
      */
     @Enumerated(EnumType.STRING)
@@ -78,17 +78,6 @@ public class Employee implements UserDetails {
     @JoinColumn(name = "executor_id")
     @Builder.Default
     private Set<Task> tasks = new HashSet<>();
-
-    /**
-     * Стек технологий, которыми владеет сотрудник
-     */
-    @ManyToMany
-    @JoinTable(
-            name = "employees_technologies",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "technology_id"))
-    @Builder.Default
-    private Set<Technology> technologies = new HashSet<>();
 
     /**
      * Список проектов сотрудника
@@ -152,7 +141,6 @@ public class Employee implements UserDetails {
                 ", role=" + role +
                 ", position=" + position +
                 ", tasks=" + tasks +
-                ", technologies=" + technologies +
                 ", created=" + created +
                 '}';
     }
