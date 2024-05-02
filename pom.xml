@@ -84,6 +84,10 @@
             <artifactId>logbook-spring-boot-starter</artifactId>
             <version>3.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
