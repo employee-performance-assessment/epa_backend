@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS projects, employees, tasks, employees_tasks, projects_tasks, projects_employees, criteria,
-    questionnaires, questionnaires_criterias, employee_evaluation, recommendations CASCADE;
+--liquibase formatted sql
+--changeset Valentina Vakhlamova:create-tables
 
 CREATE TABLE IF NOT EXISTS projects
 (

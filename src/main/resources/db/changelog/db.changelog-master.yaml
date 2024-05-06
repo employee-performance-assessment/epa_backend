@@ -1,3 +1,4 @@
-databaseChangeLog: #параметр в котором находятся миграции
-  - include: # список активных миграций
-      file: db/changelog/changeset/schema.sql # путь к файлу миграции
+databaseChangeLog:
+
+  - include:
+      file: db/changelog/changeset/00001_create_tables.sql
