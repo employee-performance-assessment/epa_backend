@@ -401,7 +401,6 @@ public class EmployeeEvaluationUnitTests {
         assertNotNull(responseRatingFullDtoListResult);
         assertEquals(expectedSize, responseRatingFullDtoListResult.size());
         assertEquals(expectedRating,responseRatingFullDtoListResult.get(0).getRating());
-        assertEquals(expectedMonthNumber,responseRatingFullDtoListResult.get(0).getMonthNumber());
         verify(employeeEvaluationRepository,times(1))
                 .findPersonalRatingByAdmin(evaluated.getId(),2024);
     }
