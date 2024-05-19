@@ -43,4 +43,12 @@ public interface AnalyticsService {
 
     @Transactional(readOnly = true)
     Integer findQuantityOfPointsByUser(Principal principal, LocalDate rangeStart, LocalDate rangeEnd);
+
+    List<Integer> findYearsForTeamStatistics(String email);
+
+    List<Integer> findMonthsForTeamStatistics(Integer year, String email);
+
+    List<Integer> findYearsForIndividualStatistics(String email);
+
+    List<Integer> findMonthsForIndividualStatistics(Integer year, String email);
 }

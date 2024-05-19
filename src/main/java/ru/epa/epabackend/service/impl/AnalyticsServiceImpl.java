@@ -94,7 +94,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         LocalDate startDate = yearMonth.atDay(1);
         LocalDate endDate = yearMonth.atEndOfMonth();
         for (Employee employee : employees) {
-            if(employee.getCreated().isBefore(startDate)) {
+            if (employee.getCreated().isBefore(startDate)) {
                 IndividualAnalytics individualAnalytics = getIndividualStats(employee, startDate, endDate);
                 employeesShortDto.add(individualAnalytics);
             }
@@ -162,6 +162,52 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         Employee employee = employeeService.findByEmail(principal.getName());
         Integer points = taskRepository.getSumPointsByExecutorIdAndForCurrentMonth(employee.getId(), rangeStart, rangeEnd);
         return points == null ? 0 : points;
+    }
+
+    @Override
+    public List<Integer> findYearsForTeamStatistics(String email) {
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator() == null ? employee : employee.getCreator();
+        return taskRepository.findAllByOwnerEmail(admin.getEmail()).stream()
+                .filter(t -> t.getFinishDate() != null)
+                .map(t -> t.getFinishDate().getYear())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Integer> findMonthsForTeamStatistics(Integer year, String email) {
+        Employee employee = employeeService.findByEmail(email);
+        Employee admin = employee.getCreator() == null ? employee : employee.getCreator();
+        return taskRepository.findAllByOwnerEmail(admin.getEmail()).stream()
+                .filter(t -> t.getFinishDate() != null && t.getFinishDate().getYear() == year)
+                .map(t -> t.getFinishDate().getMonthValue())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Integer> findYearsForIndividualStatistics(String email) {
+        Employee employee = employeeService.findByEmail(email);
+        return taskRepository.findAllByExecutorId(employee.getId()).stream()
+                .filter(t -> t.getFinishDate() != null)
+                .map(t -> t.getFinishDate().getYear())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Integer> findMonthsForIndividualStatistics(Integer year, String email) {
+        Employee employee = employeeService.findByEmail(email);
+        return taskRepository.findAllByExecutorId(employee.getId()).stream()
+                .filter(t -> t.getFinishDate() != null && t.getFinishDate().getYear() == year)
+                .map(t -> t.getFinishDate().getMonthValue())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     private IndividualAnalytics getIndividualStats(Employee employee, LocalDate rangeStart, LocalDate rangeEnd) {
