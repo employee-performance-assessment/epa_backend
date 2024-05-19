@@ -15,6 +15,7 @@ import ru.epa.epabackend.service.EmployeeService;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,13 +43,16 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TeamAnalytics getTeamStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+    public TeamAnalytics getTeamStatsByAdmin(Integer year, Integer month, String email) {
         log.info("Получение командной статистики для админа");
         int teamCompletedOnTime = 0;
         int teamDelayed = 0;
         List<Employee> leaders = new ArrayList<>();
         List<Employee> deadlineViolators = new ArrayList<>();
-        List<Task> allTasks = taskRepository.findAllByOwnerEmailAndFinishDateBetween(email, rangeStart, rangeEnd);
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+        List<Task> allTasks = taskRepository.findAllByOwnerEmailAndFinishDateBetween(email, startDate, endDate);
         Map<Employee, List<Task>> employeeTasks = allTasks.stream().collect(Collectors.groupingBy(Task::getExecutor));
 
         for (Map.Entry<Employee, List<Task>> entry : employeeTasks.entrySet()) {
@@ -82,12 +86,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<IndividualAnalytics> getIndividualStatsByAdmin(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+    public List<IndividualAnalytics> getIndividualStatsByAdmin(Integer year, Integer month, String email) {
         log.info("Получение индивидуальной статистики для админа");
         List<IndividualAnalytics> employeesShortDto = new ArrayList<>();
         List<Employee> employees = employeeService.findAllByCreatorEmail(email);
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
         for (Employee employee : employees) {
-            IndividualAnalytics individualAnalytics = getIndividualStats(employee, rangeStart, rangeEnd);
+            IndividualAnalytics individualAnalytics = getIndividualStats(employee, startDate, endDate);
             employeesShortDto.add(individualAnalytics);
         }
         return employeesShortDto;
@@ -98,11 +105,14 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public TeamAnalytics getTeamStats(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+    public TeamAnalytics getTeamStats(Integer year, Integer month, String email) {
         log.info("Получение командной статистики для сотрудника");
         Employee employee = employeeService.findByEmail(email);
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
         List<Task> tasks = taskRepository.findAllByOwnerIdAndFinishDateBetween(employee.getCreator().getId(),
-                rangeStart, rangeEnd);
+                startDate, endDate);
         int teamDelayed = countDelayedTasks(tasks);
         int teamCompletedOnTime = tasks.size() - teamDelayed;
         int totalNumbersOfTaskOfTeamCompleted = teamCompletedOnTime + teamDelayed;
@@ -117,10 +127,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     @Transactional(readOnly = true)
-    public IndividualAnalytics getIndividualStats(LocalDate rangeStart, LocalDate rangeEnd, String email) {
+    public IndividualAnalytics getIndividualStats(Integer year, Integer month, String email) {
         log.info("Получение индивидуальной статистики для сотрудника");
         Employee employee = employeeService.findByEmail(email);
-        return getIndividualStats(employee, rangeStart, rangeEnd);
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+        return getIndividualStats(employee, startDate, endDate);
     }
 
     /**
@@ -153,7 +166,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         List<Task> tasks = taskRepository.findAllByExecutorIdAndFinishDateBetween(employee.getId(), rangeStart, rangeEnd);
         int delayed = countDelayedTasks(tasks);
         int completedOnTime = tasks.size() - delayed;
-        int totalNumberOfTaskOfEmployeeCompleted = completedOnTime + delayed;
+        int totalNumberOfTaskOfEmployeeCompleted = tasks.size();
         return IndividualAnalytics.builder()
                 .employeeId(employee.getId())
                 .employeeFullName(employee.getFullName())
@@ -164,7 +177,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     }
 
     private int calcPercent(int number1, int number2) {
-        return number2 == 0 ? 0 : number1 * 100 / number2;
+        return number2 == 0 ? 0 : (int) Math.round((double) number1 * 100 / number2);
     }
 
     private int countDelayedTasks(List<Task> tasks) {

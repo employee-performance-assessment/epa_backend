@@ -56,10 +56,10 @@ public class AdminAnalyticController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/team")
     public ResponseTeamAnalyticsFullDto findTeamStatByAdmin(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate rangeEnd,
+            @RequestParam Integer year,
+            @RequestParam Integer month,
             Principal principal) {
-        TeamAnalytics stats = analyticService.getTeamStatsByAdmin(rangeStart, rangeEnd, principal.getName());
+        TeamAnalytics stats = analyticService.getTeamStatsByAdmin(year, month, principal.getName());
         return analyticsMapper.mapToFullDto(stats);
     }
 
@@ -79,11 +79,11 @@ public class AdminAnalyticController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/individual")
     public List<ResponseIndividualAnalyticsDto> findIndividualStatByAdmin(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate rangeEnd,
+            @RequestParam Integer year,
+            @RequestParam Integer month,
             Principal principal) {
         List<IndividualAnalytics> stats = analyticService
-                .getIndividualStatsByAdmin(rangeStart, rangeEnd, principal.getName());
+                .getIndividualStatsByAdmin(year, month, principal.getName());
         return analyticsMapper.mapList(stats);
     }
 
