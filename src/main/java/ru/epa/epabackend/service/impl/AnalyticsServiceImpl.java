@@ -94,8 +94,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         LocalDate startDate = yearMonth.atDay(1);
         LocalDate endDate = yearMonth.atEndOfMonth();
         for (Employee employee : employees) {
-            IndividualAnalytics individualAnalytics = getIndividualStats(employee, startDate, endDate);
-            employeesShortDto.add(individualAnalytics);
+            if(employee.getCreated().isBefore(startDate)) {
+                IndividualAnalytics individualAnalytics = getIndividualStats(employee, startDate, endDate);
+                employeesShortDto.add(individualAnalytics);
+            }
         }
         return employeesShortDto;
     }

@@ -55,6 +55,7 @@ public class AnalyticsUnitTests {
         employee1 = Employee.builder()
                 .id(ID_1)
                 .email(email1)
+                .created(LocalDate.now())
                 .build();
         employee2 = Employee.builder()
                 .id(ID_2)
@@ -62,6 +63,7 @@ public class AnalyticsUnitTests {
                 .fullName("employee2")
                 .creator(employee1)
                 .position("user")
+                .created(LocalDate.now().minusMonths(1))
                 .build();
         task = Task.builder()
                 .id(ID_1)
@@ -131,7 +133,7 @@ public class AnalyticsUnitTests {
         employeesShortDto.add(individualAnalytics);
         List<IndividualAnalytics> individualAnalyticsResult = analyticsService
                 .getIndividualStatsByAdmin(rangeStart.getYear(), rangeEnd.getMonthValue(), email2);
-        int expectedAnalyticsSize = 2;
+        int expectedAnalyticsSize = 1;
         int expectedEmployeeId = 2;
         String expectedEmployeeName = "employee2";
         String expectedEmployeePosition = "user";
