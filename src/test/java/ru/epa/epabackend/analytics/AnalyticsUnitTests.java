@@ -16,6 +16,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.impl.AnalyticsServiceImpl;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,12 +28,13 @@ public class AnalyticsUnitTests {
     private static final long ID_2 = 2L;
     private static final String email1 = "qwerty1@gmail.com";
     private static final String email2 = "qwerty2@gmail.com";
+    private final YearMonth yearMonth = YearMonth.now();
     private final LocalDate createDate = LocalDate.now().minusDays(4);
     private final LocalDate startDate = LocalDate.now().minusDays(3);
     private final LocalDate deadLineDate = LocalDate.now().minusDays(3);
     private final LocalDate finishDate = LocalDate.now().minusDays(4);
-    private final LocalDate rangeStart = LocalDate.now().minusDays(2);
-    private final LocalDate rangeEnd = LocalDate.now().plusDays(2);
+    private final LocalDate rangeStart = yearMonth.atDay(1);
+    private final LocalDate rangeEnd = yearMonth.atEndOfMonth();
     @Mock
     private TaskRepository taskRepository;
     @Mock
