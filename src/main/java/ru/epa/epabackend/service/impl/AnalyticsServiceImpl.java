@@ -164,7 +164,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     }
 
     private int calcPercent(int number1, int number2) {
-        return number2 == 0 ? 0 : number1 * 100 / number2;
+        return number2 == 0 ? 0 : (int) Math.round((double) number1 * 100 / number2);
     }
 
     private int countDelayedTasks(List<Task> tasks) {
