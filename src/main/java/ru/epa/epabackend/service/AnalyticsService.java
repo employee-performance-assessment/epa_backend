@@ -18,23 +18,23 @@ public interface AnalyticsService {
     /**
      * Получение командной статистики для админа
      */
-    TeamAnalytics getTeamStatsByAdmin(LocalDate startDate, LocalDate endDate, String email);
+    TeamAnalytics getTeamStatsByAdmin(Integer year, Integer month, String email);
 
     /**
      * Получение индивидуальной статистики для админа
      */
-    List<IndividualAnalytics> getIndividualStatsByAdmin(LocalDate startDate, LocalDate endDate,
+    List<IndividualAnalytics> getIndividualStatsByAdmin(Integer year, Integer month,
                                                         String email);
 
     /**
      * Получение командной статистики для сотрудника
      */
-    TeamAnalytics getTeamStats(LocalDate startDate, LocalDate endDate, String email);
+    TeamAnalytics getTeamStats(Integer year, Integer month, String email);
 
     /**
      * Получение индивидуальной статистики для сотрудника
      */
-    IndividualAnalytics getIndividualStats(LocalDate startDate, LocalDate endDate, String email);
+    IndividualAnalytics getIndividualStats(Integer year, Integer month, String email);
 
     /**
      * Получение суммы баллов по выполненным задачам сотрудника за текущий месяц

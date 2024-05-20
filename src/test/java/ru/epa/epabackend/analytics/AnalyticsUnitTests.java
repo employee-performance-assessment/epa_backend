@@ -16,6 +16,7 @@ import ru.epa.epabackend.service.EmployeeService;
 import ru.epa.epabackend.service.impl.AnalyticsServiceImpl;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,12 +28,13 @@ public class AnalyticsUnitTests {
     private static final long ID_2 = 2L;
     private static final String email1 = "qwerty1@gmail.com";
     private static final String email2 = "qwerty2@gmail.com";
+    private final YearMonth yearMonth = YearMonth.now();
     private final LocalDate createDate = LocalDate.now().minusDays(4);
     private final LocalDate startDate = LocalDate.now().minusDays(3);
     private final LocalDate deadLineDate = LocalDate.now().minusDays(3);
     private final LocalDate finishDate = LocalDate.now().minusDays(4);
-    private final LocalDate rangeStart = LocalDate.now().minusDays(2);
-    private final LocalDate rangeEnd = LocalDate.now().plusDays(2);
+    private final LocalDate rangeStart = yearMonth.atDay(1);
+    private final LocalDate rangeEnd = yearMonth.atEndOfMonth();
     @Mock
     private TaskRepository taskRepository;
     @Mock
@@ -109,7 +111,8 @@ public class AnalyticsUnitTests {
         teamAnalytics.setDeadlineViolators(deadlineViolators);
         when(taskRepository.findAllByOwnerEmailAndFinishDateBetween(email1, rangeStart, rangeEnd))
                 .thenReturn(allTasks);
-        TeamAnalytics teamAnalyticsResult = analyticsService.getTeamStatsByAdmin(rangeStart, rangeEnd, email1);
+        TeamAnalytics teamAnalyticsResult = analyticsService.getTeamStatsByAdmin(rangeStart.getYear(),
+                rangeEnd.getMonthValue(), email1);
         int expectedLeadersId = 1;
         int expectedCompletedOnTimePercent = 100;
         assertNotNull(teamAnalyticsResult);
@@ -127,7 +130,7 @@ public class AnalyticsUnitTests {
         when(employeeService.findAllByCreatorEmail(email2)).thenReturn(employees);
         employeesShortDto.add(individualAnalytics);
         List<IndividualAnalytics> individualAnalyticsResult = analyticsService
-                .getIndividualStatsByAdmin(rangeStart, rangeEnd, email2);
+                .getIndividualStatsByAdmin(rangeStart.getYear(), rangeEnd.getMonthValue(), email2);
         int expectedAnalyticsSize = 2;
         int expectedEmployeeId = 2;
         String expectedEmployeeName = "employee2";
@@ -147,7 +150,7 @@ public class AnalyticsUnitTests {
         tasks.add(task2);
         employee1.setTasks(Set.of(task2));
         when(taskRepository.findAllByOwnerIdAndFinishDateBetween(ID_1, rangeStart, rangeEnd)).thenReturn(tasks);
-        TeamAnalytics teamAnalyticsResult = analyticsService.getTeamStats(rangeStart, rangeEnd, email2);
+        TeamAnalytics teamAnalyticsResult = analyticsService.getTeamStats(rangeStart.getYear(), rangeEnd.getMonthValue(), email2);
         int expectedPercent = 100;
         assertEquals(expectedPercent, teamAnalyticsResult.getCompletedOnTimePercent());
     }
@@ -156,7 +159,8 @@ public class AnalyticsUnitTests {
     @DisplayName("Получение индивидуальной статистики для сотрудника")
     void shouldGetIndividualStats() {
         when(employeeService.findByEmail(email2)).thenReturn(employee2);
-        IndividualAnalytics individualAnalyticsResult = analyticsService.getIndividualStats(rangeStart, rangeEnd, email2);
+        IndividualAnalytics individualAnalyticsResult = analyticsService.getIndividualStats(rangeStart.getYear(),
+                rangeEnd.getMonthValue(), email2);
         int expectId = 2;
         assertNotNull(individualAnalyticsResult);
         assertEquals(expectId, individualAnalyticsResult.getEmployeeId());

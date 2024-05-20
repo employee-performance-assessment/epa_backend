@@ -58,10 +58,10 @@ public class UserAnalyticController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/team")
     public ResponseTeamAnalyticsShortDto findTeamStat(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate endDate,
+            @RequestParam Integer year,
+            @RequestParam Integer month,
             Principal principal) {
-        TeamAnalytics stats = analyticService.getTeamStats(rangeStart, endDate, principal.getName());
+        TeamAnalytics stats = analyticService.getTeamStats(year, month, principal.getName());
         return analyticsMapper.mapToShortDto(stats);
     }
 
@@ -82,10 +82,10 @@ public class UserAnalyticController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @GetMapping("/task/individual")
     public ResponseIndividualAnalyticsDto findIndividualStat(
-            @RequestParam(name = "range-start") LocalDate rangeStart,
-            @RequestParam(name = "range-end") LocalDate endDate,
+            @RequestParam Integer year,
+            @RequestParam Integer month,
             Principal principal) {
-        IndividualAnalytics stat = analyticService.getIndividualStats(rangeStart, endDate, principal.getName());
+        IndividualAnalytics stat = analyticService.getIndividualStats(year, month, principal.getName());
         return analyticsMapper.mapToEntityIndividual(stat);
     }
 
