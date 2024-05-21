@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 class TaskEmployeeUnitTests {
     private static final long ID_1 = 1L;
     private static final long ID_2 = 2L;
+    private static final long ID_3 = 3L;
     private static final String STATUS = "IN_PROGRESS";
     @Mock
     private TaskRepository taskRepository;
@@ -43,15 +44,20 @@ class TaskEmployeeUnitTests {
     @InjectMocks
     private TaskServiceImpl taskService;
     private Employee employee = new Employee();
+    private Employee admin;
     private Task task = new Task();
     private ResponseTaskFullDto taskOutDto = new ResponseTaskFullDto();
     private ResponseEmployeeShortDto employeeShortDto;
 
     @BeforeEach
     public void init() {
+        admin = Employee.builder()
+                .id(ID_3)
+                .build();
         employee = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
+                .creator(admin)
                 .build();
         employeeShortDto = ResponseEmployeeShortDto.builder()
                 .id(ID_1)
@@ -87,21 +93,21 @@ class TaskEmployeeUnitTests {
 
     @Test
     void findTaskById_shouldCallRepository() {
-        when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId()))
+        when(taskRepository.findByIdAndOwnerId(task.getId(), admin.getId()))
                 .thenReturn(Optional.ofNullable(task));
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
 
-        Task task = taskService.findByIdAndExecutorEmail(principal, this.task.getId());
+        Task task = taskService.findByIdAndOwnerId(principal, this.task.getId());
 
         int expectedId = 1;
         assertNotNull(task);
         assertEquals(expectedId, task.getId());
-        verify(taskRepository, times(1)).findByIdAndExecutorId(this.task.getId(), employee.getId());
+        verify(taskRepository, times(1)).findByIdAndOwnerId(this.task.getId(), admin.getId());
     }
 
     @Test
     void updateTask_shouldCallRepository() {
-        when(taskRepository.findByIdAndOwnerId(task.getId(), employee.getId()))
+        when(taskRepository.findByIdAndOwnerId(task.getId(), admin.getId()))
                 .thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(task)).thenReturn(task);
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
@@ -117,9 +123,8 @@ class TaskEmployeeUnitTests {
 
     @Test
     void finById_shouldThrowNotFoundException_task() throws ValidationException {
-        when(taskRepository.findByIdAndExecutorId(task.getId(), employee.getId())).thenReturn(Optional.empty());
+        when(taskRepository.findByIdAndOwnerId(task.getId(), admin.getId())).thenReturn(Optional.empty());
         when(employeeService.findByEmail(principal.getName())).thenReturn(employee);
-        when(employeeService.findById(employee.getId())).thenReturn(employee);
-        assertThrows(EntityNotFoundException.class, () -> taskService.findByIdAndExecutorEmail(principal, ID_1));
+        assertThrows(EntityNotFoundException.class, () -> taskService.findByIdAndOwnerId(principal, ID_1));
     }
 }

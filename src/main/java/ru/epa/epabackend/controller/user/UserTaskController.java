@@ -91,7 +91,7 @@ public class UserTaskController {
     public ResponseTaskFullDto findByIdAndExecutorEmail(
             @Parameter(required = true) @PathVariable Long taskId,
             Principal principal) {
-        return taskMapper.mapToFullDto(taskService.findByIdAndExecutorEmail(principal, taskId));
+        return taskMapper.mapToFullDto(taskService.findByIdAndOwnerId(principal, taskId));
     }
 
     /**
