@@ -38,7 +38,7 @@ public interface TaskService {
     /**
      * Получение задачи по id задачи и исполнителю
      */
-    Task findByIdAndExecutorEmail(Principal principal, Long taskId);
+    Task findByIdAndOwnerId(Principal principal, Long taskId);
 
     /**
      * Обновление статуса задачи
@@ -79,9 +79,6 @@ public interface TaskService {
      * Получение списка задач проекта с определенным статусом задач
      */
     List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status, String email);
-
-    @Transactional(readOnly = true)
-    Task findByIdAndExecutorEmail(Long taskId, Long employeeId);
 
     @Transactional(readOnly = true)
     Task findById(Long taskId);

@@ -199,14 +199,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Найти задачу по ID
+     * Найти задачу по ID сотрудником
      */
     @Override
     @Transactional(readOnly = true)
-    public Task findByIdAndExecutorEmail(Principal principal, Long taskId) {
-        log.info("Найти задачу с идентификатором {} ", taskId);
+    public Task findByIdAndOwnerId(Principal principal, Long taskId) {
+        log.info("Получение задачи из репозитория по идентификатору задачи {} " +
+                "и по идентификатору админа сотрудника с email {}", taskId, principal.getName());
         Employee employee = employeeService.findByEmail(principal.getName());
-        return findByIdAndExecutorEmail(taskId, employee.getId());
+        Employee admin = employee.getCreator() == null ? employee : employee.getCreator();
+        return taskRepository.findByIdAndOwnerId(taskId, admin.getId()).orElseThrow(() ->
+                new EntityNotFoundException("Задача не найдена"));
     }
 
     /**
@@ -234,20 +237,6 @@ public class TaskServiceImpl implements TaskService {
         } catch (IllegalArgumentException exception) {
             throw new BadRequestException("Указан неверный статус задачи");
         }
-    }
-
-    /**
-     * Получение задачи из репозитория по ID задачи и ID исполнителя
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Task findByIdAndExecutorEmail(Long taskId, Long employeeId) {
-        log.info("Получение задачи из репозитория по идентификатору задачи {} " +
-                "и по идентификатору исполнителя {}", taskId, employeeId);
-        Employee employee = employeeService.findById(employeeId);
-        return taskRepository.findByIdAndExecutorId(taskId, employeeId).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Не найдена задача для исполнителя %s",
-                        employee.getFullName())));
     }
 
     /**
