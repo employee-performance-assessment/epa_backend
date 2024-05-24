@@ -26,31 +26,31 @@ import java.util.Objects;
 public class Task {
 
     /**
-     * Идентификатор проекта.
+     * Идентификатор проекта
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Название задачи.
+     * Название задачи
      */
     private String name;
 
     /**
-     * Описание задачи.
+     * Описание задачи
      */
     private String description;
 
     /**
-     * Описание проекта.
+     * Описание проекта
      */
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
     /**
-     * Сотрудник выполняющий задачу.
+     * Сотрудник выполняющий задачу
      */
 
     @ManyToOne
@@ -58,33 +58,39 @@ public class Task {
     private Employee executor;
 
     /**
-     * Дата взятие задачи в работу.
+     * Дата создания задачи
+     */
+    @Column(name = "create_date")
+    private LocalDate createDate;
+
+    /**
+     * Дата взятие задачи в работу
      */
     @Column(name = "start_date")
     private LocalDate startDate;
 
     /**
-     * Дата до которой должна выполниться задача..
+     * Дата до которой должна выполниться задача
      */
 
     @Column(name = "deadLine")
     private LocalDate deadLine;
 
     /**
-     * Дата выполнения задачи.
+     * Дата выполнения задачи
      */
     @Column(name = "finish_date")
     private LocalDate finishDate;
 
     /**
      * Статус выполнения задачи
-     * Возможные статусы: NEW, IN_PROGRESS, REVIEW, DONE, CANCELED.
+     * Возможные статусы: NEW, IN_PROGRESS, REVIEW, DONE, CANCELED
      */
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     /**
-     * Сложность задачи измеряемая в баллах, задается руководителем.
+     * Сложность задачи измеряемая в баллах, задается руководителем
      */
     private Integer basicPoints;
 
@@ -123,7 +129,6 @@ public class Task {
         return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", executor=" + executor +
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +
                 ", status=" + status +

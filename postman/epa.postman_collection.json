@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "ab780f15-6e1c-49f8-a48c-2866115fe19b",
+		"_postman_id": "48d8893e-21f4-4c6c-b05d-13aa64d21887",
 		"name": "epa",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26701489"
+		"_exporter_id": "21428156"
 	},
 	"item": [
 		{
@@ -11,6 +11,20 @@
 			"item": [
 				{
 					"name": "Register admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -19,7 +33,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
+							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"email\": \"IGOR@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -47,7 +61,10 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -62,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"raw": "{\r\n  \"email\": \"igor@YANDEX.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -171,42 +188,36 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Host",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Postman-Token",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Authorization",
 								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Cache-Control",
 								"value": "no-cache",
-								"type": "text",
 								"disabled": true
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"mail@mail.ru\",\r\n  \"password\": \"password1\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Иван Иванович\",\r\n  \"email\": \"MAIL@mail.ru\",\r\n  \"password\": \"password1\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -216,6 +227,98 @@
 							"path": [
 								"admin",
 								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Employee high register email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"mail@mail.RU\",\r\n  \"password\": \"password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@YANDEX.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
 							]
 						}
 					},
@@ -246,13 +349,11 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -297,13 +398,11 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -353,13 +452,11 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -405,13 +502,11 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -462,18 +557,16 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@mail.ru\",\r\n  \"password\": \"password2\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Иванов Тест Иванович\",\r\n  \"email\": \"mail2@MAIL.ru\",\r\n  \"password\": \"password2\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -502,12 +595,7 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.length, 'List length must be 4').to.eql(4);\r",
-									"});\r",
-									"pm.test(\"Test employee[2] 'fullName' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData[2]).to.have.property('fullName');\r",
-									"    pm.expect(jsonData[2].fullName, '\"fullName\" must be \"Иванов Джон Иванович\"').to.eql(\"Иванов Джон Иванович\");\r",
+									"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -530,6 +618,54 @@
 							],
 							"path": [
 								"user",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get employees by Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list employee response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test employee[1] 'fullName' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[1]).to.have.property('fullName');\r",
+									"    pm.expect(jsonData[1].fullName, '\"fullName\" must be \"Иванов Тест Иванович\"').to.eql(\"Иванов Тест Иванович\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/employee",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
 								"employee"
 							]
 						}
@@ -599,8 +735,7 @@
 						"header": [
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -776,42 +911,36 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Host",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Postman-Token",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Authorization",
 								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Cache-Control",
 								"value": "no-cache",
-								"type": "text",
 								"disabled": true
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Оклахом Борис Джовански\",\r\n  \"nickName\": \"@appalachi\",\r\n  \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Оклахом Борис Джовански\",\r\n  \"nickName\": \"@appalachi\",\r\n  \"email\": \"obj@yahoo.com\",\r\n  \"password\": \"oklahomchik\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -856,42 +985,36 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Host",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Postman-Token",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Authorization",
 								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Cache-Control",
 								"value": "no-cache",
-								"type": "text",
 								"disabled": true
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Богдан Хмельницкий\",\r\n  \"nickName\": \"@kazak\",\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Богдан Хмельницкий\",\r\n  \"nickName\": \"@kazak\",\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -936,42 +1059,36 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Host",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Postman-Token",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Authorization",
 								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Cache-Control",
 								"value": "no-cache",
-								"type": "text",
 								"disabled": true
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fullName\": \"Рексар\",\r\n  \"nickName\": \"@klyk\",\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\"\r\n}"
+							"raw": "{\r\n  \"fullName\": \"Рексар\",\r\n  \"nickName\": \"@klyk\",\r\n  \"email\": \"ork@orda.net\",\r\n  \"password\": \"hereisall\",\r\n  \"position\": \"dev\"\r\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/admin/employee",
@@ -1011,36 +1128,30 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Host",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Postman-Token",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Authorization",
 								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Cache-Control",
 								"value": "no-cache",
-								"type": "text",
 								"disabled": true
 							}
 						],
@@ -1139,36 +1250,30 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Host",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Postman-Token",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Authorization",
 								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Cache-Control",
 								"value": "no-cache",
-								"type": "text",
 								"disabled": true
 							}
 						],
@@ -1211,36 +1316,30 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Host",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Postman-Token",
 								"value": "<calculated when request is sent>",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Authorization",
 								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
-								"type": "text",
 								"disabled": true
 							},
 							{
 								"key": "Cache-Control",
 								"value": "no-cache",
-								"type": "text",
 								"disabled": true
 							}
 						],
@@ -1336,7 +1435,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('task2');\r",
 									"    pm.expect(jsonData.description).to.eql('task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
@@ -1360,7 +1459,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"executorId\": 6,\n  \"deadLine\": \"2226-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"raw": "{\n  \"name\": \"task2\",\n  \"description\": \"task2 description\",\n  \"projectId\": 1,\n  \"executorId\": 6,\n  \"deadLine\": \"2025-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1400,7 +1499,7 @@
 									"\r",
 									"    pm.expect(jsonData[1].id).to.eql(2);\r",
 									"    pm.expect(jsonData[1].name).to.eql('task2');\r",
-									"    pm.expect(jsonData[1].deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData[1].deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData[1].basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.length).to.eql(2);\r",
 									"});\r",
@@ -1420,13 +1519,11 @@
 							},
 							{
 								"key": "login",
-								"value": "string2",
-								"type": "text"
+								"value": "string2"
 							},
 							{
 								"key": "password",
-								"value": "stringst",
-								"type": "text"
+								"value": "stringst"
 							}
 						],
 						"url": {
@@ -1441,6 +1538,88 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get all tasks employee By Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test list user\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].id).to.eql(1);\r",
+									"    pm.expect(jsonData[0].name).to.eql('task1');\r",
+									"    pm.expect(jsonData[0].deadLine).to.eql(\"2246-08-20\");\r",
+									"    pm.expect(jsonData[0].basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.length).to.eql(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/find?employeeId=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								"find"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
 				},
 				{
 					"name": "Get Task By Id admin",
@@ -1506,12 +1685,12 @@
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Test update user\", function () {\r",
+									"pm.test(\"Test update task\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);    \r",
 									"});"
@@ -1556,51 +1735,6 @@
 								{
 									"key": "id",
 									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete task",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/admin/task/:id",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"task",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1",
-									"description": "(Required) "
 								}
 							]
 						}
@@ -1664,7 +1798,7 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData[0].id).to.eql(2);\r",
 									"    pm.expect(jsonData[0].name).to.eql('u task2 name');\r",
-									"    pm.expect(jsonData[0].deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData[0].deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData[0].basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.length).to.eql(1);\r",
 									"});\r",
@@ -1739,7 +1873,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"});"
@@ -1919,7 +2053,7 @@
 					]
 				},
 				{
-					"name": "Update task employee",
+					"name": "Update status to IN_PROGRESS employee",
 					"event": [
 						{
 							"listen": "test",
@@ -1933,7 +2067,7 @@
 									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
 									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
-									"    pm.expect(jsonData.deadLine).to.eql(\"2226-08-20\");\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
 									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
 									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
 									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");   \r",
@@ -1958,7 +2092,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "\"IN_PROGRESS\"",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "text"
@@ -1966,14 +2100,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/user/task/:id1?status=in_progress",
+							"raw": "{{baseUrl}}/user/task/:id?status=in_progress",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"user",
 								"task",
-								":id1"
+								":id"
 							],
 							"query": [
 								{
@@ -1983,7 +2117,7 @@
 							],
 							"variable": [
 								{
-									"key": "id1",
+									"key": "id",
 									"value": "2"
 								}
 							]
@@ -2070,209 +2204,30 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Technologies",
-			"item": [
-				{
-					"name": "Technology 1 create",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200 or 201\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
-									"});",
-									"pm.test(\"Has technology create response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"});",
-									"pm.test(\"Test technology 'id' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('id');",
-									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);",
-									"});",
-									"pm.test(\"Test technology 'name' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('name');",
-									"    pm.expect(jsonData.name, '\"name\" must be \"Technology1\"').to.eql('Technology1');",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Technology1\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/technology",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"technology"
-							]
-						}
-					},
-					"response": []
 				},
 				{
-					"name": "Technology 2 create",
+					"name": "Update status task2 to DONE employee",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200 or 201\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
-									"});",
-									"pm.test(\"Has technology create response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"});",
-									"pm.test(\"Test technology 'id' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('id');",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);",
-									"});",
-									"pm.test(\"Test technology 'name' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('name');",
-									"    pm.expect(jsonData.name, '\"name\" must be \"Technology2\"').to.eql('Technology2');",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Technology2\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/technology",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"technology"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Technology create fail name",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 500 or 400\", function () {",
-									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Has error response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
+									"pm.test(\"Test update user\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(2);\r",
+									"    pm.expect(jsonData.name).to.eql('u task2 name');\r",
+									"    pm.expect(jsonData.description).to.eql('u task2 description');\r",
+									"    pm.expect(jsonData.deadLine).to.eql(\"2025-08-20\");\r",
+									"    pm.expect(jsonData.basicPoints).to.eql(100);\r",
+									"    pm.expect(jsonData.penaltyPoints).to.eql(5);\r",
+									"    pm.expect(jsonData.status).to.eql(\"DONE\");   \r",
 									"});"
 								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Te\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/technology",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"technology"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Technology 2 update name",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.be.ok;",
-									"});",
-									"pm.test(\"Has user update response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"});",
-									"pm.test(\"Test technology 'id' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('id');",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);",
-									"});",
-									"pm.test(\"Test user 'name' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('name');",
-									"    pm.expect(jsonData.name, '\"name\" must be \"updateTechnology2\"').to.eql('updateTechnology2');",
-									"});",
-									""
-								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2281,33 +2236,143 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							},
 							{
 								"key": "Accept",
-								"value": "*/*",
-								"type": "text"
+								"value": "*/*"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"updateTechnology2\"}"
+							"raw": "{\r\n  \"status\": \"DONE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/technology/2",
+							"raw": "{{baseUrl}}/admin/task/:id",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"technology",
-								"2"
+								"task",
+								":id"
 							],
 							"variable": [
 								{
-									"key": "technologyId",
+									"key": "id",
 									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get team statistic admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test team statistic\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "login",
+								"value": "string2"
+							},
+							{
+								"key": "password",
+								"value": "stringst"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/stat/task/team?year=2024&month=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"stat",
+								"task",
+								"team"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								},
+								{
+									"key": "month",
+									"value": "1"
 								}
 							]
 						}
@@ -2315,79 +2380,128 @@
 					"response": []
 				},
 				{
-					"name": "Technology update unknown",
+					"name": "Get individual statistic admin",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 500\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([500, 404]);",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Has error response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"});"
+									"\r",
+									"pm.test(\"Test list user\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length).to.eql(0);\r",
+									"});\r",
+									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
 					"request": {
-						"method": "PATCH",
+						"method": "GET",
 						"header": [
 							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"key": "Accept",
+								"value": "*/*"
 							},
 							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"key": "login",
+								"value": "string2"
+							},
+							{
+								"key": "password",
+								"value": "stringst"
 							}
 						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/stat/task/individual?year=2024&month=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"stat",
+								"task",
+								"individual"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								},
+								{
+									"key": "month",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Technology999\"}"
+							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/technology/999",
+							"raw": "{{baseUrl}}/public/auth",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"admin",
-								"technology",
-								"999"
+								"public",
+								"auth"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get All technologies",
+					"name": "Get team statistic employee",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.be.ok;",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Test list technologies response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);",
-									"});\r",
-									"pm.test(\"Test technology[1] 'name' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData[1]).to.have.property('name');",
-									"    pm.expect(jsonData[1].name, '\"name\" must be \"updateTechnology2\"').to.eql('updateTechnology2');",
+									"\r",
+									"pm.test(\"Test team statistic\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(0);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2397,42 +2511,64 @@
 							{
 								"key": "Accept",
 								"value": "*/*"
+							},
+							{
+								"key": "login",
+								"value": "string2"
+							},
+							{
+								"key": "password",
+								"value": "stringst"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/technology",
+							"raw": "{{baseUrl}}/user/stat/task/team?year=2024&month=1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"admin",
-								"technology"
+								"user",
+								"stat",
+								"task",
+								"team"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								},
+								{
+									"key": "month",
+									"value": "1"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get technology 1",
+					"name": "Get individual statistic employee",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.be.ok;\r",
-									"});",
-									"pm.test(\"Has technology create response\", function () {",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"});",
-									"pm.test(\"Test technology 'id' field\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('id');",
-									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test individual statistic\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('employeeId');\r",
+									"    pm.expect(jsonData.employeeId, '\"id\" must be 6').to.eql(6);\r",
+									"    pm.expect(jsonData.employeeFullName).to.eql(\"Богдан Хмельницкий\");\r",
+									"    pm.expect(jsonData.employeePosition).to.eql(\"dev\");\r",
+									"    pm.expect(jsonData.completedOnTimePercent).to.eql(0);\r",
+									"    pm.expect(jsonData.delayedPercent).to.eql(0);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2442,34 +2578,97 @@
 							{
 								"key": "Accept",
 								"value": "*/*"
+							},
+							{
+								"key": "login",
+								"value": "string2"
+							},
+							{
+								"key": "password",
+								"value": "stringst"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/admin/technology/1",
+							"raw": "{{baseUrl}}/user/stat/task/individual?year=2024&month=1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"admin",
-								"technology",
-								"1"
+								"user",
+								"stat",
+								"task",
+								"individual"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								},
+								{
+									"key": "month",
+									"value": "1"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete technology 2",
+					"name": "Save token Admin",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 200 or 204\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2478,8 +2677,7 @@
 						"header": [
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -2487,14 +2685,5174 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/technology/2",
+							"raw": "{{baseUrl}}/admin/task/1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"technology",
+								"task",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task By Id admin after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "open api errors",
+			"item": [
+				{
+					"name": "Register admin 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register admin 409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Георг\",\r\n  \"nickName\": \"@igor\",\r\n  \"city\": \"Miami\",\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\",\r\n  \"birthday\": \"2024-03-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"cybersecurity\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token wrong email format 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igoryandexru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token no email 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token blank email 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \" \",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token no password 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token wrong password 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token not existed email 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor1@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Evaluations",
+			"item": [
+				{
+					"name": "get default criteria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/criteria/default",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"criteria",
+								"default"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Questionnaire",
+			"item": [
+				{
+					"name": "check is passed day after share questionnaire. True",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/is-day-passed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"is-day-passed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get last questionnaire id=1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all SHARED questionnaire by user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/all-shared",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"all-shared"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get SHARED questionnaire by id=1 by user not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Status of response is BAD_REQUEST\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be BAD_REQUEST').to.eql(\"BAD_REQUEST\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update last questionnaire status to SHARED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=1 error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Status of response is BAD_REQUEST\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be BAD_REQUEST').to.eql(\"BAD_REQUEST\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get last questionnaire id=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"самостоятельный\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"вдумчивый\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update last questionnaire status to SHARED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get SHARED questionnaire by id=2 by user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get SHARED questionnaire by id=3 by user not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Status of response is NOT_FOUND\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be NOT_FOUND').to.eql(\"NOT_FOUND\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all SHARED questionnaire by user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/all-shared",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"all-shared"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get SHARED questionnaire by id=2 by user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 2\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
 								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register new admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Гарри Поттер\",\r\n  \"nickName\": \"@Potter\",\r\n  \"city\": \"Little Whinging\",\r\n  \"email\": \"grand-magician@muggle.net\",\r\n  \"password\": \"magic_wand\",\r\n  \"birthday\": \"1980-07-31\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"fighter against evil\",\r\n  \"department\": \"Gryffindor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token new Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"grand-magician@muggle.net\",\r\n  \"password\": \"magic_wand\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get SHARED questionnaire by id=2 by user error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is BAD_REQUEST\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be BAD_REQUEST').to.eql(\"BAD_REQUEST\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check is passed day after share questionnaire. False",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/is-day-passed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"is-day-passed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Evaluation Questionnaire Employee",
+			"item": [
+				{
+					"name": "Register unused admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Кузьма\",\r\n  \"email\": \"kuz@yandex.ru\",\r\n  \"password\": \"kuzkuzkuz\",\r\n  \"birthday\": \"1980-02-07\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"house_holding\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Отец\",\r\n  \"nickName\": \"@tata\",\r\n  \"city\": \"Belgrad\",\r\n  \"email\": \"tata@yandex.ru\",\r\n  \"password\": \"hatanatata\",\r\n  \"birthday\": \"1980-02-07\",\r\n  \"role\": \"ROLE_ADMIN\",\r\n  \"position\": \"general_director\",\r\n  \"department\": \"house_holding\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tata@yandex.ru\",\r\n  \"password\": \"hatanatata\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/employee/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"employee",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add employee 11",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'id' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 11').to.eql(11);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Host",
+								"value": "<calculated when request is sent>",
+								"disabled": true
+							},
+							{
+								"key": "Postman-Token",
+								"value": "<calculated when request is sent>",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
+								"disabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Рекбаш Алош Бабош\",\r\n  \"email\": \"rec@mail.ru\",\r\n  \"password\": \"recalbash\",\r\n  \"position\": \"dev\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/employee",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add employee 12",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'id' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 12').to.eql(12);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Host",
+								"value": "<calculated when request is sent>",
+								"disabled": true
+							},
+							{
+								"key": "Postman-Token",
+								"value": "<calculated when request is sent>",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmcyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImV4cCI6MTcwOTgzODgyMywiaWF0IjoxNzA5ODM1MjIzfQ.MVtErFQewOYQ_1HAZ_xDCepfykfHSgCzddPx_UeEe98",
+								"disabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fullName\": \"Артрок Шток Буйок\",\r\n  \"email\": \"arc@mail.ru\",\r\n  \"password\": \"arshbyuok\",\r\n  \"position\": \"dev\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/employee",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add project 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has project create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Developer buddhas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/project",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create task3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"task3\",\n  \"description\": \"task3 description\",\n  \"projectId\": 3,\n  \"executorId\": 12,\n  \"deadLine\": \"2246-08-20\",\n  \"basicPoints\": 100,\n  \"penaltyPoints\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/task",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update status task3 to DONE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"DONE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"dolore ullamco\",\n  \"name\": \"est adipisicing\",\n  \"id\": -35528664,\n  \"email\": \"Lorem mollit nisi anim\",\n  \"birthday\": \"1946-08-20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "get last questionnaire id=3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 3\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 3').to.eql(3);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=3 duplicate name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Проверка количества элементов в criterias - их два\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.criterias.length).to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n        {\r\n\t\t\t\"name\":\"помогает коллегам\"\r\n\t\t},\r\n        {\r\n\t\t\t\"name\":\"помогает коллегам\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 3\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 3').to.eql(3);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"активный в чатах\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"помогает при обращении к нему с просьбой\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update last questionnaire status to SHARED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 3\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 3').to.eql(3);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get last questionnaire id=4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 4\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update questionnaire with id=4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 4\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"criterias\":[\r\n\t\t{\r\n\t\t\t\"name\":\"отлично ладит с коллегами\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"name\":\"быстро отвечает на сообщения\"\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update last questionnaire status to SHARED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 4\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get last questionnaire id=5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 5\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 5').to.eql(5);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is CREATED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be CREATED').to.eql(\"CREATED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/questionnaire/last",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"questionnaire",
+								"last"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 4 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(4);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment filter by fullName length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?text=аш",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "аш"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment filter by date length = 0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?from=2024-04-05&to=2024-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2024-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment filter by date length = 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 4 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(4);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?from=2024-04-05&to=2050-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment filter by fullName and date length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list?from=2024-04-05&to=2050-04-06&text=шток",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								},
+								{
+									"key": "text",
+									"value": "шток"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get questionnaire by id = 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Id of questionnaire is 4\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('id');\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 4').to.eql(4);\r",
+									"});\r",
+									"pm.test(\"Status of questionnaire is SHARED\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('status');\r",
+									"    pm.expect(jsonData.status, '\"status\" must be SHARED').to.eql(\"SHARED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/questionnaire/4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"questionnaire",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation from admin to user 12 by quest 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 5,\r\n      \"score\": 5\r\n    },\r\n    {\r\n      \"criteriaId\": 6,\r\n      \"score\": 4\r\n    }\r\n  ],\r\n  \"recommendation\": \"необходимо больше спать ночью\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluations?questionnaireId=4&evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "4"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 3 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(3);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed length = 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation from admin to user 11 by quest 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 5,\r\n      \"score\": 4\r\n    },\r\n    {\r\n      \"criteriaId\": 6,\r\n      \"score\": 4\r\n    }\r\n  ],\r\n  \"recommendation\": \"не сиди долго над заданием. Обращайся к коллегам\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluations?questionnaireId=4&evaluatedId=11",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "4"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get assessed questionnaire 4 for employee 11",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/assessed?questionnaireId=4&evaluatedId=11",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"assessed"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "4"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation from admin to user 12 by quest 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"evaluationDtoList\": [\r\n    {\r\n      \"criteriaId\": 1,\r\n      \"score\": 2\r\n    }\r\n  ],\r\n  \"recommendation\": \"ты молодец, береги себя\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/evaluations?questionnaireId=3&evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "3"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for employee 12 check middleScore",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});\r",
+									"pm.test(\"Middle score is equal to 2 for idQuestionnaire 3\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 3);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Middle score is equal to 5 for idQuestionnaire 4\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 4);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(4.5);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/list-questionnaire?evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get assessed questionnaire 12 for employee 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/assessed?questionnaireId=3&evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"assessed"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "3"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed length = 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 3 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(3);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by fullName length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?text=шток",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "шток"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by date length = 0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?from=2024-04-05&to=2024-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2024-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by date length = 0 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 3 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(3);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?from=2024-04-05&to=2050-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed filter by fullName and date length = 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list?from=2024-04-05&to=2050-04-06&text=аш",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								},
+								{
+									"key": "text",
+									"value": "аш"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token employee 11",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"rec@mail.ru\",\r\n  \"password\": \"recalbash\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation from employee 11 to user 12 by quest 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"criteriaId\": 5,\r\n    \"score\": 2\r\n  },\r\n  {\r\n    \"criteriaId\": 6,\r\n    \"score\": 2\r\n  }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?questionnaireId=4&evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "4"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get assessed questionnaire 4 for employee 12",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed?questionnaireId=4&evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "4"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add evaluation from employee 11 to user 12 by quest 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"criteriaId\": 6,\r\n    \"score\": 5\r\n  }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations?questionnaireId=3&evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations"
+							],
+							"query": [
+								{
+									"key": "questionnaireId",
+									"value": "3"
+								},
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list assessed length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assessed-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assessed-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get self rating each months by year=2023",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/rating/personal?year=2023",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"rating",
+								"personal"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get self rating each months by year=2024",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/rating/personal?year=2024",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"rating",
+								"personal"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get command rating each months by year=2024",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/rating/command?year=2024",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"rating",
+								"command"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for me (id =11) with stars from 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/list-questionnaire?stars=4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "stars",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token employee 12",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"arc@mail.ru\",\r\n  \"password\": \"arshbyuok\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list for assessment length = 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Has response body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/assess-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"assess-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for me (id =12) with stars from 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/list-questionnaire?stars=3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "stars",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tata@yandex.ru\",\r\n  \"password\": \"hatanatata\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for employee 12 check middleScore",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});\r",
+									"pm.test(\"Middle score is equal to 4 for idQuestionnaire 3\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 3);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.5);\r",
+									"});\r",
+									"pm.test(\"Middle score is equal to 3 for idQuestionnaire 4\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 4);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.25);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/list-questionnaire?evaluatedId=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for employee 11 check middleScore",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/list-questionnaire?evaluatedId=11",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for employee 12 by middleScore length=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/list-questionnaire?evaluatedId=12&stars=3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								},
+								{
+									"key": "stars",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for employee 12 by date length=2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 2 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(2);\r",
+									"});\r",
+									"pm.test(\"Middle score is equal to 4 for idQuestionnaire 3\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 3);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.5);\r",
+									"});\r",
+									"pm.test(\"Middle score is equal to 3 for idQuestionnaire 4\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var foundItem = jsonData.find(item => item.idQuestionnaire === 4);\r",
+									"    pm.expect(foundItem.middleScore).to.eql(3.25);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/list-questionnaire?evaluatedId=12&from=2024-04-05&to=2050-04-06",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"list-questionnaire"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								},
+								{
+									"key": "from",
+									"value": "2024-04-05"
+								},
+								{
+									"key": "to",
+									"value": "2050-04-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get evaluated questionnaires for employee 12 by date length=0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/rating/personal?evaluatedId=12&year=2024",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"rating",
+								"personal"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								},
+								{
+									"key": "year",
+									"value": "2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get rating each months for employeeId=12 and year=2024",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/rating/personal?evaluatedId=12&year=2024",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"rating",
+								"personal"
+							],
+							"query": [
+								{
+									"key": "evaluatedId",
+									"value": "12"
+								},
+								{
+									"key": "year",
+									"value": "2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get command rating each months by year=2023",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 0 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/rating/command?year=2023",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"rating",
+								"command"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get command rating each months by year=2024",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/rating/command?year=2024",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"rating",
+								"command"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list of years from admin creation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response body contains a list of 1 objects\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/employee/list-of-years",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"employee",
+								"list-of-years"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list of questionnairses for evaluated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/list-questionnaire",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"list-questionnaire"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Raiting and points",
+			"item": [
+				{
+					"name": "Save token admin 10",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tata@yandex.ru\",\r\n  \"password\": \"hatanatata\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get points",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/stat/points/employee/12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"stat",
+								"points",
+								"employee",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get avg raiting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/rating/12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"rating",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token emp 12",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"arc@mail.ru\",\r\n  \"password\": \"arshbyuok\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get points Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/stat/points",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"stat",
+								"points"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get avg raiting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/evaluations/rating",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"evaluations",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Check assess",
+			"item": [
+				{
+					"name": "Save token admin id=6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"igor@yandex.ru\",\r\n  \"password\": \"ironmanish\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access employee of another admin error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/employee/12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"employee",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access another admin error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/employee/10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"employee",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access employee of another admin for analytic error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/stat/points/employee/12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"stat",
+								"points",
+								"employee",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access another admin analytic error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/stat/points/employee/10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"stat",
+								"points",
+								"employee",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access task of another admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"task bask\",\r\n  \"description\": \"do it rapidly and lie on the bed rest time\",\r\n  \"projectId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access tasks for project of another admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/task/project/3?status=NEW",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"task",
+								"project",
+								"3"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "NEW"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access task search by text",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/task/find?employeeId=6&&text=y",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"task",
+								"find"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "6"
+								},
+								{
+									"key": null,
+									"value": null
+								},
+								{
+									"key": "text",
+									"value": "y"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save token user id=6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hmel@ukr.net\",\r\n  \"password\": \"good_getman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/public/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access task search by text Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/task?text=p",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"task"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "p"
+								}
 							]
 						}
 					},

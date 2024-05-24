@@ -8,10 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.epa.epabackend.dto.employee.EmployeeShortResponseDto;
-import ru.epa.epabackend.dto.task.TaskFullResponseDto;
-import ru.epa.epabackend.dto.task.TaskRequestDto;
-import ru.epa.epabackend.dto.task.TaskShortResponseDto;
+import ru.epa.epabackend.dto.employee.ResponseEmployeeShortDto;
+import ru.epa.epabackend.dto.task.RequestTaskDto;
+import ru.epa.epabackend.dto.task.ResponseTaskFullDto;
+import ru.epa.epabackend.dto.task.ResponseTaskShortDto;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.mapper.ProjectMapper;
 import ru.epa.epabackend.mapper.TaskMapper;
@@ -55,19 +55,20 @@ class TaskAdminUnitTests {
     private Employee admin = new Employee();
     private Employee employee = new Employee();
     private Task task = new Task();
-    private TaskFullResponseDto taskOutDto = new TaskFullResponseDto();
-    private TaskRequestDto taskInDto = new TaskRequestDto();
+    private ResponseTaskFullDto taskOutDto = new ResponseTaskFullDto();
+    private RequestTaskDto taskInDto = new RequestTaskDto();
     private Project project = new Project();
-    private TaskShortResponseDto taskShortDto = new TaskShortResponseDto();
-    private EmployeeShortResponseDto employeeShortDto;
+    private ResponseTaskShortDto taskShortDto = new ResponseTaskShortDto();
+    private ResponseEmployeeShortDto employeeShortDto;
 
     @BeforeEach
     public void init() {
         admin = Employee.builder()
                 .id(ID_1)
                 .role(Role.ROLE_ADMIN)
+                .email(email)
                 .build();
-        employeeShortDto = EmployeeShortResponseDto.builder()
+        employeeShortDto = ResponseEmployeeShortDto.builder()
                 .id(ID_1)
                 .fullName("name")
                 .position("USER")
@@ -75,6 +76,7 @@ class TaskAdminUnitTests {
         employee = Employee.builder()
                 .id(ID_2)
                 .role(Role.ROLE_USER)
+                .creator(admin)
                 .email(email)
                 .build();
         project = Project.builder()
@@ -90,16 +92,16 @@ class TaskAdminUnitTests {
                 .executor(employee)
                 .project(project)
                 .build();
-        taskOutDto = TaskFullResponseDto.builder()
+        taskOutDto = ResponseTaskFullDto.builder()
                 .id(ID_1)
                 .executor(employeeShortDto)
                 .build();
-        taskInDto = TaskRequestDto.builder()
+        taskInDto = RequestTaskDto.builder()
                 .executorId(ID_2)
                 .projectId(ID_1)
                 .deadLine(LocalDate.now().plusDays(2))
                 .build();
-        taskShortDto = TaskShortResponseDto.builder()
+        taskShortDto = ResponseTaskShortDto.builder()
                 .id(ID_1)
                 .name("taskShort")
                 .deadLine(LocalDate.now().plusDays(2))
@@ -152,7 +154,7 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
-
+        when(taskRepository.existsByIdAndOwnerEmail(ID_1, email)).thenReturn(true);
         Task task = taskService.update(ID_1, taskInDto, email);
 
         int expectedId = 1;
@@ -167,6 +169,7 @@ class TaskAdminUnitTests {
         when(taskRepository.findById(ID_1)).thenReturn(Optional.ofNullable(task));
         when(employeeService.findById(employee.getId())).thenReturn(employee);
         when(taskRepository.save(task)).thenReturn(task);
+        when(taskRepository.existsByIdAndOwnerEmail(ID_1, email)).thenReturn(true);
 
         Task task = taskService.update(ID_1, taskInDto, email);
 

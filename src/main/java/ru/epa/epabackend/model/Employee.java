@@ -12,8 +12,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- * Класс Сотрудник содержит информацию о логине и пароле (для логина используется email),
- * дате рождения, должности/грейду и стеке технологий сотрудника.
+ * Класс Сотрудник содержит информацию о полном имени, логине и пароле (для логина используется email),
+ * должности.
  *
  * @author Михаил Безуглов и Валентина Вахламова
  */
@@ -27,60 +27,39 @@ import java.util.*;
 public class Employee implements UserDetails {
 
     /**
-     * Идентификатор сотрудника.
+     * Идентификатор сотрудника
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Полное имя ФИО.
+     * Полное имя ФИО
      */
     @Column(name = "full_name")
     private String fullName;
 
     /**
-     * Ник в корпоративном мессенджере.
-     */
-    @Column(name = "nick_name")
-    private String nickName;
-
-    /**
-     * Город проживания.
-     */
-    private String city;
-
-    /**
-     * Логин сотрудника - email.
+     * Логин сотрудника - email
      */
     private String email;
 
     /**
-     * Пароль.
+     * Пароль
      */
     private String password;
 
     /**
-     * День рождения.
-     */
-    private LocalDate birthday;
-
-    /**
-     * Роль/грейд
-     * Возможные роли: ADMIN, USER.
+     * Роль
+     * Возможные роли: ADMIN, USER
      */
     @Enumerated(EnumType.STRING)
     private Role role;
 
     /**
-     * Должность.
+     * Должность
      */
     private String position;
-
-    /**
-     * Отдел/подразделение.
-     */
-    private String department;
 
     @OneToOne
     @JoinColumn(name = "creator_id")
@@ -88,7 +67,12 @@ public class Employee implements UserDetails {
     private Employee creator;
 
     /**
-     * Список задач сотрудника.
+     * Дата регистрации
+     */
+    private LocalDate created;
+
+    /**
+     * Список задач сотрудника
      */
     @OneToMany
     @JoinColumn(name = "executor_id")
@@ -96,18 +80,7 @@ public class Employee implements UserDetails {
     private Set<Task> tasks = new HashSet<>();
 
     /**
-     * Стек технологий, которыми владеет сотрудник.
-     */
-    @ManyToMany
-    @JoinTable(
-            name = "employees_technologies",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "technology_id"))
-    @Builder.Default
-    private Set<Technology> technologies = new HashSet<>();
-
-    /**
-     * Список проектов сотрудника.
+     * Список проектов сотрудника
      */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "projects_employees",
@@ -163,16 +136,12 @@ public class Employee implements UserDetails {
         return "Employee{" +
                 "id=" + id +
                 ", full name='" + fullName + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", city='" + city + '\'' +
                 ", email='" + email + '\'' +
                 ", password={masked}" +
-                ", birthday=" + birthday +
                 ", role=" + role +
                 ", position=" + position +
-                ", department=" + department +
                 ", tasks=" + tasks +
-                ", technologies=" + technologies +
+                ", created=" + created +
                 '}';
     }
 }

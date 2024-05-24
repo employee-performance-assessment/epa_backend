@@ -81,7 +81,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        } catch (SignatureException | ExpiredJwtException | MalformedJwtException | StringIndexOutOfBoundsException e) {
+        } catch (ExpiredJwtException e) {
+            log.warn(e.getMessage());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(mapper.writeValueAsString(
+                    new ErrorResponse(HttpStatus.UNAUTHORIZED, "Срок вашей сессии завершён. Авторизуйтесь снова")));
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        } catch (SignatureException | MalformedJwtException | StringIndexOutOfBoundsException e) {
             log.warn(e.getMessage());
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(mapper.writeValueAsString(

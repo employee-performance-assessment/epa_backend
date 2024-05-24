@@ -1,8 +1,8 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.employee.JwtRequest;
-import ru.epa.epabackend.dto.employee.JwtResponse;
+import ru.epa.epabackend.dto.employee.RequestJwt;
+import ru.epa.epabackend.dto.employee.ResponseJwt;
 
 public interface AuthenticationService {
-    JwtResponse getToken(JwtRequest jwtRequest);
+    ResponseJwt getToken(RequestJwt requestJwt);
 }

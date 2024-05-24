@@ -1,5 +1,6 @@
 package ru.epa.epabackend.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.epa.epabackend.model.Employee;
 import ru.epa.epabackend.model.Project;
@@ -13,4 +14,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByEmail(String email);
 
     List<Employee> findByProjectsAndRole(Project project, Role role);
+
+    List<Employee> findAllByCreatorEmail(String email, Sort sort);
+
+    boolean existsByEmail(String employeeEmail);
 }

@@ -1,6 +1,7 @@
 package ru.epa.epabackend.service;
 
-import ru.epa.epabackend.dto.task.TaskRequestDto;
+import org.springframework.transaction.annotation.Transactional;
+import ru.epa.epabackend.dto.task.RequestTaskDto;
 import ru.epa.epabackend.model.Task;
 import ru.epa.epabackend.util.TaskStatus;
 
@@ -8,21 +9,36 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Интерфейс TaskService содержит методы действий с задачами .
+ * Интерфейс TaskService содержит методы действий с задачами
  *
  * @author Владислав Осипов
  */
 public interface TaskService {
 
     /**
-     * Получение списка задач по ID исполнителя и статусу задачи
+     * Получение списка задач по email исполнителя
      */
-    List<Task> findAllByExecutorIdFilters(String status, Principal principal);
+    List<Task> findAllByExecutorEmail(Principal principal, String text);
 
     /**
-     * Найти задачу по ID задачи и ID исполнителя
+     * Получение списка задач по email исполнителя и статусу задачи
      */
-    Task findByIdAndExecutorId(Principal principal, Long taskId);
+    List<Task> findAllByExecutorEmailAndStatus(String status, Principal principal, String text);
+
+    /**
+     * Получение списка задач админом по id исполнителя
+     */
+    List<Task> findAllByEmployeeId(Long employeeId, String email, String text);
+
+    /**
+     * Получение списка задач админом по id исполнителя и статусу задачи
+     */
+    List<Task> findAllByEmployeeIdAndStatus(Long employeeId, String email, String status, String text);
+
+    /**
+     * Получение задачи по id задачи и исполнителю
+     */
+    Task findByIdAndOwnerId(Principal principal, Long taskId);
 
     /**
      * Обновление статуса задачи
@@ -35,19 +51,24 @@ public interface TaskService {
     List<Task> findAll(String email);
 
     /**
-     * Создание задачи
+     * Получение списка всех задач по определенному проекту админом
      */
-    Task create(TaskRequestDto taskDto, String email);
+    List<Task> findAllByProjectId(String email, Long projectId);
 
     /**
-     * Найти задачу по ID
+     * Добавление задачи
+     */
+    Task create(RequestTaskDto taskDto, String email);
+
+    /**
+     * Получение задачи по id
      */
     Task findDtoById(Long taskId, String email);
 
     /**
      * Обновление задачи
      */
-    Task update(Long taskId, TaskRequestDto taskDto, String email);
+    Task update(Long taskId, RequestTaskDto taskDto, String email);
 
     /**
      * Удаление задачи
@@ -57,5 +78,12 @@ public interface TaskService {
     /**
      * Получение списка задач проекта с определенным статусом задач
      */
-    List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status);
+    List<Task> findByProjectIdAndStatus(Long projectId, TaskStatus status, String email);
+
+    @Transactional(readOnly = true)
+    Task findById(Long taskId);
+
+    List<Task> findAllForEmployeeByProjectId(String email, Long projectId);
+
+    List<Task> findAllForEmployee(String email);
 }
