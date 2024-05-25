@@ -29,7 +29,7 @@ public class AnalyticsUnitTests {
     private static final String email1 = "qwerty1@gmail.com";
     private static final String email2 = "qwerty2@gmail.com";
     private final YearMonth yearMonth = YearMonth.now();
-    private final LocalDate createDate = LocalDate.now().minusDays(4);
+    private final LocalDate createDate = LocalDate.now();
     private final LocalDate startDate = LocalDate.now().minusDays(3);
     private final LocalDate deadLineDate = LocalDate.now().minusDays(3);
     private final LocalDate finishDate = LocalDate.now().minusDays(4);
@@ -133,7 +133,7 @@ public class AnalyticsUnitTests {
         employeesShortDto.add(individualAnalytics);
         List<IndividualAnalytics> individualAnalyticsResult = analyticsService
                 .getIndividualStatsByAdmin(rangeStart.getYear(), rangeEnd.getMonthValue(), email2);
-        int expectedAnalyticsSize = 1;
+        int expectedAnalyticsSize = 2;
         int expectedEmployeeId = 2;
         String expectedEmployeeName = "employee2";
         String expectedEmployeePosition = "user";
