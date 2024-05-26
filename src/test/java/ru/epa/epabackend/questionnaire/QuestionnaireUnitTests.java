@@ -92,7 +92,7 @@ public class QuestionnaireUnitTests {
     @DisplayName("Получение последней анкеты админа по email" +
             " Если есть анкета со статусом CREATED, то возвращаем её")
     void shouldFindLastByAuthorEmailWhenQuestionnaireHaveStatusCreated() {
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email1)).thenReturn(lastQuestionnaire);
         questionnaire1 = lastQuestionnaire.get();
         Questionnaire questionnaireResult = questionnaireService.findLastByAuthorEmail(email1);
         int expectedId = 1;
@@ -104,7 +104,7 @@ public class QuestionnaireUnitTests {
     @DisplayName("Получение последней анкеты админа по email" +
             " У прошлой анкеты был статус SHARED, поэтому создаётся новая анкета со статусом CREATED")
     void shouldFindLastByAuthorEmailWhenQuestionnaireHaveStatusSHARED() {
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email1)).thenReturn(lastQuestionnaire);
         questionnaire2 = lastQuestionnaire.get();
         questionnaire2.setStatus(QuestionnaireStatus.SHARED);
         when(employeeService.findByEmail(email1)).thenReturn(admin);
@@ -121,7 +121,7 @@ public class QuestionnaireUnitTests {
             " У админа не было анкет, поэтому создаётся новая анкета со статусом CREATED и дефолтными критериями")
     void shouldFindLastByAuthorEmailWhenAdminDontHaveQuestionnaire() {
         lastQuestionnaire = Optional.empty();
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email2)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email2)).thenReturn(lastQuestionnaire);
         when(employeeService.findByEmail(email2)).thenReturn(author);
         when(questionnaireService.saveWithParameters(QuestionnaireStatus.CREATED, admin, criterias))
                 .thenReturn(questionnaire1);
@@ -154,7 +154,7 @@ public class QuestionnaireUnitTests {
     void shouldUpdateLastWhenCallRepository() {
         uniqueCriterias = new HashSet<>();
         uniqueCriterias.add("criteriaDto");
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email1)).thenReturn(lastQuestionnaire);
         when(criteriaService.findExistentAndSaveNonExistentCriterias(uniqueCriterias)).thenReturn(criterias);
         when(questionnaireRepository.save(questionnaire1)).thenReturn(questionnaire1);
         Questionnaire questionnaireResult = questionnaireService.updateLast(requestQuestionnaireDto, email1);
@@ -168,7 +168,7 @@ public class QuestionnaireUnitTests {
             " lastQuestionnaire.isEmpty")
     void shouldUpdateLastWhenLastQuestionnaireIsEmpty() {
         lastQuestionnaire = Optional.empty();
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email1)).thenReturn(lastQuestionnaire);
         assertThrows(BadRequestException.class, () -> questionnaireService.updateLast(requestQuestionnaireDto, email1));
     }
 
@@ -178,7 +178,7 @@ public class QuestionnaireUnitTests {
     void shouldUpdateLastWhenLastQuestionnaireStatusIsShared() {
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);
         lastQuestionnaire = Optional.of(questionnaire1);
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email1)).thenReturn(lastQuestionnaire);
         assertThrows(BadRequestException.class, () -> questionnaireService.updateLast(requestQuestionnaireDto, email1));
     }
 
@@ -202,7 +202,7 @@ public class QuestionnaireUnitTests {
     @Test
     @DisplayName("Отправление анкеты сотрудникам - изменение статуса последней анкеты с CREATED на SHARED")
     void shouldSendQuestionnaireToEmployeesWhenCallRepositoryQuestionnaireStatusToShared() {
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email1)).thenReturn(lastQuestionnaire);
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);
         when(questionnaireService.sendQuestionnaireToEmployees(email1)).thenReturn(questionnaire1);
         Questionnaire questionnaireResult = questionnaireService.sendQuestionnaireToEmployees(email1);
@@ -216,7 +216,7 @@ public class QuestionnaireUnitTests {
     @DisplayName("Последняя анкета имела статус SHARED, поэтому создаётся дубликат анкеты с новым id и датой " +
             "и статусом SHARED")
     void shouldSendQuestionnaireToEmployeesWhenQuestionnaireHaveStatusShared() {
-        when(questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email1)).thenReturn(lastQuestionnaire);
+        when(questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email1)).thenReturn(lastQuestionnaire);
         when(employeeService.findByEmail(email1)).thenReturn(admin);
         questionnaire1.setStatus(QuestionnaireStatus.SHARED);
         when(questionnaireService

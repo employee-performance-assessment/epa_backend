@@ -42,7 +42,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public Questionnaire findLastByAuthorEmail(String email) {
         log.info("Получение самой последней анкеты админа по email");
-        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email);
         if (lastQuestionnaire.isPresent()) {
             Questionnaire questionnaire = lastQuestionnaire.get();
             if (QuestionnaireStatus.CREATED.equals(questionnaire.getStatus())) {
@@ -77,7 +77,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Questionnaire updateLast(RequestQuestionnaireDto requestQuestionnaireDto, String email) {
         log.info("Обновление анкеты");
 
-        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email);
         if (lastQuestionnaire.isEmpty()) {
             throw new BadRequestException("Необходимо создать заранее анкету для возможности редактирования");
         } else if (QuestionnaireStatus.SHARED.equals(lastQuestionnaire.get().getStatus())) {
@@ -111,7 +111,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public Questionnaire sendQuestionnaireToEmployees(String email) {
         log.info("Отправление анкеты сотрудникам");
-        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByIdDesc(email);
+        Optional<Questionnaire> lastQuestionnaire = questionnaireRepository.findFirstByAuthorEmailOrderByCreatedDescIdDesc(email);
         if (lastQuestionnaire.isPresent()) {
             Questionnaire questionnaire = lastQuestionnaire.get();
             if (QuestionnaireStatus.CREATED.equals(questionnaire.getStatus())) {
