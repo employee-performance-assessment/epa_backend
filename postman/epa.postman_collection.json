@@ -61,7 +61,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -240,7 +240,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -286,7 +286,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -1749,7 +1749,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);"
 								],
 								"type": "text/javascript"
 							}
@@ -2170,7 +2170,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -2450,7 +2450,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);"
 								],
 								"type": "text/javascript"
 							}
@@ -2621,7 +2621,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3760,7 +3760,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);"
 								],
 								"type": "text/javascript"
 							}
@@ -3893,7 +3893,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3978,7 +3978,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);"
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -4155,7 +4155,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -6040,7 +6040,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -6586,7 +6586,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -6716,7 +6716,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -7220,7 +7220,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -7344,7 +7344,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -7471,7 +7471,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -7782,7 +7782,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.collectionVariables.set(\"access_token\", jsonData.token);\r",
+									"pm.collectionVariables.set(\"access_token\", jsonData.accessToken);\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
