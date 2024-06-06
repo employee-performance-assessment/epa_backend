@@ -6,9 +6,15 @@ import org.springframework.security.core.userdetails.UserDetails;
  * Сервис, отвечающий за работу с JWT токенами, включая генерацию, проверку валидности, извлечение имени пользователя
  */
 public interface JwtService {
-    String extractUserName(String token);
+    String extractAccessTokenUserName(String token);
 
-    String generateToken(UserDetails userDetails);
+    String extractRefreshTokenUserName(String token);
 
-    boolean isTokenValid(String token, UserDetails userDetails);
+    String generateAccessToken(UserDetails userDetails);
+
+    String generateRefreshToken(UserDetails userDetails);
+
+    boolean isAccessTokenValid(String token, UserDetails userDetails);
+
+    boolean validateRefreshToken(String token);
 }

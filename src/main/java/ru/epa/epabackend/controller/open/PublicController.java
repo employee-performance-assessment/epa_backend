@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.epa.epabackend.dto.employee.ResponseEmployeeFullDto;
-import ru.epa.epabackend.dto.employee.RequestEmployeeShortDto;
-import ru.epa.epabackend.dto.employee.RequestJwt;
-import ru.epa.epabackend.dto.employee.ResponseJwt;
+import ru.epa.epabackend.dto.employee.*;
 import ru.epa.epabackend.exception.ErrorResponse;
 import ru.epa.epabackend.mapper.EmployeeMapper;
 import ru.epa.epabackend.service.AuthenticationService;
@@ -39,9 +36,9 @@ public class PublicController {
     private final EmployeeMapper employeeMapper;
 
     /**
-     * Получение токена при входе пользователя
+     * Получение JWT-токенов при входе пользователя
      */
-    @Operation(summary = "Получение JWT токена по паре логин пароль")
+    @Operation(summary = "Получение JWT-токенов по паре логин пароль")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
@@ -52,7 +49,24 @@ public class PublicController {
                     mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
     @PostMapping("/auth")
     public ResponseJwt getToken(@Valid @RequestBody @Parameter(required = true) RequestJwt requestJwt) {
-        return authenticationService.getToken(requestJwt);
+        return authenticationService.getTokens(requestJwt);
+    }
+
+    /**
+     * Обновление токенов
+     */
+    @Operation(summary = "Обновление JWT-токенов с помощью токена обновления")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @PostMapping("/refresh")
+    public ResponseJwt refresh(@Valid @RequestBody @Parameter(required = true) RequestRefreshJwt requestRefreshJwt) {
+        return authenticationService.refresh(requestRefreshJwt.getRefreshToken());
     }
 
     /**

@@ -8,5 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ResponseJwt {
-    private final String token;
+    private final String accessToken;
+    private final String refreshToken;
 }
