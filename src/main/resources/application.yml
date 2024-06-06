@@ -4,7 +4,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/epa-backend
     username: postgres
     password: root
-
   liquibase:
     enabled: true
 
@@ -20,6 +19,11 @@ spring:
   sql:
     init:
       mode: always
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      password: ${SPRING_REDIS_PASSWORD:}
 
 logging:
   level:
@@ -38,8 +42,12 @@ logging:
     web: info
 
 token:
-  secret: 51Ph61VOzrdwNvRa9FZclUpZRU160G1O
-  duration: 60m
+  secret:
+    access: 51Ph61VOzrdwNvRa9FZclUpZRU160G1O
+    refresh: 8D9EBD851C91433192222F47B89A4
+  duration:
+    access: 10m
+    refresh: 15d
 admin:
   login: admin
   password: admin

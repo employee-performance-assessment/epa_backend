@@ -1,15 +1,13 @@
 package ru.epa.epabackend.service.impl;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.epa.epabackend.model.Employee;
+import ru.epa.epabackend.exception.exceptions.UnauthorizedException;
 import ru.epa.epabackend.service.JwtService;
 
 import java.time.Duration;
@@ -32,62 +30,110 @@ public class JwtServiceImpl implements JwtService {
      * Секрет, для подписания токена. Рекомендуется использовать 256-bit WEP ключ, который указывается в настройках.
      * Пример сервиса для генерации ключей можно использовать сервис <a href="https://randomkeygen.com/">https://randomkeygen.com/</a>
      */
-    @Value("${token.secret}")
-    private String secret;
+    @Value("${token.secret.access}")
+    private String jwtAccessSecret;
+
+    @Value("${token.secret.refresh}")
+    private String jwtRefreshSecret;
 
     /**
-     * Срок действия токена.
+     * Срок действия токена доступа.
      */
-    @Value("${token.duration}")
-    private Duration tokenDuration;
+    @Value("${token.duration.access}")
+    private Duration tokenDurationAccess;
 
     /**
-     * Извлечение логина из токена.
-     *
-     * @param token
+     * Срок действия токена обновления.
+     */
+    @Value("${token.duration.refresh}")
+    private Duration tokenDurationRefresh;
+
+    /**
+     * Извлечение логина из токена доступа.
      */
     @Override
-    public String extractUserName(String token) {
+    public String extractAccessTokenUserName(String token) {
         log.info("Извлечение логина из токена");
-        return extractClaim(token, Claims::getSubject);
+        return extractAccessTokenClaim(token, Claims::getSubject);
     }
 
     /**
-     * Генерация токена на основании данных пользователя.
-     *
-     * @param userDetails {@link Employee}
-     * @return токен
+     * Извлечение логина из токена обновления.
      */
     @Override
-    public String generateToken(UserDetails userDetails) {
-        log.info("Генерация токена на основании данных пользователя");
+    public String extractRefreshTokenUserName(String token) {
+        log.info("Извлечение логина из токена");
+        return extractRefreshTokenClaim(token, Claims::getSubject);
+    }
+
+    /**
+     * Генерация токена доступа на основании данных пользователя.
+     */
+    @Override
+    public String generateAccessToken(UserDetails userDetails) {
+        log.info("Генерация токена доступа на основании данных пользователя");
         Date issuedDate = new Date();
-        Date expiredDate = new Date(issuedDate.getTime() + tokenDuration.toMillis());
+        Date expiredDate = new Date(issuedDate.getTime() + tokenDurationAccess.toMillis());
 
         return Jwts.builder()
                 .setClaims(generateClaims(userDetails))
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedDate)
                 .setExpiration(expiredDate)
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS256, jwtAccessSecret)
                 .compact();
     }
 
     /**
-     * Проверка срока токена
-     *
-     * @param token       token
-     * @param userDetails {@link Employee}
+     * Генерация токена обновления на основании данных пользователя.
      */
     @Override
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        log.info("Проверка срока токена");
-        final String userName = extractUserName(token);
+    public String generateRefreshToken(UserDetails userDetails) {
+        log.info("Генерация токена обновления на основании данных пользователя");
+        Date issuedDate = new Date();
+        Date expiredDate = new Date(issuedDate.getTime() + tokenDurationRefresh.toMillis());
+
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(issuedDate)
+                .setExpiration(expiredDate)
+                .signWith(SignatureAlgorithm.HS256, jwtRefreshSecret)
+                .compact();
+    }
+
+    /**
+     * Проверка срока токена доступа
+     */
+    @Override
+    public boolean isAccessTokenValid(String token, UserDetails userDetails) {
+        log.info("Проверка срока токена доступа");
+        final String userName = extractAccessTokenUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
-        final Claims claims = extractAllClaims(token);
+    @Override
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(jwtRefreshSecret)
+                    .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            throw new UnauthorizedException("Токен обновления истек");
+        } catch (SignatureException e) {
+            throw new UnauthorizedException("Недействительная подпись токена обновления");
+        } catch (Exception e) {
+            throw new UnauthorizedException("Недействительный токен обновления");
+        }
+    }
+
+    private <T> T extractAccessTokenClaim(String token, Function<Claims, T> claimsResolvers) {
+        final Claims claims = getAccessClaims(token);
+        return claimsResolvers.apply(claims);
+    }
+
+    private <T> T extractRefreshTokenClaim(String token, Function<Claims, T> claimsResolvers) {
+        final Claims claims = getRefreshClaims(token);
         return claimsResolvers.apply(claims);
     }
 
@@ -105,10 +151,18 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return extractAccessTokenClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims getAccessClaims(String token) {
+        return getClaims(token, jwtAccessSecret);
+    }
+
+    private Claims getRefreshClaims(String token) {
+        return getClaims(token, jwtRefreshSecret);
+    }
+
+    private Claims getClaims(String token, String secret) {
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)

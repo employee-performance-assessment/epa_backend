@@ -20,6 +20,11 @@ spring:
   sql:
     init:
       mode: always
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST}
+      port: ${SPRING_REDIS_PORT}
+      password: ${SPRING_REDIS_PASSWORD}
 
 logging:
   level:
@@ -33,8 +38,12 @@ logging:
     web: info
 
 token:
-  secret: ${TOKEN_SECRET}
-  duration: ${TOKEN_DURATION}
+  secret:
+    access: ${TOKEN_SECRET_ACCESS}
+    refresh: ${TOKEN_SECRET_REFRESH}
+  duration:
+    access: ${TOKEN_DURATION_ACCESS}
+    refresh: ${TOKEN_DURATION_REFRESH}
 admin:
   login: admin
   password: admin

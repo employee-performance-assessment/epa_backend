@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.epa.epabackend.exception.exceptions.BadRequestException;
 import ru.epa.epabackend.exception.exceptions.ConflictException;
+import ru.epa.epabackend.exception.exceptions.UnauthorizedException;
 
 @Hidden
 @Slf4j
@@ -53,6 +54,13 @@ public class ErrorHandler {
     public ErrorResponse entityNotFoundException(EntityNotFoundException e) {
         log.info(e.getMessage());
         return new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse unauthorizedException(UnauthorizedException e) {
+        log.info(e.getMessage());
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
     @ExceptionHandler({DataIntegrityViolationException.class, ConflictException.class})

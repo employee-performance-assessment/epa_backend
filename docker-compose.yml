@@ -6,13 +6,30 @@ services:
     container_name: epa-db
     ports:
       - "6543:5432"
+    volumes:
+      - epa-db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=epa-backend
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
 
+  epa-redis:
+    image: redis:6.2-alpine  # Конкретная версия Redis, совместимая с Spring Boot 3.2.2
+    container_name: epa-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - epa-redis-data:/data
+    environment:
+      - REDIS_PASSWORD=root
+
   epa-backend:
-    image: konstantinosipov/epa-backend:latest
+    depends_on:
+      - epa-db
+      - epa-redis
+    build: #на удаленном сервере указываем вместо build container_name: и путь к dockerhub'у
+      context: .
+      dockerfile: Dockerfile
     container_name: epa-backend
     ports:
       - "60606:8080"
@@ -21,5 +38,14 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://epa-db:5432/epa-backend
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
-      - TOKEN_SECRET=51Ph61VOzrdwNvRa9FZclUpZRU160G1O
-      - TOKEN_DURATION=60m
+      - TOKEN_SECRET_ACCESS=51Ph61VOzrdwNvRa9FZclUpZRU160G1O
+      - TOKEN_DURATION_ACCESS=10m
+      - TOKEN_SECRET_REFRESH=8D9EBD851C91433192222F47B89A4
+      - TOKEN_DURATION_REFRESH=15d
+      - SPRING_REDIS_HOST=epa-redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=root
+
+volumes:
+  epa-db-data:
+  epa-redis-data:

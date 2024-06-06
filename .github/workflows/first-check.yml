@@ -43,6 +43,17 @@ jobs:
       - name: Ожидание 3 сек инициализации PostgreSQL
         run: sleep 3
 
+      - name: Запуск Redis через докер-контейнер
+        env:
+          REDIS_PASSWORD: ${{ env.REDIS_PASSWORD }}
+        run: |
+          export REDIS_PASSWORD=root
+          docker run --name redis -e REDIS_PASSWORD=$REDIS_PASSWORD -p 6379:6379 -d redis:6.2-alpine
+
+      - name: Ожидание 3 сек инициализации Redis
+        run: sleep 3
+
+
       - name: Сборка проекта и тестирование
         run: mvn clean install
 
@@ -65,4 +76,8 @@ jobs:
 
       - name: остановка контейнера с PostgreSQL
         run: docker stop postgres
+        continue-on-error: true
+
+      - name: остановка контейнера с Redis
+        run: docker stop redis
         continue-on-error: true
